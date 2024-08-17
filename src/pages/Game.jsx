@@ -6,6 +6,8 @@ function Game() {
     const rightScore = 0;
     const leftScore = 0;
 
+    const pressedKeys = useRef(new Set());
+
     useEffect(() => {
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -69,96 +71,50 @@ function Game() {
             requestAnimationFrame(draw);
         };
 
-        // const pressedKeys = useRef(new Set());
+        
 
-        // const checkDirection = (keys) => {
-        //     console.log("before",leftRacketY, rightRacketY);
-        //     const speed = 25;
-        //     for (let i = 0; i < keys.length;i++){
-        //         if (keys.includes('w')){
-        //             leftRacketY = Math.max(leftRacketY - speed, 0);
-        //         }
-        //         else if (keys.includes('s')){
-        //             leftRacketY = Math.min(rightRacketY + speed, canvas.height - racketHeight);
-        //         }
-        //         if (keys.includes('ArrowUp')){
-        //             rightRacketY = Math.max(rightRacketY - speed, 0);
-        //         }
-        //         else if (keys.includes('ArrowDown')){
-        //             rightRacketY = Math.min(rightRacketY + speed, canvas.height - racketHeight);
-        //         }
-        //     }
-        //     console.log("after", leftRacketY, rightRacketY);
-        // };
+        const checkDirection = (keys) => {
+            console.log("before",leftRacketY, rightRacketY);
+            const speed = 25;
+            for (let i = 0; i < keys.length;i++){
+                if (keys.includes('w')){
+                    leftRacketY = Math.max(leftRacketY - speed, 0);
+                }
+                else if (keys.includes('s')){
+                    leftRacketY = Math.min(rightRacketY + speed, canvas.height - racketHeight);
+                }
+                if (keys.includes('ArrowUp')){
+                    rightRacketY = Math.max(rightRacketY - speed, 0);
+                }
+                else if (keys.includes('ArrowDown')){
+                    rightRacketY = Math.min(rightRacketY + speed, canvas.height - racketHeight);
+                }
+            }
+            console.log("after", leftRacketY, rightRacketY);
+        };
 
-        // const handleKeyDown = (event) => {
-        //     pressedKeys.current.add(event.key);
-        //     // console.log(`Keys pressed: ${Array.from(pressedKeys.current).join(', ')}`);
-        //     checkDirection(Array.from(pressedKeys.current));
-        // };
+        const handleKeyDown = (event) => {
+            pressedKeys.current.add(event.key);
+            // console.log(`Keys pressed: ${Array.from(pressedKeys.current).join(', ')}`);
+            checkDirection(Array.from(pressedKeys.current));
+        };
 
-        // const handleKeyUp = (event) => {
-        //     pressedKeys.current.delete(event.key); 
-        //     // console.log(`Keys pressed: ${Array.from(pressedKeys.current).join(', ')}`);
-        //     checkDirection(Array.from(pressedKeys.current));
-        // };
+        const handleKeyUp = (event) => {
+            pressedKeys.current.delete(event.key); 
+            // console.log(`Keys pressed: ${Array.from(pressedKeys.current).join(', ')}`);
+            checkDirection(Array.from(pressedKeys.current));
+        };
 
         requestAnimationFrame(draw);
 
-        // window.addEventListener('keydown', handleKeyDown);
-        // window.addEventListener('keyup', handleKeyUp);
-        // return () => {
-        //     window.removeEventListener('keydown', handleKeyDown);
-        //     window.removeEventListener('keyup', handleKeyUp);
-        // };
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+        };
 
     }, []);
-    
-    // const pressedKeys = useRef(new Set());
-
-    // const checkDirection = (keys) => {
-    //     const speed = 25;
-    //     for (let i = 0; i < keys.length;i++){
-    //         if (keys.includes('w')){
-    //             leftRacketY = (prevY => Math.max(prevY - speed, 0));
-    //         }
-    //         else if (keys.includes('s')){
-    //             leftRacketY = (prevY => Math.min(prevY + speed, canvas.height - racketHeight));
-    //         }
-    //         if (keys.includes('ArrowUp')){
-    //             rightRacketY = (prevY => Math.max(prevY - speed, 0));
-    //         }
-    //         else if (keys.includes('ArrowDown')){
-    //             rightRacketY = (prevY => Math.min(prevY + speed, canvas.height - racketHeight));
-    //         }
-    //     }
-    // };
-
-    // useEffect(() => {
-        
-    //     const handleKeyDown = (event) => {
-    //         pressedKeys.current.add(event.key);
-    //         // console.log(`Keys pressed: ${Array.from(pressedKeys.current).join(', ')}`);
-    //         checkDirection(Array.from(pressedKeys.current));
-    //     };
-
-    //     const handleKeyUp = (event) => {
-    //         pressedKeys.current.delete(event.key); 
-    //         // console.log(`Keys pressed: ${Array.from(pressedKeys.current).join(', ')}`);
-    //         checkDirection(Array.from(pressedKeys.current));
-    //     };
-
-    //     window.addEventListener('keydown', handleKeyDown);
-    //     window.addEventListener('keyup', handleKeyUp);
-    //     return () => {
-    //         window.removeEventListener('keydown', handleKeyDown);
-    //         window.removeEventListener('keyup', handleKeyUp);
-    //     };
-    // }, []);
-
-    // useEffect(() => {
-    //     draw();
-    // }, []);
 
     return (
         <>
