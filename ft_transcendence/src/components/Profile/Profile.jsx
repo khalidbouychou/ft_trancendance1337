@@ -98,39 +98,13 @@ const Profile = () => {
 						<p >1 - 50%</p>
 					</div>
 				</div>
+
+				{/* last */}
+
 				<div className={styl.last}>
-					<div className={styl.history}>
-						<div className={styl.history}></div>
-						<div className={styl.blockedFriend}></div>
-						<div className={styl.friend}></div>
-						{/* <div className={styl.cardName}>
-							<p >MATCH HISTORY</p>
-						</div> */}
-						{/* <div className={styl.matches}>
-							<div className={styl.cardMatch}>
-								<div className={styl.userimg}>
-									<img src={userImage}></img>
-									<p >NOUREDDINE</p>
-								</div>
-								<div className={styl.scoreDate}>
-									3 - 2
-								</div>
-								<div className={styl.userimg}>
-									<img src={userImage}></img>
-								</div>
-								<div className={styl.scoreDate} style={{width:"30%", fontSize: "20px"}}>
-									2024/08/08
-								</div>
-							</div>
-							<div className={styl.cardMatch}></div>
-						</div> */}
-					</div>
-					<div className={styl.expelledFriends}>
-						<div className={styl.cardName}></div>
-					</div>
-					<div className={styl.friends}>
-						<div className={styl.cardName}></div>
-					</div>
+					<div className={styl.history}></div>
+					<div className={styl.blockedFriend}></div>
+					<div className={styl.friend}></div>
 				</div>
 
 			</div>
