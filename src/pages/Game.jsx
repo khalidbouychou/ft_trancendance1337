@@ -3,10 +3,11 @@ import * as styles from './Game.module.css';
 // import { useFetcher } from 'react-router-dom';
 
 function Game() {
-    const rightScore = 0;
-    const leftScore = 0;
+    
 
     const pressedKeys = useRef(new Set());
+    const [ rightScore, setRightScore ] = useState(0);
+    const [ leftScore, setLeftScore ] = useState(0);
 
     useEffect(() => {
         const canvas = document.getElementById('canvas');
@@ -15,12 +16,14 @@ function Game() {
         let centerY = 0;
         let ballx = 0;
         let bally = 0;
-        const ballspeed = 1;
-        let width = 0;
+        let ballspeed = 1;
+        let balldirectionX = 1;
+        let balldirectionY = 1;
         let racketHeight = 0;
         let racketWidth = 0;
         let leftRacketY = 0;
         let rightRacketY = 0;
+        let myReq;
     
         const drawball = () => {
 
@@ -35,30 +38,81 @@ function Game() {
 
         };
 
-        const gamelogic = () => {
-            ballx += ballspeed;
-            if ((canvas.width / 2) + ballx + 15 >= canvas.width)
-                ballx = 0;
-
-        };
-
         const drawLeftRacket = () => {
             ctx.fillStyle = '#00FF00';
-            width = (canvas.width * 2.5 / 100);
-            if (width > 16)
-                width = 16;
-            ctx.fillRect(0, leftRacketY, width, (canvas.height * 20 / 100));
+            racketWidth = (canvas.width * 2.5 / 100);
+            if (racketWidth > 16)
+                racketWidth = 16;
+            racketHeight = (canvas.height * 20 / 100);
+            ctx.fillRect(0, leftRacketY, racketWidth, racketHeight);
         }
 
         const drawRightRacket = () => {
             ctx.fillStyle = '#00FF00';
-            width = (canvas.width * 2.5 / 100);
-            if (width > 16)
-                width = 16;
-            ctx.fillRect(canvas.width-width, rightRacketY, width, (canvas.height * 20 / 100));
+            racketWidth = (canvas.width * 2.5 / 100);
+            if (racketWidth > 16)
+                racketWidth = 16;
+            racketHeight = (canvas.height * 20 / 100);
+            ctx.fillRect(canvas.width-racketWidth, rightRacketY, racketWidth, racketHeight);
         }
 
-        
+        const gamelogic = () => {
+            // const timeInMicroseconds = performance.now() * 1000;
+            // console.log(`Time in microseconds: ${Math.floor(timeInMicroseconds)}`);
+            ballx += ballspeed * balldirectionX;
+            bally += ballspeed * balldirectionY;
+
+            // console.log("bally", ((canvas.height / 2) + bally - 15));
+            // console.log("ballx", ((canvas.height / 2) + ballx + 15));
+            // console.log("rightRacketY", rightRacketY);
+            // console.log("racketHeight", rightRacketY+racketHeight);
+            // console.log("rightpad", (canvas.width - racketWidth));
+            // console.log("bottom", canvas.height);
+            // console.log("top", 0);
+            // console.log("leftraketx", (canvas.width + racketWidth));
+            // console.log("rightraketx", (canvas.width - racketWidth));
+
+            if (rightRacketY <= ((canvas.height / 2) + bally - 15) && rightRacketY+racketHeight >= ((canvas.height / 2) + bally + 15) && ((canvas.width / 2) + ballx + 15) >= (canvas.width - racketWidth)){
+                // console.log("we hit the right paad");
+                balldirectionX *= -1;
+            }
+            else if (leftRacketY <= ((canvas.height / 2) + bally - 15) && leftRacketY+racketHeight >= ((canvas.height / 2) + bally + 15) && ((canvas.width / 2) + ballx - 15) <= (0 + racketWidth)){
+                // console.log("we hit the left paad");
+                balldirectionX *= -1;
+            }
+            else if (((canvas.height / 2) + bally - 15) <= 0){
+                // console.log("we hit the top");
+                balldirectionY *= -1;
+            }
+            else if (((canvas.height / 2) + bally + 15) >= canvas.height){
+                // console.log("we hit the bottom");
+                balldirectionY *= -1;
+            }
+            else if ((canvas.width / 2) - 15 < ballx){
+                ballx = 0;
+                bally = 0;
+                if (balldirectionX < 0)
+                    balldirectionX *= -1;
+                if (balldirectionY < 0)
+                    balldirectionY *= -1;
+                // console.log(ballx);
+                setRightScore(prevScore => prevScore + 1);
+                // console.log("Right score increment");
+                // balldirection *= -1;
+            }
+            else if (-(canvas.width / 2) + 15 > ballx){
+                ballx = 0;
+                bally = 0;
+                if (balldirectionX < 0)
+                    balldirectionX *= -1;
+                if (balldirectionY < 0)
+                    balldirectionY *= -1;
+                setLeftScore(prevScore => prevScore + 1);
+                // console.log("Left score increment");
+                // balldirection *= -1;
+            }
+        };
+
         const draw = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -67,21 +121,19 @@ function Game() {
             drawRightRacket();
             gamelogic();
 
-            
-            requestAnimationFrame(draw);
+
+            return requestAnimationFrame(draw);
         };
 
-        
-
         const checkDirection = (keys) => {
-            console.log("before",leftRacketY, rightRacketY);
+            // console.log("before",leftRacketY, rightRacketY);
             const speed = 25;
             for (let i = 0; i < keys.length;i++){
                 if (keys.includes('w')){
                     leftRacketY = Math.max(leftRacketY - speed, 0);
                 }
                 else if (keys.includes('s')){
-                    leftRacketY = Math.min(rightRacketY + speed, canvas.height - racketHeight);
+                    leftRacketY = Math.min(leftRacketY + speed, canvas.height - racketHeight);
                 }
                 if (keys.includes('ArrowUp')){
                     rightRacketY = Math.max(rightRacketY - speed, 0);
@@ -90,7 +142,8 @@ function Game() {
                     rightRacketY = Math.min(rightRacketY + speed, canvas.height - racketHeight);
                 }
             }
-            console.log("after", leftRacketY, rightRacketY);
+            console.log(canvas.height);
+            // console.log("after", leftRacketY, rightRacketY);
         };
 
         const handleKeyDown = (event) => {
@@ -105,13 +158,16 @@ function Game() {
             checkDirection(Array.from(pressedKeys.current));
         };
 
-        requestAnimationFrame(draw);
+       
+        myReq = requestAnimationFrame(draw);
+
 
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
+            cancelAnimationFrame(myReq);
         };
 
     }, []);
