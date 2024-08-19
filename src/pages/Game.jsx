@@ -61,34 +61,42 @@ function Game() {
             ballx += ballspeed * balldirectionX;
             bally += ballspeed * balldirectionY;
 
-            if (rightRacketY <= ((canvas.height / 2) + bally - 15) && rightRacketY+racketHeight >= ((canvas.height / 2) + bally + 15) && ((canvas.width / 2) + ballx + 15) >= (canvas.width - racketWidth)){
+            // collision with the right paddle
+            if (rightRacketY <= ((canvas.height / 2) + bally - 15) && rightRacketY + racketHeight >= ((canvas.height / 2) + bally + 15) && ((canvas.width / 2) + ballx + 15) >= (canvas.width - racketWidth)) {
+                // calculate the offset from the paddle center
+                let offset = ((canvas.height / 2) + bally) - (rightRacketY + racketHeight / 2);
+                // normalize the offset
+                offset = offset / (racketHeight / 2);
+                // invert X direction
                 balldirectionX *= -1;
+                // adjust Y direction based on offset
+                balldirectionY = offset;
             }
-            else if (leftRacketY <= ((canvas.height / 2) + bally - 15) && leftRacketY+racketHeight >= ((canvas.height / 2) + bally + 15) && ((canvas.width / 2) + ballx - 15) <= (0 + racketWidth)){
+            // collision with the left paddle
+            else if (leftRacketY <= ((canvas.height / 2) + bally - 15) && leftRacketY + racketHeight >= ((canvas.height / 2) + bally + 15) && ((canvas.width / 2) + ballx - 15) <= (0 + racketWidth)) {
+                let offset = ((canvas.height / 2) + bally) - (leftRacketY + racketHeight / 2);
+                offset = offset / (racketHeight / 2);
                 balldirectionX *= -1;
+                balldirectionY = offset;
             }
-            else if (((canvas.height / 2) + bally - 15) <= 0){
+            // collision with top and bottom walls
+            else if (((canvas.height / 2) + bally - 15) <= 0 || ((canvas.height / 2) + bally + 15) >= canvas.height) {
                 balldirectionY *= -1;
             }
-            else if (((canvas.height / 2) + bally + 15) >= canvas.height){
-                balldirectionY *= -1;
-            }
-            else if ((canvas.width / 2) - 15 < ballx){
+            // ball out of bounds (scoring)
+            else if ((canvas.width / 2) - 15 < ballx) {
+                // right score increment
                 ballx = 0;
                 bally = 0;
-                if (balldirectionX < 0)
-                    balldirectionX *= -1;
-                if (balldirectionY < 0)
-                    balldirectionY *= -1;
+                balldirectionX = -1;
+                balldirectionY = Math.random() * 2 - 1; // randomize the initial direction
                 setRightScore(prevScore => prevScore + 1);
-            }
-            else if (-(canvas.width / 2) + 15 > ballx){
+            } else if (-(canvas.width / 2) + 15 > ballx) {
+                // left score increment
                 ballx = 0;
                 bally = 0;
-                if (balldirectionX < 0)
-                    balldirectionX *= -1;
-                if (balldirectionY < 0)
-                    balldirectionY *= -1;
+                balldirectionX = 1;
+                balldirectionY = Math.random() * 2 - 1; // randomize the initial direction
                 setLeftScore(prevScore => prevScore + 1);
             }
         };
