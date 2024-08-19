@@ -16,8 +16,8 @@ function Game() {
         let centerY = 0;
         let ballx = 0;
         let bally = 0;
-        let speed = 10;
-        let ballspeed = 7.5;
+        let speed = 5;
+        let ballspeed = 3;
         let balldirectionX = 1;
         let balldirectionY = 1;
         let racketHeight = 0;
@@ -62,20 +62,24 @@ function Game() {
             bally += ballspeed * balldirectionY;
 
             // collision with the right paddle
-            if (rightRacketY <= ((canvas.height / 2) + bally - 15) && rightRacketY + racketHeight >= ((canvas.height / 2) + bally + 15) && ((canvas.width / 2) + ballx + 15) >= (canvas.width - racketWidth)) {
+            if (rightRacketY <= ((canvas.height / 2) + bally + 15) && rightRacketY + racketHeight >= ((canvas.height / 2) + bally - 15) && ((canvas.width / 2) + ballx + 15) >= (canvas.width - racketWidth)) {
                 // calculate the offset from the paddle center
                 let offset = ((canvas.height / 2) + bally) - (rightRacketY + racketHeight / 2);
                 // normalize the offset
                 offset = offset / (racketHeight / 2);
-                // invert X direction
+                ballx = (canvas.width / 2 ) - racketWidth - 15 - 1;
+                // invert X directionww
                 balldirectionX *= -1;
                 // adjust Y direction based on offset
                 balldirectionY = offset;
             }
             // collision with the left paddle
-            else if (leftRacketY <= ((canvas.height / 2) + bally - 15) && leftRacketY + racketHeight >= ((canvas.height / 2) + bally + 15) && ((canvas.width / 2) + ballx - 15) <= (0 + racketWidth)) {
+            else if (leftRacketY <= ((canvas.height / 2) + bally + 15) && leftRacketY + racketHeight >= ((canvas.height / 2) + bally - 15) && ((canvas.width / 2) + ballx - 15) <= (0 + racketWidth)) {
                 let offset = ((canvas.height / 2) + bally) - (leftRacketY + racketHeight / 2);
                 offset = offset / (racketHeight / 2);
+                console.log("1",ballx);
+                ballx = -(canvas.width / 2 ) + racketWidth + 15;
+                console.log("2",ballx);
                 balldirectionX *= -1;
                 balldirectionY = offset;
             }
