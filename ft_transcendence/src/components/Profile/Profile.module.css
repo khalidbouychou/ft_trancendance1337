@@ -2,19 +2,18 @@
 	display: flex;
 	justify-content: center;
 	width: 100%;
-	height: 100vh;
-	min-height: 1100px;
+	height: 100%;
 	background-color: #25233C;
+	align-items: center;
 }
 
 .content {
-	min-height: 1100px;
-	width: 100%;
-	height: 100vh;
+	width: 90%;
+	height: 90%;
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
 	align-items: center;
-	margin: 5% 5% 5% 5%;
 }
 
 .head {
@@ -24,30 +23,27 @@
 	justify-content: center;
 	align-items: center;
 	color: white;
-	h1 {
-		font-size: 50px;
+	font-size: 55px;
+	@media (max-width: 1536px) {
+		font-size: 45px;
+		height: 60px;
 	}
+	
 	@media (max-width: 1024px) {
-		h1{
-			font-size: 30px;
-		}
-		height: 50px;
+		font-size: 30px;
 	}
-	@media (max-width: 700px) {
-		h1{
-			font-size: 20px;
-		}
-	}
+
 }
 .first {
+	min-height: 500px;
 	width: 100%;
-	height: 40vh;
+	height: 40%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	gap: 10px;
-	position: relative;
+	min-width: 200px;
 	.search{
 		width: 100%;
 		height: 15%;
@@ -92,6 +88,22 @@
 				}
 			}
 		}
+		@media (max-width: 1024px) {
+			height: 10%;
+			.ss {
+				height: 40px;
+				.input {
+					height: 40px;
+					font-size: 15px;
+				}
+				.button {
+					width: 50px;
+					.icon {
+						font-size: 30px;
+					}
+				}
+			}
+		}
 	}
 	.userData{
 		width: 80%;
@@ -122,7 +134,7 @@
 			}
 			.Name {
 				color: white;
-				font-size: 30px;
+				font-size: 35px;
 				flex: 1;
 				display: flex;
 				flex-direction: column;
@@ -138,6 +150,9 @@
 						background-color: aliceblue;
 						border-radius: 20px;
 						background-color: green;
+					}
+					#online {
+						font-size: 25px;
 					}
 				}
 			}
@@ -171,7 +186,73 @@
 						display: flex;
 						justify-content: center;
 						align-items: center;
-						font-size: 40px;
+						font-size: 35px;
+					}
+				}
+			}
+		}
+		@media (max-width: 1800px) {
+			.user {
+				.Image {
+					img {
+						width: 150px;
+						height: 150px;
+					}
+					@media (max-width: 1400px) {
+						img {
+							width: 120px;
+							height: 120px;
+						}
+					}
+				}
+				.Name {
+					font-size: 25px;
+				}
+			}
+			.statistic {
+				.sttcStyl {
+					.res {
+						.aspects {
+							font-size: 40px;
+						}
+						.Name {
+							font-size: 25px;
+						}
+					}
+				}
+			}
+		}
+		@media (max-width: 1280px) {
+			flex-direction: column;
+			.user {
+				gap: 0px;
+				width: 100%;
+				.Image {
+					flex: 1;
+				}
+				.Name {
+					flex: 1;
+				}
+			}
+			.statistic {
+				width: 100%;
+			}
+		}
+		@media (max-width: 768px) {
+			overflow: auto;
+			.user {
+				.Image {
+					img {
+						width: 70px;
+						height: 70px;
+					}
+				}
+				.Name {
+					font-size: 20px;
+					.onlign {
+						#online {
+							font-size: 15px;
+						}
 					}
 				}
 			}
@@ -208,111 +289,106 @@
 			align-items: center;
 		}
 	}
-	@media (max-width: 1800px) {
-		.userData {
-			.user {
-				.Name {
-					font-size: 20px;
-				}
-				.Image {
-					img {
-						width: 150px;
-						height: 150px;
-					}
-				}
-			}
-		}
-		.level {
-			.externFrame {
-				height: 70%;
-			}
-		}
-	}
-	@media (max-width: 1350px) {
-		.userData {
-			.user {
-				.Image {
-					img {
-						width: 100px;
-						height: 100px;
-					}
-				}
-			}
-			.statistic {
-				.sttcStyl {
-					.res {
-						.aspects {
-							font-size: 40px;
-						}
-						.Name {
-							font-size: 30px;
-						}
-					}
-				}
-			}
-		}
-		.level {
-			.externFrame {
-				height: 70%;
-			}
-		}
-	}
-	@media (max-width: 1024px){
+	@media (max-width: 768px) {
 		.search {
-			height: 10%;
 			.ss {
-				height: 40px;
-				.input {
-					font-size: 20px;
-					height: 40px;
-				}
-				.button {
-					font-size: 20px;
-					width: 40px;
-				}
+				width: 90%;
 			}
 		}
 		.userData {
 			width: 100%;
-			background-color: #25233C;
-			flex-direction: column;
-			.user {
-				width: 100%;
-			}
-			.statistic {
-				width: 100%;
-			}
 		}
 		.level {
+			height: 10%;
 			.externFrame {
 				width: 100%;
 			}
-			p {
-				font-size: 20px;
-			}
 		}
-
 	}
-	@media (max-width: 700px) {
-		.userData {
-			.statistic {
-				.sttcStyl {
-					.res {
-						.aspects {
-							font-size: 35px;
+}
+
+.last {
+	background-color: #009900;
+	width: 80%;
+	height: 60%;
+	.big {
+		display: flex;
+		width: 100%;
+		height: 100%;
+		background-color: aliceblue;
+		gap: 2%;
+		.history {
+			display: flex;
+			flex-direction: column;
+			background-color: violet;
+			width: 40%;
+			height: 100%;
+			.matches {
+				background-color: aqua;
+				width: 100%;
+				height: 90%;
+				display: flex;
+				overflow: auto;
+				padding: 5px;
+				.cardMatch {
+					background-color: #25233C;
+					width: 280px;
+					height: 100px;
+					display: flex;
+					.player {
+						width: 30%;
+						height: 100%;
+						background-color: red;
+						display: flex;
+						flex-direction: column;
+						img {
+							border-radius: 50px;
 						}
-						.Name {
-							font-size: 20px;
-						}
+					}
+					.scoreDate {
+						width: 40%;
+						height: 100%;
 					}
 				}
 			}
 		}
+		.friends {
+			display: flex;
+			flex-direction: column;
+			background-color: blue;
+			width: 30%;
+			height: 100%;
+		}
+		.blocked {
+			display: flex;
+			flex-direction: column;
+			background-color: violet;
+			width: 30%;
+			height: 100%;
+		}
 	}
-	
+	.small {
+		display: none;
+		width: 100%;
+		height: 100%;
+		background-color: black;
+	}
+	.cardName {
+		width: 100%;
+		height: 10%;
+		background-color: #009900;
+		font-size: 25px;
+		color: white;
+		display: flex;
+		align-items: center;
+		padding-left: 10px;
+	}
+	@media (max-width: 1024px) {
+		.big {
+			display: none;
+		}
+		.small {
+			display: flex;
+		}
+	}
 }
-.last {
-	width: 100%;
-	height: 60vh;
-}
-

@@ -15,7 +15,7 @@ const Profile = () => {
 				{/* head */}
 
 				<div className={styl.head}>
-					<h1 >PROFILE</h1>
+					PROFILE
 				</div>
 				<div className={styl.first}>
 
@@ -46,7 +46,7 @@ const Profile = () => {
 								<p >NOUREDDINE</p>
 								<div className={styl.onlign}>
 									<div className={styl.rnd}></div>
-									<p >online</p>
+									<p id={styl.online}>online</p>
 								</div>
 							</div>
 						</div>
@@ -93,7 +93,7 @@ const Profile = () => {
 					</div>
 					<div className={styl.level}>
 						<div className={styl.externFrame}>
-							<div className={styl.percentage} style={{width: "100%"}}></div>
+							<div className={styl.percentage} style={{width: "80%"}}></div>
 						</div>
 						<p >1 - 50%</p>
 					</div>
@@ -102,9 +102,29 @@ const Profile = () => {
 				{/* last */}
 
 				<div className={styl.last}>
-					<div className={styl.history}></div>
-					<div className={styl.blockedFriend}></div>
-					<div className={styl.friend}></div>
+					<div className={styl.big}>
+						<div className={styl.history}>
+							<div className={styl.cardName}>
+								MATCH HISTORY
+							</div>
+							<div className={styl.matches}>
+								<div className={styl.cardMatch}>
+									<div className={styl.player}>
+										<img src={userImage}></img>
+									</div>
+									<div className={styl.scoreDate}></div>
+									<div className={styl.player}></div>
+								</div>
+							</div>
+						</div>
+						<div className={styl.friends}>
+							<div className={styl.cardName}></div>
+						</div>
+						<div className={styl.blocked}>
+							<div className={styl.cardName}></div>
+						</div>
+					</div>
+					<div className={styl.small}></div>
 				</div>
 
 			</div>
@@ -112,5 +132,5 @@ const Profile = () => {
   )
 
 }
-
+83.6626.toFixed.apply
 export default Profile
