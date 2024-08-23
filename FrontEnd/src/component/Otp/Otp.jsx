@@ -9,19 +9,13 @@ const Otp = () => {
   const getOTPValue = () => {
     if (otp.length < 5) {
       toast.error('Invalid OTP',{
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+        position: "top-right",
       });
       console.log('Please enter 5 digit OTP');
       return;
     }
     toast.success('OTP Verified Successfully',{
-      position: "top-center",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,

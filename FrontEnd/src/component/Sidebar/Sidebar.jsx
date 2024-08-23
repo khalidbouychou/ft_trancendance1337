@@ -1,6 +1,6 @@
 import {useEffect, useState } from "react";
 import "./sidebar.css";
-import { Link, useNavigate, } from "react-router-dom";
+import { Link, Outlet, useNavigate, } from "react-router-dom";
 import imgprofil from "/icons/profile.png"
 import imgnotif from  "/icons/notification.png"
 import imggame from "/icons/game.png"
@@ -111,6 +111,10 @@ function Sidebar()  {
 
         <div className="logout">
           <img  onClick={handleLogout} src={imglogout}alt="" />
+        </div>
+
+        <div>
+          <Outlet/>
         </div>
       </div>
   );

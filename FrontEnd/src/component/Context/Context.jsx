@@ -16,7 +16,7 @@ export default function ContextProvider({ children }) {
   useEffect(() => {
     async function auth() {
       try {
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(location.search);
         const code = urlParams.get("code");
         if (code && !token) {
           const params = new URLSearchParams();
@@ -26,14 +26,14 @@ export default function ContextProvider({ children }) {
           });
           if (res.status === 200 && res.statusText === "OK")
             {
-              console.log(res.data);
-              if (res.data['twofa'] === true) {
-                setTwofa(true);
-                navigate("/twofa");
-              }
+              // console.log(res.data);
+              // if (res.data['twofa'] === true) {
+              //   setTwofa(true);
+              //   navigate("/twofa");
+              // }
+              navigate('/home');
               localStorage.setItem("is_logged", true);
               setLogged(localStorage.getItem("is_logged"));
-              navigate("/home");
             }
         }
       } catch (error) {

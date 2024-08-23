@@ -1,67 +1,31 @@
 import "./App.css";
-// import Sidebar from "./component/Sidebar/Sidebar";
+import Sidebar from "./component/Sidebar/Sidebar";
 import {Route, Routes} from "react-router-dom";
-// import Login from "./component/Login/Login";
-// import HomePage from "./component/HomePage/HomePage";
-// import Error from "./component/Error/Error";
-// import { useContext, useEffect } from "react";
-// // import axios from "axios";
-// import { Link } from "react-router-dom";
-// import Loader from "./component/Loader/Loader";
-// import axios from "axios";
-// import { authContext } from "./component/Context/Context";
 import Otp from "./component/Otp/Otp";
-// import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Login from "./component/Login/Login";
+
 
 function App() {
 
-  // const {islogged} = useContext(authContext);
-  // const location = useLocation();
 
-  // useEffect (() => {
-  //   console.log("islogged", islogged);
-  //   async function fetchData() {
-  //     try {
-  //       const response = await axios.get("http://localhost:8000/api/getusers/", {
-  //         withCredentials: true,
-  //       });
-  //       console.log("data  " ,response.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //   fetchData();
-  // }, []);
+  // const [is_logged, setLogged] = useState(localStorage.getItem("is_logged"));
 
+  // useEffect(() => {
+  //  console.log("is_logged:", is_logged);
+  // }
+  // , );
 
   return (
-    // localStorage.getItem("is_logged") && location.pathname !== "/login" ? (
-    //     <div className="all">
-    //     {(location.pathname !== ("/login")) && <Sidebar />}
         <Routes>
-          <Route exact path="/otp" element={<Otp />} />
-    {/* //       <Route exact path="/game" element={<div>game .... </div>} />
-    //       <Route exact path="/home" element={<HomePage />} />
-    //       <Route exact path="/" element={<HomePage />} />
-    //       <Route exact path="/profil" element={<div>profile .... </div>} />
-    //       <Route */}
-    {/* //         exact
-    //         path="/notification"
-    //         element={<div>notification .... </div>}
-    //         />
-    //       <Route exact path="/chat" element={<div>chat .... </div>} />
-    //       <Route exact path="/setting" element={<div>setting .... </div>} />
-    //       <Route exact path="/login" element={ localStorage.getItem("is_logged") === true ? <Login /> */}
-    {/* //         : <Navigate to="/home" /> */}
-    {/* //     } /> */}
-    {/* //       <Route exact path="/page404" element={<Error/>}/>
-    //       <Route exact path="*" element={<Navigate to='/page404' />} /> */}
+          <Route path='/' element={<Sidebar />} >
+            <Route  path='otp' element={<Otp />} />
+            <Route  path='login' element={<Login />} />
+            <Route  path='home' element={<h1> hello home </h1>} />
+          </Route>
         </Routes>
-    //   </div>
-    //   ) : (
-    //           <Login />
-    //   )
   );
+
 }
 
 export default App;
