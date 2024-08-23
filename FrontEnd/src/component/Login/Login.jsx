@@ -1,5 +1,6 @@
 import axios from "axios";
 import styl from "./login.module.css";
+import "./Login.css";
 import { useEffect, useState } from "react";
 
 const Login = () => {
@@ -21,13 +22,28 @@ useEffect(() => {
 }, [])
 
   return (
-    <div className={styl.all}>
-      <div className={styl.log}>
+    // <div className={styl.all}>
+    //   <div className={styl.log}>
+    //     <a
+    //       href={url}
+    //     >
+    //       <img src="./img/42logo.png" />
+    //     </a>
+    //   </div>
+    // </div>
+
+    <div className="hh">
+      <div className="split-container">
+
+      <div className="text-side">
+        <h1>Pong Game: Atari</h1>
+        <div>Sign in with your 42 Intra account to play the game</div>
         <a
           href={url}
-        >
-          <img src="./img/42logo.png" />
+          >
+        <img src="./img/42logo.png" alt="42 Intra Logo" className="logo-small" />
         </a>
+      </div>
       </div>
     </div>
   );

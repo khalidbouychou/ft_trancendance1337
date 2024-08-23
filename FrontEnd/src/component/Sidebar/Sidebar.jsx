@@ -52,6 +52,8 @@ function Sidebar()  {
 
   const [active, setActive] = useState("");
 
+
+
   useEffect(() => {
     const handlePopstate = () => {
       setPathname(window.location.pathname);
@@ -111,10 +113,6 @@ function Sidebar()  {
 
         <div className="logout">
           <img  onClick={handleLogout} src={imglogout}alt="" />
-        </div>
-
-        <div>
-          <Outlet/>
         </div>
       </div>
   );
