@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Route, Routes} from 'react-router-dom'
 import Sidebar from './components/Sidebar.jsx';
 import Profile from './components/Profile/Profile.jsx';

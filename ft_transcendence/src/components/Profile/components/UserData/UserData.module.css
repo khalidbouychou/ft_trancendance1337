@@ -1,0 +1,285 @@
+.first {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  .search {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .ss {
+      width: 70%;
+      height: 60px;
+      position: relative;
+      border-radius: 30px;
+      box-shadow: 4px 4px 8px black;
+      .input {
+        width: 100%;
+        height: 60px;
+        display: block;
+        border-radius: 30px;
+        padding-left: 20px;
+        font-size: 25px;
+        outline: none;
+        border: none;
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .button {
+        position: absolute;
+        right: -5px;
+        top: 0;
+        width: 70px;
+        height: 100%;
+        background: linear-gradient(90deg, rgb(198, 0, 248), grey);
+        color: white;
+        border-radius: 50%;
+        font-size: 40px;
+        outline: none;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .icon {
+          color: #25233c;
+        }
+      }
+    }
+    @media (max-width: 1024px) {
+      height: 10%;
+      .ss {
+        height: 40px;
+        .input {
+          height: 40px;
+          font-size: 15px;
+        }
+        .button {
+          width: 50px;
+          .icon {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+  .userData {
+    width: 80%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid 1px white;
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255, 0.1);
+    .user {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      gap: 5%;
+      .Image {
+        width: 40%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+          border: solid 2px rgba(255, 255, 255, 0.3);
+          width: 200px;
+          height: 200px;
+          border-radius: 300px;
+        }
+      }
+      .Name {
+        color: white;
+        font-size: 35px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 3%;
+        .onlign {
+          gap: 10px;
+          display: flex;
+          align-items: center;
+          .rnd {
+            width: 15px;
+            height: 15px;
+            background-color: aliceblue;
+            border-radius: 20px;
+            background-color: green;
+          }
+          #online {
+            font-size: 25px;
+          }
+        }
+      }
+    }
+    .statistic {
+      width: 60%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .sttcStyl {
+        width: 80%;
+        height: 80%;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        .res {
+          flex: 1;
+          display: flex;
+          .aspects {
+            width: 30%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+          }
+          .Name {
+            width: 40%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 35px;
+          }
+        }
+      }
+    }
+    @media (max-width: 1800px) {
+      .user {
+        .Image {
+          img {
+            width: 150px;
+            height: 150px;
+          }
+          @media (max-width: 1400px) {
+            img {
+              width: 120px;
+              height: 120px;
+            }
+          }
+        }
+        .Name {
+          font-size: 25px;
+        }
+      }
+      .statistic {
+        .sttcStyl {
+          .res {
+            .aspects {
+              font-size: 40px;
+            }
+            .Name {
+              font-size: 25px;
+            }
+          }
+        }
+      }
+    }
+    @media (max-width: 1280px) {
+      flex-direction: column;
+      .user {
+        gap: 0px;
+        width: 100%;
+        .Image {
+          flex: 1;
+        }
+        .Name {
+          flex: 1;
+        }
+      }
+      .statistic {
+        width: 100%;
+      }
+    }
+    @media (max-width: 768px) {
+      overflow: auto;
+      .user {
+        .Image {
+          img {
+            width: 70px;
+            height: 70px;
+          }
+        }
+        .Name {
+          font-size: 18px;
+          .onlign {
+            #online {
+              font-size: 15px;
+            }
+          }
+        }
+      }
+      .statistic {
+        .sttcStyl {
+          .res {
+            .aspects {
+              font-size: 30px;
+            }
+            .Name {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .level {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    .externFrame {
+      width: 80%;
+      height: 80%;
+      border-radius: 50px;
+      color: white;
+      background: rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      .percentage {
+        flex: 1;
+        height: 100%;
+        background: linear-gradient(to right, #00ff0036, #00cc0090, #009900);
+        border-radius: 50px;
+      }
+    }
+    p {
+      position: absolute;
+      right: 50%;
+      color: white;
+      font-size: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  @media (max-width: 768px) {
+    .search {
+      .ss {
+        width: 90%;
+      }
+    }
+    .userData {
+      width: 100%;
+    }
+    .level {
+      height: 10%;
+      .externFrame {
+        width: 100%;
+      }
+      p {
+        font-size: 20px;
+      }
+    }
+  }
+}
