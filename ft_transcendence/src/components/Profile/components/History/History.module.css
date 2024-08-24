@@ -1,111 +1,177 @@
 .last {
-  width: 80%;
-  /* width: min(500px, 80%); */
-  height: 60%;
-  background-color: aquamarine;
-  .big {
-    display: flex;
-    background-color: red;
-    width: 100%;
-    height: 100%;
-    gap: 2%;
-    background-color: black;
-    .history {
-      display: flex;
-      flex-direction: column;
-      width: 35%;
-      height: 100%;
-      .matches {
-        &:hover {
-          overflow-y: scroll;
-        }
+	/* background-color: bisque; */
+	width: 80%;
+	height: 60%;
+	overflow: auto;
 
-        &::-webkit-scrollbar {
-          width: 10px;
-          height: 100%;
-        }
-
-        &::-webkit-scrollbar-thumb {
-          border-radius: 20px;
-          background-color: #ffffff0a;
-        }
-        padding-top: 10px;
-        width: 100%;
-        height: 90%;
-        display: flex;
-        flex-direction: column;
-        overflow: auto;
-        gap: 10px;
-      }
-    }
-    .friends {
-		display: flex;
-		flex-direction: column;
-		width: 30%;
+	&::-webkit-scrollbar {
+		width: 10px;
 		height: 100%;
-		overflow: auto;
-		display: flex;
-		gap: 10px;
-		&:hover {
-		  overflow-y: scroll;
-		}
-  
-		&::-webkit-scrollbar {
-		  width: 10px;
-		  height: 100%;
-		}
-  
-		&::-webkit-scrollbar-thumb {
-		  border-radius: 20px;
-		  background-color: #ffffff0a;
-		}
-	  }
-	  .matches {
-		display: flex;
-		flex-direction: column;
-		width: 30%;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: 20px;
+		background-color: #7667D9;
+	}
+	.big {
+		/* background-color: black; */
+		width: 100%;
 		height: 100%;
-		overflow: auto;
 		display: flex;
-		gap: 10px;
-		&:hover {
-		  overflow-y: scroll;
+		gap: 5%;
+		.cont {
+			height: 100%;
+			width: 33%;
+			/* background-color: blue; */
+			display: flex;
+			flex-direction: column;
+			border: solid 2px rgba(255, 255, 255, 0.5);
+			.title {
+				width: 100%;
+				height: 10%;
+				background-color: blueviolet;
+				font-size: 30px;
+				color: white;
+				display: flex;
+				padding-left: 5%;
+				align-items: center;
+			}
+			.card {
+				&:hover {
+					overflow-y: scroll;
+				}
+		  
+				&::-webkit-scrollbar {
+					width: 10px;
+					height: 100%;
+				}
+		  
+				&::-webkit-scrollbar-thumb {
+					border-radius: 20px;
+					background-color: #7667D9;
+				}
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				padding: 5% 0 0 5%;
+				/* background-color: blanchedalmond; */
+				width: 100%;
+				height: 100%;
+				overflow: auto;
+			}
 		}
-  
-		&::-webkit-scrollbar {
-		  width: 10px;
-		  height: 100%;
+	}
+	.cardMatch {
+		background-color: rgba(0, 128, 0, 0.4);
+		width: 400px;
+		height: 120px;
+		min-height: 150px;
+		border: solid 2px green;
+		border-radius: 20px;
+		display: flex;
+		.player {
+			/* background-color: black; */
+			flex: 1;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			img {
+				padding: 5px;
+				border-radius: 50px;
+				width: 100px;
+				height: 100px;
+			}
+			p {
+				padding: 5px;
+				color: white;
+			}
 		}
-  
-		&::-webkit-scrollbar-thumb {
-		  border-radius: 20px;
-		  background-color: #ffffff0a;
+		.scoreDate {
+			flex: 1;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			p {
+				padding: 15px;
+				color: white;
+				font-size: 20px;
+			}
 		}
-	  }
-    .blocked {
-      display: flex;
-      flex-direction: column;
-      width: 35%;
-      height: 100%;
-      overflow: auto;
-      display: flex;
-      gap: 10px;
-      &:hover {
-        overflow-y: scroll;
-      }
-
-      &::-webkit-scrollbar {
-        width: 10px;
-        height: 100%;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        border-radius: 20px;
-        background-color: #ffffff0a;
-      }
-    }
-  }
-  .small {
+	}
+	.cardFriend {
+		background-color: rgba(255, 255, 255, 0.2);
+		width: 350px;
+		height: 120px;
+		min-height: 120px;
+		border: solid 1px white;
+		border-radius: 20px;
+		display: flex;
+		.Img {
+			width: 40%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			img {
+				width: 100px;
+				width: 100px;
+				border-radius: 50px;
+			}
+		}
+		.Name {
+			width: 60%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			p {
+				font-size: 20px;
+				color: white;
+			}
+		}
+		.unblock {
+			width: 30%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			button {
+				background: none;
+				border: none;
+				cursor: pointer;
+				&:hover{
+					p {
+						font-size: 22px;
+						transition: 0.5s;
+					}
+				}
+			}
+			p {
+				transition: 0.5s;
+				color: red;
+				font-size: 20px;
+			}
+		} 
+	}
+	.small {
+		display: none;
+		width: 100%;
+		height: 100%;
+	}
+	@media (max-width: 1280px) {
+		.big {
+			display: none;
+		}
+		.small {
+			display: flex;
+		}
+	}
+	@media (max-width: 768px) {
+		width: 100%;
+	}
+}
+.small {
     display: none;
     width: 100%;
     height: 100%;
@@ -130,35 +196,6 @@
     overflow: hidden;
     border: solid 2px green;
     background-color: rgba(0, 128, 0, 0.3);
-    .player {
-      width: 30%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      img {
-        margin: 8px;
-        width: 75px;
-        height: 75px;
-        border-radius: 50px;
-      }
-      p {
-        font-size: 15px;
-        color: white;
-      }
-    }
-    .scoreDate {
-      width: 40%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      p {
-        color: white;
-        font-size: 15px;
-        padding: 10px;
-      }
-    }
   }
   .cardFriend {
     background-color: rgba(255, 255, 255, 0.2);
@@ -181,6 +218,35 @@
         height: 75px;
       }
     }
+	.player {
+		width: 30%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		img {
+		  margin: 8px;
+		  width: 75px;
+		  height: 75px;
+		  border-radius: 50px;
+		}
+		p {
+		  font-size: 15px;
+		  color: white;
+		}
+	  }
+	  .scoreDate {
+		width: 40%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		p {
+		  color: white;
+		  font-size: 15px;
+		  padding: 10px;
+		}
+	  }
     .friendName {
       width: 60%;
       height: 100%;
@@ -221,7 +287,6 @@
 		.small {
 			display: flex;
 			flex-direction: column;
-			background-color: aqua;
 			
 		}
 		.Head {
@@ -235,7 +300,7 @@
 			height: 90%;
 			display: flex;
 			flex-direction: column;
-			overflow: auto;
+			padding: 2%;
 		}
 		.Button {
 			width: 100%;
@@ -283,10 +348,53 @@
 			width: 100%;
 			height: 100%;
 			display: flex;
-			flex-direction: column;
-			overflow: auto;
+			flex-wrap: wrap;
 			gap: 10px;
+			align-content: start;
+			overflow: auto;
 		}
+		.CardMatch {
+			width: 300px;
+			height: 120px;
+			display: flex;
+			background-color: rgba(0, 128, 0, 0.3);
+			border: solid 2px green;
+			border-radius: 20px;
+			.Player {
+				display: flex;
+				flex-direction: column;
+				width: 33%;
+				height: 100%;
+				align-items: center;
+				img {
+					border-radius: 70px;
+					margin-top: 5px;
+					width: 70px;
+					height: 70px;
+				}
+				p {
+					margin-top: 8px;
+					font-size: 12px;
+					color: white;
+				}
+			}
+			.ScoreDate {
+				display: flex;
+				width: 34%;
+				height: 100%;
+				flex-direction: column;
+				align-items: center;
+				gap: 15px;
+				p {
+					font-size: 15px;
+					margin: 8px;
+					color: white;
+				}
+			}
+			@media (max-width: 1136px) {
+				width: 100%;
+			}
+		} 
 		.Friends {
 			&:hover {
 				overflow-y: scroll;
@@ -304,9 +412,62 @@
 			width: 100%;
 			height: 100%;
 			display: flex;
-			flex-direction: column;
+			flex-wrap: wrap;
 			overflow: auto;
 			gap: 10px;
+			align-content: start;
+		}
+		.CardFriend {
+			background-color: rgba(255, 255, 255, 0.2);
+			width: 300px;
+			height: 100px;
+			border: solid 2px white;
+			border-radius: 20px;
+			display: flex;
+			.image {
+				width: 40%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				img {
+					width: 70px;
+					height: 70px;
+					margin: 10px;
+					border-radius: 100px;
+				}
+			}
+			.Name {
+				width: 60%;
+				height: 100%;
+				display: flex;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: white;
+				p {
+					font-size: 15px;
+				}
+			}
+			.unblock {
+				width: 30%;
+				height: 100%;
+				overflow: hidden;
+				button {
+				  transition: 0.5s;
+				  cursor: pointer;
+				  background-color: transparent;
+				  width: 100%;
+				  height: 100%;
+				  border: none;
+				  font-size: 18px;
+				  color: red;
+				  &:hover {
+					font-size: 20px;
+					transition: 0.5s;
+				  }
+				}
+			  }
 		}
 		.Blocked {
 			&:hover {
@@ -325,9 +486,10 @@
 			width: 100%;
 			height: 100%;
 			display: flex;
-			flex-direction: column;
+			flex-wrap: wrap;
+			align-content: start;
 			overflow: auto;
 			gap: 10px;
 		}
 	}
-}
+
