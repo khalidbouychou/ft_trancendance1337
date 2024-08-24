@@ -4,7 +4,7 @@
   
   .sidebar {
     width: 250px;
-    background-color: #f4f4f4;
+    /* background-color: #f4f4f4; */
     padding: 10px;
   }
   
@@ -16,4 +16,3 @@
     background-repeat: no-repeat;
     background-position: center;
   }
-  
