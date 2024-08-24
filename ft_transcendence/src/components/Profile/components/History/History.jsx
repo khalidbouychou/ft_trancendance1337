@@ -1,11 +1,15 @@
-import styl from "./History.module.css";
-import userImage from "../../assets/nouahidi.jpeg";
-import { useState } from "react";
+import styl from "./History.module.css"
+import userImage from "../../assets/nouahidi.jpeg"
+import Add from "../../assets/Add.svg"
+import Chat from "../../assets/Chat.svg"
+import Block from "../../assets/Block.svg"
+import { useState } from "react"
 
 
 
 const History = () => {
 
+  // const isMyProfile = 1
   const [activeSection, setActiveSection] = useState("matchhistory")
 
   return (
@@ -47,7 +51,33 @@ const History = () => {
         </div>
       </div>
       <div className={styl.cont}>
-        <div className={styl.title}>Blocked</div>
+        <div className={styl.settings}>
+          <div className={styl.objects}>
+            <div className={styl.Icons}>
+              <img src={Add}></img>
+            </div>
+            <div className={styl.settingName}>
+              <p >Add Friend</p>
+            </div>
+          </div>
+          <div className={styl.objects}>
+            <div className={styl.Icons}>
+                <img src={Chat}></img>
+              </div>
+              <div className={styl.settingName}>
+                <p >Chat</p>
+              </div>
+          </div>
+          <div className={styl.objects}>
+            <div className={styl.Icons}>
+              <img src={Block}></img>
+            </div>
+            <div className={styl.settingName}>
+              <p >Block User</p>
+            </div>
+          </div>
+        </div>
+        {/* <div className={styl.title}>Blocked</div>
         <div className={styl.card}>
           <div className={styl.cardFriend} style={{width: '400px'}}>
             <div className={styl.Img} style={{width: '30%'}}>
@@ -60,7 +90,8 @@ const History = () => {
               <button ><p >UNBLOCK</p></button>
             </div>
           </div>
-        </div>
+        </div> */}
+
       </div>
     </div>
     <div className={styl.small}>
