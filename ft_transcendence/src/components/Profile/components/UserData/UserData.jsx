@@ -30,17 +30,16 @@ const UserData = () => {
           {/*userImage*/}
 
           <div className={styl.Image}>
-            <img src={userImage}></img>
+            <div className={styl.imgStl}>
+              <img src={userImage}></img>
+              <div className={styl.rndOnli}></div>
+            </div>
           </div>
 
           {/* userName */}
 
           <div className={styl.Name}>
             <p>NOUREDDINE</p>
-            <div className={styl.onlign}>
-              <div className={styl.rnd}></div>
-              <p id={styl.online}>online</p>
-            </div>
           </div>
         </div>
 

@@ -87,11 +87,30 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        img {
-          border: solid 2px rgba(255, 255, 255, 0.3);
+        position: relative;
+        .imgStl {
           width: 200px;
           height: 200px;
-          border-radius: 300px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          .rndOnli {
+            background-color: #009900;
+            border: solid 1px rgba(255, 255, 255, 0.5);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            position: absolute;
+            right: 5%;
+            top: 18%;
+          }
+          img {
+            border: solid 2px rgba(255, 255, 255, 0.3);
+            width: 200px;
+            height: 200px;
+            border-radius: 300px;
+          }
         }
       }
       .Name {
@@ -156,14 +175,18 @@
     @media (max-width: 1800px) {
       .user {
         .Image {
-          img {
+          .imgStl {
             width: 150px;
             height: 150px;
-          }
-          @media (max-width: 1400px) {
             img {
-              width: 120px;
-              height: 120px;
+              width: 100%;
+              height: 100%;
+            }
+            @media (max-width: 1400px) {
+              img {
+                width: 100%;
+                height: 100%;
+              }
             }
           }
         }
@@ -204,10 +227,18 @@
       overflow: auto;
       .user {
         .Image {
-          img {
+          .imgStl {
             width: 70px;
             height: 70px;
+          img {
+            width: 100%;
+            height: 100%;
           }
+          .rndOnli {
+              width: 12px;
+              height: 12px;
+          }
+        }
         }
         .Name {
           font-size: 18px;
