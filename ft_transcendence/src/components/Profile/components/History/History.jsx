@@ -1,101 +1,36 @@
 import styl from "./History.module.css"
 import userImage from "../../assets/nouahidi.jpeg"
-import Add from "../../assets/Add.svg"
-import Chat from "../../assets/Chat.svg"
-import Block from "../../assets/Block.svg"
-import { useState } from "react"
+// import Add from "../../assets/Add.svg"
+// import Chat from "../../assets/Chat.svg"
+// import Block from "../../assets/Block.svg"
+import { useState, useEffect } from "react"
+import CardFriend from "./components/CardFriend/CardFriend";
+import CardBlocked from "./components/CardBlocked/CardBlocked";
+import CardMatch from "./components/CardMatch/CardMatch";
+// import Big from './components/Big/Big'
+// import Small from "./components/Small/Small"
 
 
 
 const History = () => {
-
-  // const isMyProfile = 1
+  const ismyprofil = 0
   const [activeSection, setActiveSection] = useState("matchhistory")
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const cardWidth = width <= 1800 ? '320px' : '400px';
 
   return (
     <div className={styl.last}>
-
-    <div className={styl.big}>
-      <div className={styl.cont}>
-        <div className={styl.title}>Match History</div>
-        <div className={styl.card}>
-          <div className={styl.cardMatch}>
-            <div className={styl.player}>
-              <img src={userImage}></img>
-              <p >NOUREDDINE</p>
-            </div>
-            <div className={styl.scoreDate}>
-              <p >2024-08-23</p>
-              <p >3 - 2</p>
-            </div>
-            <div className={styl.player}>
-              <img src={userImage}></img>
-              <p >NOUREDDINE</p>
-            </div>
-          </div>
-          <div className={styl.cardMatch}></div>
-        </div>
-      </div>
-      <div className={styl.cont}>
-        <div className={styl.title}>Friends</div>
-        <div className={styl.card}>
-          <div className={styl.cardFriend}>
-            <div className={styl.Img}>
-              <img src={userImage}></img>
-            </div>
-            <div className={styl.Name}>
-              <p >NOUREDDINE</p>
-            </div>
-          </div>
-          <div className={styl.cardFriend}></div>
-        </div>
-      </div>
-      <div className={styl.cont}>
-        <div className={styl.settings}>
-          <div className={styl.objects}>
-            <div className={styl.Icons}>
-              <img src={Add}></img>
-            </div>
-            <div className={styl.settingName}>
-              <p >Add Friend</p>
-            </div>
-          </div>
-          <div className={styl.objects}>
-            <div className={styl.Icons}>
-                <img src={Chat}></img>
-              </div>
-              <div className={styl.settingName}>
-                <p >Chat</p>
-              </div>
-          </div>
-          <div className={styl.objects}>
-            <div className={styl.Icons}>
-              <img src={Block}></img>
-            </div>
-            <div className={styl.settingName}>
-              <p >Block User</p>
-            </div>
-          </div>
-        </div>
-        {/* <div className={styl.title}>Blocked</div>
-        <div className={styl.card}>
-          <div className={styl.cardFriend} style={{width: '400px'}}>
-            <div className={styl.Img} style={{width: '30%'}}>
-              <img src={userImage} ></img>
-            </div>
-            <div className={styl.Name} style={{width: '40%'}}>
-              <p >NOUREDDINE</p>
-            </div>
-            <div className={styl.unblock}>
-              <button ><p >UNBLOCK</p></button>
-            </div>
-          </div>
-        </div> */}
-
-      </div>
-    </div>
-    <div className={styl.small}>
-      <div className={styl.Head}>
+      <div className={styl.Title}>
         <button
           onClick={() => setActiveSection("matchhistory")}
           className={styl.Button}
@@ -117,98 +52,23 @@ const History = () => {
       </div>
       <div className={styl.cont}>
         {activeSection === "matchhistory" && (
-          <div className={styl.mHistory}>
-            <div className={styl.CardMatch}>
-                <div className={styl.Player}>
-                  <img src={userImage}></img>
-                  <p >NOUREDDINE</p>
-                </div>
-                <div className={styl.ScoreDate}>
-                  <p >2024-08-24</p>
-                  <p >3 - 2</p>
-                </div>
-                <div className={styl.Player}>
-                  <img src={userImage}></img>
-                  <p >NOUREDDINE</p>
-                </div>
-            </div>
+          <div className={styl.matchHistory}>
+            <CardMatch />
           </div>
         )}
         {activeSection === "friends" && (
-          <div className={styl.Friends}>
-            <div className={styl.CardFriend}>
-              <div className={styl.image}>
-                <img src={userImage}></img>
-              </div>
-              <div className={styl.Name}>
-                <p>NOUREDDINE</p>
-              </div>
-            </div>
-            <div className={styl.CardFriend}>
-              <div className={styl.image}>
-                <img src={userImage}></img>
-              </div>
-              <div className={styl.Name}>
-                <p>NOUREDDINE</p>
-              </div>
-            </div>
-            <div className={styl.CardFriend}>
-              <div className={styl.image}>
-                <img src={userImage}></img>
-              </div>
-              <div className={styl.Name}>
-                <p>NOUREDDINE</p>
-              </div>
-            </div>
+          <div className={styl.friends}>
+            <CardFriend />
           </div>
         )}
         {activeSection === "blocked" && (
-          <div className={styl.Blocked}>
-            <div className={styl.CardFriend}>
-              <div className={styl.image} style={{width: '30%'}}>
-                <img src={userImage}></img>
-              </div>
-              <div className={styl.Name} style={{width: '40%'}}>
-                <p>NOUREDDINE</p>
-              </div>
-              <div className={styl.unblock}>
-                <button >
-                  Unblock
-                </button>
-              </div>
-            </div>
-            <div className={styl.CardFriend}>
-              <div className={styl.image} style={{width: '30%'}}>
-                <img src={userImage}></img>
-              </div>
-              <div className={styl.Name} style={{width: '40%'}}>
-                <p>NOUREDDINE</p>
-              </div>
-              <div className={styl.unblock}>
-                <button >
-                  Unblock
-                </button>
-              </div>
-            </div>
-            <div className={styl.CardFriend}>
-              <div className={styl.image} style={{width: '30%'}}>
-                <img src={userImage}></img>
-              </div>
-              <div className={styl.Name} style={{width: '40%'}}>
-                <p>NOUREDDINE</p>
-              </div>
-              <div className={styl.unblock}>
-                <button >
-                  Unblock
-                </button>
-              </div>
-            </div>
+          <div className={styl.blocked}>
+            <CardBlocked />
           </div>
         )}
       </div>
-    </div>
 
-  </div>
+    </div>
   );
 };
 
