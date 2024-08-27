@@ -1,54 +1,43 @@
-import styl from "./History.module.css"
-import userImage from "../../assets/nouahidi.jpeg"
-// import Add from "../../assets/Add.svg"
-// import Chat from "../../assets/Chat.svg"
-// import Block from "../../assets/Block.svg"
-import { useState, useEffect } from "react"
+import React, { useState } from "react";
+import styl from "./History.module.css";
 import CardFriend from "./components/CardFriend/CardFriend";
 import CardBlocked from "./components/CardBlocked/CardBlocked";
 import CardMatch from "./components/CardMatch/CardMatch";
-// import Big from './components/Big/Big'
-// import Small from "./components/Small/Small"
-
-
 
 const History = () => {
-  const ismyprofil = 0
-  const [activeSection, setActiveSection] = useState("matchhistory")
-  const [width, setWidth] = useState(window.innerWidth);
+  const [activeSection, setActiveSection] = useState("matchhistory");
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const cardWidth = width <= 1800 ? '320px' : '400px';
+  const handleClick = (section) => {
+    setActiveSection(section);
+  };
 
   return (
     <div className={styl.last}>
       <div className={styl.Title}>
-        <button
-          onClick={() => setActiveSection("matchhistory")}
-          className={styl.Button}
-        >
-          MATCH HISTORY
-        </button>
-        <button
-          onClick={() => setActiveSection("friends")}
-          className={styl.Button}
-        >
-          FRIENDS
-        </button>
-        <button
-          onClick={() => setActiveSection("blocked")}
-          className={styl.Button}
-        >
-          BLOCKED
-        </button>
+        <div className={styl.button}>
+          <button
+            onClick={() => handleClick("matchhistory")}
+            className={`${styl.Button} ${activeSection === "matchhistory" ? styl.Clicked : ""}`}
+          >
+            MATCH HISTORY
+          </button>
+        </div>
+        <div className={styl.button}>
+          <button
+            onClick={() => handleClick("friends")}
+            className={`${styl.Button} ${activeSection === "friends" ? styl.Clicked : ""}`}
+          >
+            FRIENDS
+          </button>
+        </div>
+        <div className={styl.button}>
+          <button
+            onClick={() => handleClick("blocked")}
+            className={`${styl.Button} ${activeSection === "blocked" ? styl.Clicked : ""}`}
+          >
+            BLOCKED
+          </button>
+        </div>
       </div>
       <div className={styl.cont}>
         {activeSection === "matchhistory" && (
@@ -67,10 +56,8 @@ const History = () => {
           </div>
         )}
       </div>
-
     </div>
   );
 };
-
 
 export default History;

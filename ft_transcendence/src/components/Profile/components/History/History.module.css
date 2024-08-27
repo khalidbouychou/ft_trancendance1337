@@ -5,7 +5,7 @@
 	/* border: solid 2px white; */
 	display: flex;
 	flex-direction: column ;
-	gap: 20px;
+	gap: 30px;
 	@media (max-width: 768px) {
 		width: 100%;
 	}
@@ -14,7 +14,7 @@
 .Title {
 	/* background-color: aqua; */
 	width: 100%;
-	height: 15%;
+	height: 20%;
 	display: flex;
 	gap: 5%;
 	.settings {
@@ -27,36 +27,56 @@
 	/* background-color: aquamarine; */
 	display: flex;
 	width: 100%;
-	height: 85%;
+	height: 80%;
 }
+.button {
+	display: flex;
+	flex: 1;
+	justify-content: center;
+	align-items: center;
+}
+
 .Button {
 	width: 100%;
 	height: 100%;
-	border: solid 2px #7667D9;
 	color: white;
 	cursor: pointer;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-size: 20px;
-	background-color: rgba(255, 255, 255, 0.1);
-	border-radius: 10px;
-	transition: 0.5s;
-	&:hover {
-		font-size: 22px;
-		transition: 0.5s;
-	}
-	&::after {
-		background-color: #7667D9;
-	}
-	@media (max-width: 1024px) {
+	font-size: 18px;
+	background: radial-gradient(circle at 30% 30%, #82196f, #250226);
+	border: none;
+	/* border-radius: 50%; Ensure the button is circular */
+	box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.3),
+				inset 10px 10px 20px rgba(255, 255, 255, 0.3),
+				10px 10px 20px rgba(0, 0, 0, 0.2);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.Button:active {
+	transform: scale(0.9) translateZ(-10px);
+	box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.4),
+				inset 10px 10px 20px rgba(255, 255, 255, 0.5),
+				10px 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.Button:focus {
+	outline: none;
+}
+
+@media (max-width: 1024px) {
+	.Button {
+		width: 150px;
+		height: 150px;
 		font-size: 15px;
-		&:hover {
-			font-size: 17px;
-			transition: 0.5s;
-		}
+	}
+	.Button:hover {
+		font-size: 17px;
+		transition: font-size 0.5s ease;
 	}
 }
+
 .matchHistory {
 	&:hover {
 		overflow-y: scroll;
@@ -303,3 +323,22 @@
 	}
 }
 
+.ball_3d {
+	width: 100px;
+	height: 100px;
+	background: radial-gradient(circle at 30% 30%, #ff6f61, #d84315);
+	border-radius: 50%;
+	box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.3),
+				inset 10px 10px 20px rgba(255, 255, 255, 0.3),
+				10px 10px 20px rgba(0, 0, 0, 0.2);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	cursor: pointer;
+  }
+  
+  .ball_3d_clicked {
+	transform: scale(0.9) translateZ(-10px);
+	box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.3),
+				inset 5px 5px 10px rgba(255, 255, 255, 0.3),
+				5px 5px 10px rgba(0, 0, 0, 0.4);
+  }
+  
