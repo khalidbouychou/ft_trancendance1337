@@ -3,6 +3,10 @@ import styl from "./History.module.css";
 import CardFriend from "./components/CardFriend/CardFriend";
 import CardBlocked from "./components/CardBlocked/CardBlocked";
 import CardMatch from "./components/CardMatch/CardMatch";
+import Add from '../../assets/Add.svg'
+import Chat from '../../assets/Chat.svg'
+import Block from '../../assets/Block.svg'
+import Settings from "./components/Settings/Settings";
 
 const History = () => {
   const [activeSection, setActiveSection] = useState("matchhistory");
@@ -10,6 +14,9 @@ const History = () => {
   const handleClick = (section) => {
     setActiveSection(section);
   };
+
+  const ismyprofil = 0
+
 
   return (
     <div className={styl.last}>
@@ -31,12 +38,21 @@ const History = () => {
           </button>
         </div>
         <div className={styl.button}>
-          <button
-            onClick={() => handleClick("blocked")}
-            className={`${styl.Button} ${activeSection === "blocked" ? styl.Clicked : ""}`}
-          >
-            BLOCKED
-          </button>
+        {ismyprofil === 0 ? (
+            <button
+              onClick={() => handleClick("settings")}
+              className={`${styl.Button} ${activeSection === "settings" ? styl.Clicked : ""}`}
+            >
+              SETTINGS
+            </button>
+          ) : (
+            <button
+              onClick={() => handleClick("blocked")}
+              className={`${styl.Button} ${activeSection === "blocked" ? styl.Clicked : ""}`}
+            >
+              BLOCKED
+            </button>
+          )}
         </div>
       </div>
       <div className={styl.cont}>
@@ -48,12 +64,21 @@ const History = () => {
         {activeSection === "friends" && (
           <div className={styl.friends}>
             <CardFriend />
+            <CardFriend />
+            <CardFriend />
+            <CardFriend />
+            <CardFriend />
+            <CardFriend />
+            <CardFriend />
           </div>
         )}
         {activeSection === "blocked" && (
-          <div className={styl.blocked}>
+          <div className={styl.block}>
             <CardBlocked />
           </div>
+        )}
+        {activeSection === "settings" && (
+            <Settings />
         )}
       </div>
     </div>
