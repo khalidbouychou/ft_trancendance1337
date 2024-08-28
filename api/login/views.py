@@ -11,13 +11,35 @@ from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from cryptography.fernet import Fernet
 
-import json
+import random
 from django.http import HttpResponse
-
+import imaplib
+import smtplib
+from email.mime.text import MIMEText
 
 C_ID = "u-s4t2ud-10425a09a5efb6f3e2c38b8af2d35cc79fc8446ccabb8a4657ca4fc319ed8273"
 SCID = "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"
 REDIRECT_URI = "http://localhost:3000/"
+
+
+def send_otp_code(otp_code, email):
+    # Define the email settings
+    sender_email = 'khalidbouychou22@gmail.com'
+    sender_password = 'lwalidalwalidg712178'
+    recipient_email = email
+
+    # Create the email message
+    message = MIMEText(f'Your OTP code is: {otp_code}')
+    message['Subject'] = 'OTP Code'
+    message['From'] = sender_email
+    message['To'] = recipient_email
+
+    # Send the email
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(sender_email, sender_password)
+    server.sendmail(sender_email, recipient_email, message.as_string())
+    server.quit()
 
 
 def search_user(username):
@@ -107,13 +129,21 @@ class PlayerViewSet(viewsets.ModelViewSet):
             if not user :
                 user = self.create_user(user_data)
 
-            print('user ---- >',user)
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
+            user.two_factor = True
+            # if user.two_factor:
+            #     # otp = random.randint(100000, 999999)
+            #     # user.otp = otp
+            #     # user.save()
+            #     # send_otp_code(otp, user.email)
+            #     print('twofa ---- >',user.two_factor)
+            # print('twofa ---- >',user.two_factor)
             # Create response
             response_data = {
                 'status': 'success',
-                'two_factor': user.two_factor,
+                'tofa': user.two_factor,
+                'otp': user.otp,
             }
             response = Response(response_data, status=status.HTTP_200_OK)
             response.set_cookie(
