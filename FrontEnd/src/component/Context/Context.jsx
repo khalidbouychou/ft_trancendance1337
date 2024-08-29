@@ -26,11 +26,6 @@ export default function ContextProvider({ children }) {
           });
           if (res.status === 200 && res.statusText === "OK")
             {
-              // console.log(res.data);
-              // if (res.data['twofa'] === true) {
-              //   setTwofa(true);
-              //   navigate("/twofa");
-              // }
               navigate('/home');
               localStorage.setItem("is_logged", true);
               setLogged(localStorage.getItem("is_logged"));
@@ -43,27 +38,6 @@ export default function ContextProvider({ children }) {
     auth();
   }, []);
 
-  // useEffect(() => {
-  //   async function checktoken() {
-  //     try {
-  //       const res = await axios.get("http://localhost:8000/api/token_status/", {
-  //         withCredentials: true
-  //       });
-  //       console.log("res.data['valid']:", res.data['valid']);
-  //         if (res.data['valid'] === false) {
-  //           localStorage.clear();
-  //           setLogged(false);
-  //           navigate("/login");
-  //         }
-  //     } catch (error) {
-  //       console.error("Check token error:", error);
-  //     }
-  //   }
-  //   checktoken();
-  // }, [token,islogged,location.pathname,navigate]);
-
-
-
   return (
     <authContext.Provider
       value={{
@@ -71,7 +45,7 @@ export default function ContextProvider({ children }) {
         islogged,
         setToken,
         setLogged,
-        twofa // Fix the variable name from 'towfa' to 'twofa'
+        twofa
       }}
     >
       <>

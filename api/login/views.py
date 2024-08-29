@@ -16,31 +16,15 @@ from django.http import HttpResponse
 import imaplib
 import smtplib
 from email.mime.text import MIMEText
+import os
+from dotenv import load_dotenv
 
-C_ID = "u-s4t2ud-10425a09a5efb6f3e2c38b8af2d35cc79fc8446ccabb8a4657ca4fc319ed8273"
-SCID = "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"
-REDIRECT_URI = "http://localhost:3000/"
+# Load environment variables from .env file
+load_dotenv()
 
-
-def send_otp_code(otp_code, email):
-    # Define the email settings
-    sender_email = 'khalidbouychou22@gmail.com'
-    sender_password = 'lwalidalwalidg712178'
-    recipient_email = email
-
-    # Create the email message
-    message = MIMEText(f'Your OTP code is: {otp_code}')
-    message['Subject'] = 'OTP Code'
-    message['From'] = sender_email
-    message['To'] = recipient_email
-
-    # Send the email
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(sender_email, sender_password)
-    server.sendmail(sender_email, recipient_email, message.as_string())
-    server.quit()
-
+C_ID = os.getenv('CID')
+SCID = os.getenv('SCID')
+REDIRECT_URI = os.getenv('REDIRECT_URI')
 
 def search_user(username):
     try:
@@ -53,11 +37,6 @@ def check_user_if_exist(login):
     if User.objects.filter(username=login).exists():
         return True
     return False
-
-
-
-
-
 
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
@@ -132,14 +111,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
             user.two_factor = True
-            # if user.two_factor:
-            #     # otp = random.randint(100000, 999999)
-            #     # user.otp = otp
-            #     # user.save()
-            #     # send_otp_code(otp, user.email)
-            #     print('twofa ---- >',user.two_factor)
-            # print('twofa ---- >',user.two_factor)
-            # Create response
             response_data = {
                 'status': 'success',
                 'tofa': user.two_factor,

@@ -22,16 +22,6 @@ useEffect(() => {
 }, [])
 
   return (
-    // <div className={styl.all}>
-    //   <div className={styl.log}>
-    //     <a
-    //       href={url}
-    //     >
-    //       <img src="./img/42logo.png" />
-    //     </a>
-    //   </div>
-    // </div>
-
     <div className="hh">
       <div className="split-container">
 
