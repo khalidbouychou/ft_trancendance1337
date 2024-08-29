@@ -1,0 +1,16 @@
+
+channels
+channels-redis
+
+daphne
+Django
+django-cors-headers
+djangorestframework
+djangorestframework-simplejwt
+hyperlink
+rest-framework-simplejwt
+requests
+django-two-factor-auth
+django-otp
+
+python-dotenv
