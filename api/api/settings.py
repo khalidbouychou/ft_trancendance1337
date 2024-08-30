@@ -39,11 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'login',
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
-    # 'login',
+    'rest_framework_simplejwt',
+    'login',
+    'game',
+    'game_two',
+    'chat',
+    'profile',
 ]
 
 MIDDLEWARE = [

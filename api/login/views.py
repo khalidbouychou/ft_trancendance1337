@@ -49,7 +49,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             email=user_data['email'],
         )
         user.avatar = user_data['avatar']
-        user.cover = user_data['avatar']
         user.email = user_data['email']
         user.set_unusable_password()  # Assuming password is not used
         user.save()
@@ -164,23 +163,23 @@ class PlayerViewSet(viewsets.ModelViewSet):
         except Exception:
             return Response({'msg': 'notauth'}, status=400)
 
-    def check_2fa(self, request):
-        player = request.user
-        serializer = PlayerSerializer(player)
-        print('player ---- >',serializer.data)
-        return Response(serializer.data)
+    # def check_2fa(self, request):
+    #     player = request.user
+    #     serializer = PlayerSerializer(player)
+    #     print('player ---- >',serializer.data)
+    #     return Response(serializer.data)
 
-    def getallusers(self, request):
-        players = Player.objects.all()
-        serializer = PlayerSerializer(players, many=True)
-        users =[{
-            'username' : player['username'],
-            'avatar' : player['avatar'],
-            'email' : player['email'],
-            'two_factor' : player['two_factor'],
-            'is_online' : player['is_online']
-        }
-        for player in  serializer.data
-        ]
-        print('players ---- >',users)
-        return Response(users)
+    # def getallusers(self, request):
+    #     players = Player.objects.all()
+    #     serializer = PlayerSerializer(players, many=True)
+    #     users =[{
+    #         'username' : player['username'],
+    #         'avatar' : player['avatar'],
+    #         'email' : player['email'],
+    #         'two_factor' : player['two_factor'],
+    #         'is_online' : player['is_online']
+    #     }
+    #     for player in  serializer.data
+    #     ]
+    #     print('players ---- >',users)
+    #     return Response(users)
