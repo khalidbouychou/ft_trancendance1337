@@ -6,7 +6,7 @@ import Home from './components/Home/Home.jsx';
 import Game from './pages/Game.jsx';
 import Chat from './pages/Chat.jsx';
 import Achievement from './pages/Achievement.jsx';
-import Notificationz from './pages/Notification.jsx';
+import Notificationz from './components/Notification/Notification.jsx';
 import None from './pages/None.jsx';
 import style from './App.module.css'
 

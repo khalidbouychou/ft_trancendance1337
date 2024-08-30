@@ -25,10 +25,14 @@
     display: grid;
     align-items: center;
     color: white;
+	@media (max-width: 768px) {
+        font-size:30px;
+        font-weight:100;
+        letter-spacing:4px;
+    }
 }
 
 .last {
-	/* background-color: bisque; */
 	width: 80%;
 	height: 60%;
 	overflow: auto;
@@ -66,9 +70,6 @@
 				align-items: center;
 			}
 			.card {
-				&:hover {
-					overflow-y: scroll;
-				}
 		  
 				&::-webkit-scrollbar {
 					width: 10px;

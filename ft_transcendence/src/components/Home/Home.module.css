@@ -23,6 +23,11 @@
     display: grid;
     align-items: center;
     color: white;
+    @media (max-width: 768px) {
+        font-size:30px;
+        font-weight:100;
+        letter-spacing:4px;
+    }
 }
 
 .first {
