@@ -4,7 +4,7 @@ from .models import User, FriendShip,BlockedFriend
 class UserSerialiser(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'name', 'login', 'level', 'ratio', 'match_total', 'wins', 'losses', 'percentage']
+        fields = ['id', 'name', 'login', 'level', 'ratio', 'match_total', 'wins', 'losses', 'percentage', 'image', 'xp', 'online']
 
 class BlockedFriendSerializer(serializers.ModelSerializer):
     blocked_friend = UserSerialiser()
@@ -17,6 +17,3 @@ class FriendshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = FriendShip
         fields = ['id', 'friend']
-
-
-    

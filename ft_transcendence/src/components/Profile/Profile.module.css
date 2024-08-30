@@ -17,23 +17,14 @@
 	/* background-color: aquamarine; */
 }
 
-.head {
-	width: 100%;
-	height: 100px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: white;
-	font-size: 55px;
-	@media (max-width: 1536px) {
-		font-size: 45px;
-		height: 60px;
-	}
-	
-	@media (max-width: 1024px) {
-		font-size: 30px;
-	}
-
+.head h1 
+{
+    text-align: center;
+    font-size:50px; font-weight:300; letter-spacing:15px;
+    text-transform: uppercase;
+    display: grid;
+    align-items: center;
+    color: white;
 }
 
 .last {

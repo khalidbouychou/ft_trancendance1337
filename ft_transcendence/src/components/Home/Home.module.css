@@ -1,0 +1,300 @@
+.Home{
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	background-color: #25233C;
+	overflow: auto;
+}
+
+.cont {
+    margin: 3%;
+	width: 90%;
+	height: 1500px;
+	display: flex;
+	flex-direction: column;
+}
+
+.head h1 
+{
+    text-align: center;
+    font-size:50px; font-weight:300; letter-spacing:15px;
+    text-transform: uppercase;
+    display: grid;
+    align-items: center;
+    color: white;
+}
+
+.first {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    min-width: 280px;
+}
+.Intro {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.logo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.intro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50%;
+    .str {
+        width: 100%;
+        height: 70%;
+        font-size: 50px;
+        color: white;
+        @media (max-width: 1536px) {
+            font-size: 40px;
+        }
+    }
+}
+@media (max-width: 1024px) {
+    .logo {
+        display: none;
+    }
+}
+.Play {
+    display: flex;
+    width: 100%;
+    height: 50%;
+    button {
+        width: 50%;
+        height: 100px;
+        background-color: #812185; 
+        border: none;
+        border-radius: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0px 4px 8px rgba(151, 19, 79, 0.5);
+        transition: background-color 0.3s, box-shadow 0.3s;
+        p {
+            font-size: 40px;
+            color: white;
+        }
+    }
+    button:hover {
+        background-color: #5e005e;
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4);
+    }
+    button:active {
+        background-color: #560856;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    @media (max-width: 1536px) {
+       button {
+        width: 100%;
+       }
+    }
+}
+@media (max-width: 768px) {
+    .intro {
+        height: 70%;
+    }
+    .Play {
+        height: 30%;
+    }
+}
+@media (max-width: 425px) {
+    .intro {
+        width: 80%;
+        .str {
+            font-size: 35px;
+        }
+    }
+    .Play {
+        button {
+            p{
+                font-size: 30px;
+            }
+            width: 100%;
+            height: 70px;
+        }
+    }
+
+}
+
+
+
+.last {
+    width: 85%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    @media (max-width: 1775px) {
+        width: 100%;        
+    }
+}
+.Leaderboard {
+    font-size: 30px;
+    display: flex;
+    gap: 10px;
+    color: white;
+}
+.content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+    padding: 2%;
+    gap: 20px;
+    &::-webkit-scrollbar {
+		width: 10px;
+		height: 100%;
+	}
+	
+	&::-webkit-scrollbar-thumb {
+		border-radius: 20px;
+		background-color: #ffffff0a;
+	}
+}
+.CardRank {
+    width: 100%;
+    height: 200px;
+    min-height: 200px;
+    display: flex;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    hr {
+        height: 50%;
+        margin-top: 50px;
+    }
+}
+.rank {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5%;
+    p {
+        font-size: 30px;
+        color: white;
+    }
+}
+.user {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    img {
+        border-radius: 100px;
+        width: 120px;
+        height: 120px;
+        @media (max-width: 1850px) {
+            width: 100px;
+            height: 100px;
+        }
+    }
+    p {
+        color: white;
+    }
+    @media (max-width: 1536px) {
+        flex-direction: column;
+    }
+}
+.Wins {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5%;
+    p {
+        color: white;
+        font-size: 30px;
+    }
+}
+
+.level {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.Lvl {
+    position: absolute;
+    font-size: 25px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+@media (max-width: 768px) {
+    .CardRank {
+        height: 150px;
+        min-height: 150px;
+        hr {
+            height: 50%;
+            margin-top: 40px;
+        }
+        .rank {
+            p{
+                font-size: 25px;
+            }
+        }
+        .user {
+            gap: 10px;
+            img {
+                width: 80px;
+                height: 80px;
+            }
+            p {
+                font-size: 15px;
+            }
+        }
+        .Wins {
+            p{
+                font-size: 25px;
+            }
+        }
+        .level {
+            .Lvl {
+                font-size: 20px;
+            }
+        }
+        @media (max-width: 500px) {
+            .rank {
+                width: 40%;
+            }
+            .user {
+                width: 60%;
+            }
+            .Wins {
+                display: none;
+            }
+            .level {
+                display: none;
+            }
+        }
+    }
+}

@@ -1,11 +1,19 @@
 import styl from "./UserData.module.css";
 import userImage from "../../assets/nouahidi.jpeg";
+import PropTypes from 'prop-types';
 import { CiMedal } from "react-icons/ci";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { VscChromeClose } from "react-icons/vsc";
 import { FaSearchengin } from "react-icons/fa6";
 
-const UserData = () => {
+const UserData = ({userData}) => {
+  const baseXP = 100;
+  const incrementXP = userData.xp;
+  const level = userData.level;
+
+  const xpForCurrentLevel = baseXP + (level - 1) * incrementXP;
+  const xpForNextLevel = baseXP + level * incrementXP;
+  const percentageProgress = (xpForCurrentLevel / xpForNextLevel) * 100;
   return (
     <div className={styl.first}>
       {/* search */}
@@ -31,15 +39,15 @@ const UserData = () => {
 
           <div className={styl.Image}>
             <div className={styl.imgStl}>
-              <img src={userImage}></img>
-              <div className={styl.rndOnli}></div>
+              <img src={userData.image}></img>
+              <div className={styl.rndOnli} style={{ backgroundColor: userData?.online ? 'green' : 'red' }}></div>
             </div>
           </div>
 
           {/* userName */}
 
           <div className={styl.Name}>
-            <p>NOUREDDINE</p>
+            <p>{userData.name.toUpperCase()}</p>
           </div>
         </div>
 
@@ -55,7 +63,7 @@ const UserData = () => {
                 <p>WINS</p>
               </div>
               <div className={styl.aspects}>
-                <p>10</p>
+                <p>{userData.wins}</p>
               </div>
             </div>
             <div className={styl.res}>
@@ -66,7 +74,7 @@ const UserData = () => {
                 <p>LOSE</p>
               </div>
               <div className={styl.aspects}>
-                <p>10</p>
+                <p>{userData.losses}</p>
               </div>
             </div>
             <div className={styl.res}>
@@ -77,7 +85,7 @@ const UserData = () => {
                 <p>GAMES</p>
               </div>
               <div className={styl.aspects}>
-                <p>10</p>
+                <p>{userData.match_total}</p>
               </div>
             </div>
           </div>
@@ -87,7 +95,7 @@ const UserData = () => {
         <div className={styl.externFrame}>
           <div className={styl.percentage} style={{ width: "80%" }}></div>
         </div>
-        <p>1 - 50%</p>
+        <p>{userData.level} - {Math.round(percentageProgress)}%</p>
       </div>
     </div>
   );

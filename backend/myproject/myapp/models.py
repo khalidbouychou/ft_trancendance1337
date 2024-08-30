@@ -11,6 +11,10 @@ class User(models.Model):
     match_total = models.IntegerField(blank=False)
     wins = models.IntegerField(blank=False)
     losses = models.IntegerField(blank=False)
+    xp = models.IntegerField(blank=False)
+    online = models.IntegerField(blank=False)
+    image = models.ImageField(upload_to='user_images/', blank=True, null=True)
+    
     
 class FriendShip(models.Model):
     user = models.ForeignKey(User, related_name='fiends', on_delete=models.CASCADE)
@@ -21,4 +25,4 @@ class BlockedFriend(models.Model):
     blocked_friend = models.ForeignKey(User, related_name='blocked_by', on_delete=models.CASCADE)
     
 # class MatchHistory(models.Model):
-#     player1 = models.ForeignKey(User, related_name='matches_as_player1', on_delete=)
+#     player1 = models.ForeignKey(User, related_name='matches_as_player1', on_delete=)0

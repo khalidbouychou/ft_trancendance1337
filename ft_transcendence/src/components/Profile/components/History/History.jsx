@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styl from "./History.module.css";
 import CardFriend from "./components/CardFriend/CardFriend";
 import CardBlocked from "./components/CardBlocked/CardBlocked";
@@ -7,15 +7,31 @@ import Add from '../../assets/Add.svg'
 import Chat from '../../assets/Chat.svg'
 import Block from '../../assets/Block.svg'
 import Settings from "./components/Settings/Settings";
+import axios from "axios";
 
 const History = () => {
   const [activeSection, setActiveSection] = useState("matchhistory");
+  const [friend, setFriends] = useState([]);
+
+  const fetchUserFriends = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/users/1/user_friends/`);
+      setFriends(response.data);
+    }
+    catch {
+      console.error("Error fetching user friends")
+    }
+  };
+
+  useEffect(() => {
+    fetchUserFriends();
+  },[])
 
   const handleClick = (section) => {
     setActiveSection(section);
   };
 
-  const ismyprofil = 0
+  const ismyprofil = 1
 
 
   return (
@@ -63,13 +79,9 @@ const History = () => {
         )}
         {activeSection === "friends" && (
           <div className={styl.friends}>
-            <CardFriend />
-            <CardFriend />
-            <CardFriend />
-            <CardFriend />
-            <CardFriend />
-            <CardFriend />
-            <CardFriend />
+            {friend.map((friend, index) => (
+              <CardFriend key={index} friend={friend}/>
+            ))}
           </div>
         )}
         {activeSection === "blocked" && (
