@@ -7,7 +7,7 @@ from .models import myuser as Player
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth import authenticate 
+from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from cryptography.fernet import Fernet
 
@@ -41,7 +41,7 @@ def check_user_if_exist(login):
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
-    
+
     def create_user(self, user_data):
         user = Player(
             username=user_data['username'],

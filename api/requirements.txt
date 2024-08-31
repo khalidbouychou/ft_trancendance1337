@@ -1,7 +1,6 @@
 
 channels
 channels-redis
-
 daphne
 Django
 django-cors-headers
