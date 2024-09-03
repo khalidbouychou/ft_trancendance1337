@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-gyx%6(g(2=e_y!!4_^&9!p=87&73$jlc(_*yhj1q*t=i@qvx&@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -165,7 +165,10 @@ AUTH_USER_MODEL = 'login.myuser'
 CORS_ALLOW_ALL_ORIGINS = True  # Set to True for development, but not recommended for production
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Your React app's address
+    "http://localhost:3000",# Your React app's address
+    "http://127.0.0.1",
+    "http://localhost",
+    "http://0.0.0.0",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

@@ -9,6 +9,11 @@ class myuser(AbstractUser):
     two_factor = models.BooleanField(default=False)
     otp = models.CharField(max_length=6, default='000000')
     otp_verified = models.BooleanField(default=False)
+    loses = models.IntegerField(default=0)
+    wins = models.IntegerField(default=0)
+    alias = models.CharField(max_length=255, default='default_alias')
+    points = models.IntegerField(default=0)
+    is_online = models.BooleanField(default=False)
 
 
     def __str__(self):

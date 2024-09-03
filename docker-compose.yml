@@ -1,38 +1,32 @@
-version: '3.8'
+version: '3.7'
+
 services:
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: 'python manage.py runserver 0.0.0.0:8000'
-    ports:
-      - 8000:8000
     volumes:
-      - .:/app
-    depends_on:
-      - db
-
+      - static:/static
+    env_file:
+      - .env
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-    command: 'npm run dev'
-    ports:
-      - 3000:3000
     volumes:
-      - ./frontend:/app
+      - frontend:/app/build
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - static:/static
+      - frontend:/var/www/frontend
+    ports:
+      - "80:80"
     depends_on:
       - backend
+      - frontend
 
-  db:
-    image: postgres:13
-    restart: always
-    environment:
-      MYSQL_DATABASE: admin
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - .dbdata:/var/lib/mysql
-    ports:
-      - 5432:5432
+volumes:
+  static:
+  frontend:
