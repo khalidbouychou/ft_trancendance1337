@@ -1,19 +1,29 @@
 import styl from "./UserData.module.css";
-import userImage from "../../assets/nouahidi.jpeg";
-import PropTypes from 'prop-types';
 import { CiMedal } from "react-icons/ci";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { VscChromeClose } from "react-icons/vsc";
 import { FaSearchengin } from "react-icons/fa6";
+import React, {useEffect, useState} from "react";
 
 const UserData = ({userData}) => {
   const baseXP = 100;
   const incrementXP = userData.xp;
   const level = userData.level;
+  const [searchResults, setSearchResults] = useState([]);
 
   const xpForCurrentLevel = baseXP + (level - 1) * incrementXP;
   const xpForNextLevel = baseXP + level * incrementXP;
   const percentageProgress = (xpForCurrentLevel / xpForNextLevel) * 100;
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      const response = await fetch(`http://localhost:8000/api/users/search/?q=${searchQuery}`);
+      const data = await response.json();
+      setSearchResults(data);
+    }
+  };
+
   return (
     <div className={styl.first}>
       {/* search */}
@@ -33,6 +43,21 @@ const UserData = ({userData}) => {
           </form>
         </div>
       </div>
+
+            {/* Display search results */}
+      {searchResults.length > 0 && (
+        <div className={styl.searchResults}>
+          {searchResults.map((user) => (
+            <div key={user.id} className={styl.userResult}>
+              <img src={user.image} alt={user.name} />
+              <p>{user.name}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* existing userData display */}
+
       <div className={styl.userData}>
         <div className={styl.user}>
           {/*userImage*/}

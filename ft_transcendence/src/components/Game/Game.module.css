@@ -1,0 +1,154 @@
+.Game {
+    padding-top: 20px;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	background-color: #25233C;
+	overflow: auto;
+    background: url('./assets//background.svg');
+    background-size: cover;
+    @media (max-width: 2400px) {
+        background: url('./assets/background.svg') no-repeat center center;
+        background-size: 200vh 200vh;
+    }
+    &::-webkit-scrollbar {
+        width: 10px;
+        height: 100%;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+}
+
+.content {
+	margin: 3%;
+	width: 90%;
+	height: 1250px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+    gap: 30px;
+    @media (max-width: 1536px) {
+        width: 100%;
+        margin: 0%;
+    }
+}
+
+.head h1 
+{
+    text-align: center;
+    font-size:50px;
+    font-weight:300;
+    letter-spacing:10px;
+    text-transform: uppercase;
+    display: grid;
+    align-items: center;
+    color: white;
+    @media (max-width: 768px) {
+        font-size:30px;
+        font-weight:100;
+        letter-spacing:4px;
+    }
+}
+
+.cards {
+    width: 100%;
+    margin: 2%;
+    height: 70%;
+    display: flex;
+    gap: 3%;
+    justify-content: center;
+    /* align-items: center; */
+    overflow: scroll;
+    &::-webkit-scrollbar {
+        width: 10px;
+        height: 100%;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    @media (max-width: 1800px) {
+        flex-wrap: wrap;
+        gap: 8%;
+    }
+    @media (max-width: 1024px) {
+        align-items: center;
+    }
+}
+
+.GameCard {
+    width: 400px;
+    min-width: 400px;
+    height: 800px;
+    min-height: 800px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: 0.5s;
+    &:hover {
+        transition: 0.5s;
+    }
+    @media (max-width: 1800px) {
+        width: 300px;
+        min-width: 300px;
+        height: 700px;
+        min-height: 700px;
+    }
+
+    @media (max-width: 1024px) {
+        width: 150px;
+        min-width: 150px;
+        height: 350px;
+        min-height: 350px;
+    }
+    
+}
+
+.Head {
+    font-size: 25px;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    @media (max-width: 1024px) {
+        font-size: 15px;
+    }
+}
+
+.background {
+    display: flex;
+    width: 100%;
+    height: 90%;
+    filter: brightness(40%);
+    transition: filter 1s ease;
+    border-radius: 30px;
+    overflow: hidden;
+    &:hover {
+        filter: brightness(70%);
+        animation: slide-right 2s forwards;
+    }
+    img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%
+    }
+    cursor: pointer;
+}
+
+._1VS1 {
+    position: absolute;
+    font-size: 30px;
+    color: white;
+    width: 50px;
+    height: 500px;
+}
+

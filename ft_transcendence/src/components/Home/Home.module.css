@@ -3,19 +3,19 @@
 	justify-content: center;
 	width: 100%;
 	height: 100%;
-	background-color: #25233C;
 	overflow: auto;
 }
 
 .cont {
     margin: 3%;
-	width: 90%;
-	height: 1500px;
+	width: 80%;
+	height: 1100px;
 	display: flex;
 	flex-direction: column;
+    /* background-color: yellow; */
 }
 
-.head h1 
+.head h1
 {
     text-align: center;
     font-size:50px; font-weight:300; letter-spacing:15px;
@@ -32,23 +32,60 @@
 
 .first {
     width: 100%;
-    height: 40%;
+    height: 50%;
     display: flex;
-    min-width: 280px;
+    /* min-width: 280px; */
+    position: relative;
+    /* background-color: #812185; */
 }
 .Intro {
-    flex: 1;
+    width: 70%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 .logo {
-    flex: 1;
+    width: 30%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+}
+@media (max-width: 1800px) {
+    .Intro {
+        width: 50%;
+    }
+    .logo {
+        width: 50%;
+        
+    }
+}
+@media (max-width: 1280px) {
+    .logo {
+        position: absolute;
+        width: 100%;
+        opacity: 30%;
+    }
+    .Intro {
+        width: 100%;
+        .intro {
+            height: 60%;
+        }
+        .Play {
+            height: 40%;
+            width: 50%;
+        }
+        z-index: 1;
+    }
+}
+@media (max-width: 640px) {
+    .cont {
+        width: 100%;
+    }
 }
 .intro {
     display: flex;
@@ -59,16 +96,8 @@
     .str {
         width: 100%;
         height: 70%;
-        font-size: 50px;
+        font-size: 30px;
         color: white;
-        @media (max-width: 1536px) {
-            font-size: 40px;
-        }
-    }
-}
-@media (max-width: 1024px) {
-    .logo {
-        display: none;
     }
 }
 .Play {
@@ -76,9 +105,9 @@
     width: 100%;
     height: 50%;
     button {
-        width: 50%;
+        width: 400px;
         height: 100px;
-        background-color: #812185; 
+        background-color: #411556; 
         border: none;
         border-radius: 30px;
         display: flex;
@@ -100,37 +129,38 @@
         background-color: #560856;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
     }
-    @media (max-width: 1536px) {
-       button {
-        width: 100%;
-       }
-    }
+
 }
+
 @media (max-width: 768px) {
-    .intro {
-        height: 70%;
+    .Intro {
+        justify-content: start;
+        align-items: start;
     }
     .Play {
-        height: 30%;
+        width: 200px;
+        height: 100px;
+        button {
+            width: 100%;
+            height: 100px;
+            p {
+                font-size: 25px;
+            }
+        }
     }
 }
+
 @media (max-width: 425px) {
     .intro {
-        width: 80%;
+        justify-content: center;
+        align-items: center;
+        height: 70%;
         .str {
-            font-size: 35px;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
         }
     }
-    .Play {
-        button {
-            p{
-                font-size: 30px;
-            }
-            width: 100%;
-            height: 70px;
-        }
-    }
-
 }
 
 
@@ -157,7 +187,7 @@
     flex-direction: column;
     gap: 10px;
     overflow: auto;
-    padding: 2%;
+    padding-top: 4%;
     gap: 20px;
     &::-webkit-scrollbar {
 		width: 10px;
@@ -168,138 +198,4 @@
 		border-radius: 20px;
 		background-color: #ffffff0a;
 	}
-}
-.CardRank {
-    width: 100%;
-    height: 200px;
-    min-height: 200px;
-    display: flex;
-    border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
-    hr {
-        height: 50%;
-        margin-top: 50px;
-    }
-}
-.rank {
-    width: 20%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 5%;
-    p {
-        font-size: 30px;
-        color: white;
-    }
-}
-.user {
-    width: 25%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    img {
-        border-radius: 100px;
-        width: 120px;
-        height: 120px;
-        @media (max-width: 1850px) {
-            width: 100px;
-            height: 100px;
-        }
-    }
-    p {
-        color: white;
-    }
-    @media (max-width: 1536px) {
-        flex-direction: column;
-    }
-}
-.Wins {
-    width: 25%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 5%;
-    p {
-        color: white;
-        font-size: 30px;
-    }
-}
-
-.level {
-    width: 30%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.circle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-.Lvl {
-    position: absolute;
-    font-size: 25px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-@media (max-width: 768px) {
-    .CardRank {
-        height: 150px;
-        min-height: 150px;
-        hr {
-            height: 50%;
-            margin-top: 40px;
-        }
-        .rank {
-            p{
-                font-size: 25px;
-            }
-        }
-        .user {
-            gap: 10px;
-            img {
-                width: 80px;
-                height: 80px;
-            }
-            p {
-                font-size: 15px;
-            }
-        }
-        .Wins {
-            p{
-                font-size: 25px;
-            }
-        }
-        .level {
-            .Lvl {
-                font-size: 20px;
-            }
-        }
-        @media (max-width: 500px) {
-            .rank {
-                width: 40%;
-            }
-            .user {
-                width: 60%;
-            }
-            .Wins {
-                display: none;
-            }
-            .level {
-                display: none;
-            }
-        }
-    }
 }

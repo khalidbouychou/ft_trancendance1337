@@ -32,7 +32,14 @@ const Profile = () => {
           <History userData={userData} />
         </>
         ) : (
-          <p>Loading...</p>
+          <div className={styl.loading}>
+            <h1 >loading</h1>
+            <div className={styl.pointContainer}>
+              <div className={styl.point}></div>
+              <div className={styl.point}></div>
+              <div className={styl.point}></div>
+            </div>
+          </div>
         )}
 
       </div>

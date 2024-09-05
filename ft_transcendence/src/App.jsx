@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar.jsx';
 import Profile from './components/Profile/Profile.jsx';
 import Setting from './pages/Setting.jsx';
 import Home from './components/Home/Home.jsx';
-import Game from './pages/Game.jsx';
+import Game from './components/Game/Game.jsx';
 import Chat from './pages/Chat.jsx';
 import Achievement from './pages/Achievement.jsx';
 import Notificationz from './components/Notification/Notification.jsx';

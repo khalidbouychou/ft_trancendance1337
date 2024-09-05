@@ -1,8 +1,7 @@
 import styl from './Home.module.css'
-import logo from './assets/logo.webp'
+import logo from './assets/pinglo-removebg-preview.png'
 import scale from './assets/scale.svg'
-import userImage from './assets/nouahidi.jpeg'
-import Circle from './components/Circle/circle'
+import CardRank from './components/CardRank/CardRank'
 
 const Home = () => {
   return (
@@ -34,30 +33,7 @@ const Home = () => {
                     <img src={scale}></img>
                 </div>
                 <div className={styl.content}>
-                    <div className={styl.CardRank}>
-                        <div className={styl.rank}>
-                            <p >Rank</p>
-                            <p >#1</p>
-                        </div>
-                        <hr />
-                        <div className={styl.user}>
-                            <img src={userImage}></img>
-                            <p >NOUREDDINE</p>
-                        </div>
-                        <div className={styl.Wins}>
-                            <p >WINS</p>
-                            <p >10</p>
-                        </div>
-                        <div className={styl.level}>
-                            <div className={styl.circle}>
-                                <Circle  percentage={10}/>
-                                <div className={styl.Lvl}>
-                                    <p >LVL</p>
-                                    <p >1 - 10%</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <CardRank />
                 </div>
             </div>
         </div>

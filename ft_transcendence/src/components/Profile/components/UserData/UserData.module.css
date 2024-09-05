@@ -82,7 +82,7 @@
       display: flex;
       gap: 5%;
       .Image {
-        width: 40%;
+        width: 50%;
         height: 100%;
         display: flex;
         align-items: center;
@@ -228,23 +228,36 @@
       .user {
         .Image {
           .imgStl {
-            width: 70px;
-            height: 70px;
-          img {
-            width: 100%;
-            height: 100%;
+            img {
+              width: 100%;
+              height: 100%;
+            }
           }
-          .rndOnli {
-              width: 12px;
-              height: 12px;
-          }
-        }
         }
         .Name {
           font-size: 18px;
           .onlign {
             #online {
               font-size: 15px;
+            }
+          }
+        }
+        @media (max-width: 640px) {
+          .Image {
+            .imgStl {
+              width: 100px;
+              height: 100px;
+              .rndOnli {
+                width: 15px;
+                height: 15px;
+              }
+            }
+            .Name {
+              .onlign {
+                #online {
+                  font-size: 15px;
+                }
+              }
             }
           }
         }

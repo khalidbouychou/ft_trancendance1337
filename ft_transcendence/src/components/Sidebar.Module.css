@@ -7,7 +7,7 @@
 
 .side-nav {
     width: 15rem; /* Default width */
-    background-color: rgb(150, 138, 232);
+    background-color: #7667D9;
     color: white;
     display: flex;
     flex-direction: column;

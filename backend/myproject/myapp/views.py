@@ -10,6 +10,23 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerialiser
 
+    @action(detail=False, methods=['get'])
+    def search(self, request):
+        query = request.query_params.get('q', '')
+        if query:
+            # Corrected the lookup from `name_icontains` to `name__icontains`
+            users = User.objects.filter(name__icontains=query)
+            serializer = self.get_serializer(users, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'error': 'No search query provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    @action(detail=False, methods=['get'])
+    def top_users(self, request):
+        top_users = User.objects.order_by('-level', '-wins', '-xp')[:10]
+        serializer = UserSerialiser(top_users, many=True)
+        return Response(serializer.data)
+    
     @action(detail=True, methods=['get'])
     def user_friends(self, request, pk=None):
         user = self.get_object()
