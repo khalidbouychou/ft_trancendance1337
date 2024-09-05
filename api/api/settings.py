@@ -150,7 +150,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-AUTH_USER_MODEL = 'login.myuser'
+AUTH_USER_MODEL = 'login.Player'
 
 # CLIENT_ID = 'your_client_id'
 # CLIENT_SECRET = 'your_client_secret'

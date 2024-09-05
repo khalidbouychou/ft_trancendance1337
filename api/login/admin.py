@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import myuser
+from .models import Player, MatchHistory
 # Register your models here.
 
 
-admin.site.register(myuser)
+admin.site.register(Player)
+admin.site.register(MatchHistory)

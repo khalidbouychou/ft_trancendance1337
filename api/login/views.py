@@ -3,7 +3,7 @@ from rest_framework.response import Response
 import requests
 from django.contrib.auth.models import User
 from .serializers import PlayerSerializer
-from .models import myuser as Player
+from .models import Player as Player
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from django.core.exceptions import ObjectDoesNotExist
