@@ -19,6 +19,7 @@ urlpatterns = [
     path('user_status/',PlayerViewSet.as_view({'get': 'user_status'})),
     path('check2fa/',PlayerViewSet.as_view({'post': 'check_2fa'})),
     path('getusers/',PlayerViewSet.as_view({'get': 'getallusers'})),
+    path('qrcode/',PlayerViewSet.as_view({'get': 'generate_qr_code'})),
     # path('verify_token/', PlayerViewSet.as_view({'post': 'verify_token'})),
     # path ('gettoken/', PlayerViewSet.as_view({'get': 'gettoken'})),
     # path ('checktwofa/', PlayerViewSet.as_view({'get': 'checktwofa'})),

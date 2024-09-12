@@ -13,11 +13,11 @@ from cryptography.fernet import Fernet
 
 import json
 from django.http import HttpResponse
+import os
 
-
-C_ID = "u-s4t2ud-10425a09a5efb6f3e2c38b8af2d35cc79fc8446ccabb8a4657ca4fc319ed8273"
-SCID = "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"
-REDIRECT_URI = "http://localhost:3000/"
+C_ID = os.getenv('C_ID')
+SCID = os.getenv('SCID')
+REDIRECT_URI = os.getenv('REDIRECT_URI')
 
 
 def search_user(username):
@@ -34,18 +34,38 @@ def check_user_if_exist(login):
 
 
 
-
-
-
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
     
+    def generate_qr_code(self, request):
+        token = request.COOKIES.get('access')
+        if not token:
+            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+        try :
+            user = AccessToken(token).user
+            if user.two_factor:
+                return Response({'error': '2FA already enabled'}, status=status.HTTP_400_BAD_REQUEST)
+            user.two_factor = True
+            user.save()
+            return Response({'msg': '2FA enabled'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
     def create_user(self, user_data):
         user = Player(
             username=user_data['username'],
             avatar=user_data['avatar'],
             email=user_data['email'],
+            wins=0,
+            losses=0,
+            level=1,
+            exp_game=0,
+            status_network='online',
+            status_game='offline',
+            two_factor=False,
+            otp='000000',
+            otp_verified=False,
         )
         user.avatar = user_data['avatar']
         user.cover = user_data['avatar']
