@@ -4,12 +4,17 @@ import History from "./components/History/History";
 import axios from 'axios';
 import { useState, useEffect } from "react";
 
+// let id = 2;
+
 const Profile = () => {
   const [userData, setUserData] = useState(null);
+  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [id, setId] = useState(1);  // default user id
+
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/users/1/`);
+      const response = await axios.get(`http://localhost:8000/api/users/${id}/`);
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -17,8 +22,15 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchUserData();
-  }, []);
+    fetchUserData(id);
+  }, [id]);
+
+
+  const handleFriendClick = (friend) => {
+    setId(friend.id);
+    setSelectedFriend(friend);
+  };
+
   return (
     <div className={styl.profile}>
       <div className={styl.content}>
@@ -29,7 +41,7 @@ const Profile = () => {
         {userData ? (
         <>
           <UserData userData={userData} />
-          <History userData={userData} />
+          <History onFriendClick={handleFriendClick} id={id}/>
         </>
         ) : (
           <div className={styl.loading}>

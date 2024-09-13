@@ -63,8 +63,17 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 10px;
-		p {
-			color: #7667D9;
+		button {
+			border: none;
+			background: none;
+			cursor: pointer;
+			p {
+				color: #7667D9;
+			}
+			&:hover {
+				text-decoration: underline;
+				color: #7667D9;
+			}
 		}
 	}
 	.image {

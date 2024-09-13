@@ -59,6 +59,7 @@ const UserData = ({userData}) => {
       {/* existing userData display */}
 
       <div className={styl.userData}>
+        <div className={styl.sett}></div>
         <div className={styl.user}>
           {/*userImage*/}
 

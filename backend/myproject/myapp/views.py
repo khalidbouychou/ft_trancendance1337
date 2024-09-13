@@ -39,7 +39,6 @@ class UserViewSet(viewsets.ModelViewSet):
         user = self.get_object()
         bolcked_friends = BlockedFriend.objects.filter(user=user)
         serializer = BlockedFriendSerializer(bolcked_friends, many=True)
-        print('hna1=hna')
         return Response(serializer.data)
     
     @action(detail=True, methods=['post'])
@@ -75,13 +74,14 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def unblock_user(self, request, pk=None):
         user = self.get_object()
-        user_name = request.data.get('name')
+        blocked_user_id = request.data.get('blocked_user_id')
         try:
-            blocked_friend = User.objects.get(name=user_name)
+            blocked_friend = User.objects.get(id=blocked_user_id)
             BlockedFriend.objects.filter(user=user, blocked_friend=blocked_friend).delete()
             return Response({'status': 'friend unblocked'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'error': 'Friend not found'}, status=status.HTTP_400_BAD_REQUEST)
+
     
     @action(detail=True, methods=['post'])
     def kickout_friend(self, request, pk=None):

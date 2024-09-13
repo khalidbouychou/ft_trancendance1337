@@ -9,14 +9,16 @@ import Block from '../../assets/Block.svg'
 import Settings from "./components/Settings/Settings";
 import axios from "axios";
 
-const History = () => {
+const History = ({ onFriendClick, id } ) => {
   const [activeSection, setActiveSection] = useState("matchhistory");
   const [friend, setFriends] = useState([]);
+  const [userBlocked, setUserBlocked] = useState([]);
 
   const fetchUserFriends = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/users/1/user_friends/`);
+      const response = await axios.get(`http://localhost:8000/api/users/${id}/user_friends/`);
       setFriends(response.data);
+      console.log('Fetched friends:', response.data);
     }
     catch {
       console.error("Error fetching user friends")
@@ -31,7 +33,21 @@ const History = () => {
     setActiveSection(section);
   };
 
-  const ismyprofil = 1
+  const fetchUserBlocked = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/users/${id}/user_blocked_friends/`);
+      setUserBlocked(response.data);
+    }
+    catch {
+      console.error("Error fetching user blocked friends")
+    }
+  };
+
+  useEffect(() => {
+    fetchUserBlocked();
+  },[])
+
+  const ismyprofil = 0
 
 
   return (
@@ -79,14 +95,31 @@ const History = () => {
         )}
         {activeSection === "friends" && (
           <div className={styl.friends}>
-            {friend.map((friend, index) => (
-              <CardFriend key={index} friend={friend}/>
+            {friend.map((friend) => (
+              <CardFriend key={friend.id} friend={friend} onClick={onFriendClick}/>
             ))}
           </div>
         )}
         {activeSection === "blocked" && (
           <div className={styl.block}>
-            <CardBlocked />
+            {userBlocked.map((userBlocked) => (
+              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
+            ))}
+            {userBlocked.map((userBlocked) => (
+              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
+            ))}
+            {userBlocked.map((userBlocked) => (
+              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
+            ))}
+            {userBlocked.map((userBlocked) => (
+              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
+            ))}
+            {userBlocked.map((userBlocked) => (
+              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
+            ))}
+            {userBlocked.map((userBlocked) => (
+              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
+            ))}
           </div>
         )}
         {activeSection === "settings" && (

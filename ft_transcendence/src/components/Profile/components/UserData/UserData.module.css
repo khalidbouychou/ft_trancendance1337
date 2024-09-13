@@ -68,6 +68,7 @@
     }
   }
   .userData {
+    position: relative;
     width: 80%;
     height: 70%;
     display: flex;
@@ -326,4 +327,13 @@
       }
     }
   }
+}
+
+.sett {
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  position: absolute;
+  right: 94%;
+  bottom: 90%;
 }

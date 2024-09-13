@@ -11,7 +11,7 @@
     color: white;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     overflow: auto;
     transition: width 0.3s ease;
 }
