@@ -1,5 +1,6 @@
 #root {
   background-color: rgba(37, 35, 60);
   height: 100vh;
+  overflow: hidden;
 }
 

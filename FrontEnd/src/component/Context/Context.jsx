@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
-import {  Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 
 export const authContext = createContext();
@@ -12,29 +12,34 @@ export default function ContextProvider({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-
   useEffect(() => {
     async function auth() {
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get("code");
-        if (code && !token) {
+        const urlParams = await new URLSearchParams(location.search);
+        const error = await urlParams.get("error");
+        if (error) {
+          navigate("/login");
+        }
+        const code = await urlParams.get("code");
+        if (code) {
           const params = new URLSearchParams();
           params.append("code", code);
-          const res = await axios.post(`http://localhost:8000/api/login/`, params, {
-            withCredentials: true
-          });
-          if (res.status === 200 && res.statusText === "OK")
+          const res = await axios.post(
+            `http://localhost:8000/api/login/`,
+            params,
             {
-              console.log(res.data);
-              if (res.data['twofa'] === true) {
-                setTwofa(true);
-                navigate("/twofa");
-              }
-              localStorage.setItem("is_logged", true);
-              setLogged(localStorage.getItem("is_logged"));
-              navigate("/home");
+              withCredentials: true,
             }
+          );
+          if (res.status === 200) {
+            console.log("res.data:", res.data);
+            setToken(res.data.access_token);
+            setLogged(true);
+            if (res.data.twofa === true) {
+              setTwofa(true);
+            }
+            navigate("/home");
+          }
         }
       } catch (error) {
         console.log(error);
@@ -62,8 +67,6 @@ export default function ContextProvider({ children }) {
   //   checktoken();
   // }, [token,islogged,location.pathname,navigate]);
 
-
-
   return (
     <authContext.Provider
       value={{
@@ -71,12 +74,10 @@ export default function ContextProvider({ children }) {
         islogged,
         setToken,
         setLogged,
-        twofa // Fix the variable name from 'towfa' to 'twofa'
+        twofa,
       }}
     >
-      <>
-        {children}
-      </>
+      <>{children}</>
     </authContext.Provider>
   );
 }

@@ -11,13 +11,13 @@ import Otp from "./component/Otp/Otp";
 import ContextProvider from "../src/component/Context/Context";
 // import Layout from "./component/Layout/Layout";
 import Login from "./component/Login/Login";
-import AppContext from "./component/Context/Context";
-import { useContext, useState } from "react";
+import {  useState } from "react";
 import NotPageFound from "../src/component/Layout/NoPageFound/NoPageFound.jsx";
-import Twofa from "/goinfre/khbouych/ft_trancendance1337-2/FrontEnd/src/component/Twofa/Towfa";
+// import Twofa from "/goinfre/khbouych/ft_trancendance1337-2/FrontEnd/src/component/Twofa/Towfa";
 function App() {
   function PrivateRoute() {
-    const [token,setToken] = useState("test");
+    const [token,setToken] = useState("document.cookie.split('=')[1]");
+    console.log("********************* > ",token)
     if (!token) return <Navigate to="/login" />;
     return (
       <>
@@ -34,8 +34,9 @@ function App() {
           <Route path="*" element={<NotPageFound />} />
   
           <Route path="/" element={<PrivateRoute />}>
+            <Route path="home" element={<div>home</div>} />
             <Route path="/otp" element={<Otp />} />
-            <Route path="/twofa" element={<Twofa />} />
+            {/* <Route path="/twofa" element={<Twofa />} /> */}
             <Route path="/chat" element={<div>chat</div>} />
             <Route path="/game" element={<div>game</div>} />
             <Route path="/profil" element={<div>profil</div>} />
