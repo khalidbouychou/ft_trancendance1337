@@ -1,7 +1,7 @@
 import axios from "axios";
 // import styl from "./login.module.css";
 import { useContext, useEffect, useState } from "react";
-import img from "../../../public/img/bg.avif";
+import img from "../../../public/img/videTabl.jpg";
 import "./test.css";
 import { authContext } from "../Context/Context";
 

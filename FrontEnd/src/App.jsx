@@ -6,13 +6,13 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import Otp from "./component/Otp/Otp";
+import Otp from "./component/Otp/Otp.jsx";
 
-import ContextProvider from "../src/component/Context/Context";
+import ContextProvider from "./component/Context/Context.jsx";
 // import Layout from "./component/Layout/Layout";
-import Login from "./component/Login/Login";
+import Login from "./component/Login/Login.jsx";
 import {  useState } from "react";
-import NotPageFound from "../src/component/Layout/NoPageFound/NoPageFound.jsx";
+import NotPageFound from "./component/Layout/NoPageFound/NoPageFound.jsx";
 // import Twofa from "/goinfre/khbouych/ft_trancendance1337-2/FrontEnd/src/component/Twofa/Towfa";
 function App() {
   function PrivateRoute() {
