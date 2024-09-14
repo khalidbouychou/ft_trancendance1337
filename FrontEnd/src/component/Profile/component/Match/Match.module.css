@@ -1,0 +1,70 @@
+.StlMatch{
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+}
+
+.Match{
+	/* flex: 1; */
+	display: flex;
+	align-items: center;
+	width: 340px;
+	height: 120px;
+	padding: 8px;
+	border-radius: 20px;
+	transition: 0.3s;
+	gap: 15px;
+	.UserNameImage {
+		display: flex;
+		flex: 1;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+	
+	img {
+		width: 80px;
+		height: 80px;
+		border-radius: 50px;
+	}
+	
+	p{
+		font-size: 18px;
+		font-weight: 350;
+	}
+	
+	.ScoreAndDate {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		
+		#Date {
+			position: relative;
+			bottom: 20px
+		}
+		
+	}
+}
+
+.Match:hover {
+	transition: 0.3s;
+	cursor: pointer;
+	padding: 15px;
+}
+
+.WL{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: green;
+	margin-top: 10px;
+	width: 35px;
+	height: 35px;
+	border-radius: 50px;
+	.icon {
+		font-size: 24px;
+		color: white;
+	}
+}

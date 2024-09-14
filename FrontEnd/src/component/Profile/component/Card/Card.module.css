@@ -1,0 +1,45 @@
+.stlCard {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	width: 40%;
+	gap: 30px;
+	border-radius: 10px;
+	transition: 0.2s;
+
+	background-color: rgba(255, 255, 255, 0.05);
+	img{
+		width: 70px;
+		height: 70px;
+		border-radius: 50px;
+	}
+	
+	button p{
+		font-size: 20px;
+		color: rgb(32, 166, 32);
+		flex: 1;
+	}
+	
+	.RdButton {
+		background: none;
+		border: none;
+		color: inherit;
+		cursor: pointer;
+	}
+	
+	.RdButton p{
+		font-size: 30px;
+		color: rgb(32, 166, 32);
+	}
+	
+	.RdButton:hover {
+		border: 2px solid red;
+	}
+	
+	&:hover {
+		padding: 15px;
+		cursor: pointer;
+		background-color: rgba(255, 255, 255, 0.1);
+		transition: 0.2s;
+	}
+}
