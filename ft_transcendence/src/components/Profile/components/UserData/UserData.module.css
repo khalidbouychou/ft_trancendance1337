@@ -75,7 +75,7 @@
     justify-content: center;
     align-items: center;
     border: solid 1px white;
-    border-radius: 50px;
+    border-radius: 20px;
     background-color: rgba(255, 255, 255, 0.1);
     .user {
       width: 50%;
@@ -330,10 +330,89 @@
 }
 
 .sett {
-  width: 30px;
-  height: 30px;
-  background-color: white;
+  width: 100%;
+  height: 90%;
+  /* background-color: white; */
   position: absolute;
-  right: 94%;
-  bottom: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  margin-right: 20px;
 }
+
+.buttonDiv {
+  display: flex;
+  justify-content: end;
+  width: 90%;
+  height: 30px;
+}
+
+.setButton {
+  width: 30px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  &:hover {
+    padding: 1px;
+  }
+}
+
+.settDisplay {
+  /* background-color: #25233c; */
+  width: 200px;
+  height: 250px;
+  border-radius: 20px 0 20px 20px;
+  display: flex;
+  padding: 1%;
+  gap: 10px;
+  flex-direction: column;
+  /* border: 2px solid rgb(38, 6, 88); */
+}
+
+.Tmp {
+  flex: 1;
+  display: flex;
+  /* background-color: rgba(255, 255, 255, 0.3); */
+  background-color: black;
+}
+
+.setIcon {
+  background-color: aliceblue;
+  width: 35%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.icons {
+  width: 60%;
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  &:hover {
+    width: 70%;
+    height: 70%;
+  }
+}
+
+.setStr {
+  flex: 1;
+  width: 75%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  p {
+    font-size: 20px;
+    font-weight: 200;
+    color: white;
+  }
+}
+

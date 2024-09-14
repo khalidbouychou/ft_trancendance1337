@@ -4,16 +4,27 @@ import { IoGameControllerOutline } from "react-icons/io5";
 import { VscChromeClose } from "react-icons/vsc";
 import { FaSearchengin } from "react-icons/fa6";
 import React, {useEffect, useState} from "react";
+import { SlOptions } from "react-icons/sl";
+import { IoIosPersonAdd } from "react-icons/io";
+import { TbLock } from "react-icons/tb";
+import { BsChatDots } from "react-icons/bs";
 
 const UserData = ({userData}) => {
   const baseXP = 100;
   const incrementXP = userData.xp;
   const level = userData.level;
   const [searchResults, setSearchResults] = useState([]);
+  const ismyprofil = 1
 
   const xpForCurrentLevel = baseXP + (level - 1) * incrementXP;
   const xpForNextLevel = baseXP + level * incrementXP;
   const percentageProgress = (xpForCurrentLevel / xpForNextLevel) * 100;
+  const [Settings, setSettings] = useState('none')
+
+
+  const handleClick = () => {
+    setSettings(prevOpen => (prevOpen === 'none' ? 'flex' : 'none'))
+  }
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -44,7 +55,6 @@ const UserData = ({userData}) => {
         </div>
       </div>
 
-            {/* Display search results */}
       {searchResults.length > 0 && (
         <div className={styl.searchResults}>
           {searchResults.map((user) => (
@@ -56,10 +66,8 @@ const UserData = ({userData}) => {
         </div>
       )}
 
-      {/* existing userData display */}
 
       <div className={styl.userData}>
-        <div className={styl.sett}></div>
         <div className={styl.user}>
           {/*userImage*/}
 
@@ -76,6 +84,35 @@ const UserData = ({userData}) => {
             <p>{userData.name.toUpperCase()}</p>
           </div>
         </div>
+        {ismyprofil !== 0 ? (
+        <div className={styl.sett}>
+          <div className={styl.buttonDiv}>
+            <button className={styl.setButton}>
+              <SlOptions style={{width: '100%', height: '100%', color: 'white'}} onClick={handleClick}/>
+            </button>
+          </div>
+          <div className={styl.settDisplay} style={{display: Settings}}>
+            <div className={styl.Tmp}>
+              <button className={styl.setIcon}>
+                <IoIosPersonAdd className={styl.icons}/>
+              </button>
+              <div className={styl.setStr}><p >Add</p></div>
+            </div>
+            <div className={styl.Tmp}>
+              <button className={styl.setIcon}>
+                <TbLock className={styl.icons}/>
+              </button>
+              <div className={styl.setStr}><p >Block</p></div>
+            </div>
+            <div className={styl.Tmp}>
+              <button className={styl.setIcon}>
+                <BsChatDots className={styl.icons}/>
+              </button>
+              <div className={styl.setStr}><p >Chat</p></div>
+            </div>
+          </div>
+        </div>
+        ) : (null)}
 
         {/* statistic */}
 

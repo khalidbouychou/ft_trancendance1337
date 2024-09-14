@@ -47,7 +47,7 @@ const History = ({ onFriendClick, id } ) => {
     fetchUserBlocked();
   },[])
 
-  const ismyprofil = 0
+  const ismyprofil = 1
 
 
   return (
@@ -69,23 +69,18 @@ const History = ({ onFriendClick, id } ) => {
             FRIENDS
           </button>
         </div>
-        <div className={styl.button}>
-        {ismyprofil === 0 ? (
-            <button
-              onClick={() => handleClick("settings")}
-              className={`${styl.Button} ${activeSection === "settings" ? styl.Clicked : ""}`}
-            >
-              SETTINGS
-            </button>
-          ) : (
+        {ismyprofil !== 0 ? (
+          <div className={styl.button}>
             <button
               onClick={() => handleClick("blocked")}
               className={`${styl.Button} ${activeSection === "blocked" ? styl.Clicked : ""}`}
             >
               BLOCKED
             </button>
-          )}
-        </div>
+          </div>
+        ) : (
+          null
+        )}
       </div>
       <div className={styl.cont}>
         {activeSection === "matchhistory" && (
@@ -105,25 +100,7 @@ const History = ({ onFriendClick, id } ) => {
             {userBlocked.map((userBlocked) => (
               <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
             ))}
-            {userBlocked.map((userBlocked) => (
-              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
-            ))}
-            {userBlocked.map((userBlocked) => (
-              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
-            ))}
-            {userBlocked.map((userBlocked) => (
-              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
-            ))}
-            {userBlocked.map((userBlocked) => (
-              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
-            ))}
-            {userBlocked.map((userBlocked) => (
-              <CardBlocked key={userBlocked.id} userBlocked={userBlocked}/>
-            ))}
           </div>
-        )}
-        {activeSection === "settings" && (
-            <Settings />
         )}
       </div>
     </div>
