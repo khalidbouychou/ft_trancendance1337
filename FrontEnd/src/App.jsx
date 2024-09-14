@@ -64,15 +64,13 @@ const Chat = () => <div>Chat Content</div>;
 const Notifications = () => <div>Notifications Content</div>;
 const Games = () => <div>Games Content</div>;
 const Settings = () => <div>Settings Content</div>;
+const Logout = () => <div>Logout Content</div>;
 
 function App() {
   return (
     <Router>
       <div className="app-container">
-        <Sidebar 
-          avatarUrl="../public/img/khbouych.jpeg" 
-          nickname="khbouych" 
-        />
+        {(window.location.pathname !== '/login' ) ? <Sidebar avatarUrl='../public/img/khbouych.jpeg' nickname='khbouych' /> : null}
         <main className="content-area">
           <Routes>
             <Route path="/profile" element={<Profile />} />
@@ -80,6 +78,10 @@ function App() {
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/games" element={<Games />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/" element={<div>home</div>} />
+            <Route path="/login" element={<div>Login</div>} />
+            <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </main>
       </div>
