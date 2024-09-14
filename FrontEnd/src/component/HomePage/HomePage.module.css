@@ -1,0 +1,10 @@
+.homepage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    gap: 4vh;
+    overflow-x: auto;
+    
+}
