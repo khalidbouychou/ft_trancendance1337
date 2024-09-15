@@ -14,7 +14,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def search(self, request):
         query = request.query_params.get('q', '')
         if query:
-            # Corrected the lookup from `name_icontains` to `name__icontains`
             users = User.objects.filter(name__icontains=query)
             serializer = self.get_serializer(users, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)

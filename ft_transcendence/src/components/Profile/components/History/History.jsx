@@ -47,7 +47,7 @@ const History = ({ onFriendClick, id } ) => {
     fetchUserBlocked();
   },[])
 
-  const ismyprofil = 1
+  const ismyprofil = 0
 
 
   return (
@@ -69,7 +69,7 @@ const History = ({ onFriendClick, id } ) => {
             FRIENDS
           </button>
         </div>
-        {ismyprofil !== 0 ? (
+        {ismyprofil !== 1 ? (
           <div className={styl.button}>
             <button
               onClick={() => handleClick("blocked")}

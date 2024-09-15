@@ -8,13 +8,16 @@ import { SlOptions } from "react-icons/sl";
 import { IoIosPersonAdd } from "react-icons/io";
 import { TbLock } from "react-icons/tb";
 import { BsChatDots } from "react-icons/bs";
+import UserImage from '../../assets/nouahidi.jpeg'
+import SearchRes from "./components/SearchRes/SearchRes";
 
 const UserData = ({userData}) => {
   const baseXP = 100;
   const incrementXP = userData.xp;
   const level = userData.level;
   const [searchResults, setSearchResults] = useState([]);
-  const ismyprofil = 1
+  const [searchQuery, setSearchQuery] = useState("");
+  const ismyprofil = 0
 
   const xpForCurrentLevel = baseXP + (level - 1) * incrementXP;
   const xpForNextLevel = baseXP + level * incrementXP;
@@ -26,14 +29,22 @@ const UserData = ({userData}) => {
     setSettings(prevOpen => (prevOpen === 'none' ? 'flex' : 'none'))
   }
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      const response = await fetch(`http://localhost:8000/api/users/search/?q=${searchQuery}`);
-      const data = await response.json();
-      setSearchResults(data);
-    }
-  };
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      if (searchQuery.trim()) {
+        const response = await fetch(
+          `http://localhost:8000/api/users/search/?q=${searchQuery}`
+        );
+        const data = await response.json();
+        console.log(data);
+        setSearchResults(data);
+      } else {
+        setSearchResults([]);
+      }
+    };
+
+    fetchSearchResults();
+  }, [searchQuery]);
 
   return (
     <div className={styl.first}>
@@ -41,10 +52,11 @@ const UserData = ({userData}) => {
 
       <div className={styl.search}>
         <div className={styl.ss}>
-          <form>
+          <form onSubmit={(e) => e.preventDefault()}>
             <input
               type="text"
-              name=""
+              name="search"
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="search..."
               className={styl.input}
             />
@@ -53,18 +65,15 @@ const UserData = ({userData}) => {
             </button>
           </form>
         </div>
+        {searchResults.length > 0 && (
+          <div className={styl.searchRes} >
+            {searchResults.map((user) => (
+              <SearchRes key={user.id} user={user} />
+            ))}
+          </div>
+        )}
       </div>
 
-      {searchResults.length > 0 && (
-        <div className={styl.searchResults}>
-          {searchResults.map((user) => (
-            <div key={user.id} className={styl.userResult}>
-              <img src={user.image} alt={user.name} />
-              <p>{user.name}</p>
-            </div>
-          ))}
-        </div>
-      )}
 
 
       <div className={styl.userData}>
