@@ -6,6 +6,7 @@ import camera from './assets/camera.svg'
 import pencil from './assets/pencil.svg'
 import QRCode from 'react-qr-code'
 import { MdOutlineKeyboardDoubleArrowDown } from "react-icons/md";
+import { MdLock } from "react-icons/md";
 
 
 const Settings = () => {
@@ -219,6 +220,11 @@ const Settings = () => {
             <div className={styl.qrCode}>
               <div className={styl.qrGenerate}>
                 <QRCode value={qrValue} size={298} />
+                {breakerColors === 'red' && (
+                <div className={styl.Qrlock}>
+                  <MdLock style={{width: '25%', height: '25%'}}/>
+                </div>
+                )}
               </div>
               <div className={styl.qrLock}></div>
             </div>

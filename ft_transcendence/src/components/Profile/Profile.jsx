@@ -11,7 +11,7 @@ const Profile = () => {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [id, setId] = useState(1);  // default user id
 
-
+  const ismyprofil = 1
   const fetchUserData = async () => {
     try {
       const response = await axios.get(`http://localhost:8000/api/users/${id}/`);
@@ -40,8 +40,8 @@ const Profile = () => {
 
         {userData ? (
         <>
-          <UserData userData={userData} />
-          <History onFriendClick={handleFriendClick} id={id}/>
+          <UserData userData={userData} ismyprofil={ismyprofil}/>
+          <History onFriendClick={handleFriendClick} id={id} ismyprofil={ismyprofil}/>
         </>
         ) : (
           <div className={styl.loading}>

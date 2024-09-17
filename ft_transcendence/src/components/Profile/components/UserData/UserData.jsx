@@ -11,13 +11,12 @@ import { BsChatDots } from "react-icons/bs";
 import UserImage from '../../assets/nouahidi.jpeg'
 import SearchRes from "./components/SearchRes/SearchRes";
 
-const UserData = ({userData}) => {
+const UserData = ({userData, ismyprofil}) => {
   const baseXP = 100;
   const incrementXP = userData.xp;
   const level = userData.level;
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const ismyprofil = 0
 
   const xpForCurrentLevel = baseXP + (level - 1) * incrementXP;
   const xpForNextLevel = baseXP + level * incrementXP;

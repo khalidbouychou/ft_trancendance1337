@@ -31,7 +31,7 @@ const CardRank = () => {
             </div>
             <hr />
             <div className={styl.user}>
-                <img src={userImage} alt={`${user.name}`} />
+                <img src={'http://localhost:8000'+user.image} alt={`${user.name}`} />
                 <p>{user.name.toUpperCase()}</p>
             </div>
             <div className={styl.Wins}>

@@ -2,8 +2,16 @@ import styl from './Home.module.css'
 import logo from './assets/pinglo-removebg-preview.png'
 import scale from './assets/scale.svg'
 import CardRank from './components/CardRank/CardRank'
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate('/game');
+    }
+
   return (
     <div className={styl.Home}>
         <div className={styl.cont}>
@@ -18,7 +26,7 @@ const Home = () => {
                             truly dominates the table</p>
                     </div>
                     <div className={styl.Play}>
-                        <button >
+                        <button  onClick={handleClick}>
                             <p >Play Now</p>
                         </button>
                     </div>

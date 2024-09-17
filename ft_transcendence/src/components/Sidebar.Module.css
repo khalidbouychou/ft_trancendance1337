@@ -16,7 +16,7 @@
     transition: width 0.3s ease;
 }
 
-/* User Section Styles */
+
 .user {
     display: flex;
     align-items: center;
@@ -45,7 +45,7 @@
     font-size: 14px;
 }
 
-/* Navigation List Styles */
+
 ul {
     list-style: none;
     padding: 0;
@@ -72,7 +72,7 @@ ul li p {
     font-size: 16px;
 }
 
-/* Navigation Links */
+
 a {
     color: white;
     text-decoration: none;
@@ -82,7 +82,6 @@ a {
     height: 100%;
 }
 
-/* Hover Effects */
 ul li:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
@@ -91,7 +90,6 @@ ul li a {
     color: inherit;
 }
 
-/* Settings Section Styles */
 ul:last-of-type {
     margin-top: auto;
     border-top: 1px solid rgba(255, 255, 255, 0.3);
@@ -101,12 +99,12 @@ ul:last-of-type li {
     border-bottom: none;
 }
 
-/* Shrink Effect */
+
 .side-nav.shrink {
-    width: 60px; /* Reduced width */
+    width: 60px;
 }
 
-/* Hide Text in Shrinked Sidebar */
+
 .side-nav.shrink .user div,
 .side-nav.shrink ul li p {
     display: none;
@@ -118,19 +116,18 @@ ul:last-of-type li {
 }
 
 .side-nav.shrink ul li img {
-    width: 24px; /* Ensure icon size remains consistent */
+    width: 24px;
     height: 24px;
 }
 
-/* Media Query for Smaller Screens */
 @media (max-width: 768px) {
     .side-nav {
-        width: 60px; /* Sidebar width on smaller screens */
+        width: 60px;
     }
 
     .side-nav .user div,
     .side-nav ul li p {
-        display: none; /* Hide text on smaller screens */
+        display: none;
     }
 
     .side-nav .user-img {
@@ -139,7 +136,7 @@ ul:last-of-type li {
     }
 
     .side-nav ul li img {
-        width: 24px; /* Ensure icon size remains consistent */
+        width: 24px;
         height: 24px;
     }
 }

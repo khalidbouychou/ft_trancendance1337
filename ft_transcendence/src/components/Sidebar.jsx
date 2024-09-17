@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import './Sidebar.Module.css'; // Correct file name
+import './Sidebar.Module.css';
 
 function Sidebar() {
     return (
@@ -28,3 +27,17 @@ function Sidebar() {
 }
 
 export default Sidebar;
+
+// import React from 'react'
+// import styl from './Sidebar.Module.css'
+
+// const Sidebar = () => {
+//   return (
+//     <div className={styl.Sidebar}>
+      
+//     </div>
+//   )
+// }
+
+// export default Sidebar
+

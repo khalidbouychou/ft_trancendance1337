@@ -46,10 +46,14 @@ class UserViewSet(viewsets.ModelViewSet):
         friend_name = request.data.get('name')
         try:
             friend = User.objects.get(name=friend_name)
-            if FriendShip.objects.filter(user=user, friend=friend).exists():
-                return Response({'status': 'friend already added'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if FriendShip.objects.filter(user=user, friend=friend).exists() or FriendShip.objects.filter(user=friend, friend=user).exists():
+                return Response({'status': 'Friendship already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
             FriendShip.objects.create(user=user, friend=friend)
-            return Response({'status': 'friend added'}, status=status.HTTP_201_CREATED)
+            FriendShip.objects.create(user=friend, friend=user)
+
+            return Response({'status': 'Friend added'}, status=status.HTTP_201_CREATED)
         except User.DoesNotExist:
             return Response({'error': 'Friend not found'}, status=status.HTTP_400_BAD_REQUEST)
     

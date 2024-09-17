@@ -1,4 +1,6 @@
-#!/Users/nouahidi/Desktop/backend/venv/bin/python3
+#!/bin/sh
+'''exec' "/Users/nouahidi/Desktop/push copy/backend/venv/bin/python3" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

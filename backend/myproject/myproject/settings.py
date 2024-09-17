@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,6 +40,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
     'myapp',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -61,6 +63,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'myproject.urls'
 
+SESSION_COOKIE_AGE = 7 * 24 * 60 * 60
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -78,6 +84,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 
 # Database
@@ -146,3 +156,15 @@ CORS_ALLOW_HEADERS = [
 
 # Optional: Allow credentials (cookies, authorization headers)
 CORS_ALLOW_CREDENTIALS = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    # Add more settings if needed
+}

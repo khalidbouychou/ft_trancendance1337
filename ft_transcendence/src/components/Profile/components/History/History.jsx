@@ -9,14 +9,14 @@ import Block from '../../assets/Block.svg'
 import Settings from "./components/Settings/Settings";
 import axios from "axios";
 
-const History = ({ onFriendClick, id } ) => {
+const History = ({ onFriendClick, id, ismyprofil} ) => {
   const [activeSection, setActiveSection] = useState("matchhistory");
   const [friend, setFriends] = useState([]);
   const [userBlocked, setUserBlocked] = useState([]);
 
-  const fetchUserFriends = async () => {
+  const fetchUserFriends = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/users/${id}/user_friends/`);
+      const response = await axios.get(`http://localhost:8000/api/users/${userId}/user_friends/`);
       setFriends(response.data);
       console.log('Fetched friends:', response.data);
     }
@@ -29,13 +29,9 @@ const History = ({ onFriendClick, id } ) => {
     fetchUserFriends();
   },[])
 
-  const handleClick = (section) => {
-    setActiveSection(section);
-  };
-
-  const fetchUserBlocked = async () => {
+  const fetchUserBlocked = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/users/${id}/user_blocked_friends/`);
+      const response = await axios.get(`http://localhost:8000/api/users/${userId}/user_blocked_friends/`);
       setUserBlocked(response.data);
     }
     catch {
@@ -44,11 +40,13 @@ const History = ({ onFriendClick, id } ) => {
   };
 
   useEffect(() => {
-    fetchUserBlocked();
-  },[])
+    fetchUserFriends(id);
+    fetchUserBlocked(id);
+  },[id])
 
-  const ismyprofil = 0
-
+  const handleClick = (section) => {
+    setActiveSection(section)
+  }
 
   return (
     <div className={styl.last}>
