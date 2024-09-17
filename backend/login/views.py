@@ -123,11 +123,16 @@ class PlayerViewSet(viewsets.ModelViewSet):
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
             # Create response
-            response_data = {
-                'status': 'success',
+            user_data = {
+                'access': tokens['access'],
+                'username': user.username,
+                'avatar': user.avatar,
+                'email': user.email,
                 'two_factor': user.two_factor,
+                'is_online': user.is_online,
+                'status' : 'success'
             }
-            response = Response(response_data, status=status.HTTP_200_OK)
+            response = Response(user_data, status=status.HTTP_200_OK)
             response.set_cookie(
                 key='access',
                 value=tokens['access'],

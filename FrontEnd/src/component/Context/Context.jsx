@@ -9,6 +9,7 @@ export default function ContextProvider({ children }) {
   const [token, setToken] = useState(null);
   const [islogged, setLogged] = useState(false);
   const [twofa, setTwofa] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -33,6 +34,7 @@ export default function ContextProvider({ children }) {
           );
           if (res.status === 200) {
             console.log("res.data:", res.data);
+            setUser(res.data.user_data);
             setToken(res.data.access_token);
             setLogged(true);
             if (res.data.twofa === true) {
