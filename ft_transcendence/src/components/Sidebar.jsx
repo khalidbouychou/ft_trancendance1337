@@ -46,6 +46,7 @@ import CmpCard from './CmpCard/CmpCard';
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
     const [hasNotification, setHasNotification] = useState(false);
+    const [sidebarWidth, setSidebarWidth] = useState('300px');
 
     const handleClick = () => {
         setIsOpen(!isOpen)
@@ -57,6 +58,10 @@ const Sidebar = () => {
                 setIsOpen(false)
             else
                 setIsOpen(true)
+            if (window.innerWidth <= 768)
+                setSidebarWidth('50px')
+            else
+                setSidebarWidth('80px')
         }
         handleResize()
         window.addEventListener('resize', handleResize)
@@ -66,7 +71,7 @@ const Sidebar = () => {
     }, [])
 
   return (
-    <div className={styl.Sidebar} style={{ width: isOpen ? '300px' : '80px' }}>
+    <div className={styl.Sidebar} style={{ width: isOpen ? '300px' : sidebarWidth }}>
         <Link to='/'><div className={styl.Card} style={{top: '0%'}}>
             <div className={styl.icon}>
                 <img src={pinglogo}/>
@@ -75,57 +80,12 @@ const Sidebar = () => {
         </div>
         </Link>
         <div className={styl.cont} >
-            {/* <div className={styl.icons}>
-                <Link to="/"><img src={pinglogo}/></Link>
-                <hr />
-                <div className={styl.allIcon}>
-                    <button >
-                        <Link to="/profile"><CgProfile className={styl.icon}/></Link>
-                    </button>
-                    <button >
-                        <Link to="/chat"><IoChatbubbleEllipsesOutline className={styl.icon}/></Link>
-                    </button>
-                    <button >
-                        <Link to="/game"><IoLogoGameControllerB className={styl.icon}/></Link>
-                    </button>
-                    <button >
-                        <div className={styl.notification}>
-                            <Link to="/notification"><IoIosNotifications className={styl.icon}/></Link>
-                            {hasNotification && <div className={styl.circle}></div>}
-                        </div>
-                    </button>
-                    <button >
-                        <Link to="/setting"><CiSettings className={styl.icon}/></Link>
-                    </button>
-                </div>
-                <button className={styl.logoutlogo}>
-                    <AiOutlineLogout className={styl.icon}/>
-                </button>
-            </div>
-            <div className={styl.pageName} style={{ transform: isOpen ? 'translateX(0)' :
-                'translateX(-190px)',opacity: isOpen ? 1 : 0}}>
-                <div className={styl.cmpName} style={{display: isOpen ? 'flex' : 'none'}}>
-                    <div className={styl.gameName}>
-                        <p >Ping Pong</p>
-                    </div>
-                    <hr />
-                    <div className={styl.iconName}>
-                        <p >My Profile</p>
-                        <p >Chat</p>
-                        <p >Game</p>
-                        <p >Notification</p>
-                        <p >Settings</p>
-                    </div>
-                    <p className={styl.logoutName}>Log Out</p>
-                </div>
-            </div> */}
             <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={'/profile'}/>
             <CmpCard isOpen={isOpen} ICON={IoChatbubbleEllipsesOutline} name={'Chat'} link={'/chat'}/>
             <CmpCard isOpen={isOpen} ICON={IoLogoGameControllerB} name={'Game'} link={'/game'}/>
             <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/>
             <CmpCard isOpen={isOpen} ICON={CiSettings} name={'Setting'} link={'/setting'}/>
             <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'} top={'43%'}/>
-
         </div>
         <button className={styl.cirButton} onClick={handleClick} style={{left: isOpen ? '96%' : '85%'}}>
             <FaAnglesLeft style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}}/>

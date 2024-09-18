@@ -158,6 +158,7 @@ ul:last-of-type li {
     background-color: rgba(255, 255, 255, 0.3);
     a {
         text-decoration: none;
+        display: flex;
     }
 }
 
