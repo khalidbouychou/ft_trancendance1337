@@ -1,26 +1,24 @@
 import axios from "axios";
-import { createContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { createContext ,useEffect,useState } from "react";
+import {  useLocation, useNavigate } from "react-router-dom";// Add missing import statement
 // import { useNavigate } from "react-router-dom";
 
 export const authContext = createContext();
 
 export default function ContextProvider({ children }) {
-  const [token, setToken] = useState(null);
-  const [islogged, setLogged] = useState(false);
-  const [twofa, setTwofa] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
+
     async function auth() {
       try {
-        const urlParams = await new URLSearchParams(location.search);
-        const error = await urlParams.get("error");
+        const urlParams =  new URLSearchParams(location.search);
+        const error =  urlParams.get("error");
         if (error) {
           navigate("/login");
         }
-        const code = await urlParams.get("code");
+        const code =  urlParams.get("code");
         if (code) {
           const params = new URLSearchParams();
           params.append("code", code);
@@ -31,50 +29,56 @@ export default function ContextProvider({ children }) {
               withCredentials: true,
             }
           );
-          if (res.status === 200) {
-            console.log("res.data:", res.data);
-            setToken(res.data.access_token);
-            setLogged(true);
-            if (res.data.twofa === true) {
-              setTwofa(true);
-            }
+          if (res.data.status === 200 ) 
+          {
             navigate("/home");
+            setUser(res.data.user);
+          }
+          else
+          {
+            navigate("/login");
           }
         }
       } catch (error) {
         console.log(error);
       }
     }
-    auth();
-  }, []);
 
-  // useEffect(() => {
-  //   async function checktoken() {
-  //     try {
-  //       const res = await axios.get("http://localhost:8000/api/token_status/", {
-  //         withCredentials: true
-  //       });
-  //       console.log("res.data['valid']:", res.data['valid']);
-  //         if (res.data['valid'] === false) {
-  //           localStorage.clear();
-  //           setLogged(false);
-  //           navigate("/login");
-  //         }
-  //     } catch (error) {
-  //       console.error("Check token error:", error);
-  //     }
-  //   }
-  //   checktoken();
-  // }, [token,islogged,location.pathname,navigate]);
+    useEffect(() => {
+      auth();
+    }, []);
+
+  async function verifytoken() {
+   await axios.post("http://localhost:8000/api/verifytoken/", {
+    user : user
+    }, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application / json", 
+   }
+    }).then((res) => {
+      if (res.data.status === 200) {
+        setUser(res.data.user);
+      } else {
+       return navigate("/login");
+      }
+    }
+    ).catch((err) => {
+      console.log(err);
+      return navigate("/login");
+    });
+  
+  }
+
+
+
+
 
   return (
     <authContext.Provider
       value={{
-        token,
-        islogged,
-        setToken,
-        setLogged,
-        twofa,
+        auth,
+        verifytoken,
       }}
     >
       <>{children}</>

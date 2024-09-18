@@ -1,9 +1,9 @@
 import axios from "axios";
 // import styl from "./login.module.css";
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import img from "../../../public/img/videTabl.jpg";
 import "./test.css";
-import { authContext } from "../Context/Context";
+
 
 // const Login = () => {
 const PongParadise = () => {
@@ -21,8 +21,10 @@ const PongParadise = () => {
       }
     }
     auth_intra42();
-    
+
   }, []);
+
+
 
   return (
     <div

@@ -123,13 +123,21 @@ class PlayerViewSet(viewsets.ModelViewSet):
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
             # Create response
-            response_data = {
-                'status': 'success',
+            user = {
+                'token': tokens['access'],
+                'username': user.username,
+                'avatar': user.avatar,
+                'email': user.email,
                 'two_factor': user.two_factor,
+                'is_online': user.status_network,
+            }
+            response_data = {
+                'msg': 'success',
+                'user': user,
             }
             response = Response(response_data, status=status.HTTP_200_OK)
             response.set_cookie(
-                key='access',
+                key='token',
                 value=tokens['access'],
                 httponly=True,
                 secure=True,
@@ -137,10 +145,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
             )
             return  response
         except requests.RequestException as e:
-            print ('request.data ---- >',request.data)
             return Response({'error': 'Request failed: {}'.format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            print ('request.data ---- >',request.data)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def logout(self, request):
@@ -169,7 +175,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
     def check_2fa(self, request):
         player = request.user
         serializer = PlayerSerializer(player)
-        print('player ---- >', serializer.data)
         return Response(serializer.data)
 
     def getallusers(self, request):
@@ -184,5 +189,24 @@ class PlayerViewSet(viewsets.ModelViewSet):
         }
             for player in serializer.data
         ]
-        print('players ---- >', users)
         return Response(users)
+    def verifytoken (self , request) :
+        try :
+            token = request.COOKIES.get('token')
+            if not token :
+                return Response({'msg':'Token is invalid or expired'},status=status.HTTP_400_BAD_REQUEST)
+            decoded_token = AccessToken(token)
+            payload = decoded_token.payload
+            if not payload.get("user_id"):
+                return Response({'msg':'Token is invalid or expired '},status=status.HTTP_400_BAD_REQUEST)
+            user = Player.objects.get(id=payload.get("user_id"))
+            print ('user ---- >', user)
+            data = {
+                'msg':'valid',
+                'user' : PlayerSerializer(user).data
+            }
+            return Response(data)
+        except Exception as e :
+            print('error ---- >', e)
+            return Response({'msg':'Token is invalid or expired'},status=status.HTTP_400_BAD_REQUEST)
+

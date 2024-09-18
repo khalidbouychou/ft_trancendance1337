@@ -1,4 +1,4 @@
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./sidebar.css";
 import { Link, useNavigate, } from "react-router-dom";
 import imgprofil from "/icons/profile.png"
@@ -14,7 +14,9 @@ import axios from "axios";
 
 
 
+
 function Sidebar()  {
+
   const navigate = useNavigate();
   const [pathname, setPathname] = useState(window.location.pathname);
   const [icons] = useState([
@@ -31,6 +33,7 @@ function Sidebar()  {
       url: "/notification",
     },
     {
+
       id:3,
       titel: "game",
       urlImg: imggame,
@@ -76,7 +79,7 @@ function Sidebar()  {
       }).then((res) => {
         console.log(res);
         localStorage.clear();
-        navigate('/login');
+        navigate("/login");
       }).catch((err) => {
         console.log(err);
       });
