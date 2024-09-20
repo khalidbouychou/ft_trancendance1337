@@ -1,21 +1,19 @@
 
 
-import { useContext, useEffect } from "react";
-import {  Outlet } from "react-router-dom";
-import { authContext } from "../Context/Context";
+// import { Children, useContext, useEffect } from "react";
+import {  Navigate, Outlet } from "react-router-dom";
+// import { authContext } from "../Context/Context";
 
 
 
-function PrivateRoute() {
-const {verifytoken} = useContext(authContext);
-useEffect(() => {
-  verifytoken();
+function PrivateRoutes() {
+let auth = {'token':false}
+return (
+
+      !auth.token ?
+      <Navigate to='/login'/>
+      :
+      <Outlet/>
+)
 }
-, [window.location.pathname]);
-  return (
-    <>
-      <Outlet />
-    </>
-  );
-}
-export default PrivateRoute;
+export default PrivateRoutes;
