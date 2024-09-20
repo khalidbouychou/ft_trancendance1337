@@ -1,4 +1,4 @@
-#!/goinfre/khbouych/test/backend/env/bin/python3.12
+#!/goinfre/khbouych/ft_trancendance1337-4/backend/env/bin/python3
 
 # http://www.python.org/doc/2.4.4/lib/module-itertools.html
 import itertools
