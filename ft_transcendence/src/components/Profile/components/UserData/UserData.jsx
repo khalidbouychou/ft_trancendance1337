@@ -15,78 +15,28 @@ const UserData = ({userData, ismyprofil}) => {
   const baseXP = 100;
   const incrementXP = userData.xp;
   const level = userData.level;
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-
   const xpForCurrentLevel = baseXP + (level - 1) * incrementXP;
   const xpForNextLevel = baseXP + level * incrementXP;
   const percentageProgress = (xpForCurrentLevel / xpForNextLevel) * 100;
   const [Settings, setSettings] = useState('none')
 
-
   const handleClick = () => {
     setSettings(prevOpen => (prevOpen === 'none' ? 'flex' : 'none'))
   }
 
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      if (searchQuery.trim()) {
-        const response = await fetch(
-          `http://localhost:8000/api/users/search/?q=${searchQuery}`
-        );
-        const data = await response.json();
-        console.log(data);
-        setSearchResults(data);
-      } else {
-        setSearchResults([]);
-      }
-    };
-
-    fetchSearchResults();
-  }, [searchQuery]);
-
   return (
     <div className={styl.first}>
-      {/* search */}
-
-      <div className={styl.search}>
-        <div className={styl.ss}>
-          <form onSubmit={(e) => e.preventDefault()}>
-            <input
-              type="text"
-              name="search"
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="search..."
-              className={styl.input}
-            />
-            <button type="submit" className={styl.button}>
-              <FaSearchengin className={styl.icon} />
-            </button>
-          </form>
-        </div>
-        {searchResults.length > 0 && (
-          <div className={styl.searchRes} >
-            {searchResults.map((user) => (
-              <SearchRes key={user.id} user={user} />
-            ))}
-          </div>
-        )}
-      </div>
 
 
 
       <div className={styl.userData}>
         <div className={styl.user}>
-          {/*userImage*/}
-
           <div className={styl.Image}>
             <div className={styl.imgStl}>
               <img src={userData.image}></img>
               <div className={styl.rndOnli} style={{ backgroundColor: userData?.online ? 'green' : 'red' }}></div>
             </div>
           </div>
-
-          {/* userName */}
 
           <div className={styl.Name}>
             <p>{userData.name.toUpperCase()}</p>
@@ -121,9 +71,6 @@ const UserData = ({userData, ismyprofil}) => {
           </div>
         </div>
         ) : (null)}
-
-        {/* statistic */}
-
         <div className={styl.statistic}>
           <div className={styl.sttcStyl}>
             <div className={styl.res}>

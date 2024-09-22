@@ -13,6 +13,10 @@
 	display: flex;
 	flex-direction: column;
     /* background-color: aqua; */
+    @media (max-width: 1280px) {
+        width: 100%;
+        /* height: 1000px; */
+    }
 }
 
 .head h1
@@ -30,179 +34,16 @@
     }
 }
 
-/* .Intro {
-    width: 70%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-.logo {
-    width: 30%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-@media (max-width: 1800px) {
-    .Intro {
-        width: 50%;
-    }
-    .logo {
-        width: 50%;
-        
-    }
-}
-@media (max-width: 1280px) {
-    .logo {
-        position: absolute;
-        width: 100%;
-        opacity: 30%;
-    }
-    .Intro {
-        width: 100%;
-        .intro {
-            height: 60%;
-        }
-        .Play {
-            height: 40%;
-            width: 50%;
-        }
-        z-index: 1;
-    }
-}
-@media (max-width: 640px) {
-    .cont {
-        width: 100%;
-    }
-} */
-/* .intro {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 50%;
-    .str {
-        width: 100%;
-        height: 70%;
-        font-size: 30px;
-        color: white;
-    }
-} */
-/* .Play {
-    display: flex;
-    width: 100%;
-    height: 50%;
-    button {
-        width: 400px;
-        height: 100px;
-        background-color: #411556; 
-        border: none;
-        border-radius: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        box-shadow: 0px 4px 8px rgba(151, 19, 79, 0.5);
-        transition: background-color 0.3s, box-shadow 0.3s;
-        p {
-            font-size: 40px;
-            color: white;
-        }
-    }
-    button:hover {
-        background-color: #5e005e;
-        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4);
-    }
-    button:active {
-        background-color: #560856;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-} */
-
-/* @media (max-width: 768px) {
-    .Intro {
-        justify-content: start;
-        align-items: start;
-    }
-    .Play {
-        width: 200px;
-        height: 100px;
-        button {
-            width: 100%;
-            height: 100px;
-            p {
-                font-size: 25px;
-            }
-        }
-    }
-}
-
-@media (max-width: 425px) {
-    .intro {
-        justify-content: center;
-        align-items: center;
-        height: 70%;
-        .str {
-            justify-content: center;
-            align-items: center;
-            font-size: 28px;
-        }
-    }
-} */
-
-
-
-/* .last {
-    width: 85%;
-    height: 60%;
-    display: flex;
-    flex-direction: column;
-    @media (max-width: 1775px) {
-        width: 100%;        
-    }
-}
-.Leaderboard {
-    font-size: 30px;
-    display: flex;
-    gap: 10px;
-    color: white;
-}
-.content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    overflow: auto;
-    padding-top: 4%;
-    gap: 20px;
-    &::-webkit-scrollbar {
-		width: 10px;
-		height: 100%;
-	}
-	
-	&::-webkit-scrollbar-thumb {
-		border-radius: 20px;
-		background-color: #ffffff0a;
-	}
-} */
-
 .search {
-    /* background-color: aliceblue; */
     width: 80;
     height: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .extFrame {
-    /* width: 1000px; */
     width: 80%;
     height: 50px;
     border-radius: 50px;
@@ -217,7 +58,6 @@
 
 
 .innerFrame {
-    /* background-color: aliceblue; */
     width: 100%;
     height: 100%;
     display: flex;
@@ -238,7 +78,7 @@
     }
 }
 
-.serachBut {
+.searchBut {
     display: flex;
     position: absolute;
     width: 50px;
@@ -250,9 +90,57 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    @media (max-width: 768px) {
-        height: 35px;
-        width: 35px;
+}
+
+.searchResult {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 300px;
+    top: 80%;
+    left: 11%;
+    z-index: 1;
+    background-color: #660da5;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 0 0 10px 10px;
+    @media (max-width: 640px) {
+        width: 80%;
+    }
+}
+
+.searchCard {
+    width: 210px;
+    height: 60px;
+    display: flex;
+    cursor: pointer;
+    position: relative;
+}
+
+.userImage {
+    display: flex;
+    width: 70px;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    img {
+        width: 55px;
+        height: 55px;
+        border-radius: 60px;
+    }
+}
+
+.userName {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 140px;
+    height: 100%;
+    p {
+        font-size: 16px;
+        font-weight: 800;
+        color: white;
     }
 }
 
@@ -261,11 +149,9 @@
     height: 30%;
     display: flex;
     position: relative;
-    /* background-color: #812185; */
 }
 
 .intro {
-    /* background-color: aquamarine; */
     width: 50%;
     height: 100%;
     display: flex;
@@ -278,10 +164,11 @@
         letter-spacing: 2px;
     }
 }
+
+
 .play {
     width: 50%;
     height: 100%;
-    /* background-color: azure; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -309,6 +196,11 @@
         @media (max-width: 1536px) {
             width: 80%;
         }
+        @media (max-width: 640px) {
+            p {
+                font-size: 1.2rem;
+            }
+        }
     }
 }
 
@@ -317,14 +209,29 @@
         flex-direction: column;
     }
     .intro{
+        padding: 6%;
         width: 100%;
-        height: 70%;
+        height: 50%;
     }
     .play {
         width: 100%;
-        height: 30%;
+        height: 50%;
         button {
-            height: 80%;
+            height: 50%;
+        }
+    }
+    .searchBut {
+        height: 35px;
+        width: 35px;
+    }
+    .innerFrame {
+        input {
+            font-size: 15px;
+        }
+    }
+    .intro {
+        p {
+            font-size: 20px;
         }
     }
 }
@@ -332,197 +239,128 @@
 .last {
     width: 100%;
     height: 60%;
-    /* background-color: aqua; */
     display: flex;
+}
+
+.tmp2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 10px
 }
 
 .Head {
-    /* background-color: #660da5; */
+    /* background-color: azure; */
+    display: flex;
     width: 100%;
     height: 10%;
-    display: flex;
-}
-
-.But {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    padding-left: 1%;
-    gap: 10px;
-    h2 {
-        font-weight: 1000;
-        color: white;
-        letter-spacing: 3px;
-        
+    button {
+        background-color: rgba(255, 255, 255, 0.3);
+        border: 1px solid white;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        p {
+            font-size: 17px;
+            color: white;
+        }
     }
 }
 
-.Icon {
-    padding-bottom: 6px;
-    width: 30px;
-    height: 30px;
+.icon {
+    width: 20px;
+    height: 20px;
     color: gold;
+    display: flex;
+    position: relative;
+    bottom: 2px;
 }
 
-.content {
-    /* background-color: red; */
-    display: flex;
+.cards {
     width: 100%;
     height: 90%;
-}
-
-.leaderboard {
-    width: 30%;
-    height: 100%;
-    /* background-color: aliceblue; */
+    overflow: auto;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 0% 1% 1% 1%;
-    gap: 10px;
+    gap: 20px;
+    padding: 1%;
+    border: solid 1px white;
 }
 
-.bar {
-    background-color: rgba(255, 255, 255, 0.3);
+.statistic {
+    padding: 1%;
     width: 100%;
-    height: 7%;
+    height: 90%;
+    border: 1px solid white;
     display: flex;
+    flex-direction: column;
+}
+
+.chart1 {
+    display: flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart2 {
+    display: flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.circ {
+    display: flex;
+    width: 50%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.CurveChart {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chartCir {
+    width: 200px;
+    height: 200px;
+    border-radius: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chartText{
+    position: absolute;
+    text-align: center;
+    color: white;
     p {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-size: 15px;
-        font-weight: 800;
+        margin: 0;
     }
-    @media (max-width: 1280px) {
-        p {
+}
+
+@media (max-width: 640px) {
+    .chartCir {
+        width: 130px;
+        height: 130px;
+    }
+    .chartText {
+        p{
             font-size: 12px;
         }
     }
 }
 
-.cards {
-    /* background-color: aquamarine; */
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.cardRank {
-    width: 100%;
-    height: 120px;
-    min-height: 120px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.3);
-    hr {
-        height: 70%;
-    }
-}
-
-.ranking {
-    width: 20%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    p{
-        color: white;
-        font-size: 35px;
-        font-weight: 1000;
-        text-decoration: underline;
-    }
-}
-
-.user {
-    display: flex;
-    width: 40%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 10%;
-    img {
-        width: 70px;
-        height: 70px;
-        border-radius: 50px;
-    }
-    p {
-        font-size: 12px;
-        font-weight: 800;
-        color: white;
-    }
-    @media (max-width: 1536px) {
-        P {
-            font-size: 8px;
-        }
-        img {
-            width: 50px;
-            height: 50px;
-        }
-    }
-}
-
-.wins {
-    width: 20%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    p {
-        font-size: 25px;
-        color: white;
-        font-weight: 500px;
-    }
-}
-
-.lvl {
-    width: 20%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    p {
-        font-size: 25px;
-        color: white;
-        font-weight: 500px;
-    }
-}
-
-@media (max-width: 1536px) {
-    .cardRank {
-        height: 100px;
-        min-height: 100px;
-    }
-    .ranking {
-        p {
-            font-size: 30px;
-        }
-    }
-    .user {
-        P {
-            font-size: 10px;
-        }
-        img {
-            width: 50px;
-            height: 50px;
-        }
-    }
-    .wins, .lvl {
-        p {
-            font-size: 20px;
-        }
-    }
-}
-
-.statistic {
-    width: 70%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.3);
-}

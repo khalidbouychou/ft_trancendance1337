@@ -3,6 +3,7 @@ import styl from "./History.module.css";
 import CardFriend from "./components/CardFriend/CardFriend";
 import CardBlocked from "./components/CardBlocked/CardBlocked";
 import CardMatch from "./components/CardMatch/CardMatch";
+import { IoIosArrowForward } from "react-icons/io";
 import Add from '../../assets/Add.svg'
 import Chat from '../../assets/Chat.svg'
 import Block from '../../assets/Block.svg'
@@ -13,6 +14,9 @@ const History = ({ onFriendClick, id, ismyprofil} ) => {
   const [activeSection, setActiveSection] = useState("matchhistory");
   const [friend, setFriends] = useState([]);
   const [userBlocked, setUserBlocked] = useState([]);
+  const [isGame2Visible, setIsGame2Visible] = useState(false);
+  const [currentGame, setCurrentGame] = useState("Ping Pong");
+  const [isIconRotated, setIsIconRotated] = useState(false);
 
   const fetchUserFriends = async (userId) => {
     try {
@@ -48,6 +52,19 @@ const History = ({ onFriendClick, id, ismyprofil} ) => {
     setActiveSection(section)
   }
 
+  const handleGameChange = () => {
+    setCurrentGame(currentGame === "Ping Pong" ? "Tic Tac Toe" : "Ping Pong");
+    setIsGame2Visible(false);
+    setIsIconRotated(false);
+  }
+
+  const handleToggleGame2 = () => {
+    setIsGame2Visible(!isGame2Visible);
+    setIsIconRotated(!isIconRotated);
+  };
+
+
+
   return (
     <div className={styl.last}>
       <div className={styl.Title}>
@@ -82,8 +99,25 @@ const History = ({ onFriendClick, id, ismyprofil} ) => {
       </div>
       <div className={styl.cont}>
         {activeSection === "matchhistory" && (
-          <div className={styl.matchHistory}>
-            <CardMatch />
+          <div className={styl.cont} style={{flexDirection: 'column'}}>
+            <div className={styl.choiseGame}>
+              <button onClick={handleToggleGame2} >
+                <IoIosArrowForward  className={`${styl.icon} ${isIconRotated ? styl.rotated : ""}`}/>
+              </button>
+              <div className={styl.gameName}>
+                <p >{currentGame}</p>
+              </div>
+            </div>
+            {isGame2Visible && (
+              <div className={styl.game2}>
+                <button onClick={handleGameChange}>
+                  <p>{currentGame === "Ping Pong" ? "Tic Tac Toe" : "Ping Pong"}</p>
+                </button>
+              </div>
+            )}
+            <div className={styl.matchHistory}>
+              <CardMatch />
+            </div>
           </div>
         )}
         {activeSection === "friends" && (

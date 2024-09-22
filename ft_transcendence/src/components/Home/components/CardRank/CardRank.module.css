@@ -1,170 +1,107 @@
-.CardRank {
+.cardRank {
     width: 100%;
-    height: 200px;
-    min-height: 200px;
+    height: 120px;
+    min-height: 120px;
+    border-radius: 10px;
     display: flex;
-    border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.2);
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.3);
     hr {
-        height: 50%;
-        margin-top: 50px;
-    }
-    @media (max-width: 1536px) {
-        height: 150px;
-        min-height: 150px;
+        height: 70%;
     }
 }
-.rank {
+
+.ranking {
     width: 20%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    gap: 5%;
-    p {
-        font-size: 30px;
+    p{
         color: white;
+        font-size: 35px;
+        font-weight: 1000;
+        text-decoration: underline;
     }
 }
+
 .user {
-    width: 25%;
-    height: 100%;
     display: flex;
-    align-items: center;
+    width: 40%;
+    height: 100%;
     justify-content: center;
-    gap: 20px;
+    align-items: center;
+    flex-direction: column;
+    gap: 10%;
     img {
-        border-radius: 100px;
-        width: 120px;
-        height: 120px;
-        @media (max-width: 1850px) {
-            width: 100px;
-            height: 100px;
+        width: 70px;
+        height: 70px;
+        border-radius: 50px;
+    }
+    p {
+        font-size: 12px;
+        font-weight: 800;
+        color: white;
+    }
+    @media (max-width: 1536px) {
+        P {
+            font-size: 8px;
+        }
+        img {
+            width: 50px;
+            height: 50px;
         }
     }
+}
+
+.wins {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     p {
-        color: white;
         font-size: 25px;
-    }
-}
-.Wins {
-    width: 25%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 5%;
-    p {
         color: white;
-        font-size: 30px;
+        font-weight: 500px;
     }
 }
 
-.level {
-    width: 30%;
+.lvl {
+    width: 20%;
     height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.circle {
-    display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-}
-.Lvl {
-    position: absolute;
-    font-size: 25px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    p {
+        font-size: 25px;
+        color: white;
+        font-weight: 500px;
+    }
 }
 
 @media (max-width: 1536px) {
-    .rank {
+    .cardRank {
+        height: 100px;
+        min-height: 100px;
+    }
+    .ranking {
         p {
-            font-size: 25px;
-        }
-    }
-
-    .user {
-        flex-direction: column;
-        gap: 10px;
-        p {
-            font-size: 20px;
-        }
-        .img {
-            background-color: aqua;
-            width: 100px;
-            height: 100px;
-        }
-    }
-    .Wins {
-        p {
-            font-size: 25px;
-        }
-    }
-    .Lvl {
-        font-size: 20px;
-    }
-}
-
-@media (max-width: 1024px) {
-    .CardRank {
-        hr {
-            margin-top: 40px;
+            font-size: 30px;
         }
     }
     .user {
+        P {
+            font-size: 10px;
+        }
         img {
-            width: 80px;
-            height: 80px;
-        }
-        p {
-            font-size: 15px;
+            width: 50px;
+            height: 50px;
         }
     }
-    .Wins {
+    .wins, .lvl {
         p {
             font-size: 20px;
         }
     }
-    .Lvl {
-        font-size: 15px;
-    }
 }
-
-@media (max-width: 500px) {
-    .CardRank {
-        height: 120px;
-        min-height: 120px;
-    }
-    .Wins {
-        display: none;
-    }
-
-    .level {
-        display: none;
-    }
-
-    .rank {
-        width: 50%;
-        P{
-            font-size: 20px;
-        }
-    }
-    .user {
-        width: 50%;
-        img {
-            width: 65px;
-            height: 65px;
-        }
-    }
-}
-
