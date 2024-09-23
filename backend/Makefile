@@ -1,19 +1,23 @@
-env :
-	python3 -m venv env
-	@echo "Virtualenv activated"
+run:
+	python3 manage.py runserver 0.0.0.0:8000
 
-init :
-	pip install -r requirements.txt
-	make back
+migrate:
+	python3 manage.py makemigrations && python3 manage.py migrate
 
-back :
-	python3 manage.py runserver
+useradmin:
+	python3 manage.py createsuperuser
+	
+prod:
+	python3 manage.py runserver 0.0.0.0:8000
 
-front :
-	cd frontend && npm install
-	npm run dev
+migrate_all : clean
+	python3 manage.py makemigrations  login 
+	# chat userprofile pongame secondgame
+	python3 manage.py migrate
 
-push :
-	git add .
-	git commit -m "auto commit"
-	git push
+clean:
+	rm -rf login/migrations login/__pycache__ 
+	# rm -rf userprofile/migrations userprofile/__pycache__
+	# rm -rf chat/migrations chat/__pycache__
+	# rm -rf pongame/migrations pongame/__pycache__
+	# rm -rf secondgame/migrations secondgame/__pycache__
