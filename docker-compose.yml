@@ -1,93 +1,71 @@
-# version: '3.8'
-# services:
-#   backend:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     command: 'python manage.py runserver 0.0.0.0:8000'
-#     ports:
-#       - 8000:8000
-#     volumes:
-#       - .:/app
-#     depends_on:
-#       - db
-
-#   frontend:
-#     build:
-#       context: ./frontend
-#       dockerfile: Dockerfile 
-#     command: 'npm run dev'
-#     ports:
-#       - 3000:3000
-#     volumes:
-#       - ./frontend:/app
-#     depends_on:
-#       - backend
-
-#   db:
-#     image: postgres:13
-#     restart: always
-#     environment:
-#       MYSQL_DATABASE: admin
-#       MYSQL_USER: root
-#       MYSQL_PASSWORD: root
-#       MYSQL_ROOT_PASSWORD: root
-#     volumes:
-#       - .dbdata:/var/lib/mysql
-#     ports:
-#       - 5432:5432
-    # frontend:
-    #   container_name: frontend
-    #   build:
-    #     context: ./frontend
-    #   ports:
-    #     - "3000:3000"
-    #   # networks:
-    #   #   - pinger_network
-    #   volumes:
-    #     - ./frontend:/app
-# networks:
-#   pinger_network:
-#   driver: bridge
-  #   depends_on:
-  #     - db
-  # db:
-  #   image: postgres:13
-  #   restart: always
-  #   environment:
-  #     POSTGRES_DB: admin
-  #     POSTGRES_USER: root
-  #     POSTGRES_PASSWORD: root
-  #   volumes:
-  #     - .dbdata:/var/lib/postgresql/data
-  #   ports:
-  #     - 5432:5432
-
-  
 version: '3.8'
 
+# Define the volumes
+volumes:
+  postgres_volume:
+
+    #networks:
+networks:
+  trance_network:
+    name: trance_network
+    driver: bridge
+
 services:
-  db:
-    image: postgres:13
-    restart: always
-    environment:
-      POSTGRES_DB: admin
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-    volumes:
-      - .dbdata:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-  
-  backend:
+
+  frontend:
     build:
-      context: ./backend  # Pointing to the backend directory
-      dockerfile: Dockerfile  # The Dockerfile in the backend directory
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "3000:3000"
     volumes:
-      - ./backend:/app
-    environment:
-      - PYTHONUNBUFFERED=1
-    depends_on:
-      - db
+      - ./frontend:/app
+    networks:
+      - trance_network
+    restart: always
+  # Define the database service
+  # trance_db:
+  #   container_name: postgres_db
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: trance_db
+  #     POSTGRES_USER: khbouych
+  #     POSTGRES_PASSWORD: khbouych_pass
+  #   volumes:
+  #     - postgres_volume:/var/lib/postgresql/data
+  #   ports:
+  #     - 5432:5432
+  #   networks:
+  #     - trance_network
+  #   restart: always
+
+  # Define the backend service
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./backend:/app
+  #   # depends_on:
+  #   #   - trance_db
+  #   networks:
+  #     - trance_network
+  #   restart: always
+
+    # Define the frontend service
+    # nginx:
+    #   volumes:
+    #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    #   command: [ nginx-debug, '-g', 'daemon off;' ]
+    #   restart: always
+
+    # Define the frontend service
+    # redis:
+    #   container_name: redis
+    #   image: redis:alpine
+    #   ports:
+    #     - "6379:6379"
+    #   networks:
+    #     - trance_network

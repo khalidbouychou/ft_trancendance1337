@@ -1,7 +1,7 @@
 
 # all: ssl
-# 	docker-compose up --build
-all: clean
+	# docker-compose up --build
+all: down clean
 	docker-compose up --build
 clean:
 	docker system prune -af
@@ -16,7 +16,7 @@ clean:
 	# rm -rf ./backend/certs
 # ssl:
 # 	bash ./generate_ssl.sh
-down:
+down: clean
 	docker-compose down
 
 reload: down clean all

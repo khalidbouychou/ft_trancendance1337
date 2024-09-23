@@ -1,0 +1,11 @@
+
+
+
+# ./FrontEnd/node_modules
+# ./FrontEnd/.env
+
+
+# .env
+# node_modules
+# ./backend/env
+# ./backend/db.sqlite3
