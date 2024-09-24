@@ -1,28 +1,43 @@
 version: '3.8'
 
-# Define the volumes
+#volumes
 volumes:
-  postgres_volume:
+  trance_volume:
 
-    #networks:
+#networks:
 networks:
   trance_network:
     name: trance_network
     driver: bridge
 
 services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - trance_volume:/app/vbackend
+    # depends_on:
+    #   - trance_db
+    networks:
+      - trance_network
+    restart: always
 
   frontend:
     build:
-      context: ./frontend
+      context: ./FrontEnd
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app
+      - trance_volume:/app/vfrontend
     networks:
       - trance_network
     restart: always
+    depends_on:
+      - backend
   # Define the database service
   # trance_db:
   #   container_name: postgres_db
@@ -40,19 +55,6 @@ services:
   #   restart: always
 
   # Define the backend service
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - ./backend:/app
-  #   # depends_on:
-  #   #   - trance_db
-  #   networks:
-  #     - trance_network
-  #   restart: always
 
     # Define the frontend service
     # nginx:

@@ -3,6 +3,9 @@
 	# docker-compose up --build
 all: down clean
 	docker-compose up --build
+docker :
+	chmod +x ./initdocker.sh
+	./initdocker.sh
 clean:
 	docker system prune -af
 	docker volume prune -f

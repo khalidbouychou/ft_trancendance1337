@@ -44,7 +44,7 @@ function App() {
   return (
       <Router>
     <ContextProvider>
-        {/* {window.location.pathname !== "/login" && <Sidebar />} */}
+        {window.location.pathname !== "/login" && <Sidebar />}
         <Routes>
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<Home />} exact />

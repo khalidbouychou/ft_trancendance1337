@@ -6,7 +6,7 @@ migrate:
 
 useradmin:
 	python3 manage.py createsuperuser
-	
+
 prod:
 	python3 manage.py runserver 0.0.0.0:8000
 
