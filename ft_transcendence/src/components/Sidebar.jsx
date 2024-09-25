@@ -39,6 +39,7 @@ import { IoLogoGameControllerB } from "react-icons/io";
 import { CiSettings } from "react-icons/ci";
 import { AiOutlineLogout } from "react-icons/ai";
 import { IoIosNotifications } from "react-icons/io";
+import { MdOutlineHome } from "react-icons/md";
 import { BiLogOut } from 'react-icons/bi';
 import CmpCard from './CmpCard/CmpCard';
 
@@ -80,6 +81,7 @@ const Sidebar = () => {
         </div>
         </Link>
         <div className={styl.cont} >
+            <CmpCard isOpen={isOpen} ICON={MdOutlineHome} name={'Home'} link={'/'}/>
             <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={'/profile'}/>
             <CmpCard isOpen={isOpen} ICON={IoChatbubbleEllipsesOutline} name={'Chat'} link={'/chat'}/>
             <CmpCard isOpen={isOpen} ICON={IoLogoGameControllerB} name={'Game'} link={'/game'}/>

@@ -1,17 +1,7 @@
 import styl from './Home.module.css'
-import logo from './assets/pinglo-removebg-preview.png'
-import scale from './assets/scale.svg'
-import CardRank from './components/CardRank/CardRank'
 import { useNavigate } from 'react-router-dom';
 import { FaSearchengin } from "react-icons/fa6";
-import userImage from './assets/nouahidi.jpeg'
-import { FaRankingStar } from "react-icons/fa6";
-import { FaChartArea } from "react-icons/fa";
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { height, width } from '@fortawesome/free-solid-svg-icons/fa0';
-import CurveChart from './components/CurveChart/CurveChart';
-import CurveLevel from './components/CurveLevel/CurveLevel';
 import Tmp1 from './components/Tmp1/Tmp1'
 import { useState, useEffect } from 'react';
 import Tmp2 from './components/Tmp2/Tmp2';
@@ -20,7 +10,6 @@ import SearchCard from './components/SearchCard/Searchcard';
 
 const Home = () => {
 
-    const navigate = useNavigate();
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const handleClick = () => {
         navigate('/game');
@@ -45,6 +34,7 @@ const Home = () => {
 
     const [searchResults, setSearchResults] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchSearchResults = async () => {
@@ -63,9 +53,6 @@ const Home = () => {
         fetchSearchResults();
       }, [searchQuery]);
 
-    const total = 15 + 10;
-    const winPercentage = (15 / total) * 100;
-    const lossPercentage = (10 / total) * 100;
     const data = [
         { time: 'Jan', wins: 5, losses: 3 },
         { time: 'Feb', wins: 8, losses: 2 },
@@ -105,7 +92,7 @@ const Home = () => {
                         <SearchCard key={user.id} user={user} />
                     ))}
                 </div>
-        )}
+                )}
                 </div>
             </div>
             <div className={styl.first}>
@@ -117,7 +104,7 @@ const Home = () => {
                     </p>
                 </div>
                 <div className={styl.play}>
-                    <button >
+                    <button onClick={handleClick}>
                         <p >Play Now</p>
                     </button>
                 </div>

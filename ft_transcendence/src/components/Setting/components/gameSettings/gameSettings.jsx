@@ -1,4 +1,4 @@
-import styl from './gameSettings.module.css'
+import styl from './GameSettings.module.css'
 import React, { useEffect, useState } from 'react'
 import userImage from '../../assets/nouahidi.jpeg'
 import camera from '../../assets/camera.svg'
@@ -6,7 +6,7 @@ import pencil from '../../assets/pencil.svg'
 import QRCode from 'react-qr-code'
 import { MdOutlineKeyboardDoubleArrowDown } from "react-icons/md";
 
-const gameSettings = () => {
+const GameSettings = () => {
 
     const [userName, setUserName] = useState('NOUREDDINE');
     const [newName, setNewName] = useState('NOUREDDINE');
@@ -89,12 +89,12 @@ const gameSettings = () => {
         <div className={styl.change}>
         <div className={styl.Image}>
             <div className={styl.image}>
-            <img src={userImage} alt="User" />
-            <div className={styl.icon}>
-                <button>
-                <img src={camera} alt="Camera" />
-                </button>
-            </div>
+              <img src={userImage} alt="User" />
+              <div className={styl.icon}>
+                  <button>
+                  <img src={camera} alt="Camera" />
+                  </button>
+              </div>
             </div>
         </div>
         <div className={styl.Name}>
@@ -210,4 +210,4 @@ const gameSettings = () => {
   )
 }
 
-export default gameSettings;
+export default GameSettings;

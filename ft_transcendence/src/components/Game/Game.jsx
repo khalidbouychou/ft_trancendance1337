@@ -10,34 +10,7 @@ const Game = () => {
             <div className={styl.head}>
                 <h1 >GAME</h1>
             </div>
-            <div className={styl.cards}>
-                <div className={styl.GameCard}>
-                  <div className={styl.Head}>
-                    <h3 >1 VS 1</h3>
-                  </div>
-                  <div className={styl.background}>
-                    <img src={_1vs1}></img>
-                  </div>
-                </div>
-
-                <div className={styl.GameCard}>
-                  <div className={styl.Head}>
-                    <h3 >Local Tournoi</h3>
-                  </div>
-                  <div className={styl.background}>
-                    <img src={tournoi}></img>
-                  </div>
-                </div>
-
-                <div className={styl.GameCard}>
-                  <div className={styl.Head}>
-                    <h3 >Team vs Team</h3>
-                  </div>
-                  <div className={styl.background}>
-                    <img src={team}></img>
-                  </div>
-                </div>
-            </div>
+            <div className={styl.cont}></div>
         </div>
     </div>
   )
