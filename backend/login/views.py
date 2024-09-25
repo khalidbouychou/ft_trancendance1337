@@ -153,13 +153,12 @@ class PlayerViewSet(viewsets.ModelViewSet):
             token = request.COOKIES.get('access')
             if not token:
                 return Response({'msg':'none'}, status=status.HTTP_200_OK)
-            response = Response({'msg': 'Token deleted'},
-                                status=status.HTTP_200_OK)
+            response = Response({'msg': 'Token deleted'},status=status.HTTP_200_OK)
             response.delete_cookie('access')
             return response
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def user_status(self, request):
         token = request.COOKIES.get('access')
         if not token:
