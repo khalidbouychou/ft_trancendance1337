@@ -1,0 +1,36 @@
+/* #root {
+  background-color: rgba(37, 35, 60);
+  height: 100vh;
+  overflow: hidden;
+} */
+
+/* App.css */
+.app-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.content-area {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  margin-left: 16rem; /* This should match the width of your sidebar */
+}
+
+/* You might want to add some global styles */
+body {
+  overflow: hidden;
+  /* margin: 0; */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: white;
+}
+
+/* Ensure the app takes up the full height of the viewport */
+html, body, #root {
+  height: 100%;
+}
