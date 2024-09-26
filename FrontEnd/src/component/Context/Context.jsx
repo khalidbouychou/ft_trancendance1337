@@ -16,12 +16,12 @@ export default function ContextProvider({ children }) {
   useEffect(() => {
     async function auth() {
       try {
-        const urlParams = await new URLSearchParams(location.search);
-        const error = await urlParams.get("error");
+        const urlParams =  new URLSearchParams(location.search);
+        const error =  urlParams.get("error");
         if (error) {
           navigate("/login");
         }
-        const code = await urlParams.get("code");
+        const code =  urlParams.get("code");
         if (code) {
           const params = new URLSearchParams();
           params.append("code", code);
@@ -77,6 +77,7 @@ export default function ContextProvider({ children }) {
         setToken,
         setLogged,
         twofa,
+        user,
       }}
     >
       <>{children}</>
