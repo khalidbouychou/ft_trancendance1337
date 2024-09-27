@@ -1,6 +1,6 @@
 import axios from "axios";
 // import styl from "./login.module.css";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./test.css";
 // import { authContext } from "../Context/Context";
 
@@ -22,7 +22,6 @@ const PongParadise = () => {
       }
     }
     auth_intra42();
-    
   }, []);
 
   return (
@@ -37,7 +36,7 @@ const PongParadise = () => {
           <br />
           Join players worldwide in fast-paced matches, tournaments and
           challenges. <br />
-          Ready to dominate the Pong arena? Let's play!
+          Ready to dominate the Pong arena? Let&apos;s play!
         </p>
         <div className="pong-paradise-logo">
           <a href={url}>

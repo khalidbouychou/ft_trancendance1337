@@ -1,20 +1,18 @@
-import styl from "./HomePage.module.css";
-import WelcomeMessageAndImage from "./Component/WelcomeMessageAndImage/WelcomeMessageAndImage.jsx";
-import LeaderboardAndFriends from "./Component/LeaderboardAndFriends/LeaderboardAndFriends.jsx";
+// import styl from "./HomePage.module.css";
+// import WelcomeMessageAndImage from "./Component/WelcomeMessageAndImage/WelcomeMessageAndImage.jsx";
+// import LeaderboardAndFriends from "./Component/LeaderboardAndFriends/LeaderboardAndFriends.jsx";
 // import { useEffect } from "react";
 
-const HomePage = () => {
-  // useEffect(() => {
-  //   if (data.token);
-  //      data.setToken(data.token)
-  // }, [data]);
+import { useContext } from "react";
+import { AuthContext } from "../UserContext/Context";
+import {  Navigate, Outlet } from "react-router-dom";
 
-  return (
-    <div className={styl.homepage}>
-      <WelcomeMessageAndImage />
-      <LeaderboardAndFriends />
-    </div>
-  );
+import Login from "../Login/Login";
+const HomePage = () => {
+  const {user} = useContext(AuthContext);
+ 
+  return user.token ? <Outlet/> : <Navigate to={<Login/>}/>
+ 
 };
 
 export default HomePage;
