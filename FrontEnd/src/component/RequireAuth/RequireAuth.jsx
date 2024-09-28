@@ -1,11 +1,18 @@
-import { useContext } from "react";
+import { useContext, useEffect} from "react";
 import { AuthContext } from "../UserContext/Context";
 import { Navigate, Outlet } from "react-router-dom";
-import Login from "../Login/Login";
+
+
 
 const RequireAuth = () => {
-    const {user} = useContext(AuthContext);
-    return (user.token ? <Outlet/>  : <Navigate to={<Login/>}/>);
+    const { user , auth } = useContext(AuthContext);
+
+    useEffect(() => {
+        auth();
+    }
+    ,[user , auth]);
+
+    return user && user.is_logged && user.access ? <Outlet /> : <Navigate to="/login" />;
 }
 
 export default RequireAuth
