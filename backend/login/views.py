@@ -51,6 +51,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
             username=user_data['username'],
             avatar=user_data['avatar'],
             email=user_data['email'],
+            is_logged=True,
             wins=0,
             losses=0,
             level=1,
@@ -61,9 +62,9 @@ class PlayerViewSet(viewsets.ModelViewSet):
             otp='000000',
             otp_verified=False,
         )
-        user.avatar = user_data['avatar']
-        user.cover = user_data['avatar']
-        user.email = user_data['email']
+        # user.avatar = user_data['avatar']
+        # user.cover = user_data['avatar']
+        # user.email = user_data['email']
         user.set_unusable_password()  # Assuming password is not used
         user.save()
         return user
@@ -105,7 +106,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             }
-            response = requests.get('https://api.intra.42.fr/v2/me', headers=headers)
+            response = requests.get(
+                'https://api.intra.42.fr/v2/me', headers=headers)
             response.raise_for_status()  # Check if the request was successful
             intra_data = response.json()
 
@@ -115,11 +117,11 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 'email': intra_data.get('email'),
             }
             # Check if user exists
-            user = Player.objects.filter(username=user_data['username']).first()
-            if not user :
+            user = Player.objects.filter(
+                username=user_data['username']).first()
+            if not user:
                 user = self.create_user(user_data)
 
-            print('user ---- >',user)
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
             # Create response
@@ -129,9 +131,10 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 'avatar': user.avatar,
                 'email': user.email,
                 'two_factor': user.two_factor,
-                'is_online': user.is_online,
-                'status' : 'success'
+                'is_logged': user.is_logged,
+                'status': 'success'
             }
+            print('user ---- >', user_data)
             response = Response(user_data, status=status.HTTP_200_OK)
             response.set_cookie(
                 key='access',
@@ -140,35 +143,33 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 secure=True,
                 samesite='Lax'
             )
-            return  response
+            return response
         except requests.RequestException as e:
-            print ('request.data ---- >',request.data)
+            print('request.data ---- >', request.data)
             return Response({'error': 'Request failed: {}'.format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            print ('request.data ---- >',request.data)
+            print('request.data ---- >', request.data)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def logout(self, request):
         try:
             token = request.COOKIES.get('access')
             if not token:
-                return Response({'msg':'none'}, status=status.HTTP_200_OK)
-            response = Response({'msg': 'Token deleted'},status=status.HTTP_200_OK)
+                return Response({'msg': 'none'}, status=status.HTTP_200_OK)
+            response = Response({'msg': 'Token deleted'},
+                                status=status.HTTP_200_OK)
             response.delete_cookie('access')
             return response
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def user_status(self, request):
+    def check_auth(self, request):
+        user_token = request.data.get('token')
         token = request.COOKIES.get('access')
+        if not user_token or user_token == 'undefined' or user_token == 'null':
+            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
         if not token:
-            return Response({'msg': 'none'}, status=status.HTTP_200_OK)
-        try:
-            print('user_status ---- >', token)
-            AccessToken(token)
-            return Response({'msg': 'isauth'}, status=200)
-        except Exception:
-            return Response({'msg': 'notauth'}, status=400)
+            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
     def check_2fa(self, request):
         player = request.user
