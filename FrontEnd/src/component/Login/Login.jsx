@@ -10,18 +10,9 @@ const PongParadise = () => {
   const backgroundimage = '/img/loginbg.jpg'; // For public assets
   const logo = '/img/42logo.png'; // For public assets
   const [url, setUrl] = useState("");
+  const { auth_intra42} = useContext(AuthContext);
 
   useEffect(() => {
-    async function auth_intra42() {
-      const response = await axios.get("http://localhost:8000/api/auth_intra/");
-      try {
-        if (response.status === 200) {
-          setUrl(response.data.url);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
     auth_intra42();
   }, []);
 

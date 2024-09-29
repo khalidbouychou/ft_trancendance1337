@@ -5,12 +5,12 @@ import { Navigate, Outlet } from "react-router-dom";
 
 
 const RequireAuth = () => {
-    const { user , auth } = useContext(AuthContext);
+    const { user , Login } = useContext(AuthContext);
 
     useEffect(() => {
-        auth();
+        Login();
     }
-    ,[user , auth]);
+    ,[user]);
 
     return user && user.is_logged && user.access ? <Outlet /> : <Navigate to="/login" />;
 }
