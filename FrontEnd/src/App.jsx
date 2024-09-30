@@ -24,35 +24,7 @@ import Profile from "./component/Profile/Profile.jsx";
 import { Link } from "react-router-dom";
 import AuthProvider from "./component/UserContext/Context.jsx";
 
-const Game = () => {
-  return (
-    <>
-      <h1>Game</h1>
-      <Link to="/chat">chat</Link>
-      <br />
-      <Link to="/game">game</Link>
-      <br />
-      <Link to="/profil">profil</Link>
-      <br />
-      <Link to="/setting">setting</Link>
-      <br />
-      <Link to="/otp">otp</Link>
-    </>
-  );
-};
-
-const Setting = () => {
-  return <h1>Setting</h1>;
-};
-
-const Notification = () => {
-  return <h1>Notification</h1>;
-};
-
-// const NotPageFound = () => {
-//   return <h1>NotPageFound</h1>;
-// };
-
+import Dashboard from "./component/Dashboard/Dashboard.jsx";
 function App() {
   return (
     <AuthProvider>
@@ -60,12 +32,8 @@ function App() {
     <Routes>
       {/* Protected Routes */}
       <Route element={<RequireAuth />}>
-        <Route path="/" element={<HomePage />}>
+        <Route path="/" element={<Dashboard />}>
           <Route path="profil" element={<Profile />} />
-          <Route path="chat" element={<Chat />} />
-          <Route path="game" element={<Game />} />
-          <Route path="setting" element={<Setting />} />
-          <Route path="notifications" element={<Notification />} />
           <Route path="otp" element={<Otp />} />
         </Route>
       </Route>
