@@ -38,16 +38,3 @@ class Player(AbstractUser):
 
 
 #------------------------------------------------------------------------------------------------
-class MatchHistory(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE , related_name='player')
-    opponent = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='opponent')
-    score_player = models.IntegerField(default=0)
-    score_opponent = models.IntegerField(default=0)
-    winner = models.CharField(max_length=255, default='default_winner')
-    date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.player.username
-
-    class Meta:
-        db_table = 'match_history'
