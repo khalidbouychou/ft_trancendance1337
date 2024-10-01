@@ -17,7 +17,7 @@ import CmpCard from './CmpCard/CmpCard';
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
-    const [hasNotification, setHasNotification] = useState(false);
+    // const [hasNotification, setHasNotification] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState('300px');
 
     const handleClick = () => {

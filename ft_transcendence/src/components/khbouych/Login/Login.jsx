@@ -1,6 +1,6 @@
-import axios from "axios";
+
 // import styl from "./login.module.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import "./test.css";
 import { AuthContext } from "../UserContext/Context";
 // import { authContext } from "../Context/Context";
@@ -9,8 +9,8 @@ import { AuthContext } from "../UserContext/Context";
 const PongParadise = () => {
   const backgroundimage = '/img/loginbg.jpg'; // For public assets
   const logo = '/img/42logo.png'; // For public assets
-  const [url, setUrl] = useState("");
-  const { auth_intra42} = useContext(AuthContext);
+ 
+  const { url ,auth_intra42} = useContext(AuthContext);
 
   useEffect(() => {
     auth_intra42();

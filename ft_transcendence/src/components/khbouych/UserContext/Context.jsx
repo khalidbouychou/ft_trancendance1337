@@ -1,17 +1,19 @@
 
 import axios from "axios";
-import { createContext, useEffect, useState } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { createContext, useState } from "react";
+import {useLocation, useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [url, setUrl] = useState("");
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
 
+//---------------------------------auth_intra42---------------------------------
   async function auth_intra42() {
     const response = await axios.get("http://localhost:8000/api/auth_intra/");
     try {
@@ -22,6 +24,7 @@ export default function AuthProvider({ children }) {
       console.log(error);
     }
   }
+//---------------------------------Login---------------------------------
   async function Login() {
     try {
       const urlParams = new URLSearchParams(location.search);
@@ -46,10 +49,48 @@ export default function AuthProvider({ children }) {
       console.log(error);
     }
   }
+//---------------------------------Logout---------------------------------
+  async function Logout() {
+    try {
+      const res = await axios.get(`http://localhost:8000/api/logout/`,{withCredentials: true,});
+      if (res.status === 200) {
+        setUser(null);
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+//---------------------------------User_state---------------------------------
+async function User_state() {
+    try {
+      const res = await axios.get(`http://localhost:8000/api/user_state/`,{withCredentials: true,});
+      if (res.status === 200 && res.data.is_logged === true) {
+        setUser(res.data);
+      }
+      else {navigate("/login");}
+    } catch (error) {
+      navigate("/login");
+      console.log(error);
+    }
+  }
 
-
+  //---------------------------------Check2fa---------------------------------
+  async function Check2fa() {
+    try {
+      const res = await axios.get(`http://localhost:8000/api/check2fa/`,{withCredentials: true,});
+      if (res.status === 200 && res.data.msg === "enabled") {
+        navigate("/twofa");
+        setUser(res.data);
+      }
+      else {navigate("/login");}
+    } catch (error) {
+      navigate("/login");
+      console.log(error);
+    }
+  }
   return (
-    <AuthContext.Provider value={{ user, setUser , Login , auth_intra42}}>
+    <AuthContext.Provider value={{ user,url, setUser , Login , auth_intra42, User_state, Check2fa , Logout}}>
       {children}
     </AuthContext.Provider>
   );
