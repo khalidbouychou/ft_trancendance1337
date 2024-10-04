@@ -4,14 +4,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../UserContext/Context';
 
 export default function Game() {
-
-    const {user} = useContext(AuthContext);
-    const navigate = useNavigate();
-    const location = useLocation();
-    useEffect(() => {
-        if (!user)
-            navigate("/login");
-    }, [user]);
+    // const {user} = useContext(AuthContext);
+    // const navigate = useNavigate();
+    // const location = useLocation();
+    // useEffect(() => {
+    //     if (!user)
+    //         navigate("/login");
+    // }, [user]);
 
     return (
         <>
