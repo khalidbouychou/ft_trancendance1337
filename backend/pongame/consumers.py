@@ -306,20 +306,28 @@ class GameConsumer(AsyncWebsocketConsumer):
                 # Access the first and second elements
                 first_element = values[0]
                 second_element = values[1]
-                matchs = await sync_to_async(Matches)(
-                    Player.username=first_element['username'],
-                    opponent.username=second_element['username'],
+
+                first_player = await sync_to_async(Player.objects.get)(username=first_element['username'])
+                second_player = await sync_to_async(Player.objects.get)(username=second_element['username'])
+
+                first_player.losses += 1
+                first_player.exp_game += 1
+                second_player.wins += 1
+                second_player.exp_game += 10
+
+                await sync_to_async(first_player.save)()
+                await sync_to_async(second_player.save)()
+
+                match = await sync_to_async(Matches.objects.create)(
+                    player=first_player,
+                    opponent=second_player,
                     date=timezone.now().date(),
-                    winner=second_element['username'],
-                    opponent.wins += 1
-                    opponent.xp += 10
-                    loser=first_element['username'],
-                    Player.losses += 1
-                    Player.xp += 1
+                    winner=second_player.username,
+                    loser=first_player.username,
                     left_score=self.left_score,
                     right_score=self.right_score
                 )
-                await sync_to_async(matchs.save)()
+                await sync_to_async(match.save)()
 
 
         elif self.ballx >= self.game_width - 15:
@@ -347,19 +355,26 @@ class GameConsumer(AsyncWebsocketConsumer):
 
                 first_element = values[0]
                 second_element = values[1]
-                matchs = await sync_to_async(Matches)(
-                    Player=first_element['username'],
-                    opponent=second_element['username'],
+                first_player = await sync_to_async(Player.objects.get)(username=first_element['username'])
+                second_player = await sync_to_async(Player.objects.get)(username=second_element['username'])
+
+                first_player.wins += 1
+                first_player.exp_game += 10
+                second_player.losses += 1
+                second_player.exp_game += 1
+
+                await sync_to_async(first_player.save)()
+                await sync_to_async(second_player.save)()
+
+                match = await sync_to_async(Matches.objects.create)(
+                    player=first_player,
+                    opponent=second_player,
                     date=timezone.now().date(),
-                    winner=first_element['username'],
-                    Player.wins += 1
-                    Player.xp += 10
-                    loser=second_element['username'],
-                    opponent.losses += 1
-                    opponent.xp += 1
+                    winner=first_player.username,
+                    loser=second_player.username,
                     left_score=self.left_score,
                     right_score=self.right_score
                 )
-                await sync_to_async(matchs.save)()
+                await sync_to_async(match.save)()
 
         await self.pack_data_to_send()
