@@ -8,6 +8,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 export default function Home() {
+  console.log('i may send u to login');
   return (
     <>
       <div>This is the home page</div>

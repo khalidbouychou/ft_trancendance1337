@@ -24,7 +24,7 @@ const Game = () => {
                   <div className={styl.gameName}>
                     <p>Tic Tac Toe</p>
                   </div>
-                  <Link to={"/games/xo-games"}><button className={styl.image} >
+                  <Link to={"/xo-games"}><button className={styl.image} >
                     <img src={tic} alt="Tic Tac Toe" />
                   </button></Link>
                 </div>
@@ -34,7 +34,7 @@ const Game = () => {
                   <div className={styl.gameName}>
                     <p>Ping Pong</p>
                   </div>
-                  <Link to={"/games/pingpong-games"}><button className={styl.image}>
+                  <Link to={"/pingpong-games"}><button className={styl.image}>
                     <img src={ping} alt="Ping Pong" />
                   </button></Link>
                 </div>

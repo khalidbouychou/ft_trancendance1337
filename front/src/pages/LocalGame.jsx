@@ -149,7 +149,7 @@ export default function LocalGame() {
             drawRightRacket();
             gamelogic();
             const currentPath = window.location.pathname;
-            if (currentPath === '/localpong' && condition === 'R')
+            if (currentPath === '/games/localpong' && condition === 'R')
             {
                 return requestAnimationFrame(draw);
             }else
@@ -180,7 +180,7 @@ export default function LocalGame() {
     const navigate = useNavigate();
 
     const handleExitClick = () => {
-        navigate('/game');
+        navigate('/pingpong-games');
     };
     return (
         <>
@@ -204,14 +204,14 @@ export default function LocalGame() {
                     <div className={styles.player}>
                         <img src="assets/superior.png" className={styles.userImg}/>
                         <div className={styles.playerInfo}>
-                            <h2>Mohammed</h2>
+                            <h2>Left Player</h2>
                             <h3>score: {leftScore}</h3>
                         </div>
                     </div>
                     <div className={styles.player}>
                         <img src="assets/battlebeast.png" className={styles.userImg}/>
                         <div className={styles.playerInfo}>
-                            <h2>Local friend</h2>
+                            <h2>Right Player</h2>
                             <h3>score: {rightScore}</h3>
                         </div>
                     </div>

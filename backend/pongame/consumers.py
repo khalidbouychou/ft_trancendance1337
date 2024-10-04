@@ -307,11 +307,15 @@ class GameConsumer(AsyncWebsocketConsumer):
                 first_element = values[0]
                 second_element = values[1]
                 matchs = await sync_to_async(Matches)(
-                    player_name_1=first_element['username'],
-                    player_name_2=second_element['username'],
+                    Player.username=first_element['username'],
+                    opponent.username=second_element['username'],
                     date=timezone.now().date(),
                     winner=second_element['username'],
+                    opponent.wins += 1
+                    opponent.xp += 10
                     loser=first_element['username'],
+                    Player.losses += 1
+                    Player.xp += 1
                     left_score=self.left_score,
                     right_score=self.right_score
                 )
@@ -344,11 +348,15 @@ class GameConsumer(AsyncWebsocketConsumer):
                 first_element = values[0]
                 second_element = values[1]
                 matchs = await sync_to_async(Matches)(
-                    player_name_1=first_element['username'],
-                    player_name_2=second_element['username'],
+                    Player=first_element['username'],
+                    opponent=second_element['username'],
                     date=timezone.now().date(),
                     winner=first_element['username'],
+                    Player.wins += 1
+                    Player.xp += 10
                     loser=second_element['username'],
+                    opponent.losses += 1
+                    opponent.xp += 1
                     left_score=self.left_score,
                     right_score=self.right_score
                 )

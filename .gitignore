@@ -25,5 +25,6 @@ dist-ssr
 
 env
 
-backend/env
 .vite
+backend/env
+backend/strong_backend

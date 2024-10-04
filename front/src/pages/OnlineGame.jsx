@@ -28,12 +28,6 @@ export default function  OnlineGame() {
 
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
-    const location = useLocation();
-    useEffect(() => {
-        console.log('user:', user);
-        if (!user)
-            navigate("/login");
-    }, [user]);
 
     const pressedKeys = useRef(new Set());
     const [ rightScore, setRightScore ] = useState(0);
@@ -237,7 +231,7 @@ export default function  OnlineGame() {
                 }
             }
             const currentPath = window.location.pathname;
-            if (currentPath === '/onlinepong' && condition === 'N')
+            if (currentPath === '/games/onlinepong' && condition === 'N')
                 return requestAnimationFrame(draw);
             else
                 return cancelAnimationFrame(myReq);

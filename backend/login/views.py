@@ -53,7 +53,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             email=user_data['email'],
             wins=0,
             losses=0,
-            level=1,
             exp_game=0,
             status_network='online',
             status_game='offline',
@@ -212,3 +211,10 @@ class PlayerViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print('error ---- >', e)
             return Response({'msg': 'Token is invalid or expired'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+#------------------------------------------------------------------------------------------------
+

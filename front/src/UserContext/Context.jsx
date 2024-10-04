@@ -9,34 +9,9 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [url, setUrl] = useState("");
+  const [islogin, setIslogin] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
-  async function fetchUserWithToken() {
-    try {
-      const token = Cookies.get('token');
-      if (!token) {
-        // If no token, navigate to login
-        console.log("No token found, redirecting to login.");
-        navigate("/login");
-        return;
-      }
-      const res = await axios.post(`http://10.13.10.14:8000/api/login/`,params,{
-            withCredentials: true
-          });
-      if (res.status === 200){
-        console.log("res.data:", res.data.user);
-        setUser(res.data);
-
-        navigate("/");
-      } else {
-        navigate("/login");
-      }
-      } catch (error) {
-      navigate("/login");
-      console.log(error);
-    }
-  }
 
   async function auth_intra42() {
     const response = await axios.get("http://10.13.10.14:8000/api/auth_intra/");
@@ -48,6 +23,7 @@ export default function AuthProvider({ children }) {
       console.log(error);
     }
   }
+
   async function Login() {
     try {
       const urlParams = new URLSearchParams(location.search);
@@ -64,7 +40,8 @@ export default function AuthProvider({ children }) {
           {
           console.log("res.data:", res.data.user);
           setUser(res.data);
-
+          setIslogin(true);
+          console.log("i will send you to home");
           navigate("/");
         } else {
           navigate("/login");
@@ -84,7 +61,7 @@ export default function AuthProvider({ children }) {
 
 
   return (
-    <AuthContext.Provider value={{ user,url, setUser , Login , auth_intra42, fetchUserWithToken}}>
+    <AuthContext.Provider value={{ islogin,user,url, setUser , Login , auth_intra42}}>
       {children}
     </AuthContext.Provider>
   );

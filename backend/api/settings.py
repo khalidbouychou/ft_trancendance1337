@@ -19,9 +19,6 @@ from dotenv import load_dotenv  # Import dotenv here
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -31,8 +28,7 @@ SECRET_KEY = 'django-insecure-gyx%6(g(2=e_y!!4_^&9!p=87&73$jlc(_*yhj1q*t=i@qvx&@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -45,13 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework',
+    'channels',
     'corsheaders',
     'login',
     'pongame',
-    'secondgame',
-    'userprofile',
-    'chat',
- 
+    'matches',
 ]
 
 MIDDLEWARE = [
@@ -63,11 +57,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
+
+ASGI_APPLICATION = 'api.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 ROOT_URLCONF = 'api.urls'
 
@@ -91,7 +91,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -101,10 +100,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -207,11 +202,7 @@ JWT_REFRESH_TOKEN_LIFETIME = REFRESH_TOKEN_LIFETIME
 
 CORS_ALLOW_ALL_ORIGINS = True  # Set to True for development, but not recommended for production
 
-CORS_ALLOWED_ORIGINS = [
-    "http://10.13.10.14:3000",  # Your React app's address
-    'http://10.13.10.14:8000',
-    
-]
+CORS_ALLOWED_ORIGINS = ['http://*']
 
 # DATABASES = {
 #     'default': {

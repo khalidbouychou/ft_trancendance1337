@@ -200,7 +200,7 @@ export default function LocalGame() {
             drawbottomrightRacket();
             gamelogic();
             const currentPath = window.location.pathname;
-            if (currentPath === '/localteampong' && condition === 'R')
+            if (currentPath === '/games/localteampong' && condition === 'R')
             {
                 return requestAnimationFrame(draw);
             }else

@@ -24,29 +24,8 @@ class Player(AbstractUser):
     two_factor = models.BooleanField(default=False)
     otp = models.CharField(max_length=6, default='000000')
     otp_verified = models.BooleanField(default=False)
-    match_history = models.ManyToManyField('MatchHistory', related_name='match_history', blank=True)
-
-
-    def __str__(self):
-        return self.username
+   
 
 
     class Meta:
         db_table = 'player'
-
-
-#------------------------------------------------------------------------------------------------
-class MatchHistory(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE , related_name='player')
-    opponent = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='opponent')
-    score_player = models.IntegerField(default=0)
-    score_opponent = models.IntegerField(default=0)
-    winner = models.CharField(max_length=255, default='default_winner')
-    loser = models.CharField(max_length=255, default='default_loser')
-    date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.player.username
-
-    class Meta:
-        db_table = 'match_history'

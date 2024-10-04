@@ -9,6 +9,8 @@ class PlayerSerializer(serializers.ModelSerializer):
         model = Player
         fields = '__all__'
 
+
+
 # class TwoFASerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Player
