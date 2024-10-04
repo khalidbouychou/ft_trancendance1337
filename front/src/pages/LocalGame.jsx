@@ -62,6 +62,7 @@ export default function LocalGame() {
         }
 
         const gamelogic = () => {
+            console.log('gamelogic');
             ballx += (ballspeed + bonus) * balldirectionX;
             bally += (ballspeed + bonus) * balldirectionY;
             if (rightRacketY <= ((canvas.height / 2) + bally + 15) && rightRacketY + racketHeight >= ((canvas.height / 2) + bally - 15) && ((canvas.width / 2) + ballx + 15) >= (canvas.width - racketWidth)) {
