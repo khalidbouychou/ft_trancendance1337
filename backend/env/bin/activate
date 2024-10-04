@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/goinfre/khbouych/ft_trancendance1337-3/backend/env"
+VIRTUAL_ENV="/Users/mel-jira/Desktop/TeamProject/backend/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

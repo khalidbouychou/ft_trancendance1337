@@ -53,7 +53,7 @@ const Sidebar = () => {
             <CmpCard isOpen={isOpen} ICON={MdOutlineHome} name={'Home'} link={'/'}/>
             <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={'/profile'}/>
             <CmpCard isOpen={isOpen} ICON={IoChatbubbleEllipsesOutline} name={'Chat'} link={'/chat'}/>
-            <CmpCard isOpen={isOpen} ICON={IoLogoGameControllerB} name={'Game'} link={'/game'}/>
+            <CmpCard isOpen={isOpen} ICON={IoLogoGameControllerB} name={'Game'} link={'/games'}/>
             <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/>
             <CmpCard isOpen={isOpen} ICON={CiSettings} name={'Setting'} link={'/setting'}/>
             <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'} top={'43%'}/>

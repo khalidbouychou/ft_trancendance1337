@@ -183,31 +183,6 @@
 }
 
 .game {
-    /* display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    background-size: cover;
-    flex-direction: column;
-    width: 350px;
-    height: 650px;
-    background-color: aqua;
-    border-radius: 20px;
-    border: 5px solid rgba(255, 255, 255, 0.5);
-    filter: brightness(50%);
-    transition: filter 1s ease;
-    cursor: pointer;
-    &:hover {
-        filter: brightness(70%);
-        animation: slide-right 2s forwards;
-    }
-    img {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 150%;
-        height: 150%
-    } */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -259,7 +234,7 @@
     }
 }
 
-.pingPong {
+.pingPong, .TicTac {
     display: flex;
     justify-content: center;
     padding-top: 6%;
@@ -273,6 +248,10 @@
     @media (max-width: 768px) {
         padding-top: 0%;
     }
+}
+
+.TicTac {
+    gap: 20%;
 }
 
 /* .card {

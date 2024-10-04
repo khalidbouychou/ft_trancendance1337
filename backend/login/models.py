@@ -18,7 +18,6 @@ class Player(AbstractUser):
     email = models.EmailField(max_length=200, default='default')
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
-    level = models.IntegerField(default=1)
     exp_game = models.IntegerField(default=0)
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
     status_game = models.CharField(max_length=10, choices=STATUS_GAME, default='offline')
@@ -43,6 +42,7 @@ class MatchHistory(models.Model):
     score_player = models.IntegerField(default=0)
     score_opponent = models.IntegerField(default=0)
     winner = models.CharField(max_length=255, default='default_winner')
+    loser = models.CharField(max_length=255, default='default_loser')
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -1,84 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styl from './Game.module.css';
-// import _1vs1 from 'assets/1vs1.jpeg';
-// import tic from 'assets/tictac.jpeg';
-// import ping from 'assets/ping.jpeg';
-// import tournoi from 'assets/tournii.jpeg';
-// import team from 'assets/tmvstm.jpeg';
+import _1vs1 from './assets/1vs1.jpeg';
+import tic from './assets/tictac.jpeg';
+import ping from './assets/ping.jpeg';
+import tournoi from './assets/tournii.jpeg';
+import team from './assets/tmvstm.jpeg';
+import local from './assets/local.jpeg';
 import { IoIosArrowBack } from "react-icons/io";
-
-// Array of card images
-// const cardImages = [_1vs1, tic, ping, tournoi, team];
+import { Link } from 'react-router-dom';
 
 const Game = () => {
-  const [currentCards, setCurrentCards] = useState([0, 1, 2, 3]); // Indexes of the cards to display
 
   return (
-    <div className={styl.Game}>
-      <div className={styl.content}>
-        <div className={styl.head}>
-          <h1>GAME</h1>
-        </div>
-        <div className={styl.cont}>
-                        <div className={styl.chouseGame}>
-                <div className={styl.cardGame}>
-                  <div className={styl.game}>
-                    <div className={styl.gameName}>
-                      <p >Tic Tac Toe</p>
-                    </div>
-                    <div className={styl.image}>
-                      <img src="assets/tictac.jpeg"/>
-                    </div>
-                  </div>
-                </div>
-                <div className={styl.cardGame}>
+      <div className={styl.Game}>
+        <div className={styl.content}>
+          <div className={styl.head}>
+            <h1>GAME</h1>
+          </div>
+          <div className={styl.cont}>
+            <div className={styl.chouseGame}>
+              <div className={styl.cardGame}>
                 <div className={styl.game}>
-                    <div className={styl.gameName}>
-                      <p >Ping Pong</p>
-                    </div>
-                    <div className={styl.image}>
-                      <img src="assets/ping.jpeg"/>
-                    </div>
+                  <div className={styl.gameName}>
+                    <p>Tic Tac Toe</p>
                   </div>
+                  <Link to={"/games/xo-games"}><button className={styl.image} >
+                    <img src={tic} alt="Tic Tac Toe" />
+                  </button></Link>
                 </div>
               </div>
-          {/* <div className={styl.pingPong}>
-            <div className={styl.card}>
-              <div className={styl.cardName}>
-                <p >Local</p>
-              </div>
-              <div className={styl.Image}>
-                <img src={_1vs1}/>
-              </div>
-            </div>
-            <div className={styl.card}>
-              <div className={styl.cardName}>
-                <p >1 Vs 1</p>
-              </div>
-              <div className={styl.Image}>
-                <img src={_1vs1}/>
+              <div className={styl.cardGame}>
+                <div className={styl.game}>
+                  <div className={styl.gameName}>
+                    <p>Ping Pong</p>
+                  </div>
+                  <Link to={"/games/pingpong-games"}><button className={styl.image}>
+                    <img src={ping} alt="Ping Pong" />
+                  </button></Link>
+                </div>
               </div>
             </div>
-            <div className={styl.card}>
-              <div className={styl.cardName}>
-                <p >Tournament</p>
-              </div>
-              <div className={styl.Image}>
-                <img src={_1vs1}/>
-              </div>
-            </div>
-            <div className={styl.card}>
-              <div className={styl.cardName}>
-                <p >Local Team</p>
-              </div>
-              <div className={styl.Image}>
-                <img src={_1vs1}/>
-              </div>
-            </div>
-          </div> */}
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 
