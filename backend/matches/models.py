@@ -13,3 +13,6 @@ class Matches(models.Model):
 
     class Meta:
         db_table = 'matches'
+    
+    def __str__(self):
+        return self.player.username + ' vs ' + self.opponent.username
