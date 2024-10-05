@@ -1,0 +1,65 @@
+version: '3.8'
+#volumes
+volumes:
+  trance_volume:
+
+    #networks:
+networks:
+  trance_network:
+    name: trance_network
+    driver: bridge
+
+services:
+  trance_db:
+    container_name: postgres_db
+    image: postgres:13
+    environment:
+      POSTGRES_DB: "trance_db"
+      POSTGRES_USER: "khbouych"
+      POSTGRES_PASSWORD: "khbouych_pass"
+    volumes:
+      - trance_volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - trance_network
+    restart: always
+  bd:
+    build:
+      context: ./bd
+      dockerfile: back/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - trance_volume:/app/vbd
+    depends_on:
+      - trance_db
+    networks:
+      - trance_network
+    restart: always
+
+  fd:
+    build:
+      context: ./fd
+      dockerfile: front/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - trance_volume:/app/vfd
+    networks:
+      - trance_network
+    restart: always
+    depends_on:
+      - bd
+    # Define the database service
+
+    # Define the bd service
+
+    # Define the fd service
+    # redis:
+    #   container_name: redis
+    #   image: redis:alpine
+    #   ports:
+    #     - "6379:6379"
+    #   networks:
+    #     - trance_network
