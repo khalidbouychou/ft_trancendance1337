@@ -180,7 +180,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                     )
                     self.game_loop = True
                     asyncio.create_task(self.run_60_times_per_second())
-                    # asyncio.create_task(self.pack_data_to_send())
                 
                     # Remove matched players from the queue
                     for player in matched_players:
@@ -210,6 +209,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def pack_data_to_send(self):
         data = {
+            'message': 'game_data',
             'ballx': self.ballx,
             'bally': self.bally,
             'right_paddleY': self.right_paddleY,
