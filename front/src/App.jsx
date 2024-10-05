@@ -7,16 +7,15 @@ import PingPongGames from './components/Game/components/PingGame/PingGame.jsx';
 import XOGames from './components/Game/components/TicTac/TicTac.jsx';
 
 import Home from './components/Home/Home.jsx';
-import Chat from './pages/Chat.jsx';
+import Chat from './Chat/Chat.jsx';
 import Profile from './components/Profile/Profile.jsx';
 import Setting from './components/Setting/Setting.jsx';
-import Achievement from './pages/Achievement.jsx';
 import Notificationz from './components/Notification/Notification.jsx';
-import None from './pages/None.jsx';
-import LocalGame from './pages/LocalGame.jsx';
-import LocalTeamGame from './pages/LocalTeamGame.jsx';
-import OnlineGame from './pages/OnlineGame.jsx';
-import Tournament from './pages/Tournament.jsx';
+import None from './components/None/None.jsx';
+import LocalGame from './ponggame/localpong/LocalGame.jsx';
+import LocalTeamGame from './ponggame/teampong/LocalTeamGame.jsx';
+import OnlineGame from './ponggame/onlinepong/OnlineGame.jsx';
+import Tournament from './ponggame/Tournamentpong/Tournament.jsx';
 import AuthProvider from './UserContext/Context.jsx';
 import style from './App.module.css';
 
@@ -52,7 +51,6 @@ function App() {
               <Route path="chat" element={<Chat />} />
               <Route path="profile" element={<Profile />} />
               <Route path="setting" element={<Setting />} />
-              <Route path="achievement" element={<Achievement />} />
               <Route path="notification" element={<Notificationz />} />
             </Route>
             <Route path="/login" element={<Login />} />

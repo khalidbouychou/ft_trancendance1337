@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './OnlineGame.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../UserContext/Context';
+import { AuthContext } from '../../UserContext/Context';
 
 // function getOrCreateName() {
 //     const storedName = localStorage.getItem('username');
@@ -60,7 +60,7 @@ export default function  OnlineGame() {
         let player_id = 0;
         let myReq;
         let pause = 0;
-        let socket = new WebSocket(`ws://10.13.10.14:8000/ws/socket-server/`);
+        let socket = new WebSocket(`ws://10.11.9.12:8000/ws/socket-server/`);
 
         socket.onopen = () => {
             console.log('my name is:', username, "my avatar is:", avatar);
@@ -80,25 +80,20 @@ export default function  OnlineGame() {
     
         socket.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-                console.log('Received:', data)
-                if (data.hasOwnProperty('ballx'))
-                    ballx = (data.ballx / game_width) * canvas.width
-                if (data.hasOwnProperty('bally'))
-                    bally = (data.bally / game_height) * canvas.height
-                if (data.hasOwnProperty('right_paddleY'))
-                    rightRacketY = (data.right_paddleY / game_height) * canvas.height
-                if (data.hasOwnProperty('left_paddleY'))
-                    leftRacketY = (data.left_paddleY / game_height) * canvas.height
-                if (data.hasOwnProperty('right_score'))
-                    setRightScore(data.right_score)
-                if (data.hasOwnProperty('left_score'))
-                    setLeftScore(data.left_score)
-                if (data.hasOwnProperty('racketHeight'))
-                    racketHeight =  data.racketHeight
-                if (data.hasOwnProperty('racketWidth'))
-                    racketWidth = data.racketWidth
-                if (data.hasOwnProperty('ball_radius'))
-                    ball_radius = ((canvas.height / game_width + canvas.width / game_height) / 2) * 15
+                // console.log('Received:', data)
+                if (data.message){
+                    if (data.message === 'game_data'){
+                        ballx = (data.ballx / game_width) * canvas.width
+                        bally = (data.bally / game_height) * canvas.height
+                        rightRacketY = (data.right_paddleY / game_height) * canvas.height
+                        leftRacketY = (data.left_paddleY / game_height) * canvas.height
+                        setRightScore(data.right_score)
+                        setLeftScore(data.left_score)
+                        racketHeight =  data.racketHeight
+                        racketWidth = data.racketWidth
+                        ball_radius = ((canvas.height / game_width + canvas.width / game_height) / 2) * 15
+                    }
+                }
                 if (data.message){
                     if (data.message === 'game_started'){
                         if (data.player_id1 === username){
@@ -107,7 +102,6 @@ export default function  OnlineGame() {
                             setRightPlayerName(data.player_id2);
                             setLeftPlayerAvatar(data.player_1_avatar);
                             setRightPlayerAvatar(data.player_2_avatar);
-                            console.log("left avatar", data.player_1_avatar, "right avatar", data.player_2_avatar);
                         }
                         else if (data.player_id2 === username){
                             player_id = 2;
@@ -115,33 +109,26 @@ export default function  OnlineGame() {
                             setRightPlayerName(data.player_id2);
                             setLeftPlayerAvatar(data.player_1_avatar);
                             setRightPlayerAvatar(data.player_2_avatar);
-                            console.log("left avatar", data.player_1_avatar, "right avatar", data.player_2_avatar);
                         }
                         setGameStarted(true);
-                        console.log("Game started and i have changed gamestarted to true");
                     }
                     else if (data.message === 'disconnected'){
                         setCondition('D');
                         socket.close();
                         setMessage("Opponent left the game");
-                        console.log("Opponent left the game");
                     }
                 }
                 if (data.hasOwnProperty('winner')) {
-                    console.log("winner", data.winner, player_id);
                     if (data.winner == player_id){
                         setCondition('W');
                         setMessage("You won the game");
-                        console.log("You won the game");
                     }
                     socket.close();
                 }
                 if (data.hasOwnProperty('loser')) {
-                    console.log("loser", data.loser, player_id);
                     if (data.loser == player_id){
                         setCondition('L');
                         setMessage("You lost the game");
-                        console.log("You lost the game");
                     }
                     socket.close();
                 }
@@ -268,7 +255,7 @@ export default function  OnlineGame() {
     }, [gamestarted, condition]);
 
     const handleExitClick = () => {
-        navigate('/game');
+        navigate('/pingpong-games');
     };
 
     return (
