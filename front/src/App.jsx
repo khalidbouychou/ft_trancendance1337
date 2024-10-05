@@ -40,7 +40,7 @@ function App() {
         <div className={style.MainContent}>
           <Routes>
             <Route path="/" element={<ProtectedRoutes />} > 
-              {/* <Route path="/home" element={<Home />} /> */}
+              <Route path="home" element={<Home />} />
               <Route path="games" element={<Games />} />
               <Route path="pingpong-games" element={<PingPongGames />} />
               <Route path="xo-games" element={<XOGames />} />

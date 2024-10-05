@@ -24,7 +24,6 @@ dist-ssr
 *.sw?
 
 env
-
 .vite
 backend/env
 backend/strong_backend
