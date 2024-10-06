@@ -1,9 +1,12 @@
 version: '3.8'
-#volumes
+
 volumes:
   trance_volume:
+  bd_volume:
+  fd_volume:
+  redis_volume:
 
-    #networks:
+
 networks:
   trance_network:
     name: trance_network
@@ -31,7 +34,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - trance_volume:/app/vbd
+      - bd_volume:/app/vbd
     depends_on:
       - trance_db
     networks:
@@ -45,21 +48,21 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - trance_volume:/app/vfd
+      - fd_volume:/app/vfd
+    networks:
+      - trance_network
+    depends_on:
+      - bd
+    restart: always
+
+
+  redis:
+    image: redis:latest
+    container_name: Trance_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_volume:/data
     networks:
       - trance_network
     restart: always
-    depends_on:
-      - bd
-    # Define the database service
-
-    # Define the bd service
-
-    # Define the fd service
-    # redis:
-    #   container_name: redis
-    #   image: redis:alpine
-    #   ports:
-    #     - "6379:6379"
-    #   networks:
-    #     - trance_network
