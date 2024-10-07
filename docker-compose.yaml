@@ -45,8 +45,6 @@ services:
     build:
       context: ./fd
       dockerfile: front/Dockerfile
-    ports:
-      - "3000:3000"
     volumes:
       - fd_volume:/app/vfd
     networks:

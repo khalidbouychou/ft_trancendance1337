@@ -1,12 +1,12 @@
 
 import axios from "axios";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import {useLocation, useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
   const [url, setUrl] = useState("");
   const [islogged, setLogged] = useState(false);
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -40,22 +40,22 @@ export default function AuthProvider({ children }) {
           {
           console.log("res.data:", res.data);
           setUser(res.data);
-          if (user){
-              setLogged(true);
-              navigate("/");
-          }else{
-              setLogged(false);
-              navigate("/login");
-            }
-        } else {
-          navigate("/login");
-        }
+          user &&  setLogged(true);
+          console.log("++ > user:", user);
+        }else {navigate("/login");}
       }
     } catch (error) {
       navigate("/login");
       console.log(error);
     }
   }
+
+
+  useEffect(() => {
+    console.log("-- > user:", user);
+    user ? navigate("/home") : navigate("/login");
+  }
+  , [user]);
 //---------------------------------Logout---------------------------------
   async function Logout() {
     try {
@@ -97,8 +97,9 @@ async function User_state() {
     }
   }
   return (
+
     <AuthContext.Provider value={{ user,url, setUser , Login , auth_intra42, User_state, Check2fa , Logout}}>
-      {children}
-    </AuthContext.Provider>
+    {children}
+   </AuthContext.Provider>
   );
 }
