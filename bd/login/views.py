@@ -5,16 +5,14 @@ from django.contrib.auth.models import User
 from .serializers import PlayerSerializer
 from .models import Player as Player
 from rest_framework import viewsets, status
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , UntypedToken
+from rest_framework_simplejwt.exceptions import TokenError
 
 import os
 
-# C_ID = os.getenv('C_ID')
-C_ID ="u-s4t2ud-2653f5d859771cfaa049b166987c592e6ca20ba05794f64237e9e0cbb54bcf1a"
-# SCID = os.getenv('SCID')
-SCID = "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"
-# REDIRECT_URI = os.getenv('REDIRECT_URI')
-REDIRECT_URI = "http://localhost:5173"
+C_ID = os.getenv('C_ID')
+SCID = os.getenv('SCID')
+REDIRECT_URI = os.getenv('REDIRECT_URI')
 
 
 def search_user(username):
@@ -64,10 +62,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
             two_factor=False,
             otp='000000',
             otp_verified=False,
+            profile_name = user_data['username'],
         )
-        # user.avatar = user_data['avatar']
-        # user.cover = user_data['avatar']
-        # user.email = user_data['email']
         user.set_unusable_password()  # Assuming password is not used
         user.save()
         return user
@@ -119,28 +115,24 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 'avatar': intra_data.get('image')['link'],
                 'email': intra_data.get('email'),
             }
-            # Check if user exists
             user = Player.objects.filter(
                 username=user_data['username']).first()
             if not user:
                 user = self.create_user(user_data)
-
-            # Create JWT tokens
             tokens = self.create_jwt_token(user)
-            # Create response
             user_data = {
-                'access': tokens['access'],
                 'username': user.username,
+                'profile_name': user.profile_name,
                 'avatar': user.avatar,
                 'email': user.email,
                 'two_factor': user.two_factor,
                 'is_logged': user.is_logged,
                 'status': 'success'
             }
-            print('user ---- >', user_data)
+            print('user_data ---- >', user_data.get('is_logged'))
             response = Response(user_data, status=status.HTTP_200_OK)
             response.set_cookie(
-                key='access',
+                key='token',
                 value=tokens['access'],
                 httponly=True,
                 secure=True,
@@ -148,49 +140,17 @@ class PlayerViewSet(viewsets.ModelViewSet):
             )
             return response
         except requests.RequestException as e:
-            print('request.data ---- >', request.data)
             return Response({'error': 'Request failed: {}'.format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            print('request.data ---- >', request.data)
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    def logout(self, request):
-        try:
-            token = request.COOKIES.get('access')
-            if not token:
-                return Response({'msg': 'none'}, status=status.HTTP_200_OK)
-            response = Response({'msg': 'Token deleted'},
-                                status=status.HTTP_200_OK)
-            response.delete_cookie('access')
-            return response
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def check_auth(self, request):
-        user_token = request.data.get('token')
-        token = request.COOKIES.get('access')
-        if not user_token or user_token == 'undefined' or user_token == 'null':
-            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
-        if not token:
-            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
-
-    def check_2fa(self, request):
-        player = request.user
-        serializer = PlayerSerializer(player)
-        print('player ---- >', serializer.data)
-        return Response(serializer.data)
-
-    def getallusers(self, request):
-        players = Player.objects.all()
-        serializer = PlayerSerializer(players, many=True)
-        users = [{
-            'username': player['username'],
-            'avatar': player['avatar'],
-            'email': player['email'],
-            'two_factor': player['two_factor'],
-            'is_online': player['is_online']
-        }
-            for player in serializer.data
-        ]
-        print('players ---- >', users)
-        return Response(users)
+        try:
+            token = request.COOKIES.get('token')
+            if not token:
+                return Response({'message': 'Token is required'}, status=status.HTTP_400_BAD_REQUEST)
+            UntypedToken(token)
+            print(UntypedToken(token))
+            return Response({'message': 'Token is valid'}, status=status.HTTP_200_OK)
+        except TokenError:
+            return Response({'message': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)

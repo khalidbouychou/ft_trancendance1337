@@ -14,6 +14,7 @@ class Player(AbstractUser):
         ('offline', _('offline')),
     )
     username = models.CharField(max_length=255, default='default_username', unique=True, blank=False)
+    profile_name = models.CharField(max_length=255, default='default_profile_name', unique=True, blank=False)
     avatar = models.URLField(max_length=200, default='default_avatar')
     email = models.EmailField(max_length=200, default='default')
     is_logged = models.BooleanField(default=False)
