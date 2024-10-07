@@ -1,25 +1,22 @@
 
-// import styl from "./login.module.css";
+
 import { useContext, useEffect } from "react";
 import "./test.css";
 import { AuthContext } from "../UserContext/Context";
-// import { authContext } from "../Context/Context";
 
-// const Login = () => {
 const PongParadise = () => {
-  const backgroundimage = '/img/loginbg.jpg'; // For public assets
-  const logo = '/img/42logo.png'; // For public assets
- 
+  // const backgroundimage = '/img/loginbg.jpg';
+  const logo = '/img/42logo.png';
+
   const { url ,auth_intra42} = useContext(AuthContext);
 
   useEffect(() => {
     auth_intra42();
-  }, []);
+  }, [url]);
 
   return (
     <div
       className="pong-paradise-container"
-      style={{ backgroundImage: `url(${backgroundimage})` }}
     >
       <div className="pong-paradise-card">
         <h1 className="pong-paradise-title">Welcome to Pong Paradise!</h1>

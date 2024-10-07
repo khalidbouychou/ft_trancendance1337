@@ -8,14 +8,15 @@ import PrivateRoutes from "./components/khbouych/PrivateRoutes/PrivateRoutes.jsx
 import Testhome from "./Testhome.jsx";
 
 function App() {
+  
   return (
     <>
       <div className={style.EntirePage}>
         {/* {window.location.pathname !== "/login" && <Sidebar />} */}
         <div className={style.MainContent}>
           <Routes>
-          <Route path='/' element={<PrivateRoutes/>}>
-            <Route path="/home" element={<Testhome />} />
+          <Route path='/' element={ <PrivateRoutes/> }>
+            <Route path="home" element={<Testhome />} />
           </Route>
             <Route path="/login" element={<Login />} />
           </Routes>
