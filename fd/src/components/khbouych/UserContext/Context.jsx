@@ -20,11 +20,16 @@ export default function AuthProvider({ children }) {
     try {
       if (response.status === 200) {
         setUrl(response.data.url);
+        console.log("response.data.url:", response.data.url);
       }
     } catch (error) {
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    console.log("url:", url);
+  } , [url]);
 //---------------------------------Login---------------------------------
   async function Login() {
     try {
@@ -98,7 +103,7 @@ async function User_state() {
   }
   return (
 
-    <AuthContext.Provider value={{ user,url, setUser , Login , auth_intra42, User_state, Check2fa , Logout}}>
+    <AuthContext.Provider value={{ user,url,islogged ,setUser , Login , auth_intra42, User_state, Check2fa , Logout}}>
     {children}
    </AuthContext.Provider>
   );
