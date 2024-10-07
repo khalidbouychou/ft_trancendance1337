@@ -9,9 +9,12 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 import os
 
-C_ID = os.getenv('C_ID')
-SCID = os.getenv('SCID')
-REDIRECT_URI = os.getenv('REDIRECT_URI')
+# C_ID = os.getenv('C_ID')
+C_ID ="u-s4t2ud-2653f5d859771cfaa049b166987c592e6ca20ba05794f64237e9e0cbb54bcf1a"
+# SCID = os.getenv('SCID')
+SCID = "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"
+# REDIRECT_URI = os.getenv('REDIRECT_URI')
+REDIRECT_URI = "http://localhost:5173"
 
 
 def search_user(username):
