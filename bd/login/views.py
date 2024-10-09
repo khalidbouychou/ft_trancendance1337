@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from .serializers import PlayerSerializer
 from .models import Player as Player
 from rest_framework import viewsets, status
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , UntypedToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, UntypedToken
 from rest_framework_simplejwt.exceptions import TokenError
 
 import os
@@ -62,7 +62,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
             two_factor=False,
             otp='000000',
             otp_verified=False,
-            profile_name = user_data['username'],
+            profile_name=user_data['username'],
         )
         user.set_unusable_password()  # Assuming password is not used
         user.save()
@@ -144,13 +144,33 @@ class PlayerViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def check_auth(self, request):
+    def Userstate(self, request):
+        token = request.COOKIES.get('token')
+        if not token:
+            return Response({'error': 'Token is invalid or expired'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            token = request.COOKIES.get('token')
-            if not token:
-                return Response({'message': 'Token is required'}, status=status.HTTP_400_BAD_REQUEST)
-            UntypedToken(token)
-            print(UntypedToken(token))
-            return Response({'message': 'Token is valid'}, status=status.HTTP_200_OK)
+            decoded_token = AccessToken(token)
+            payload = decoded_token.payload
+            if not payload.get("user_id"):
+                return Response({'error': 'Token is invalid or expired '}, status=status.HTTP_400_BAD_REQUEST)
+            user = Player.objects.filter(id=payload.get("user_id")).first()  # Use filter instead of get to handle the case when user is not found
+            if not user:
+                return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
+            userdata = {
+                'username': user.username,
+                'profile_name': user.profile_name,
+                'avatar': user.avatar,
+                'email': user.email,
+                'two_factor': user.two_factor,
+                'is_logged': user.is_logged,
+                '2fa': user.two_factor,
+            }
+            datauser = {
+                'msg': 'valid',
+                'user': PlayerSerializer(userdata).data
+            }
+            return Response(datauser, status=status.HTTP_200_OK)
         except TokenError:
-            return Response({'message': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
