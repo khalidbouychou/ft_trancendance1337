@@ -5,9 +5,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState("");
   const [url, setUrl] = useState("");
-  const [islogged, setLogged] = useState(document.cookie.includes("access"));
+  // const [islogged, setLogged] = useState(document.cookie.includes("access"));
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,12 +41,10 @@ export default function AuthProvider({ children }) {
           { withCredentials:true }
         );
         if (res.status === 200) {
-          navigate("/home");
-          localStorage.setItem("logged", true);
+          console.log("login ---> ",res.data);
           setUser(res.data)
-        } else {
-          navigate("/login");
-        }
+          navigate("/");
+        } 
       }
     } catch (error) {
       navigate("/login");
@@ -54,10 +52,7 @@ export default function AuthProvider({ children }) {
     }
   }
 
-  useEffect(() => {
-    Login();
-  }, [user]);
-
+  
   //---------------------------------Logout---------------------------------
   async function Logout() {
     try {
@@ -73,54 +68,32 @@ export default function AuthProvider({ children }) {
     }
   }
   //---------------------------------User_state---------------------------------
-  async function User_state() {
+  async function Userstate() {
     try {
-      const res = await axios.get(`http://localhost:8000/api/check_auth/`, {
+      const res = await axios.get(`http://localhost:8000/api/userstate/`, {
         withCredentials:true,
       });
-      if (res.status === 200) {
-        console.log(res.data);
+      if (res.status === 200 ) {
+        setUser(res.data.user);
       }
-      else
-      {
-        console.log(res.data);
-        navigate("/login");
-      }
-    } catch (error) {
-      navigate("/login");
-      console.log(error);
+    } catch (e) {
+      setUser("");
+      console.log(e);
     }
   }
-
-  //---------------------------------Check2fa---------------------------------
-  async function Check2fa() {
-    try {
-      const res = await axios.get(`http://localhost:8000/api/check2fa/`, {
-        withCredentials: true,
-      });
-      if (res.status === 200 && res.data.msg === "enabled") {
-        navigate("/twofa");
-        setUser(res.data);
-      } else {
-        navigate("/login");
-      }
-    } catch (error) {
-      navigate("/login");
-      console.log(error);
-    }
-  }
-
+  useEffect(() => {
+    Login();
+  }, []);
+  
   return (
     <AuthContext.Provider
       value={{
         user,
         url,
-        islogged,
         setUser,
         Login,
         auth_intra42,
-        User_state,
-        Check2fa,
+        Userstate,
         Logout,
       }}
     >

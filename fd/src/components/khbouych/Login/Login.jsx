@@ -1,23 +1,16 @@
-
-
 import { useContext, useEffect } from "react";
 import "./test.css";
 import { AuthContext } from "../UserContext/Context";
 
 const PongParadise = () => {
-  // const backgroundimage = '/img/loginbg.jpg';
-  const logo = '/img/42logo.png';
-
-  const { url ,auth_intra42} = useContext(AuthContext);
+  const { url, auth_intra42 } = useContext(AuthContext);
 
   useEffect(() => {
     auth_intra42();
-  }, [url]);
+  }, []);
 
   return (
-    <div
-      className="pong-paradise-container"
-    >
+    <div className="pong-paradise-container">
       <div className="pong-paradise-card">
         <h1 className="pong-paradise-title">Welcome to Pong Paradise!</h1>
         <p className="pong-paradise-description">
@@ -29,8 +22,7 @@ const PongParadise = () => {
         </p>
         <div className="pong-paradise-logo">
           <a href={url}>
-            {/* <img src="/img/42logo.png" alt="pong paradise" /> */}
-            <img src={logo} alt="pong paradise" />
+            <img src="/img/42logo.png" alt="pong paradise" />
           </a>
         </div>
       </div>
