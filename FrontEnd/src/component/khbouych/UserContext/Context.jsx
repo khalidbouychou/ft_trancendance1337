@@ -34,7 +34,7 @@ export default function AuthProvider({ children }) {
         const res = await axios.post(`http://localhost:8000/api/login/`,params,{withCredentials: true,});
         if (res.status === 200 && res.data.is_logged === true)
           {
-          console.log("res.data:", res.data);
+          // console.log("res.data:", res.data);
           setUser(res.data);
           navigate("/");
         } else {
