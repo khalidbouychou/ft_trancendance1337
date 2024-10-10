@@ -24,8 +24,20 @@ class Player(AbstractUser):
     two_factor = models.BooleanField(default=False)
     otp = models.CharField(max_length=6, default='000000')
     otp_verified = models.BooleanField(default=False)
-   
-
+    blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
 
     class Meta:
         db_table = 'player'
+
+    def block_user(self, user_to_block):
+        self.blocked_users.add(user_to_block)
+
+    def unblock_user(self, user_to_unblock):
+        self.blocked_users.remove(user_to_unblock)
+
+    def is_blocked(self, user):
+        return self.blocked_users.filter(id=user.id).exists() 
+
+    @staticmethod
+    def are_enemies(user1, user2):
+        return user1.is_blocked(user2) or user2.is_blocked(user1)

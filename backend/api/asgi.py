@@ -11,16 +11,18 @@ import os
 
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-import pongame.routing
+# from channels.auth import AuthMiddlewareStack
+from pongame.routing import websocket_urlpatterns as pong_urlpatterns
+from chat.routing import websocket_urlpatterns as chat_urlpatterns
+from chat.middleware import TokenAuthMiddlewareStack
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'api.settings')
 
 application = ProtocolTypeRouter({
     'http':get_asgi_application(),
-    'websocket':AuthMiddlewareStack(
+    'websocket':TokenAuthMiddlewareStack(
         URLRouter(
-            pongame.routing.websocket_urlpatterns
+            pong_urlpatterns + chat_urlpatterns
         )
     )
 })
