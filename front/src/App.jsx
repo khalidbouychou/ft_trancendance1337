@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+// import React, { useContext, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Sidebar from './components/SideBar/Sidebar.jsx';
 import Games from './components/Game/Game.jsx';
 
@@ -16,30 +16,25 @@ import LocalGame from './ponggame/localpong/LocalGame.jsx';
 import LocalTeamGame from './ponggame/teampong/LocalTeamGame.jsx';
 import OnlineGame from './ponggame/onlinepong/OnlineGame.jsx';
 import Tournament from './ponggame/Tournamentpong/Tournament.jsx';
-import AuthProvider from './UserContext/Context.jsx';
+// import AuthProvider from './UserContext/Context.jsx';
 import style from './App.module.css';
 
 import Login from './Login/Login.jsx';
 
-import { AuthContext } from './UserContext/Context.jsx';
+// import { AuthContext } from './UserContext/Context.jsx';
 
-import ProtectedRoutes from './protectedRoutes.jsx';
+// import ProtectedRoutes from './protectedRoutes.jsx';
+import Layout from './Layout.jsx';
 
 function App() {
-  const {islogin, user} = useContext(AuthContext);
 
-  useEffect(() => {
-    console.log('islogin', islogin, 'user', user);
-  }
-  , [islogin]);
   return (
     // <BrowserRouter>
 
       <div className={style.EntirePage}>
-        {window.location.pathname !== '/login' && <Sidebar />}
         <div className={style.MainContent}>
           <Routes>
-            <Route path="/" element={<ProtectedRoutes />} > 
+            <Route path="/" element={<Layout />} > 
               <Route path="home" element={<Home />} />
               <Route path="games" element={<Games />} />
               <Route path="pingpong-games" element={<PingPongGames />} />
@@ -53,12 +48,11 @@ function App() {
               <Route path="setting" element={<Setting />} />
               <Route path="notification" element={<Notificationz />} />
             </Route>
-            <Route path="/login" element={<Login />} />
             <Route path="/*" element={<None />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
       </div>
-        
      // </BrowserRouter>
   );
 }
