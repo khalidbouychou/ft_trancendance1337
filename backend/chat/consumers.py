@@ -100,11 +100,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 user_to_block = text_data_json.get('user_id')
                 event = text_data_json.get('event')
                 if event == 'BLOCK':
-                    print("blocking user")
                     await self.block_user(user_to_block)
                 elif event == 'UNBLOCK':
-                    print('unblocking user')
                     await self.unblock_user(user_to_block)
+                current_user = self.scope["user"]
+                await self.send(text_data=json.dumps({
+                    'type': 'BLOCK_USER',
+                    'user_id': user_to_block,
+                    'event': event
+                }))
         except ObjectDoesNotExist as e:
             print(f"Error: {e}", file=sys.stderr)
 
@@ -171,7 +175,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_users(self, query):
-        players = Player.objects.filter(username__icontains=query)
+        players = Player.objects.filter(username__icontains=query).exclude(id=self.scope["user"].id)
         return PlayerSerializer(players, many=True).data
 
     @database_sync_to_async
