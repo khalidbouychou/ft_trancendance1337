@@ -37,7 +37,7 @@ body, html {
     letter-spacing: 2px;
     font-weight: 500;
     text-transform: uppercase; */
-    height: 200px;
+    height: 150px;
 }
 
 .chat-header-h1 {
@@ -61,6 +61,7 @@ body, html {
     flex: 1;
     overflow: hidden;
     border-radius: 10px;
+    margin-bottom: 30px;
 }
 
 .sidebar {
@@ -75,7 +76,7 @@ body, html {
     padding: 3%;
     display: flex;
     width: 94%;
-    position: relative; /* Add this */
+    position: relative;
     padding-top: 20px;
 }
 
@@ -88,13 +89,13 @@ body, html {
     color: #ffffff;
     font-size: 0.9em;
     min-width: 0;
-    outline: none; /* Remove the default focus outline */
-    transition: background-color 0.3s ease; /* Smooth transition for background color */
+    outline: none;
+    transition: background-color 0.3s ease;
 }
 
 .search:focus {
-    background-color: #2f3136; /* Slightly lighter background when focused */
-    box-shadow: 0 0 0 1px rgba(114, 137, 218, 0.5); /* Subtle glow effect */
+    background-color: #2f3136;
+    box-shadow: 0 0 0 1px rgba(114, 137, 218, 0.5);
 }
 
 .search-button {
@@ -106,7 +107,7 @@ body, html {
     cursor: pointer;
     transition: background-color 0.3s;
     font-size: 0.9em;
-    white-space: nowrap; /* Prevents button text from wrapping */
+    white-space: nowrap;
 }
 
 .search-button:hover {
@@ -156,8 +157,8 @@ body, html {
 .contact-info {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* This will push items to the edges */
-    width: 100%; /* Ensure it takes full width of the contact */
+    justify-content: space-between;
+    width: 100%;
 }
 
 .contact-name {
@@ -171,19 +172,39 @@ body, html {
 }
 
 .contact-last-message {
-    margin-left: auto; /* Push to the right */
-    white-space: nowrap; /* Prevent wrapping */
+    margin-left: auto;
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Add ellipsis for long text */
-    max-width: 30%; /* Adjust as needed */
+    text-overflow: ellipsis;
+    max-width: 30%;
 }
 
 .contact-status {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+.contact-status::before {
+    content: '';
+    position: absolute;
     width: 8px;
     height: 8px;
     border-radius: 50%;
+    border: 1px solid #43b581;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.contact-status.online::before {
     background-color: #43b581;
-    margin-left: 5px; /* Add some space between last message and status */
+}
+
+.contact-status.offline::before {
+    background-color: transparent;
 }
 
 .contact-unread {
@@ -192,7 +213,7 @@ body, html {
     border-radius: 50%;
     padding: 2px 6px;
     font-size: 0.75em;
-    margin-left: 5px; /* Add some space between status and unread count */
+    margin-left: 5px;
 }
 
 .chat-container {
@@ -228,7 +249,7 @@ body, html {
 .contact-metadata {
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* Align items to the right */
+    justify-content: flex-end;
     font-size: 0.8em;
     color: #72767d;
 }
@@ -287,7 +308,7 @@ body, html {
 
 .message-text {
     display: inline-block;
-    margin-right: 40px; /* Make room for time on the right */
+    margin-right: 40px;
 }
 
 .message-time {
@@ -353,6 +374,8 @@ body, html {
     height: 100%;
     font-style: italic;
     color: #72767d;
+    font-size: 1.2em;
+    background-color: rgba(174, 176, 180, 0.3);
 }
 
 /* Chat Header Styles */
@@ -379,7 +402,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #7289da; /* You can change this color */
+    background-color: #7289da;
     color: #ffffff;
 }
 
@@ -401,7 +424,7 @@ body, html {
     color: #ffffff;
     font-size: 1.5em;
     cursor: pointer;
-    padding: 5px 10px; /* Increase clickable area around the dots */
+    padding: 5px 10px;
 }
 
 .menu-list {
@@ -420,9 +443,15 @@ body, html {
 }
 
 .menu-list li {
+    display: flex;
+    align-items: center;
     padding: 10px 20px;
     cursor: pointer;
     transition: background-color 0.3s;
+}
+
+.menu-list li svg {
+    margin-right: 10px;
 }
 
 .menu-list li:hover {
@@ -476,7 +505,7 @@ body, html {
 
   /* Default Avatar Styles */
   .default-avatar {
-    font-size: 18px; /* Adjust as needed */
+    font-size: 18px;
 }
 
 /* Search Results Styles */
@@ -538,4 +567,13 @@ body, html {
 .contact-avatar.default-avatar svg {
     width: 20px;
     height: 20px;
+}
+
+.typing-indicator {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 0.8em;
+    padding-left: 10px;
+    padding-top: 5px;
+    color: #38a2a3;
 }

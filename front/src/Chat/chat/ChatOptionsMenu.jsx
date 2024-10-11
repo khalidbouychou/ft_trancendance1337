@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faUserSlash, faUserCheck, faTableTennis, faGamepad } from '@fortawesome/free-solid-svg-icons';
 
-function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser }) {
+function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, currentUser, viewProfile }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-    // useEffect(() => {
-    //     if (otherUser) {
-    //         setIsBlocked(otherUser);
-    //     }
-    // }, [otherUser])
+  useEffect(() => {
+    const checkBlockStatus = () => {
+      if (currentUser && otherUser) {
+        const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
+        setIsBlocked(isOtherUserBlocked);
+      }
+    };
+    checkBlockStatus();
+  }, [otherUser, currentUser])
 
   const handleMouseEnter = () => setIsOpen(true);
   const handleMouseLeave = () => setIsOpen(false);
 
-
   const handleBlockClick = () => {
     if (isBlocked) {
-      // If already blocked, unblock immediately
       setIsBlocked(false);
       onBlockUser(false);
     } else {
-      // If not blocked, show confirmation
       setShowConfirmation(true);
     }
   };
@@ -38,16 +41,25 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser }
   
   return (
     <div className="chat-options-menu" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      {console.log('otherUser: ', otherUser)}
       <button className="menu-toggle">⋮</button>
       {isOpen && (
         <ul className="menu-list">
           <li onClick={handleBlockClick}>
+            <FontAwesomeIcon icon={isBlocked ? faUserSlash : faUserCheck} />
             {isBlocked ? "Unblock User" : "Block User"}
           </li>
-          <li onClick={onPlayPong}>Play Pong</li>
-          <li onClick={onPlayTicTacToe}>Play Tic-Tac-Toe</li>
-          <li onClick={() => { /* Add more options here */ }}>Other Option</li>
+          <li onClick={onPlayPong}>
+            <FontAwesomeIcon icon={faTableTennis} />
+            Play Pong
+          </li>
+          <li onClick={onPlayTicTacToe}>
+            <FontAwesomeIcon icon={faGamepad} />
+            Play Tic-Tac-Toe
+          </li>
+          <li onClick={viewProfile}>
+            <FontAwesomeIcon icon={faUser} />
+            View Profile
+          </li>
         </ul>
       )}
       {showConfirmation && (

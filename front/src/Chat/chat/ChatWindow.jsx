@@ -4,9 +4,10 @@ import ChatOptionsMenu from './ChatOptionsMenu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
     
-function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, currentUser, chatMessagesRef, sockets }) {
+function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, currentUser, chatMessagesRef, sockets, typingUser }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [otherUser, setOtherUser] = useState(null);
+    const [isTyping, setIsTyping] = useState(false);
 
     useEffect(() => {
         if (currentContact) {
@@ -15,6 +16,23 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             setOtherUser(null);
         }
     }, [currentContact])
+
+    useEffect(() => {
+        if (typingUser && otherUser) {
+            if (typingUser.sender === otherUser.id) {
+                setIsTyping(true)
+            }
+        }
+    }, [typingUser])
+
+    useEffect(() => {
+        if (isTyping) {
+            const timer = setTimeout(() => {
+                setIsTyping(false);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [isTyping])
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -38,6 +56,11 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
     const handlePlayTicTacToe = () => {
         console.log('Play Tic-Tac-Toe');
     };
+
+    const viewProfile = () => {
+        console.log('View Profile');
+    };
+
     return (
         <div className="chat-container">
             {otherUser ? (
@@ -54,12 +77,19 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                             <span className="contact-name">
                                 {otherUser.username}
                             </span>
+                            {isTyping && (
+                                <div className="typing-indicator">
+                                    <p>Typing...</p>
+                                </div>
+                            )}
                         </div>
                         <ChatOptionsMenu
                             onBlockUser={handleBlockUser}
                             onPlayPong={handlePlayPong}
                             onPlayTicTacToe={handlePlayTicTacToe}
                             otherUser={otherUser}
+                            currentUser={currentUser}
+                            viewProfile={viewProfile}
                         />
                     </div>
                     <div className="chat-messages" ref={chatMessagesRef}>
@@ -75,6 +105,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                                 value={message}
                                 onChange={handleTyping}
                                 placeholder="Type a message"
+                                maxLength={1000}
                             />
                             <button type="submit">Send</button>
                         </form>

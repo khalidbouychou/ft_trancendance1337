@@ -39,6 +39,7 @@ const LoginPage = () => {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+						maxLength={50}
                     />
                 </div>
                 {error && <p style={{ color: 'red' }}>{error}</p>}

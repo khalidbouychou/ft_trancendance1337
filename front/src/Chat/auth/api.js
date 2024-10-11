@@ -10,12 +10,10 @@ const api = axios.create({
 api.interceptors.request.use(
     async (config) => {
         const accessToken = localStorage.getItem('token');
-        console.log('accessToken from local storage: ', accessToken)
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         } else {
             console.warn('No access token found in local storage');
-            // Instead of navigating here, we'll throw an error
             throw new Error('No access token');
         }
         return config;
@@ -31,7 +29,6 @@ api.interceptors.response.use(
     async (error) => {
         if (error.response && error.response.status === 401) {
             console.warn('Unauthorized access');
-            // Instead of navigating here, we'll throw an error
             throw new Error('Unauthorized');
         }
         return Promise.reject(error);

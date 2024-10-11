@@ -31,24 +31,6 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
 		);
 		setMatchedUsers(filteredUsers.slice(0, 5));
 		console.log('matchedUsers: ', matchedUsers)
-	// const filteredUsers = allUsers.filter(user => 
-		// 	user.username.toLowerCase().includes(search.toLowerCase())
-		// );
-		// setMatchedUsers(filteredUsers.slice(0, 5));
-		// if (filteredUsers.length === 0) {
-		// 	const performSearch = async () => {
-		// 		try {
-		// 			const socket = await setupSocket(1);
-		// 			socket.send(JSON.stringify({
-		// 				type: 'SEARCH_USERS',
-		// 				query: search,
-		// 			}));
-		// 		} catch (error) {
-		// 			console.error('Error fetching matched users:', error);
-		// 		}
-		// 	}
-		// 	performSearch();
-		// }
 	}, [search]);
 
 	useEffect(() => {
@@ -56,10 +38,6 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
 			user.username.toLowerCase().includes(search.toLowerCase())
 		).slice(0, 5));
 	}, [allUsers]);
-
-	// useEffect(() => {
-	// 	console.log('matchedUsers updated:', matchedUsers);
-	// }, [matchedUsers]);
 
 	useEffect(() => {
 		data.chat_rooms.forEach(room => {
@@ -69,7 +47,6 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
 			.filter(room => room.messages && room.messages.length > 0)
 			.sort((a, b) => new Date(b.modified_at) - new Date(a.modified_at));
 		setSortedRooms(filteredAndSortedRooms);
-		// console.log('filteredAndSortedRooms :', filteredAndSortedRooms);
 	}, [data.chat_rooms]);
 
 	const sendSelectUserRequest = async (username) => {
@@ -90,7 +67,7 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
 	}
 
 	const handleSubmitSearch = async (e) => {
-        e.preventDefault(); // Prevent the default form submission
+        e.preventDefault();
 		if (search.length >= 2) {
             await sendSelectUserRequest(search);
             setShowResults(false);
@@ -110,7 +87,8 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
                     className="search" 
                     placeholder="Search contacts" 
                     value={search}
-                    onChange={handleSearch} 
+                    onChange={handleSearch}
+					maxLength={50}
                 />
                 <button type="submit" className="search-button">
                     Search

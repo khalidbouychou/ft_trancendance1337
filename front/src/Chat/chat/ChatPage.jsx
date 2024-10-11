@@ -12,19 +12,16 @@ function ChatPage() {
 	const [sockets, setSockets] = useState({});
 	const [message, setMessage] = useState('');
 	const [chat, setChat] = useState([]);
-	const [typingUsers, setTypingUsers] = useState([]);
 	const [currentContact, setCurrentContact] = useState('');
 	const [unreadMessages, setUnreadMessages] = useState({});
 	const [roomId, setRoomId] = useState('');
 	const [allUsers, setAllUsers] = useState([]);
-	const [isTyping, setIsTyping] = useState(false);
+	const [typingUser, setTypingUser] = useState([]);
 	const [receivedMessage, setReceivedMessage] = useState({});
 	const [notificationSocket, setNotificationSocket] = useState(null);
 	const [data, setData] = useState({
 		chat_rooms: [],
 		user: {},
-		session: {},
-		cookie: {},
 	});
 	const chatMessagesRef = useRef(null);
 	const hasFetchedData = useRef(false);
@@ -36,19 +33,20 @@ function ChatPage() {
 	}, [chat]);
 
 	useEffect(() => {
+		console.log('blocked users: ', data.user.blocked_users);
+	}, [data.user]);
+
+	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await api.get('/chat/');
-				console.log('response from chat: ', response)
 				setData(response.data);
 				setupSocket(1);
 				setupNotificationSocket();
 				initUnreadMessages(response.data);
 			} catch (error) {
-				console.error('Error fetching chat data:', error);
-				if (error.response && error.response.status === 401) {
-					navigate('/login');
-				}
+				console.warn('Chat page inaccessible:', error);
+				navigate('/login');
 			}
 		};
 		
@@ -160,11 +158,14 @@ function ChatPage() {
 	const updateChatRooms = (prevData, newMessage) => {
 		const updatedChatRooms = prevData.chat_rooms.map(room => {
 		  if (room.id === newMessage.chat_room) {
-			return {
-			  ...room,
-			  messages: [...room.messages, newMessage],
-			  modified_at: new Date().toISOString()
-			};
+			const messageExists = room.messages.some(msg => msg.id === newMessage.id);
+            if (!messageExists) {
+                return {
+                    ...room,
+                    messages: [...room.messages, newMessage],
+                    modified_at: new Date().toISOString()
+                };
+            }
 		  }
 		  return room;
 		});
@@ -229,39 +230,54 @@ function ChatPage() {
 			}
 
 			newSocket.onmessage = (event) => {
-				const data = JSON.parse(event.data)
-				switch (data.type) {
+				const data_re = JSON.parse(event.data)
+				switch (data_re.type) {
 					case 'USERS_LIST':
-						console.log('Received users list:', data)
-						setAllUsers(data.users);
+						console.log('Received users list:', data_re)
+						setAllUsers(data_re.users);
 						break
 					case 'MESSAGE':
-						if (!data.message || !data.message.sender) {
+						if (!data_re.message || !data_re.message.sender) {
 							console.log('Received empty message, ignoring');
 							break;
 						}
-						console.log('Received message:', data)
-						setData(prevData => updateChatRooms(prevData, data.message))
+						console.log('Received message:', data_re.message)
+						setData(prevData => updateChatRooms(prevData, data_re.message))
 
-						setReceivedMessage(data.message)
-						// handleUnreadMessages(data.message)
+						setReceivedMessage(data_re.message)
 						break
 					case 'TYPING':
-						setTypingUsers(prevTyping => [...prevTyping, data.user])
+						setTypingUser(data_re)
 						break
 					case 'USER_SELECTED':
-						console.log('User selected:', data.status)
-						if (data.status === 'OK') {
-							setupChatRoom(data.chat_room)
-							setupSocket(data.chat_room.id)
+						if (data_re.status === 'OK') {
+							setupChatRoom(data_re.chat_room)
+							// setupSocket(data_re.chat_room.id)
 							resolve(newSocket)
 						}
 						break
 					case 'BLOCK_USER':
-						console.log('User blocked:', data.user)
+						console.log('Blocked user:', data_re);
+						if (data_re.event === 'BLOCK') {
+							setData(prevData => ({
+								...prevData,
+								user: {
+									...prevData.user,
+									blocked_users: Array.from(new Set([...prevData.user.blocked_users, data_re.user_id]))
+								}
+							}));
+						} else if (data_re.event === 'UNBLOCK') {
+							setData(prevData => ({
+								...prevData,
+								user: {
+									...prevData.user,
+									blocked_users: prevData.user.blocked_users.filter(id => id !== data_re.user_id)
+								}
+							}));
+						}
 						break
 					default:
-						console.log('Unknown message type:', data.type)
+						console.log('Unknown message type:', data_re.type)
 						break
 				}
 			}
@@ -302,7 +318,7 @@ function ChatPage() {
 			sockets[roomId].send(JSON.stringify({
 				type: 'TYPING',
 				room_id: roomId,
-				user: data.user.id,
+				sender: data.user.id,
 			}))
 		}
 	}
@@ -333,6 +349,7 @@ function ChatPage() {
 						currentUser={data.user}
 						chatMessagesRef={chatMessagesRef}
 						sockets={sockets}
+						typingUser={typingUser}
 						/>
 				</div>
         </div>

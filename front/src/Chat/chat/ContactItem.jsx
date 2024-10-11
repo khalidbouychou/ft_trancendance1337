@@ -27,7 +27,7 @@ function ContactItem({ contact, currentUser, onClick, unreadMessages }) {
                         {unreadCount > 0 && (
                             <span className="contact-unread">{unreadCount}</span>
                         )}
-                        <span className="contact-status"></span>
+                        <span className={`contact-status ${otherUser.status_network}`}></span>
                     </div>
                 </div>
             </div>
