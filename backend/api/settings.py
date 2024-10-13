@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'pongame',
     'matches',
     'chat',
+    'notification',
 ]
 
 MIDDLEWARE = [
