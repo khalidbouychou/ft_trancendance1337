@@ -18,12 +18,11 @@ import OnlineGame from './ponggame/onlinepong/OnlineGame.jsx';
 import Tournament from './ponggame/Tournamentpong/Tournament.jsx';
 // import AuthProvider from './UserContext/Context.jsx';
 import style from './App.module.css';
-
 import Login from './Login/Login.jsx';
-
 // import { AuthContext } from './UserContext/Context.jsx';
-
 // import ProtectedRoutes from './protectedRoutes.jsx';
+
+import { NotificationWebSocketProvider } from './contexts/NotifWSContext.jsx';
 import Layout from './Layout.jsx';
 
 function App() {
@@ -34,7 +33,8 @@ function App() {
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
           <Routes>
-            <Route path="/" element={<Layout />} > 
+          <Route path="/" element={<Layout />}>
+          {/* <Route path="/" element={<NotificationWebSocketProvider><Layout /></NotificationWebSocketProvider>}> */}
               <Route path="home" element={<Home />} />
               <Route path="games" element={<Games />} />
               <Route path="pingpong-games" element={<PingPongGames />} />
@@ -43,7 +43,8 @@ function App() {
               <Route path="games/localteampong" element={<LocalTeamGame />} />
               <Route path="games/onlinepong" element={<OnlineGame />} />
               <Route path="games/tournament" element={<Tournament />} />
-              <Route path="chat" element={<Chat />} />
+              <Route path="chat" element={<NotificationWebSocketProvider><Chat /></NotificationWebSocketProvider>} />
+              {/* <Route path="chat" element={<Chat />} /> */}
               <Route path="profile" element={<Profile />} />
               <Route path="setting" element={<Setting />} />
               <Route path="notification" element={<Notificationz />} />

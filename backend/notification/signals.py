@@ -7,7 +7,9 @@ from .serializers import NotificationSerializer
 
 @receiver(post_save, sender=Notification)
 def notify_user(sender, instance, created, **kwargs):
+    print(f'notify_user: {created}')
     if created:
+        print(f'Creating notification')
         channel_layer = get_channel_layer()
         notification_serializer = NotificationSerializer(instance)
         notif_type = instance.notif_type
