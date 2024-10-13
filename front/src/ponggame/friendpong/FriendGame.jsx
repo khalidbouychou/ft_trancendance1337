@@ -1,56 +1,103 @@
 import React, {useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './OnlineGame.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../UserContext/Context';
-
-// function getOrCreateName() {
-//     const storedName = localStorage.getItem('username');
-    
-//     if (storedName) {
-//         return storedName;
-//     } else {
-//         const newName = generateRandomName();
-//         localStorage.setItem('username', newName);
-//         return newName;
-//     }
-// }
-
-// function generateRandomName() {
-//     const firstNames = ["Mohammed", "Reda", "Hassan", "Bilal", "Khalid", "Nour", "Eddine"];
-//     const lastNames = ["Jirari", "Jirari","Sobane", "Eddinaoui", "Bouychou", "Ouahidi", "Ouahidi"];
-    
-//     const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-//     const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-//     return `${randomFirstName}${randomLastName}`;
-// }
+import { AuthContext } from '../../UserContext/Context';
+import api from '../auth/api';
 
 export default function  OnlineGame() {
 
-    const {user} = useContext(AuthContext);
+    const {user, setUser} = useContext(AuthContext);
     const navigate = useNavigate();
-    const location = useLocation();
-    useEffect(() => {
-        console.log('user:', user);
-        if (!user)
-            navigate("/login");
-    }, [user]);
 
     const pressedKeys = useRef(new Set());
     const [ rightScore, setRightScore ] = useState(0);
     const [ leftplayername, setLeftPlayerName ] = useState("left player");
     const [ rightplayername, setRightPlayerName ] = useState("right player");
-    const [ leftplayeravatar, setLeftPlayerAvatar ] = useState(user.user.avatar);
-    const [ rightplayeravatar, setRightPlayerAvatar ] = useState("./assets/unknown0.png");
+    const [ leftplayeravatar, setLeftPlayerAvatar ] = useState('');
+    const [ rightplayeravatar, setRightPlayerAvatar ] = useState("/assets/unknown0.png");
     const [ leftScore, setLeftScore ] = useState(0);
     const [ gamestarted, setGameStarted ] = useState(false);
     const [ condition, setCondition ] = useState('N');
     const [ MESSAGE, setMessage ] = useState("message");
-    const [ username, setUsername ] = useState(user.user.username);
-    const [ avatar, setAvatar ] = useState(user.user.avatar);
+    const [ username, setUsername ] = useState('');
+    const [ avatar, setAvatar ] = useState('');
+    const [ level, setLevel ] = useState(0);
+    const [ player_idx, setPlayerId ] = useState(0);
+    const hasFetchedData = useRef(false);
+    let socket = null;
 
     useEffect(() => {
-        const username = user.user.username;
-        const avatar = user.user.avatar;
+		const fetchData = async () => {
+            const response = await api.get('/chat/');
+            if (response.status === 200)
+            {
+                setUser(response.data.user);
+                setUsername(response.data.user.username);
+                setLeftPlayerAvatar(response.data.user.avatar);
+                setAvatar(response.data.user.avatar);
+                console.log("avatar", response.data.avatar);
+                setLevel(response.data.user.level);
+            }
+		};
+		
+		if (!hasFetchedData.current) {
+			fetchData();
+			hasFetchedData.current = true;
+		}
+	}, []);
+
+    const leftup = () => {
+        if (player_idx === 1 && socket && socket.readyState === WebSocket.OPEN) {
+            const message = {
+                action: 'w',
+                value: 10,
+            };
+            socket.send(JSON.stringify(message));
+        } else {
+            console.log("Only the left player can move the left paddle.");
+        }
+    };
+    
+    const leftdown = () => {
+        if (player_idx === 1 && socket && socket.readyState === WebSocket.OPEN) {
+            const message = {
+                action: 's',
+                value: 10,
+            };
+            socket.send(JSON.stringify(message));
+        } else {
+            console.log("Only the left player can move the left paddle.");
+        }
+    };
+    
+    const rightup = () => {
+        if (player_idx === 2 && socket && socket.readyState === WebSocket.OPEN) {
+            const message = {
+                action: 'ArrowUp',
+                value: 10,
+            };
+            socket.send(JSON.stringify(message));
+        } else {
+            console.log("Only the right player can move the right paddle.");
+        }
+    };
+    
+    const rightdown = () => {
+        if (player_idx === 2 && socket && socket.readyState === WebSocket.OPEN) {
+            const message = {
+                action: 'ArrowDown',
+                value: 10,
+            };
+            socket.send(JSON.stringify(message));
+        } else {
+            console.log("Only the right player can move the right paddle.");
+        }
+    };
+
+    useEffect(() => {
+        const xusername = username;
+        const xavatar = avatar;
+        const xmylevel = level / 100;
         setLeftPlayerName(username);
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -65,17 +112,17 @@ export default function  OnlineGame() {
         let rightRacketY = 0;
         let player_id = 0;
         let myReq;
-        let pause = 0;
-        let socket = new WebSocket(`ws://localhost:8000/ws/socket-server/`);
+        const token = localStorage.getItem('token');
+        socket = new WebSocket(`ws://10.11.9.12:8000/ws/play-friend/?token=${token}`);
 
         socket.onopen = () => {
-            console.log('my name is:', username, "my avatar is:", avatar);
+            // console.log('my name is:', username, "my avatar is:", avatar);
             if (socket.readyState === WebSocket.OPEN) {
                 const message = {
                     action: 'connect',
-                    username: username,
-                    avatar: avatar,
-                    level: 1,
+                    username: xusername,
+                    avatar: xavatar,
+                    level: xmylevel,
                 };
                 socket.send(JSON.stringify(message));
                 console.log('WebSocket is open now');
@@ -84,70 +131,65 @@ export default function  OnlineGame() {
             }
         };
     
+        window.leftup = leftup;
+        window.leftdown = leftdown;
+        window.rightup = rightup;
+        window.rightdown = rightdown;
+    
         socket.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-                console.log('Received:', data)
-                if (data.hasOwnProperty('ballx'))
-                    ballx = (data.ballx / game_width) * canvas.width
-                if (data.hasOwnProperty('bally'))
-                    bally = (data.bally / game_height) * canvas.height
-                if (data.hasOwnProperty('right_paddleY'))
-                    rightRacketY = (data.right_paddleY / game_height) * canvas.height
-                if (data.hasOwnProperty('left_paddleY'))
-                    leftRacketY = (data.left_paddleY / game_height) * canvas.height
-                if (data.hasOwnProperty('right_score'))
-                    setRightScore(data.right_score)
-                if (data.hasOwnProperty('left_score'))
-                    setLeftScore(data.left_score)
-                if (data.hasOwnProperty('racketHeight'))
-                    racketHeight =  data.racketHeight
-                if (data.hasOwnProperty('racketWidth'))
-                    racketWidth = data.racketWidth
-                if (data.hasOwnProperty('ball_radius'))
-                    ball_radius = ((canvas.height / game_width + canvas.width / game_height) / 2) * 15
+                // console.log('Received:', data)
+                if (data.message){
+                    if (data.message === 'game_data'){
+                        ballx = (data.ballx / game_width) * canvas.width
+                        bally = (data.bally / game_height) * canvas.height
+                        rightRacketY = (data.right_paddleY / game_height) * canvas.height
+                        leftRacketY = (data.left_paddleY / game_height) * canvas.height
+                        setRightScore(data.right_score)
+                        setLeftScore(data.left_score)
+                        racketHeight =  data.racketHeight
+                        racketWidth = data.racketWidth
+                        ball_radius = ((canvas.height / game_width + canvas.width / game_height) / 2) * 15
+                    }
+                }
                 if (data.message){
                     if (data.message === 'game_started'){
                         if (data.player_id1 === username){
                             player_id = 1;
+                            setPlayerId(1);
                             setLeftPlayerName(data.player_id1);
                             setRightPlayerName(data.player_id2);
                             setLeftPlayerAvatar(data.player_1_avatar);
                             setRightPlayerAvatar(data.player_2_avatar);
-                            console.log("left avatar", data.player_1_avatar, "right avatar", data.player_2_avatar);
                         }
                         else if (data.player_id2 === username){
                             player_id = 2;
+                            setPlayerId(2);
                             setLeftPlayerName(data.player_id1);
                             setRightPlayerName(data.player_id2);
                             setLeftPlayerAvatar(data.player_1_avatar);
                             setRightPlayerAvatar(data.player_2_avatar);
-                            console.log("left avatar", data.player_1_avatar, "right avatar", data.player_2_avatar);
                         }
+                        navigate(`/games/pingpong/${data.group_name}`, { replace: true });
                         setGameStarted(true);
-                        console.log("Game started and i have changed gamestarted to true");
                     }
                     else if (data.message === 'disconnected'){
                         setCondition('D');
                         socket.close();
                         setMessage("Opponent left the game");
-                        console.log("Opponent left the game");
                     }
                 }
                 if (data.hasOwnProperty('winner')) {
-                    console.log("winner", data.winner, player_id);
                     if (data.winner == player_id){
                         setCondition('W');
                         setMessage("You won the game");
-                        console.log("You won the game");
                     }
                     socket.close();
                 }
                 if (data.hasOwnProperty('loser')) {
-                    console.log("loser", data.loser, player_id);
                     if (data.loser == player_id){
                         setCondition('L');
                         setMessage("You lost the game");
-                        console.log("You lost the game");
                     }
                     socket.close();
                 }
@@ -227,17 +269,8 @@ export default function  OnlineGame() {
             drawball();
             drawLeftRacket();
             drawRightRacket();
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                if (pause === 0) {
-                    const message = {
-                        action: 'state',
-                        value: 1,
-                    };
-                    socket.send(JSON.stringify(message));
-                }
-            }
             const currentPath = window.location.pathname;
-            if (currentPath === '/onlinepong' && condition === 'N')
+            if (currentPath === '/games/onlinepong' && condition === 'N')
                 return requestAnimationFrame(draw);
             else
                 return cancelAnimationFrame(myReq);
@@ -259,6 +292,10 @@ export default function  OnlineGame() {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
             cancelAnimationFrame(myReq);
+
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.close(); // Close WebSocket when the component unmounts
+            }
         };
     }, []);
 
@@ -274,7 +311,7 @@ export default function  OnlineGame() {
     }, [gamestarted, condition]);
 
     const handleExitClick = () => {
-        navigate('/game');
+        navigate('/pingpong-games');
     };
 
     return (
@@ -287,7 +324,7 @@ export default function  OnlineGame() {
                             <h4>{leftplayername}</h4>
                         </div>
                         <div className={styles.vs}>
-                            <img src="assets/loading.gif" className={styles.loadingGif}/>
+                            <img src="/assets/loading.gif" className={styles.loadingGif}/>
                             <p>VS</p>
                         </div>
                         <div className={styles.leftplayer}>
@@ -308,8 +345,12 @@ export default function  OnlineGame() {
                     <div className={styles.holderx} style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                         <div className={styles.message}>
                             <h4>{MESSAGE}</h4>
-                            <img src={avatar}/>
-                            <h3>{username}</h3>
+                            {condition !== 'D' && (
+                                <>
+                                    <img src={avatar}/>
+                                    <h3>{username}</h3>
+                                </>
+                            )}
                         </div>
                         <div className={styles.buttoncontainer}>
                         <div className={styles.Button}>

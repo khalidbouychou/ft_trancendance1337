@@ -9,6 +9,22 @@ from login.models import Player
 from matches.models import Matches
 from django.utils import timezone
 
+class GameStateManager:
+    _game_states = {}
+
+    @classmethod
+    def get_state(cls, room_name):
+        return cls._game_states.get(room_name, None)
+
+    @classmethod
+    def set_state(cls, room_name, game_state):
+        cls._game_states[room_name] = game_state
+
+    @classmethod
+    def remove_state(cls, room_name):
+        if room_name in cls._game_states:
+            del cls._game_states[room_name]
+
 class GameConsumer(AsyncWebsocketConsumer):
     name = ''
     avatar = ''
@@ -35,7 +51,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     left_score = 0
     bonus = 0
     ball_speed = 800 / (2 * 60) + bonus
-    heartbeat = 5
+
 
     async def connect(self):
         await self.accept()
@@ -55,25 +71,11 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 self.channel_name
             )
+            GameStateManager.remove_state(self.room_group_name)
         else:
             self.close()
         if self.name in GameConsumer.queue:
             del GameConsumer.queue[self.name]
-
-    async def monitor_heartbeat(self):
-        while self.heartbeat > 0:
-            print(f'decreasing heartbeat {self.heartbeat} from {self.name}')
-            self.heartbeat -= 0.2
-            await asyncio.sleep(0.2)
-        print('Client disconnected')
-        if (self.ingame):
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'game_message',
-                    'message': 'disconnected',
-                }
-            )
 
     async def receive(self, text_data):
         # print('Received:', text_data)
@@ -91,7 +93,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         value = data.get('value', 0)
 
         if action == 'connect':
-            #stop the connection if he already in the queue
             if (data.get('username') in GameConsumer.queue):
                 self.close()
             GameConsumer.queue[data.get('username')] = {
@@ -104,34 +105,36 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.name = data.get('username')
             self.avatar = data.get('avatar')
             GameConsumer.instances[self.name] = self
-            print("avatar=[",data.get('avatar'),"]")
-            print('client connected', self.avatar)
-            asyncio.create_task(self.monitor_heartbeat())
 
-            #now need to check if we have 2 in queue can that be matched
             if len(GameConsumer.queue) >= 2:
-                print('start searching for match')
                 match_found = False
                 matched_players = []
                 for player1, data1 in GameConsumer.queue.items():
                     for player2, data2 in GameConsumer.queue.items():
-                        # print(f'{player1} vs {player2}')
                         if player1 != player2 and abs(data1['level'] - data2['level']) <= 5:
                             match_found = True
                             matched_players = [player1, player2]
                             break
                     if match_found:
                         break
-                print('searching done')
                 if match_found:
-                    # Start the game
                     self.ingame = True
                     self.admin = self
-                    print('Match found')
 
-                    #create game name
-                    group_name = f'game.{matched_players[0]}vs{matched_players[1]}'
-                    print(f'matched player1 {matched_players[0]}, player2 {matched_players[1]}')
+                    group_name = f'game{matched_players[0]}vs{matched_players[1]}'
+                    print("group_name=",group_name)
+                    game_state = {
+                        'ballx': 400,
+                        'bally': 250,
+                        'left_paddle_y': 100,
+                        'right_paddle_y': 100,
+                        'left_score': 0,
+                        'right_score': 0,
+                        'left_player': GameConsumer.queue[matched_players[0]]['username'],
+                        'right_player': GameConsumer.queue[matched_players[1]]['username']
+                    }
+                    GameStateManager.set_state(group_name, game_state)
+
                     self.game[matched_players[0]] = {
                         'username': GameConsumer.queue[matched_players[0]]['username'],
                         'avatar': GameConsumer.queue[matched_players[0]]['avatar'],
@@ -163,13 +166,13 @@ class GameConsumer(AsyncWebsocketConsumer):
                         GameConsumer.queue[matched_players[1]]['channel_name']
                     )
                     self.room_group_name = group_name
-                    print('Game started')
                     data = {
                         'message': 'game_started',
                         'player_id1': matched_players[0],
                         'player_1_avatar': self.game[matched_players[0]]['avatar'],
                         'player_id2': matched_players[1],
                         'player_2_avatar': self.game[matched_players[1]]['avatar'],
+                        'group_name': group_name,
                     }
                     await self.channel_layer.group_send(
                         self.room_group_name,
@@ -180,32 +183,28 @@ class GameConsumer(AsyncWebsocketConsumer):
                     )
                     self.game_loop = True
                     asyncio.create_task(self.run_60_times_per_second())
-                
-                    # Remove matched players from the queue
+
                     for player in matched_players:
                         del GameConsumer.queue[player]
-
-        if action == 'state':
-            self.heartbeat = value
 
         if self.ingame:
             if action == 'ArrowDown':
                 if self.admin.right_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
                     self.admin.right_paddleY += value
-                    print(f'right_paddleY set to: {self.admin.right_paddleY}')
+                    # print(f'right_paddleY set to: {self.admin.right_paddleY}')
             elif action == 'ArrowUp':
                 if self.admin.right_paddleY >= 10:
                     self.admin.right_paddleY -= value
-                    print(f'right_paddleY set to: {self.admin.right_paddleY}')
+                    # print(f'right_paddleY set to: {self.admin.right_paddleY}')
 
             if action == 's':
                 if self.admin.left_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
                     self.admin.left_paddleY += value
-                    print(f'left_paddleY set to: {self.admin.left_paddleY}')
+                    # print(f'left_paddleY set to: {self.admin.left_paddleY}')
             elif action == 'w':
                 if self.admin.left_paddleY >= 10:
                     self.admin.left_paddleY -= value
-                    print(f'left_paddleY set to: {self.admin.left_paddleY}')
+                    # print(f'left_paddleY set to: {self.admin.left_paddleY}')
 
     async def pack_data_to_send(self):
         data = {
@@ -220,7 +219,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             'game_height': self.game_height,
             'ball_radius': 15,
         }
-        
+
+
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -228,8 +228,18 @@ class GameConsumer(AsyncWebsocketConsumer):
                 'message': data
             }
         )
-        # print('Data sent', data)
-        await asyncio.sleep(1/60)
+        packet = {
+            'message': 'game_data',
+            'ballx': self.ballx,
+            'bally': self.bally,
+            'right_paddleY': self.right_paddleY,
+            'left_paddleY': self.left_paddleY,
+            'right_score': self.right_score,
+            'left_score': self.left_score,
+            'game_width': self.game_width,
+            'game_height': self.game_height,
+        }
+        GameStateManager.set_state(self.room_group_name, packet)
     
     async def game_data(self, event):
         data = event['message']
@@ -243,8 +253,11 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def run_60_times_per_second(self):
         while self.game_loop:
+            start_time = time.time()
             await self.gamelogic()
-            # await self.pack_data_to_send()
+            end_time = time.time()
+            execution_time = end_time - start_time
+            print(f"gamelogic() execution time: {execution_time:.6f} seconds")
             await asyncio.sleep(1/60)
     
     async def gamelogic(self):
@@ -259,7 +272,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.ballx = self.game_width - self.racketWidth - 16
             self.balldirectionX *= -1
             self.balldirectionY = offset
-            self.bonus = min(2, self.bonus + 1)
+            self.bonus += 1
 
         elif (self.ballx - 15 <= self.racketWidth and
             self.left_paddleY <= (self.bally + 15) and
@@ -269,7 +282,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.ballx = self.racketWidth + 16
             self.balldirectionX *= -1
             self.balldirectionY = offset
-            self.bonus = min(2, self.bonus + 1)
+            self.bonus += 1
 
         elif self.bally - 15 <= 0:
             self.bally = 16
@@ -285,7 +298,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionX = -1  
             self.balldirectionY = random.uniform(-1, 1)
             self.right_score += 1
-            if (self.right_score == 3):
+            self.bonus = 0
+            if (self.right_score >= 1000):
                 self.game_loop = False
                 data = {
                     'winner': '2',
@@ -300,10 +314,11 @@ class GameConsumer(AsyncWebsocketConsumer):
                         'message': data
                     }
                 )
-                # Get a list of all the values in the dictionary
+
+                GameStateManager.remove_state(group_name)
+
                 values = list(self.game.values())
 
-                # Access the first and second elements
                 first_element = values[0]
                 second_element = values[1]
 
@@ -336,7 +351,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionX = 1
             self.balldirectionY = random.uniform(-1, 1)
             self.left_score += 1
-            if (self.left_score == 3):
+            self.bonus = 0
+            if (self.left_score >= 1000):
                 self.game_loop = False
                 data = {
                     'winner': '1',
@@ -350,7 +366,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                     'type': 'game_data',
                     'message': data
                 })
-                # Get a list of all the values in the dictionary
+
+                GameStateManager.remove_state(group_name)
+
                 values = list(self.game.values())
 
                 first_element = values[0]
@@ -376,5 +394,82 @@ class GameConsumer(AsyncWebsocketConsumer):
                     right_score=self.right_score
                 )
                 await sync_to_async(match.save)()
-
         await self.pack_data_to_send()
+
+
+class inviteConsumer(AsyncWebsocketConsumer):
+    games_queue = {}
+    started_games = {}
+
+    async def connect(self):
+        await self.accept()
+        print('Connected')
+
+    async def disconnect(self, close_code):
+        print('Disconnected')
+
+    async def receive(self, text_data):
+        if not text_data.strip():
+            print('Received empty message')
+            return
+        
+        try:
+            data = json.loads(text_data)
+        except json.JSONDecodeError:
+            print('Received malformed JSON')
+            return
+
+        action = data.get('action')
+        value = data.get('value', 0)
+        
+        #this case for invite friend to play
+        if action == 'friend_game':
+            if action == 'friend_game':
+                inviteConsumer.game_queue[value] = {
+                    'players':  {
+                        data.get('player1'): None,
+                        data.get('player2'): None,
+                    },
+                    'counter': 30,
+                    'connected': 0
+                }
+                # Start the countdown in a separate thread
+                asyncio.create_task(start_countdown())
+
+        #this case if a player join the (invite friend game)
+        if action == 'connect':
+            if len(inviteConsumer.game_queue) > 0:
+                game = inviteConsumer.game_queue.get(value)
+                if game:
+                    if data.get('player') not in game['players']:
+                        self.close()
+                    elif data.get('player') in game['players']:
+                        inviteConsumer.game_queue[value]['connected'] += 1
+                        inviteConsumer.game_queue[value]['players'][data.get('player')] = self.channel_name
+                else:
+                    self.close()
+            else:
+                self.close()
+
+        #if both players joined start the game
+        if (action == 'connect' and inviteConsumer.game_queue[value]['connected'] == 2):
+            inviteConsumer.started_games[value] = {
+                'players': inviteConsumer.game_queue[value]['players'],
+                'channel_group': f'game{value}',
+            }
+            self.start_game(value)
+            del inviteConsumer.game_queue[value]
+
+    def start_countdown(self, game_id):
+        """Countdown thread for removing the game if no players join in 30 seconds."""
+        while game_id in inviteConsumer.game_queue:
+            game = inviteConsumer.game_queue[game_id]
+            if game['counter'] <= 0:
+                print(f"Game {game_id} expired, removing from the queue.")
+                del inviteConsumer.game_queue[game_id]
+                break
+
+            # Sleep for 1 second and decrease the counter
+            time.sleep(1)
+            inviteConsumer.game_queue[game_id]['counter'] -= 1
+            print(f"Game {game_id} countdown: {inviteConsumer.game_queue[game_id]['counter']} seconds remaining.")

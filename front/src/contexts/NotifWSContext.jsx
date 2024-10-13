@@ -8,7 +8,7 @@ export function NotificationWebSocketProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const ws = new WebSocket(`ws://localhost:8000/ws/notif/?token=${token}`);
+    const ws = new WebSocket(`ws://10.11.9.12:8000/ws/notif/?token=${token}`);
 
     ws.onopen = () => {
       console.log('Notification WebSocket connected');
