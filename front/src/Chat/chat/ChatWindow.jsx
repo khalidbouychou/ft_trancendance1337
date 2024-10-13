@@ -3,11 +3,13 @@ import MessageItem from './MessageItem';
 import ChatOptionsMenu from './ChatOptionsMenu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
     
 function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, currentUser, chatMessagesRef, sockets, typingUser }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [otherUser, setOtherUser] = useState(null);
     const [isTyping, setIsTyping] = useState(false);
+    const { sendMessage: sendNotifMessage, isConnected } = useNotificationWS();
 
     useEffect(() => {
         if (currentContact) {
@@ -51,14 +53,29 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 
     const handlePlayPong = () => {
         console.log('Play Pong');
+        if (isConnected) {
+            sendNotifMessage({
+                type: 'SEND_GR',
+                game_type: 'PONG',
+                to_user_id: otherUser.id
+            });
+        }
     };
 
     const handlePlayTicTacToe = () => {
         console.log('Play Tic-Tac-Toe');
+        if (isConnected) {
+            sendNotifMessage({
+                type: 'SEND_GR',
+                game_type: 'TICTACTOE',
+                to_user_id: otherUser.id
+            });
+        }
     };
 
     const viewProfile = () => {
         console.log('View Profile');
+        // navigate(`/profile/${otherUser.id}`);
     };
 
     return (

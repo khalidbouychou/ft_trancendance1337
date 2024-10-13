@@ -68,34 +68,35 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message_type = text_data_json.get('type')
+        game_type = text_data_json.get('game_type')
 
-        try:
-            if message_type == 'CANCEL_FR':
-                await self.cancel_FR(text_data_json)
-            elif message_type == 'ACCEPT_FR':
-                await self.accept_FR(text_data_json)
-            elif message_type == 'DECLINE_FR':
-                await self.decline_FR(text_data_json)
-            elif message_type == 'SEND_FR':
-                await self.send_FR(text_data_json)
-            elif message_type == 'CANCEL_GR':
-                await self.cancel_GR(text_data_json, game_type)
-            elif message_type == 'ACCEPT_GR':
-                await self.accept_GR(text_data_json, game_type)
-            elif message_type == 'DECLINE_GR':
-                await self.decline_GR(text_data_json, game_type)
-            elif message_type == 'SEND_GR':
-                await self.send_GR(text_data_json, game_type)
-        except DatabaseError as e:
-            await self.failed_operation(message_type, e)
+        # try:
+        if message_type == 'CANCEL_FR':
+            await self.cancel_FR(text_data_json)
+        elif message_type == 'ACCEPT_FR':
+            await self.accept_FR(text_data_json)
+        elif message_type == 'DECLINE_FR':
+            await self.decline_FR(text_data_json)
+        elif message_type == 'SEND_FR':
+            await self.send_FR(text_data_json)
+        elif message_type == 'CANCEL_GR':
+            await self.cancel_GR(text_data_json, game_type)
+        elif message_type == 'ACCEPT_GR':
+            await self.accept_GR(text_data_json, game_type)
+        elif message_type == 'DECLINE_GR':
+            await self.decline_GR(text_data_json, game_type)
+        elif message_type == 'SEND_GR':
+            await self.send_GR(text_data_json, game_type)
+        # except DatabaseError as e:
+        #     await self.failed_operation(message_type, e)
 
     @database_sync_to_async
     def cancel_FR(self, event):
         from_user_id = self.scope['user'].id
         to_user_id = event['to_user_id']
         notifications = Notification.objects.filter(
-            from_user__id=from_user_id, 
-            to_user__id=to_user_id, 
+            from_user_id=from_user_id, 
+            to_user_id=to_user_id, 
             notif_type='FR', 
             status='pending'
         )
@@ -108,8 +109,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         from_user_id = text_data_json['from_user_id']
         to_user_id = self.scope['user'].id
         notifications = Notification.objects.filter(
-            from_user__id=from_user_id, 
-            to_user__id=to_user_id, 
+            from_user_id=from_user_id, 
+            to_user_id=to_user_id, 
             notif_type='FR', 
             status='pending'
         )
@@ -122,8 +123,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         from_user_id = text_data_json['from_user_id']
         to_user_id = self.scope['user'].id
         notifications = Notification.objects.filter(
-            from_user__id=from_user_id, 
-            to_user__id=to_user_id, 
+            from_user_id=from_user_id, 
+            to_user_id=to_user_id, 
             notif_type='FR', 
             status='pending'
         )
@@ -136,8 +137,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
         Notification.objects.get_or_create(
-            from_user__id=from_user_id,
-            to_user__id=to_user_id,
+            from_user_id=from_user_id,
+            to_user_id=to_user_id,
             notif_type='FR',
             status='pending',
         )
@@ -147,6 +148,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
         await self.send(text_data=json.dumps({
             'type': 'NEW_NOTIFICATION',
+            'notif_type': 'FR',
             'FR_notification': FR_notification
         }))
 
@@ -155,8 +157,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
         notifications = Notification.objects.filter(
-            from_user__id=from_user_id, 
-            to_user__id=to_user_id, 
+            from_user_id=from_user_id, 
+            to_user_id=to_user_id, 
             notif_type='GR', 
             game_type=game_type, 
             status='pending'
@@ -170,8 +172,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
         notifications = Notification.objects.filter(
-            from_user__id=from_user_id, 
-            to_user__id=to_user_id, 
+            from_user_id=from_user_id, 
+            to_user_id=to_user_id, 
             notif_type='GR', 
             game_type=game_type, 
             status='pending'
@@ -185,8 +187,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
         notifications = Notification.objects.filter(
-            from_user__id=from_user_id, 
-            to_user__id=to_user_id, 
+            from_user_id=from_user_id, 
+            to_user_id=to_user_id, 
             notif_type='GR', 
             game_type=game_type, 
             status='pending'
@@ -200,8 +202,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
         Notification.objects.get_or_create(
-            from_user__id=from_user_id,
-            to_user__id=to_user_id,
+            from_user_id=from_user_id,
+            to_user_id=to_user_id,
             notif_type='GR',
             game_type=game_type,
             status='pending'
@@ -212,6 +214,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
         await self.send(text_data=json.dumps({
             'type': 'NEW_NOTIFICATION',
+            'notif_type': 'GR',
             'GR_notification': GR_notification
         }))
     

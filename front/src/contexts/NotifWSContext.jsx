@@ -18,6 +18,25 @@ export function NotificationWebSocketProvider({ children }) {
 
     ws.onmessage = (event) => {
       console.log('Notification WebSocket message:', event.data);
+      const data = JSON.parse(event.data);
+      if (data.type === 'NEW_NOTIFICATION') {
+        if (data.notif_type === 'FR') {
+          console.log('New friend request:', data.FR_notification);
+        } else if (data.notif_type === 'GR') {
+          console.log('New game request:', data.GR_notification);
+        } else {
+          console.error('Unknown notification type:', data.notif_type);
+        }
+      }
+      else if (data.type === 'NOTIFICATION_ACCEPTED') {
+        console.log('Game request accepted:', data.GR_accepted_notification);
+      } else if (data.type === 'NOTIFICATION_EXPIRED') {
+        console.log('Game request expired:', data.GR_expired_notification);
+      } else if (data.type === 'FAILED_OPERATION') {
+        console.warn('Failed operation:', data.operation, data.error);
+      } else {
+        console.error('Unknown message type:', data.type);
+      }
     };
 
     ws.onclose = () => {
