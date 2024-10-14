@@ -400,6 +400,26 @@ class GameConsumer(AsyncWebsocketConsumer):
 class inviteConsumer(AsyncWebsocketConsumer):
     games_queue = {}
     started_games = {}
+    ingame = False
+    inqueue = False
+    instances = {}
+    game_loop = False
+    game_width = 800
+    game_height = 500
+    right_paddleY = 0
+    left_paddleY = 0
+    ballx = 400
+    bally = 250
+    balldirectionX = 1
+    balldirectionY = 1
+    racketHeight = (game_height * 20 / 100)
+    racketWidth = (game_width * 2.5 / 100)
+    baddle_speed = 10
+    ball_radius = 15
+    right_score = 0
+    left_score = 0
+    bonus = 0
+    ball_speed = 800 / (2 * 60) + bonus
 
     async def connect(self):
         await self.accept()
@@ -446,6 +466,7 @@ class inviteConsumer(AsyncWebsocketConsumer):
                     elif data.get('player') in game['players']:
                         inviteConsumer.game_queue[value]['connected'] += 1
                         inviteConsumer.game_queue[value]['players'][data.get('player')] = self.channel_name
+                        self.inqueue = True
                 else:
                     self.close()
             else:
@@ -457,11 +478,12 @@ class inviteConsumer(AsyncWebsocketConsumer):
                 'players': inviteConsumer.game_queue[value]['players'],
                 'channel_group': f'game{value}',
             }
-            self.start_game(value)
             del inviteConsumer.game_queue[value]
+            self.inqueue = False
+            asyncio.create_task(self.start_game())
 
-    def start_countdown(self, game_id):
-        """Countdown thread for removing the game if no players join in 30 seconds."""
+
+    async def start_countdown(self, game_id):
         while game_id in inviteConsumer.game_queue:
             game = inviteConsumer.game_queue[game_id]
             if game['counter'] <= 0:
@@ -470,6 +492,101 @@ class inviteConsumer(AsyncWebsocketConsumer):
                 break
 
             # Sleep for 1 second and decrease the counter
-            time.sleep(1)
+            await asyncio.sleep(1)
             inviteConsumer.game_queue[game_id]['counter'] -= 1
             print(f"Game {game_id} countdown: {inviteConsumer.game_queue[game_id]['counter']} seconds remaining.")
+
+    async def start_game(self):
+        game = inviteConsumer.started_games.get(value)
+        if game:
+            await self.channel_layer.group_add(
+                game['channel_group'],
+                game['players'][data.get('player1')]
+            )
+            await self.channel_layer.group_add(
+                game['channel_group'],
+                game['players'][data.get('player2')]
+            )
+            self.ingame = True
+            self.room_group_name = game['channel_group']
+            self.game_loop = True
+            asyncio.create_task(self.run_60_times_per_second())
+
+            data = {
+                'message': 'game_started',
+                'player_id1': data.get('player1'),
+                'player_id2': data.get('player2'),
+                'group_name': game['channel_group'],
+            }
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_data',
+                    'message': data
+                }
+            )
+    
+    async def run_60_times_per_second(self):
+        while self.game_loop:
+            start_time = time.time()
+            await self.gamelogic()
+            end_time = time.time()
+            execution_time = end_time - start_time
+            print(f"gamelogic() execution time: {execution_time:.6f} seconds")
+            await asyncio.sleep(1/60)
+
+    async def gamelogic(self):
+        self.ballx += (self.ball_speed + self.bonus) * self.balldirectionX
+        self.bally += (self.ball_speed + self.bonus) * self.balldirectionY
+
+        if (self.ballx + 15 >= self.game_width - self.racketWidth and
+            self.right_paddleY <= (self.bally + 15) and
+            self.right_paddleY + self.racketHeight >= (self.bally - 15)):
+
+            offset = (self.bally - (self.right_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
+            self.ballx = self.game_width - self.racketWidth - 16
+            self.balldirectionX *= -1
+            self.balldirectionY = offset
+            self.bonus += 1
+
+        elif (self.ballx - 15 <= self.racketWidth and
+            self.left_paddleY <= (self.bally + 15) and
+            self.left_paddleY + self.racketHeight >= (self.bally - 15)):
+
+            offset = (self.bally - (self.left_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
+            self.ballx = self.racketWidth + 16
+            self.balldirectionX *= -1
+            self.balldirectionY = offset
+            self.bonus += 1
+
+        elif self.bally - 15 <= 0:
+            self.bally = 16
+            self.balldirectionY *= -1
+        
+        elif self.bally + 15 >= self.game_height:
+            self.bally = self.game_height - 16
+            self.balldirectionY *= -1
+        
+        elif self.ballx <= 15:
+            self.ballx = 400
+            self.bally = 250
+            self.balldirectionX = -1  
+            self.balldirectionY = random.uniform(-1, 1)
+            self.right_score += 1
+            self.bonus = 0
+            if (self.right_score >= 1000):
+                self.game_loop = False
+                data = {
+                    'winner': '2',
+                    'left_score': self.left_score,
+                    'loser': '1',
+                    'right_score': self.right_score
+                }
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'game_data',
+                        'message': data
+                    }
+                )
+        
