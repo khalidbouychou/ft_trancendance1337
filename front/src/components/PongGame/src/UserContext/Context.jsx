@@ -24,7 +24,7 @@ export default function AuthProvider({ children }) {
 <<<<<<< HEAD
       const res = await axios.post(`http://10.13.6.2:8000/api/login/`,params,{
 =======
-      const res = await axios.post(`http://localhost:8000/api/login/`,params,{
+      const res = await axios.post(`http://10.13.6.2:8000/api/login/`,params,{
 >>>>>>> refs/remotes/origin/master
             withCredentials: true
           });
@@ -48,7 +48,7 @@ export default function AuthProvider({ children }) {
 =======
 >>>>>>> refs/remotes/origin/master
     try {
-      const response = await axios.get("http://localhost:8000/api/auth_intra/");
+      const response = await axios.get("http://10.13.6.2:8000/api/auth_intra/");
       if (response.status === 200) {
         setUrl(response.data.url);
       }
@@ -68,7 +68,7 @@ export default function AuthProvider({ children }) {
 <<<<<<< HEAD
         const res = await axios.post(`http://10.13.6.2:8000/api/login/`,params,{
 =======
-        const res = await axios.post(`http://localhost:8000/api/login/`,params,{
+        const res = await axios.post(`http://10.13.6.2:8000/api/login/`,params,{
 >>>>>>> refs/remotes/origin/master
           withCredentials: true
         });

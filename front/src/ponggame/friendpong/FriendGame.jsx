@@ -117,7 +117,7 @@ export default function  OnlineGame() {
         let socket = new WebSocket(`ws://10.13.6.2:8000/ws/socket-server/`);
 =======
         const token = localStorage.getItem('token');
-        socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
+        socket = new WebSocket(`ws://10.13.6.2:8000/ws/play-friend/?token=${token}`);
 >>>>>>> refs/remotes/origin/master:front/src/ponggame/friendpong/FriendGame.jsx
 
         socket.onopen = () => {
