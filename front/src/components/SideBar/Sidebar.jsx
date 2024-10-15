@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import { Link } from 'react-router-dom';
 import React, {useState, useEffect, useContext} from 'react'
-=======
-import { Link, useLocation } from 'react-router-dom';
-import React, {useState, useEffect} from 'react'
->>>>>>> refs/remotes/origin/master
 import styl from './Sidebar.module.css'
 import pinglogo from './assets/pinglogo.png'
 import { FaAnglesLeft } from "react-icons/fa6";
@@ -24,27 +19,8 @@ const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
     const [hasNotification, setHasNotification] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState('300px');
-<<<<<<< HEAD
     const { user } = useContext(AuthContext);
     // const profilePath = user && user.user ? `/profile/${user.user.username}` : '';
-=======
-    const { notif } = useNotificationWS();
-    const { currentLocation } = useLocationContext();
-
-    useEffect(() => {
-        if (notif && notif.status === 'pending' && currentLocation !== '/notification') {
-            setHasNotification(true);
-        }
-    }, [notif]);
-
-    useEffect(() => {
-        if (currentLocation === '/notification') {
-            setHasNotification(false);
-        }
-    }, [currentLocation]);
-
-
->>>>>>> refs/remotes/origin/master
     const handleClick = () => {
         setIsOpen(!isOpen)
     }

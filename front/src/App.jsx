@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useContext, useEffect } from 'react';
-=======
-// import React, { useContext, useEffect } from 'react';
->>>>>>> refs/remotes/origin/master
 import { Routes, Route } from 'react-router-dom';
 import Sidebar from './components/SideBar/Sidebar.jsx';
 import Games from './components/Game/Game.jsx';
@@ -20,12 +16,8 @@ import LocalGame from './ponggame/localpong/LocalGame.jsx';
 import LocalTeamGame from './ponggame/teampong/LocalTeamGame.jsx';
 import OnlineGame from './ponggame/onlinepong/OnlineGame.jsx';
 import Tournament from './ponggame/Tournamentpong/Tournament.jsx';
-<<<<<<< HEAD
-=======
-// import AuthProvider from './UserContext/Context.jsx';
->>>>>>> refs/remotes/origin/master
 import style from './App.module.css';
-import Login from './Login/Login.jsx';
+import Login from './Login/intra/Login.jsx';
 // import { AuthContext } from './UserContext/Context.jsx';
 // import ProtectedRoutes from './protectedRoutes.jsx';
 
@@ -34,14 +26,6 @@ import Layout from './Layout.jsx';
 
 function App() {
 
-<<<<<<< HEAD
-  useEffect(() => {
-    console.log('islogin', islogin, 'user', user);
-  }
-  , [islogin]);
-
-=======
->>>>>>> refs/remotes/origin/master
   return (
     // <BrowserRouter>
 
@@ -80,12 +64,7 @@ function App() {
           </Routes>
         </div>
       </div>
-<<<<<<< HEAD
-        
-    // </BrowserRouter>
-=======
      // </BrowserRouter>
->>>>>>> refs/remotes/origin/master
   );
 }
 

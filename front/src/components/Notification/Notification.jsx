@@ -1,40 +1,5 @@
 import styl from './Notification.module.css'
 import NotiCard from './component/NotiCard/NotiCard'
-<<<<<<< HEAD
-import { AuthContext } from '../../UserContext/Context';
-import React, { useEffect, useState, useContext } from 'react'
-
-const Notification = () => {
-    const { user } = useContext(AuthContext);
-    return (
-      <div className={styl.Notification}>
-          <div className={styl.content}>
-              <div className={styl.head}><h1>NOTIFICATION</h1></div>
-              <div className={styl.cont}>
-                  <hr className={styl.line}/>
-                  <div className={styl.noti}>
-                      <div className={styl.Request}>
-                          <div className={styl.title}>
-                              <h3 >Pending request</h3>
-                          </div>
-                          <div className={styl.card}>
-                              <NotiCard request={'sent you request friend'}/>
-                          </div>
-                      </div>
-                      <div className={styl.Request}>
-                          <div className={styl.title}>
-                              <h3 >Game request</h3>
-                          </div>
-                          <div className={styl.card}>
-                              <NotiCard request={'invit you for game'}/>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-    )
-=======
 import NotiCardSent from './component/NotiCard/NotiCardSent'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
@@ -124,7 +89,6 @@ const Notification = () => {
         </div>
     </div>
   )
->>>>>>> refs/remotes/origin/master
 }
 
 export default Notification

@@ -24,22 +24,6 @@ class Player(AbstractUser):
     two_factor = models.BooleanField(default=False)
     otp = models.CharField(max_length=6, default='000000')
     otp_verified = models.BooleanField(default=False)
-<<<<<<< HEAD
-   
-    class Meta:
-        db_table = 'player'
-        
-#     def __str__(self):
-#         return self.usernam
-    
-# class FriendShip(models.Model):
-#     user = models.ForeignKey(Player, related_name='friends', on_delete=models.CASCADE)
-#     friend = models.ForeignKey(Player, related_name='friends_of', on_delete=models.CASCADE)
-
-# class BlockedFriend(models.Model):
-#     user = models.ForeignKey(Player, related_name='blocked_fiends', on_delete=models.CASCADE)
-#     blocked_friend = models.ForeignKey(Player, related_name='blocked_by', on_delete=models.CASCADE)
-=======
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
 
     class Meta:
@@ -62,4 +46,3 @@ class Player(AbstractUser):
     @staticmethod
     def are_enemies(user1, user2):
         return user1.is_blocked(user2) or user2.is_blocked(user1)
->>>>>>> refs/remotes/origin/master

@@ -112,13 +112,8 @@ export default function  OnlineGame() {
         let rightRacketY = 0;
         let player_id = 0;
         let myReq;
-<<<<<<< HEAD
-        let pause = 0;
-        let socket = new WebSocket(`ws://10.13.6.2:8000/ws/socket-server/`);
-=======
         const token = localStorage.getItem('token');
         socket = new WebSocket(`ws://10.13.6.2:8000/ws/remote-game/?token=${token}`);
->>>>>>> refs/remotes/origin/master
 
         socket.onopen = () => {
             // console.log('my name is:', username, "my avatar is:", avatar);
