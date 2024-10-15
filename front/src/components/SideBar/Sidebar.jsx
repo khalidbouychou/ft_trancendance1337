@@ -1,5 +1,5 @@
-import { Link, useLocation } from 'react-router-dom';
-import React, {useState, useEffect} from 'react'
+import { Link } from 'react-router-dom';
+import React, {useState, useEffect, useContext} from 'react'
 import styl from './Sidebar.module.css'
 import pinglogo from './assets/pinglogo.png'
 import { FaAnglesLeft } from "react-icons/fa6";
@@ -9,6 +9,7 @@ import { IoLogoGameControllerB } from "react-icons/io";
 import { CiSettings } from "react-icons/ci";
 import { AiOutlineLogout } from "react-icons/ai";
 import { MdOutlineHome } from "react-icons/md";
+import { AuthContext } from '../../UserContext/Context.jsx'
 import CmpCard from '../CmpCard/CmpCard';
 import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
 import { MdNotifications, MdNotificationImportant } from "react-icons/md";
@@ -18,22 +19,8 @@ const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
     const [hasNotification, setHasNotification] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState('300px');
-    const { notif } = useNotificationWS();
-    const { currentLocation } = useLocationContext();
-
-    useEffect(() => {
-        if (notif && notif.status === 'pending' && currentLocation !== '/notification') {
-            setHasNotification(true);
-        }
-    }, [notif]);
-
-    useEffect(() => {
-        if (currentLocation === '/notification') {
-            setHasNotification(false);
-        }
-    }, [currentLocation]);
-
-
+    const { user } = useContext(AuthContext);
+    // const profilePath = user && user.user ? `/profile/${user.user.username}` : '';
     const handleClick = () => {
         setIsOpen(!isOpen)
     }
@@ -56,6 +43,8 @@ const Sidebar = () => {
         }
     }, [])
 
+    console.log('-----<<<>>>', user?.user?.profile_name)
+
   return (
     <div className={styl.Sidebar} style={{ width: isOpen ? '300px' : sidebarWidth }}>
         <Link to='/'><div className={styl.Card} style={{top: '0%'}}>
@@ -67,7 +56,7 @@ const Sidebar = () => {
         </Link>
         <div className={styl.cont} >
             <CmpCard isOpen={isOpen} ICON={MdOutlineHome} name={'Home'} link={'/home'}/>
-            <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={'/profile'}/>
+            <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={`/profile/${user?.user?.profile_name}`} />
             <CmpCard isOpen={isOpen} ICON={IoChatbubbleEllipsesOutline} name={'Chat'} link={'/chat'}/>
             <CmpCard isOpen={isOpen} ICON={IoLogoGameControllerB} name={'Game'} link={'/games'}/>
             {/* <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/> */}

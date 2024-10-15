@@ -112,8 +112,13 @@ export default function  OnlineGame() {
         let rightRacketY = 0;
         let player_id = 0;
         let myReq;
+<<<<<<< HEAD:front/src/components/PongGame/src/pages/OnlineGame.jsx
+        let pause = 0;
+        let socket = new WebSocket(`ws://10.13.6.2:8000/ws/socket-server/`);
+=======
         const token = localStorage.getItem('token');
-        socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
+        socket = new WebSocket(`ws://10.13.6.2:8000/ws/play-friend/?token=${token}`);
+>>>>>>> refs/remotes/origin/master:front/src/ponggame/friendpong/FriendGame.jsx
 
         socket.onopen = () => {
             // console.log('my name is:', username, "my avatar is:", avatar);

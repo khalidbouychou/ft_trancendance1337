@@ -168,18 +168,20 @@
 .chouseGame {
     display: flex;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
     width: 100%;
-    height: 100%;
+    height: 80%;
+    /* background-color: aqua; */
 }
 
 .cardGame {
-    width: 50%;
-    height: 100%;
+    width: 40%;
+    height: 70%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    /* background-color: antiquewhite; */
 }
 
 .game {
@@ -191,6 +193,30 @@
     height: 700px;
     /* background-color: azure; */
     gap: 10px;
+}
+
+@media (max-width: 1536px) {
+    .cardGame {
+        width: 100%;
+    }
+    .game {
+        width: 300px;
+        height: 600px;
+    }
+}
+
+@media (max-width: 768px) {
+    .game {
+        width: 250px;
+        height: 550px;
+    }
+}
+
+@media (max-width: 640px) {
+    .game {
+        width: 150px;
+        height: 450px;
+    }
 }
 
 .image {

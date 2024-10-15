@@ -40,7 +40,7 @@
 		width: 10px;
 		height: 100%;
 	}
-
+	
 	&::-webkit-scrollbar-thumb {
 		border-radius: 20px;
 		background-color: #7667D9;

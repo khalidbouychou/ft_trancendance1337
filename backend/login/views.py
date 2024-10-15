@@ -6,6 +6,9 @@ from .serializers import PlayerSerializer
 from .models import Player as Player
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework import permissions
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 import os
 
@@ -32,6 +35,28 @@ class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
 
+    def search_users(self, request):
+        search_query = request.query_params.get('q', None)
+        if search_query:
+            users = Player.objects.filter(profile_name__icontains=search_query)
+            serializer = PlayerSerializer(users, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'No search query provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def get_user_by_profile_name(self, request, username):
+        try:
+            print('username ==>', username)
+            user = Player.objects.get(username=username)
+            serializer = PlayerSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Player.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
     def generate_qr_code(self, request):
         token = request.COOKIES.get('access')
         if not token:
@@ -49,6 +74,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
     def create_user(self, user_data):
         user = Player(
             username=user_data['username'],
+            profile_name=user_data['username'],
             avatar=user_data['avatar'],
             email=user_data['email'],
             wins=0,
@@ -60,9 +86,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             otp='000000',
             otp_verified=False,
         )
-        user.avatar = user_data['avatar']
-        user.cover = user_data['avatar']
-        user.email = user_data['email']
         user.set_unusable_password()  # Assuming password is not used
         user.save()
         return user
@@ -124,9 +147,10 @@ class PlayerViewSet(viewsets.ModelViewSet):
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
             # Create response
-            user = {
+            data = {
                 'token': tokens['access'],
                 'username': user.username,
+                'profile_name': user.username,
                 'avatar': user.avatar,
                 'email': user.email,
                 'two_factor': user.two_factor,
@@ -134,7 +158,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
             }
             response_data = {
                 'msg': 'success',
-                'user': user,
+                'user': data,
             }
             response = Response(response_data, status=status.HTTP_200_OK)
             response.set_cookie(
@@ -178,19 +202,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
         serializer = PlayerSerializer(player)
         return Response(serializer.data)
 
-    def getallusers(self, request):
-        players = Player.objects.all()
-        serializer = PlayerSerializer(players, many=True)
-        users = [{
-            'username': player['username'],
-            'avatar': player['avatar'],
-            'email': player['email'],
-            'two_factor': player['two_factor'],
-            'is_online': player['is_online']
-        }
-            for player in serializer.data
-        ]
-        return Response(users)
+
 
     def verifytoken(self, request):
         try:
@@ -212,6 +224,44 @@ class PlayerViewSet(viewsets.ModelViewSet):
             print('error ---- >', e)
             return Response({'msg': 'Token is invalid or expired'}, status=status.HTTP_400_BAD_REQUEST)
 
+    def set_profile_name(self, request):
+        new_name = request.data.get('new_name')
+        username = request.data.get('username')
+        print('names', new_name, username)
+        if not (new_name and username):
+            return Response({"error": "Both profile name and username are required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = Player.objects.get(username=username)
+        except Player.DoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        if new_name.strip():  # Ensure new_name is not just whitespace
+            user.profile_name = new_name
+            user.save()
+        else:
+            return Response({"error": "Profile name cannot be empty."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({"user": PlayerSerializer(user).data}, status=status.HTTP_200_OK)
+
+    def set_userImage(self, request):
+        username = request.data.get('username')
+        avatar = request.data.get('avatar')
+    
+        if not (username and avatar):
+            return Response({"error": "Both username and avatar URL are required."}, status=status.HTTP_400_BAD_REQUEST)
+    
+        try:
+            user = Player.objects.get(username=username)
+        except Player.DoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+        if avatar.strip():  # Ensure avatar URL is not empty or whitespace
+            user.avatar = avatar
+            user.save()
+            return Response({"user": PlayerSerializer(user).data}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Avatar URL cannot be empty."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 

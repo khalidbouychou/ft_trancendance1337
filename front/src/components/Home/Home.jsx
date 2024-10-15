@@ -12,7 +12,7 @@ const Home = () => {
 
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const handleClick = () => {
-        navigate('/game');
+        navigate('/games');
     }
 
     const handleResize = () => {
@@ -40,7 +40,7 @@ const Home = () => {
         const fetchSearchResults = async () => {
           if (searchQuery.trim()) {
             const response = await fetch(
-              `http://localhost:8000/api/users/search/?q=${searchQuery}`
+              `http://10.13.6.2:8000/api/search/?q=${searchQuery}`
             );
             const data = await response.json();
             console.log(data);

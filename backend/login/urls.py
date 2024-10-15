@@ -2,6 +2,7 @@
 from django.urls import path, include
 from .views import PlayerViewSet
 from rest_framework import routers
+from rest_framework_simplejwt.views import TokenRefreshView
 # from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView
 
 router = routers.DefaultRouter()
@@ -27,4 +28,10 @@ urlpatterns = [
     # path('verify_2fa/'),PlayerViewSet.as_view({'post': 'verify_2fa'}),
     # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('friends/', PlayerViewSet.as_view({'get': 'get_user_friends'}), name='user_friends'),
+    # path('add_friend/<str:profile_name>/', PlayerViewSet.as_view({'post': 'add_friend'}), name='add_friend'),
+    path('getuser/<str:username>/', PlayerViewSet.as_view({'get': 'get_user_by_profile_name'}), name='get_user'),
+    path('search/', PlayerViewSet.as_view({'get': 'search_users'}), name='search_users'),
+    path('set_profile_name/', PlayerViewSet.as_view({'post': 'set_profile_name'}), name='set_profile_name'),
+    path('set_user_image/', PlayerViewSet.as_view({'post': 'set_userImage'}), name='set_user_image'),
 ]

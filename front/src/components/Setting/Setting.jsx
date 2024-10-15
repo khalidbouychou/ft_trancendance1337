@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import styl from './Settings.module.css'
 import gameSettings from './components/gameSettings/GameSettings'
 import userImage from './assets/nouahidi.jpeg'
@@ -8,6 +8,7 @@ import QRCode from 'react-qr-code'
 import { MdOutlineKeyboardDoubleArrowDown } from "react-icons/md";
 import { MdLock } from "react-icons/md";
 import GameSettings from './components/gameSettings/GameSettings'
+import { AuthContext } from '../../UserContext/Context';
 
 
 const Settings = () => {
@@ -24,13 +25,14 @@ const Settings = () => {
   const [code, setCode] = useState(['','','','','',])
   const [confirmationMessage, setConfirmationMessage] = useState('');
   const [qrValue, setQrValue] = useState('https://tailwindcss.com/')
-
-
+  const { user } = useContext(AuthContext);
+  
+  
   const handleINputChange = (e, index) => {
     const newCode = [...code]
     newCode[index] = e.target.value.slice(-1)
     setCode(newCode)
-
+    
     if (e.target.nextSibling) {
       e.target.nextSibling.focus()
     }
@@ -85,16 +87,12 @@ const Settings = () => {
   const handleSpeedChange = (newSpeed) => {
     setSpeed(newSpeed);
   }
-
-
-
-
   return (
     <div className={styl.Settings}>
       <div className={styl.content}>
         <div className={styl.head}><h1>SETTINGS</h1></div>
 
-        <GameSettings />
+        <GameSettings user={user}/>
 
         <hr style={{width: '90%'}}/>
         <div className={styl.last}>
