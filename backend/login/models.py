@@ -6,7 +6,12 @@ class Player(AbstractUser):
     STATUS = (
         ('online', _('online')),
         ('offline', _('offline')),
-        ('invailable', _('offline')),
+    )
+    STATUS_GAME = (
+        ('available', _('available')),
+        ('waiting', _('waiting')),
+        ('playing', _('playing')),
+        ('offline', _('offline')),
     )
     username = models.CharField(max_length=255, default='default_username', unique=True, blank=False)
     avatar = models.URLField(max_length=200, default='default_avatar')
@@ -22,6 +27,11 @@ class Player(AbstractUser):
 
     class Meta:
         db_table = 'player'
+
+    def save(self, *args, **kwargs):
+        if self.status_network == 'offline':
+            self.status_game = 'offline'
+        super().save(*args, **kwargs)
 
     def block_user(self, user_to_block):
         self.blocked_users.add(user_to_block)

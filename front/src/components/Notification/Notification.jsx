@@ -1,13 +1,27 @@
 import styl from './Notification.module.css'
 import NotiCard from './component/NotiCard/NotiCard'
+import NotiCardSent from './component/NotiCard/NotiCardSent'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useNotificationWS } from '../../contexts/NotifWSContext'
 
 const Notification = () => {
     const [FR_notif_received, setFR_notif_received] = useState([])
     const [GR_notif_received, setGR_notif_received] = useState([])
     const [FR_notif_sent, setFR_notif_sent] = useState([])
     const [GR_notif_sent, setGR_notif_sent] = useState([])
+
+    const { notif } = useNotificationWS();
+
+    useEffect(() => {
+        if (notif && notif.status === 'pending') {
+            if (notif.notif_type === 'FR') {
+                setFR_notif_received([...FR_notif_received, notif]);
+            } else if (notif.notif_type === 'GR') {
+                setGR_notif_received([...GR_notif_received, notif]);
+            }
+        }
+    }, [notif]);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -43,7 +57,7 @@ const Notification = () => {
                         </div>
                         <div className={styl.card}>
                             {FR_notif_received.map((notif) => (
-                                <NotiCard key={notif.id} request={`${notif.from_user.username} sent you a friend request`}/>
+                                <NotiCard key={notif.id} request={notif}/>
                             ))}
                         </div>
                     </div>
@@ -53,7 +67,20 @@ const Notification = () => {
                         </div>
                         <div className={styl.card}>
                             {GR_notif_received.map((notif) => (
-                                <NotiCard key={notif.id} request={`${notif.from_user.username} invited you to play ${notif.game_type}`}/>
+                                <NotiCard key={notif.id} request={notif}/>
+                            ))}
+                        </div>
+                    </div>
+                    <div className={styl.Request}>
+                        <div className={styl.title}>
+                            <h3>Sent requests</h3>
+                        </div>
+                        <div className={styl.card}>
+                            {FR_notif_sent.map((notif) => (
+                                <NotiCardSent key={notif.id} request={notif}/>
+                            ))}
+                            {GR_notif_sent.map((notif) => (
+                                <NotiCardSent key={notif.id} request={notif}/>
                             ))}
                         </div>
                     </div>

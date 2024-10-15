@@ -28,3 +28,4 @@ env
 .vite
 backend/env
 backend/strong_backend
+backend/db.sqlite3

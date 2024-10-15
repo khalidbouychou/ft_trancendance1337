@@ -113,7 +113,7 @@ export default function  OnlineGame() {
         let player_id = 0;
         let myReq;
         const token = localStorage.getItem('token');
-        socket = new WebSocket(`ws://10.11.9.12:8000/ws/play-friend/?token=${token}`);
+        socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
 
         socket.onopen = () => {
             // console.log('my name is:', username, "my avatar is:", avatar);

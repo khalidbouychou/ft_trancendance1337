@@ -46,10 +46,11 @@ from channels.db import database_sync_to_async
 
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.user_id = self.scope['user']
-        if self.user_id is None:
+        self.user = self.scope['user']
+        if self.user is None:
             await self.close()
             return
+        self.user_id = self.user.id
         self.notification_group_name = f'user_{self.user_id}_NOTIF'
 
         await self.channel_layer.group_add(
@@ -136,21 +137,12 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     def send_FR(self, text_data_json):
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
-        Notification.objects.get_or_create(
+        notif = Notification.objects.get_or_create(
             from_user_id=from_user_id,
             to_user_id=to_user_id,
             notif_type='FR',
-            status='pending',
+            status='pending'
         )
-
-    async def send_FR_notification(self, event):
-        FR_notification = event['FR_notification']
-
-        await self.send(text_data=json.dumps({
-            'type': 'NEW_NOTIFICATION',
-            'notif_type': 'FR',
-            'FR_notification': FR_notification
-        }))
 
     @database_sync_to_async
     def cancel_GR(self, text_data_json, game_type):
@@ -169,8 +161,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def accept_GR(self, text_data_json, game_type):
-        from_user_id = self.scope['user'].id
-        to_user_id = text_data_json['to_user_id']
+        from_user_id = text_data_json['from_user_id']
+        to_user_id = self.scope['user'].id
         notifications = Notification.objects.filter(
             from_user_id=from_user_id, 
             to_user_id=to_user_id, 
@@ -184,8 +176,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def decline_GR(self, text_data_json, game_type):
-        from_user_id = self.scope['user'].id
-        to_user_id = text_data_json['to_user_id']
+        from_user_id = text_data_json['from_user_id']
+        to_user_id = self.scope['user'].id
         notifications = Notification.objects.filter(
             from_user_id=from_user_id, 
             to_user_id=to_user_id, 
@@ -201,6 +193,17 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     def send_GR(self, text_data_json, game_type):
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
+        notifs = Notification.objects.filter(
+            from_user_id=from_user_id, 
+            to_user_id=to_user_id, 
+            notif_type='GR', 
+            game_type=game_type, 
+            status='pending'
+        )
+        for notif in notifs:
+            if notif and notif.is_expired():
+                notifs.update(status='expired')
+                break
         Notification.objects.get_or_create(
             from_user_id=from_user_id,
             to_user_id=to_user_id,
@@ -209,29 +212,12 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             status='pending'
         )
     
-    async def send_GR_notification(self, event):
-        GR_notification = event['GR_notification']
-
+    async def send_notification(self, event):
+        notification = event['notification']
+        print(f'Sending notification {notification.get("status")}')
         await self.send(text_data=json.dumps({
-            'type': 'NEW_NOTIFICATION',
-            'notif_type': 'GR',
-            'GR_notification': GR_notification
-        }))
-    
-    async def send_GR_accepted_notification(self, event):
-        GR_accepted_notification = event['GR_accepted_notification']
-
-        await self.send(text_data=json.dumps({
-            'type': 'NOTIFICATION_ACCEPTED',
-            'GR_accepted_notification': GR_accepted_notification
-        }))
-
-    async def send_GR_expired_notification(self, event):
-        GR_expired_notification = event['GR_expired_notification']
-
-        await self.send(text_data=json.dumps({
-            'type': 'NOTIFICATION_EXPIRED',
-            'GR_expired_notification': GR_expired_notification
+            'type': f'NOTIFICATION_{notification.get("status").upper()}',
+            'notification': notification
         }))
     
     async def failed_operation(self, operation, error):

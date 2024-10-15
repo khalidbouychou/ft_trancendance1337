@@ -1,5 +1,6 @@
 from django.db import models
 from login.models import Player
+from django.utils import timezone
 
 # Create your models here.
 class Notification(models.Model):
@@ -28,7 +29,13 @@ class Notification(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        unique_together = [('from_user', 'to_user', 'notif_type', 'game_type')]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['from_user', 'to_user', 'notif_type', 'game_type'],
+                condition=models.Q(status='pending'),
+                name='unique_pending_notification'
+            )
+        ]
     
     def __str__(self):
         return f"{self.get_notif_type_display()} from {self.from_user} to {self.to_user}"

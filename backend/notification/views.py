@@ -4,13 +4,23 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Notification
 from login.serializers import PlayerSerializer
 from .serializers import NotificationSerializer
+from django.db.models import Q
 
-# Create your views here.
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_notifications(request):
-    all_notifs = Notification.objects.filter(to_user=request.user).order_by('-created_at')
-    all_received_notifs = all_notifs.filter(status='pending')   
+    all_notifs = Notification.objects.filter(
+        Q(to_user=request.user) | Q(from_user=request.user),
+        status='pending'
+    ).order_by('-created_at')
+    expired_notifs = []
+    for notif in all_notifs:
+        if notif.is_expired():
+            expired_notifs.append(notif.id)
+    Notification.objects.filter(id__in=expired_notifs).update(status='expired')
+    all_notifs = all_notifs.exclude(id__in=expired_notifs)
+
+    all_received_notifs = all_notifs.filter(to_user=request.user)
     all_received_notifs.update(is_read=True)
     FR_notif_received = all_received_notifs.filter(notif_type='FR')
     GR_notif_received = all_received_notifs.filter(notif_type='GR')

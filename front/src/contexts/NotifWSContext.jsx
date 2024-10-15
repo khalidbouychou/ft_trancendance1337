@@ -5,10 +5,11 @@ const NotifWSContext = createContext();
 export function NotificationWebSocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [notif, setNotif] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const ws = new WebSocket(`ws://10.11.9.12:8000/ws/notif/?token=${token}`);
+    const ws = new WebSocket(`ws://localhost:8000/ws/notif/?token=${token}`);
 
     ws.onopen = () => {
       console.log('Notification WebSocket connected');
@@ -17,26 +18,9 @@ export function NotificationWebSocketProvider({ children }) {
     };
 
     ws.onmessage = (event) => {
-      console.log('Notification WebSocket message:', event.data);
       const data = JSON.parse(event.data);
-      if (data.type === 'NEW_NOTIFICATION') {
-        if (data.notif_type === 'FR') {
-          console.log('New friend request:', data.FR_notification);
-        } else if (data.notif_type === 'GR') {
-          console.log('New game request:', data.GR_notification);
-        } else {
-          console.error('Unknown notification type:', data.notif_type);
-        }
-      }
-      else if (data.type === 'NOTIFICATION_ACCEPTED') {
-        console.log('Game request accepted:', data.GR_accepted_notification);
-      } else if (data.type === 'NOTIFICATION_EXPIRED') {
-        console.log('Game request expired:', data.GR_expired_notification);
-      } else if (data.type === 'FAILED_OPERATION') {
-        console.warn('Failed operation:', data.operation, data.error);
-      } else {
-        console.error('Unknown message type:', data.type);
-      }
+      console.log(data.type, ':', data.notification);
+      setNotif(data.notification);
     };
 
     ws.onclose = () => {
@@ -69,7 +53,7 @@ export function NotificationWebSocketProvider({ children }) {
   }, [socket]);
 
   return (
-    <NotifWSContext.Provider value={{ sendMessage, isConnected }}>
+    <NotifWSContext.Provider value={{ sendMessage, isConnected, notif }}>
       {children}
     </NotifWSContext.Provider>
   );

@@ -34,7 +34,18 @@ function App() {
         <div className={style.MainContent}>
           <Routes>
           <Route path="/" element={<Layout />}>
-          {/* <Route path="/" element={<NotificationWebSocketProvider><Layout /></NotificationWebSocketProvider>}> */}
+              {/* <Route path="home" element={<NotificationWebSocketProvider><Home /></NotificationWebSocketProvider>} />
+              <Route path="games" element={<NotificationWebSocketProvider><Games /></NotificationWebSocketProvider>} />
+              <Route path="pingpong-games" element={<NotificationWebSocketProvider><PingPongGames /></NotificationWebSocketProvider>} />
+              <Route path="xo-games" element={<NotificationWebSocketProvider><XOGames /></NotificationWebSocketProvider>} />
+              <Route path="games/localpong" element={<NotificationWebSocketProvider><LocalGame /></NotificationWebSocketProvider>} />
+              <Route path="games/localteampong" element={<NotificationWebSocketProvider><LocalTeamGame /></NotificationWebSocketProvider>} />
+              <Route path="games/onlinepong" element={<NotificationWebSocketProvider><OnlineGame /></NotificationWebSocketProvider>} />
+              <Route path="games/tournament" element={<NotificationWebSocketProvider><Tournament /></NotificationWebSocketProvider>} />
+              <Route path="chat" element={<NotificationWebSocketProvider><Chat /></NotificationWebSocketProvider>} />
+              <Route path="profile" element={<NotificationWebSocketProvider><Profile /></NotificationWebSocketProvider>} />
+              <Route path="setting" element={<NotificationWebSocketProvider><Setting /></NotificationWebSocketProvider>} />
+              <Route path="notification" element={<NotificationWebSocketProvider><Notificationz /></NotificationWebSocketProvider>} /> */}
               <Route path="home" element={<Home />} />
               <Route path="games" element={<Games />} />
               <Route path="pingpong-games" element={<PingPongGames />} />
@@ -43,8 +54,7 @@ function App() {
               <Route path="games/localteampong" element={<LocalTeamGame />} />
               <Route path="games/onlinepong" element={<OnlineGame />} />
               <Route path="games/tournament" element={<Tournament />} />
-              <Route path="chat" element={<NotificationWebSocketProvider><Chat /></NotificationWebSocketProvider>} />
-              {/* <Route path="chat" element={<Chat />} /> */}
+              <Route path="chat" element={<Chat />} />
               <Route path="profile" element={<Profile />} />
               <Route path="setting" element={<Setting />} />
               <Route path="notification" element={<Notificationz />} />
