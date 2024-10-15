@@ -18,9 +18,10 @@ import OnlineGame from './ponggame/onlinepong/OnlineGame.jsx';
 import Tournament from './ponggame/Tournamentpong/Tournament.jsx';
 // import AuthProvider from './UserContext/Context.jsx';
 import style from './App.module.css';
-import Login from './Login/Login.jsx';
+import Login from './Login/intra/Login.jsx';
 // import { AuthContext } from './UserContext/Context.jsx';
 // import ProtectedRoutes from './protectedRoutes.jsx';
+import FriendGame from './ponggame/friendpong/FriendGame.jsx';
 
 import { NotificationWebSocketProvider } from './contexts/NotifWSContext.jsx';
 import Layout from './Layout.jsx';
@@ -51,6 +52,7 @@ function App() {
               <Route path="pingpong-games" element={<PingPongGames />} />
               <Route path="xo-games" element={<XOGames />} />
               <Route path="games/localpong" element={<LocalGame />} />
+              <Route path="friend-game" element={<FriendGame />} />
               <Route path="games/localteampong" element={<LocalTeamGame />} />
               <Route path="games/onlinepong" element={<OnlineGame />} />
               <Route path="games/tournament" element={<Tournament />} />

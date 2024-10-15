@@ -2,7 +2,7 @@ import axios from "axios";
 // import styl from "./login.module.css";
 import { useContext, useEffect, useState } from "react";
 import "./test.css";
-import { AuthContext } from "../UserContext/Context";
+import { AuthContext } from "../../UserContext/Context";
 // import { useLocation, useNavigate } from "react-router-dom";
 // import { authContext } from "../Context/Context";
 

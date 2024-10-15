@@ -1,10 +1,10 @@
 import React, {useRef, useEffect, useState, useContext } from 'react';
-import * as styles from './OnlineGame.module.css';
+import * as styles from './FriendGame.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../UserContext/Context';
 import api from '../auth/api';
 
-export default function  OnlineGame() {
+export default function  FriendGame() {
 
     const {user, setUser} = useContext(AuthContext);
     const navigate = useNavigate();
@@ -113,8 +113,8 @@ export default function  OnlineGame() {
         let player_id = 0;
         let myReq;
         const token = localStorage.getItem('token');
-        socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
-
+        socket = new WebSocket(`ws://10.11.10.12:8000/ws/play-friend/?token=${token}`);
+        console.log("socket");
         socket.onopen = () => {
             // console.log('my name is:', username, "my avatar is:", avatar);
             if (socket.readyState === WebSocket.OPEN) {
@@ -125,7 +125,7 @@ export default function  OnlineGame() {
                     level: xmylevel,
                 };
                 socket.send(JSON.stringify(message));
-                console.log('WebSocket is open now');
+                console.log('WebSocket is open now in FriendGame');
             } else {
                 console.error('WebSocket is not open. readyState:', socket.readyState);
             }
@@ -196,7 +196,7 @@ export default function  OnlineGame() {
         };
     
         socket.onclose = () => {
-            console.log('WebSocket connection closed');
+            console.log('WebSocket connection closed in FriendGame');
         };
 
         socket.onerror = (error) => {

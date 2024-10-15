@@ -4,12 +4,14 @@ import ChatOptionsMenu from './ChatOptionsMenu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
+import { useNavigate } from 'react-router-dom';
     
 function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, currentUser, chatMessagesRef, sockets, typingUser }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [otherUser, setOtherUser] = useState(null);
     const [isTyping, setIsTyping] = useState(false);
     const { sendMessage: sendNotifMessage, isConnected } = useNotificationWS();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (currentContact) {
@@ -54,12 +56,33 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
     const handlePlayPong = () => {
         console.log('Play Pong');
         if (isConnected) {
+            console.log('Connected');
             sendNotifMessage({
                 type: 'SEND_GR',
                 game_type: 'PONG',
                 to_user_id: otherUser.id
             });
+            //testing
+            const token = localStorage.getItem('token');
+            const pong_socket = new WebSocket(`ws://10.11.10.12:8000/ws/play-friend/?token=${token}`);
+            pong_socket.onopen = () => {
+                const data = {
+                    action: 'friend_game',
+                    player1: currentUser.username,
+                    player2: otherUser.username,
+                    value: `${'game'+currentUser.username+'vs'+otherUser.username}`,
+                }
+                pong_socket.send(JSON.stringify(data));
+                navigate('/friend-game');
+            }
         }
+        else {
+            console.log('Not connected');
+        }
+        // return () => {
+        //     if (pong_socket && pong_socket.readyState === WebSocket.OPEN) {
+        //         pong_socket.close();
+        // };
     };
 
     const handlePlayTicTacToe = () => {

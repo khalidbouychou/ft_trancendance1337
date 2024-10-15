@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { useNotificationWS } from '../../../../contexts/NotifWSContext.jsx'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const NotiCard = ({request}) => {
   const [isVisible, setIsVisible] = useState(true)
@@ -13,6 +14,7 @@ const NotiCard = ({request}) => {
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const { sendMessage: sendNotifMessage, isConnected, notif } = useNotificationWS();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (request.notif_type === 'GR') {
@@ -58,11 +60,16 @@ const NotiCard = ({request}) => {
 
   const handleAccept = () => {
     if (isConnected) {
+      console.log('Connected');
       sendNotifMessage({
         type: request.notif_type === 'FR' ? 'ACCEPT_FR' : 'ACCEPT_GR',
         from_user_id: request.from_user.id,
         game_type: request.game_type
       });
+      console.log('move to the game page');
+      navigate('/friend-game');
+    } else {
+      console.log('Not connected');
     }
     setIsVisible(false);
   };

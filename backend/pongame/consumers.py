@@ -89,10 +89,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             print('Received malformed JSON')
             return
 
+        print('received:', data)
         action = data.get('action')
         value = data.get('value', 0)
 
         if action == 'connect':
+            print('a user has connected')
             if (data.get('username') in GameConsumer.queue):
                 self.close()
             GameConsumer.queue[data.get('username')] = {
@@ -109,12 +111,15 @@ class GameConsumer(AsyncWebsocketConsumer):
             if len(GameConsumer.queue) >= 2:
                 match_found = False
                 matched_players = []
-                for player1, data1 in GameConsumer.queue.items():
-                    for player2, data2 in GameConsumer.queue.items():
-                        if player1 != player2 and abs(data1['level'] - data2['level']) <= 5:
-                            match_found = True
-                            matched_players = [player1, player2]
-                            break
+                players_list = list(GameConsumer.queue.items())
+                
+                for i, (player1, data1) in enumerate(players_list):
+                    for j, (player2, data2) in enumerate(players_list):
+                        if i != j:
+                            if abs(data1['level'] - data2['level']) <= 5:
+                                match_found = True
+                                matched_players = [player1, player2]
+                                break
                     if match_found:
                         break
                 if match_found:
@@ -299,7 +304,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.right_score += 1
             self.bonus = 0
-            if (self.right_score >= 1000):
+            if (self.right_score >= 5):
                 self.game_loop = False
                 data = {
                     'winner': '2',
@@ -352,7 +357,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.left_score += 1
             self.bonus = 0
-            if (self.left_score >= 1000):
+            if (self.left_score >= 5):
                 self.game_loop = False
                 data = {
                     'winner': '1',
@@ -398,7 +403,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 
 class inviteConsumer(AsyncWebsocketConsumer):
-    games_queue = {}
+    game_queue = {}
     started_games = {}
     ingame = False
     inqueue = False
@@ -427,6 +432,11 @@ class inviteConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         print('Disconnected')
+        if self.inqueue:
+            for game_id, game in inviteConsumer.game_queue.items():
+                if self.channel_name in game['players'].values():
+                    inviteConsumer.game_queue[game_id]['connected'] -= 1
+                    break
 
     async def receive(self, text_data):
         if not text_data.strip():
@@ -440,9 +450,10 @@ class inviteConsumer(AsyncWebsocketConsumer):
             return
 
         action = data.get('action')
-        value = data.get('value', 0)
+        value = data.get('value')
         
         #this case for invite friend to play
+        print('we receoved something:', data)
         if action == 'friend_game':
             if action == 'friend_game':
                 inviteConsumer.game_queue[value] = {
@@ -454,19 +465,21 @@ class inviteConsumer(AsyncWebsocketConsumer):
                     'connected': 0
                 }
                 # Start the countdown in a separate thread
-                asyncio.create_task(start_countdown())
+                asyncio.create_task(self.start_countdown(data.get('value')))
+                return
 
         #this case if a player join the (invite friend game)
         if action == 'connect':
             if len(inviteConsumer.game_queue) > 0:
                 game = inviteConsumer.game_queue.get(value)
                 if game:
-                    if data.get('player') not in game['players']:
+                    if data.get('username') not in game['players']:
                         self.close()
-                    elif data.get('player') in game['players']:
+                    elif data.get('username') in game['players']:
                         inviteConsumer.game_queue[value]['connected'] += 1
-                        inviteConsumer.game_queue[value]['players'][data.get('player')] = self.channel_name
+                        inviteConsumer.game_queue[value]['players'][data.get('username')] = self.channel_name
                         self.inqueue = True
+                        print(f"Player {data.get('username')} joined game {value}")
                 else:
                     self.close()
             else:
