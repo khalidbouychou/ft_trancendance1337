@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useContext, useEffect } from 'react';
+=======
+// import React, { useContext, useEffect } from 'react';
+>>>>>>> refs/remotes/origin/master
 import { Routes, Route } from 'react-router-dom';
 import Sidebar from './components/SideBar/Sidebar.jsx';
 import Games from './components/Game/Game.jsx';
@@ -16,30 +20,47 @@ import LocalGame from './ponggame/localpong/LocalGame.jsx';
 import LocalTeamGame from './ponggame/teampong/LocalTeamGame.jsx';
 import OnlineGame from './ponggame/onlinepong/OnlineGame.jsx';
 import Tournament from './ponggame/Tournamentpong/Tournament.jsx';
+<<<<<<< HEAD
+=======
+// import AuthProvider from './UserContext/Context.jsx';
+>>>>>>> refs/remotes/origin/master
 import style from './App.module.css';
-
 import Login from './Login/Login.jsx';
+// import { AuthContext } from './UserContext/Context.jsx';
+// import ProtectedRoutes from './protectedRoutes.jsx';
 
-import { AuthContext } from './UserContext/Context.jsx';
-
-import ProtectedRoutes from './protectedRoutes.jsx';
+import { NotificationWebSocketProvider } from './contexts/NotifWSContext.jsx';
+import Layout from './Layout.jsx';
 
 function App() {
-  const {islogin, user} = useContext(AuthContext);
 
+<<<<<<< HEAD
   useEffect(() => {
     console.log('islogin', islogin, 'user', user);
   }
   , [islogin]);
 
+=======
+>>>>>>> refs/remotes/origin/master
   return (
     // <BrowserRouter>
 
       <div className={style.EntirePage}>
-        {window.location.pathname !== '/login' && <Sidebar />}
         <div className={style.MainContent}>
           <Routes>
-            <Route path="/" element={<ProtectedRoutes />} > 
+          <Route path="/" element={<Layout />}>
+              {/* <Route path="home" element={<NotificationWebSocketProvider><Home /></NotificationWebSocketProvider>} />
+              <Route path="games" element={<NotificationWebSocketProvider><Games /></NotificationWebSocketProvider>} />
+              <Route path="pingpong-games" element={<NotificationWebSocketProvider><PingPongGames /></NotificationWebSocketProvider>} />
+              <Route path="xo-games" element={<NotificationWebSocketProvider><XOGames /></NotificationWebSocketProvider>} />
+              <Route path="games/localpong" element={<NotificationWebSocketProvider><LocalGame /></NotificationWebSocketProvider>} />
+              <Route path="games/localteampong" element={<NotificationWebSocketProvider><LocalTeamGame /></NotificationWebSocketProvider>} />
+              <Route path="games/onlinepong" element={<NotificationWebSocketProvider><OnlineGame /></NotificationWebSocketProvider>} />
+              <Route path="games/tournament" element={<NotificationWebSocketProvider><Tournament /></NotificationWebSocketProvider>} />
+              <Route path="chat" element={<NotificationWebSocketProvider><Chat /></NotificationWebSocketProvider>} />
+              <Route path="profile" element={<NotificationWebSocketProvider><Profile /></NotificationWebSocketProvider>} />
+              <Route path="setting" element={<NotificationWebSocketProvider><Setting /></NotificationWebSocketProvider>} />
+              <Route path="notification" element={<NotificationWebSocketProvider><Notificationz /></NotificationWebSocketProvider>} /> */}
               <Route path="home" element={<Home />} />
               <Route path="games" element={<Games />} />
               <Route path="pingpong-games" element={<PingPongGames />} />
@@ -54,13 +75,17 @@ function App() {
               <Route path="setting" element={<Setting />} />
               <Route path="notification" element={<Notificationz />} />
             </Route>
-            <Route path="/login" element={<Login />} />
             <Route path="/*" element={<None />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
       </div>
+<<<<<<< HEAD
         
     // </BrowserRouter>
+=======
+     // </BrowserRouter>
+>>>>>>> refs/remotes/origin/master
   );
 }
 

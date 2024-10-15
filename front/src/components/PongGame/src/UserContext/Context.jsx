@@ -21,11 +21,15 @@ export default function AuthProvider({ children }) {
         navigate("/login");
         return;
       }
+<<<<<<< HEAD
       const res = await axios.post(`http://10.13.6.2:8000/api/login/`,params,{
+=======
+      const res = await axios.post(`http://localhost:8000/api/login/`,params,{
+>>>>>>> refs/remotes/origin/master
             withCredentials: true
           });
       if (res.status === 200){
-        console.log("res.data:", res.data.user);
+        console.log("res.data!:", res.data.user);
         setUser(res.data);
 
         navigate("/");
@@ -39,8 +43,12 @@ export default function AuthProvider({ children }) {
   }
 
   async function auth_intra42() {
+<<<<<<< HEAD
     const response = await axios.get("http://10.13.6.2:8000/api/auth_intra/");
+=======
+>>>>>>> refs/remotes/origin/master
     try {
+      const response = await axios.get("http://localhost:8000/api/auth_intra/");
       if (response.status === 200) {
         setUrl(response.data.url);
       }
@@ -57,12 +65,16 @@ export default function AuthProvider({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
+<<<<<<< HEAD
         const res = await axios.post(`http://10.13.6.2:8000/api/login/`,params,{
+=======
+        const res = await axios.post(`http://localhost:8000/api/login/`,params,{
+>>>>>>> refs/remotes/origin/master
           withCredentials: true
         });
         if (res.status === 200)
           {
-          console.log("res.data:", res.data.user);
+          console.log("res.data!!:", res.data.user);
           setUser(res.data);
 
           navigate("/");

@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
 import React, {useState, useEffect, useContext} from 'react'
+=======
+import { Link, useLocation } from 'react-router-dom';
+import React, {useState, useEffect} from 'react'
+>>>>>>> refs/remotes/origin/master
 import styl from './Sidebar.module.css'
 import pinglogo from './assets/pinglogo.png'
 import { FaAnglesLeft } from "react-icons/fa6";
@@ -8,18 +13,38 @@ import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { IoLogoGameControllerB } from "react-icons/io";
 import { CiSettings } from "react-icons/ci";
 import { AiOutlineLogout } from "react-icons/ai";
-import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineHome } from "react-icons/md";
 import { AuthContext } from '../../UserContext/Context.jsx'
 import CmpCard from '../CmpCard/CmpCard';
-
+import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
+import { MdNotifications, MdNotificationImportant } from "react-icons/md";
+import { useLocationContext } from '../../contexts/LocationContext.jsx';
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
     const [hasNotification, setHasNotification] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState('300px');
+<<<<<<< HEAD
     const { user } = useContext(AuthContext);
     // const profilePath = user && user.user ? `/profile/${user.user.username}` : '';
+=======
+    const { notif } = useNotificationWS();
+    const { currentLocation } = useLocationContext();
+
+    useEffect(() => {
+        if (notif && notif.status === 'pending' && currentLocation !== '/notification') {
+            setHasNotification(true);
+        }
+    }, [notif]);
+
+    useEffect(() => {
+        if (currentLocation === '/notification') {
+            setHasNotification(false);
+        }
+    }, [currentLocation]);
+
+
+>>>>>>> refs/remotes/origin/master
     const handleClick = () => {
         setIsOpen(!isOpen)
     }
@@ -58,7 +83,8 @@ const Sidebar = () => {
             <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={`/profile/${user?.user?.profile_name}`} />
             <CmpCard isOpen={isOpen} ICON={IoChatbubbleEllipsesOutline} name={'Chat'} link={'/chat'}/>
             <CmpCard isOpen={isOpen} ICON={IoLogoGameControllerB} name={'Game'} link={'/games'}/>
-            <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/>
+            {/* <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/> */}
+            <CmpCard isOpen={isOpen} ICON={hasNotification ? MdNotificationImportant : MdNotifications} name={'Notification'} link={'/notification'}/>
             <CmpCard isOpen={isOpen} ICON={CiSettings} name={'Setting'} link={'/setting'}/>
             <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'} top={'43%'}/>
         </div>

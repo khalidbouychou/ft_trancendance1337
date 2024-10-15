@@ -166,7 +166,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 value=tokens['access'],
                 httponly=True,
                 secure=True,
-                samesite='Lax'
+                samesite='None'
             )
             return response
         except requests.RequestException as e:

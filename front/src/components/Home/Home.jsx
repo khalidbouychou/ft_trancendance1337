@@ -6,7 +6,7 @@ import Tmp1 from './components/Tmp1/Tmp1'
 import { useState, useEffect } from 'react';
 import Tmp2 from './components/Tmp2/Tmp2';
 import SearchCard from './components/SearchCard/Searchcard';
-
+import Cookies from 'js-cookie';
 
 const Home = () => {
 
