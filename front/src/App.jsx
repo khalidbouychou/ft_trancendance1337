@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Sidebar from './components/SideBar/Sidebar.jsx';
 import Games from './components/Game/Game.jsx';
 
@@ -16,7 +16,6 @@ import LocalGame from './ponggame/localpong/LocalGame.jsx';
 import LocalTeamGame from './ponggame/teampong/LocalTeamGame.jsx';
 import OnlineGame from './ponggame/onlinepong/OnlineGame.jsx';
 import Tournament from './ponggame/Tournamentpong/Tournament.jsx';
-import AuthProvider from './UserContext/Context.jsx';
 import style from './App.module.css';
 
 import Login from './Login/Login.jsx';
@@ -32,6 +31,7 @@ function App() {
     console.log('islogin', islogin, 'user', user);
   }
   , [islogin]);
+
   return (
     // <BrowserRouter>
 
@@ -49,7 +49,8 @@ function App() {
               <Route path="games/onlinepong" element={<OnlineGame />} />
               <Route path="games/tournament" element={<Tournament />} />
               <Route path="chat" element={<Chat />} />
-              <Route path="profile" element={<Profile />} />
+              {/* <Route path="profile" element={<Profile />} /> */}
+              <Route path="profile/:username" element={<Profile />} />
               <Route path="setting" element={<Setting />} />
               <Route path="notification" element={<Notificationz />} />
             </Route>
@@ -59,7 +60,7 @@ function App() {
         </div>
       </div>
         
-     // </BrowserRouter>
+    // </BrowserRouter>
   );
 }
 

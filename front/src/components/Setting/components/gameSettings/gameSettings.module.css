@@ -1,5 +1,5 @@
 .first {
-    width: 90%;
+    width: 100%;
     height: 50%;
     display: flex;
     align-items: center;
@@ -19,6 +19,7 @@
     width: 50%;
     height: 100%;
     display: flex;
+    padding: 5%;
 }
 
 
@@ -228,7 +229,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    p {
+    justify-content: center;
+    gap: 10px;
+    /* p {
         color: #7667D9;
         font-size: 25px;
         font-weight: 800;
@@ -239,8 +242,151 @@
     }
     @media (max-width: 640px) {
         display: none;
+    } */
+}
+
+.disTable {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 200px;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.changeBt {
+    width: 100px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #7667D9;
+    transition: 0.5s;
+    cursor: pointer;
+    border: none;
+    p {
+        font-size: 15px;
+        color: white;
     }
 }
+
+.disColors {
+    padding: 10px;
+    width: 300px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    border: 1px white solid;
+    background-color: rgba(255, 255, 255, 0.3);
+    @media (max-width: 768px) {
+        max-width: 250px;
+    }
+}
+
+.Table {
+    display: flex;
+    width: 60px;
+    height: 40px;
+    border: 1px solid white;
+    cursor: pointer;
+    transition: 0.5s;
+    position: relative;
+    &:hover {
+        transition: 0.5s;
+        transform: scale(1.05);
+    }
+}
+
+.ball {
+    width: 25px;
+    height: 25px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.5s;
+    &:hover {
+        transition: 0.5s;
+        transform: scale(1.1);
+    }
+}
+
+.racket {
+    display: flex;
+    width: 50px;
+    height: 15px;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s;
+    &:hover {
+        transition: 0.5s;
+        transform: scale(1.1);
+    }
+
+}
+
+.colors {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    z-index: 1;
+    /* left: 100%; */
+    top: 100%;
+}
+
+.tableCol {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 150px;
+    transition: 0.5s;
+    border: 2px solid white;
+    position: relative;
+    hr {
+        width: 0.5%;
+        height: 110%;
+        background-color: black;
+        border: none;
+    }
+    @media (max-width: 768px) {
+        width: 250px;
+        height: 120px;
+    }
+}
+
+.Racket {
+    width: 15px;
+    height: 60px;
+    background-color: white;
+    position: absolute;
+    @media (max-width: 768px) {
+        width: 10px;
+        height: 40px;
+    }
+}
+
+.Ball {
+    width: 20px;
+    height: 20px;
+    border-radius: 25px;
+    background-color: white;
+    left: 55%;
+    top: 50%;
+    position: relative;
+    position: absolute;
+    @media (max-width: 768px) {
+        width: 17px;
+        height: 17px;
+    }
+}
+
 
 .settingGame2 {
     /* background-color: aqua; */
@@ -356,7 +502,7 @@
     color: #7667D9;
 }
 
-.racket {
+/* .racket {
     display: flex;
     width: 30%;
     height: 15%;
@@ -365,9 +511,9 @@
     @media (max-width: 1024px) {
         height: 10%;
     }
-}
+} */
 
-.colors {
+/* .colors {
     padding: 2%;
     width: 70%;
     height: 100%;
@@ -389,7 +535,7 @@
 		border-radius: 20px;
 		background-color: rgba(255, 255, 255, 0.3);
 	}
-}
+} */
 
 .colorPicker {
     display: flex;
