@@ -17,6 +17,7 @@ clean:
 # ssl:
 # 	bash ./generate_ssl.sh
 down: clean
+	rm -rf db/*
 	docker-compose down
 
 push :
