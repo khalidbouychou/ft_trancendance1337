@@ -1,25 +1,18 @@
-import React from 'react';
-import styl from './SearchCard.module.css';
-import { useNavigate } from 'react-router-dom';
+import React from 'react'
+import styl from './SearchCard.module.css'
+import userImage from '../../assets/nouahidi.jpeg'
 
-const SearchCard = ({ user }) => {
-
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`/profile/${user.username}`);
-  };
-
+const SearchCard = ({user}) => {
   return (
-    <button className={styl.searchCard} onClick={handleClick}>
-      <div className={styl.userImage}>
-        <img src={user.avatar} />
-      </div>
-      <div className={styl.userName}>
-        <p>{user.username}</p>
-      </div>
-    </button>
-  );
-};
+    <div className={styl.searchCard}>
+        <div className={styl.userImage}>
+            <img src={userImage}/>
+        </div>
+        <div className={styl.userName}>
+            <p >{user.name}</p>
+        </div>
+    </div>
+  )
+}
 
-export default SearchCard;
+export default SearchCard

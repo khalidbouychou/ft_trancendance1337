@@ -6,7 +6,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
 import { useNavigate } from 'react-router-dom';
     
-function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, currentUser, chatMessagesRef, sockets, typingUser }) {
+function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, data, chatMessagesRef, sockets, typingUser }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [otherUser, setOtherUser] = useState(null);
     const [isTyping, setIsTyping] = useState(false);
@@ -15,7 +15,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 
     useEffect(() => {
         if (currentContact) {
-            setOtherUser(currentContact.user1.id === currentUser.id ? currentContact.user2 : currentContact.user1);
+            setOtherUser(currentContact.user1.id === data.user.id ? currentContact.user2 : currentContact.user1);
         } else {
             setOtherUser(null);
         }
@@ -64,13 +64,13 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             });
             //testing
             const token = localStorage.getItem('token');
-            const pong_socket = new WebSocket(`ws://10.11.10.12:8000/ws/play-friend/?token=${token}`);
+            const pong_socket = new WebSocket(`ws://10.13.8.4:8000/ws/play-friend/?token=${token}`);
             pong_socket.onopen = () => {
                 const data = {
                     action: 'friend_game',
-                    player1: currentUser.username,
+                    player1: data.user.username,
                     player2: otherUser.username,
-                    value: `${'game'+currentUser.username+'vs'+otherUser.username}`,
+                    value: `${'game'+data.user.username+'vs'+otherUser.username}`,
                 }
                 pong_socket.send(JSON.stringify(data));
                 navigate('/friend-game');
@@ -101,6 +101,17 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
         // navigate(`/profile/${otherUser.id}`);
     };
 
+    const onFriendRequest = () => {
+        console.log('Friend Request:', otherUser.username);
+        if (isConnected) {
+            sendNotifMessage({
+                type: 'SEND_FR',
+                to_user_id: otherUser.id
+            });
+            
+        }
+    }
+
     return (
         <div className="chat-container">
             {otherUser ? (
@@ -128,13 +139,14 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                             onPlayPong={handlePlayPong}
                             onPlayTicTacToe={handlePlayTicTacToe}
                             otherUser={otherUser}
-                            currentUser={currentUser}
+                            currentUserr={data.user}
                             viewProfile={viewProfile}
+                            onFriendRequest={onFriendRequest}
                         />
                     </div>
                     <div className="chat-messages" ref={chatMessagesRef}>
                         {chat.map((msg, index) => (
-                            <MessageItem key={index} message={msg} currentUser={currentUser} />
+                            <MessageItem key={index} message={msg} currentUserr={data.user} />
                         ))}
                     </div>
                     <div className="chat-form-container">

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserSlash, faUserCheck, faTableTennis, faGamepad } from '@fortawesome/free-solid-svg-icons';
 
-function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, currentUser, viewProfile }) {
+function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, currentUser, viewProfile, onFriendRequest }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
+  const [isFriend, setIsFriend] = useState('None');
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
@@ -38,12 +39,31 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, 
   const handleCancelBlock = () => {
     setShowConfirmation(false);
   };
+
+  const handleFriendClick = () => {
+    if (isFriend) {
+      setIsFriend(false);
+      onFriendRequest(false);
+    }
+  }
   
   return (
     <div className="chat-options-menu" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <button className="menu-toggle">⋮</button>
       {isOpen && (
         <ul className="menu-list">
+          {isFriend === 'None' && (
+            <li onClick={handleFriendClick}>
+              <FontAwesomeIcon icon={faUserCheck} />
+              Send Friend Request
+            </li>
+          )}
+          {isFriend === 'invited' && (
+            <li onClick={handleFriendClick}>
+              <FontAwesomeIcon icon={faUserCheck} />
+              Accept Friend Request
+            </li>
+          )}
           <li onClick={handleBlockClick}>
             <FontAwesomeIcon icon={isBlocked ? faUserSlash : faUserCheck} />
             {isBlocked ? "Unblock User" : "Block User"}

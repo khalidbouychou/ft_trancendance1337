@@ -112,7 +112,8 @@ export default function  OnlineGame() {
         let player_id = 0;
         let myReq;
         const token = localStorage.getItem('token');
-        socket = new WebSocket(`ws://10.13.6.2:8000/ws/remote-game/?token=${token}`);
+        if (FetchedData)
+            socket = new WebSocket(`ws://10.13.8.4:8000/ws/remote-game/?token=${token}`);
 
         if (socket) {
             socket.onopen = () => {

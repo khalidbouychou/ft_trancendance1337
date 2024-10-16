@@ -33,13 +33,13 @@ const UserData = ({userData, ismyprofil}) => {
         <div className={styl.user}>
           <div className={styl.Image}>
             <div className={styl.imgStl}>
-              <img src={userData.avatar}></img>
-              <div className={styl.rndOnli} style={{ backgroundColor: 'red' }}></div>
+              <img src={userData.image}></img>
+              <div className={styl.rndOnli} style={{ backgroundColor: userData?.online ? 'green' : 'red' }}></div>
             </div>
           </div>
 
           <div className={styl.Name}>
-            <p>{userData.profile_name.toUpperCase()}</p>
+            <p>{userData.name.toUpperCase()}</p>
           </div>
         </div>
         {ismyprofil !== 0 ? (
@@ -103,7 +103,7 @@ const UserData = ({userData, ismyprofil}) => {
                 <p>GAMES</p>
               </div>
               <div className={styl.aspects}>
-                <p>{userData.wins + userData.losses}</p>
+                <p>{userData.match_total}</p>
               </div>
             </div>
           </div>
@@ -113,7 +113,7 @@ const UserData = ({userData, ismyprofil}) => {
         <div className={styl.externFrame}>
           <div className={styl.percentage} style={{ width: "80%" }}></div>
         </div>
-        <p>5 - 80%</p>
+        <p>{userData.level} - {Math.round(percentageProgress)}%</p>
       </div>
     </div>
   );

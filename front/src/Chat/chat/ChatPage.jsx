@@ -32,9 +32,9 @@ function ChatPage() {
 		}
 	}, [chat]);
 
-	useEffect(() => {
-		console.log('blocked users: ', data.user.blocked_users);
-	}, [data.user]);
+	// useEffect(() => {
+	// 	console.log('blocked users: ', data.user.blocked_users);
+	// }, [data.user]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -44,6 +44,7 @@ function ChatPage() {
 				setupSocket(1);
 				setupNotificationSocket();
 				initUnreadMessages(response.data);
+				console.log('Current User:', response.data.user);
 			} catch (error) {
 				console.warn('Chat page inaccessible:', error);
 				navigate('/login');
@@ -83,7 +84,7 @@ function ChatPage() {
 
 	const setupNotificationSocket = () => {
 		const token = localStorage.getItem('token');
-		const socket = new WebSocket(`ws://10.13.6.2:8000/ws/notification/?token=${token}`);
+		const socket = new WebSocket(`ws://10.13.8.4:8000/ws/notification/?token=${token}`);
 	
 		socket.onopen = () => {
 			console.log('Connected to notification socket');
@@ -128,15 +129,15 @@ function ChatPage() {
 		}
 	}, [currentContact]);
 
-	useEffect(() => {
-		Object.entries(unreadMessages).forEach(([userId, count]) => {
-			const user = data.chat_rooms.flatMap(room => [room.user1, room.user2])
-				.find(user => user.id === parseInt(userId));
-			if (user && count > 0) {
-				console.log(`${count} unread messages from ${user.username}`);
-			}
-		});
-	}, [unreadMessages]);
+	// useEffect(() => {
+	// 	Object.entries(unreadMessages).forEach(([userId, count]) => {
+	// 		const user = data.chat_rooms.flatMap(room => [room.user1, room.user2])
+	// 			.find(user => user.id === parseInt(userId));
+	// 		if (user && count > 0) {
+	// 			console.log(`${count} unread messages from ${user.username}`);
+	// 		}
+	// 	});
+	// }, [unreadMessages]);
 
 	useEffect(() => {
 		if (!receivedMessage) {
@@ -214,7 +215,7 @@ function ChatPage() {
 			}
 		
 			const token = localStorage.getItem('token');
-			const newSocket = new WebSocket(`ws://10.13.6.2:8000/ws/chat/${room_id}/?token=${token}`)
+			const newSocket = new WebSocket(`ws://10.13.8.4:8000/ws/chat/${room_id}/?token=${token}`)
 
 			newSocket.onopen = () => {
 				setSockets(prev => ({
@@ -238,7 +239,7 @@ function ChatPage() {
 						break
 					case 'MESSAGE':
 						if (!data_re.message || !data_re.message.sender) {
-							console.log('Received empty message, ignoring');
+							// console.log('Received empty message, ignoring');
 							break;
 						}
 						console.log('Received message:', data_re.message)
@@ -346,7 +347,7 @@ function ChatPage() {
 						message={message}
 						sendMessage={sendMessage}
 						handleTyping={handleTyping}
-						currentUser={data.user}
+						data={data}
 						chatMessagesRef={chatMessagesRef}
 						sockets={sockets}
 						typingUser={typingUser}

@@ -1,6 +1,9 @@
 import React from 'react';
 
 function MessageItem({ message, currentUser }) {
+    if (!currentUser) {
+        return null;
+    }
     const isCurrentUser = message.sender.username === currentUser.username;
 
     return (

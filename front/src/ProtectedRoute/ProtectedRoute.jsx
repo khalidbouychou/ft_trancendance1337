@@ -11,7 +11,7 @@ function ProtectedRoute({ children }) {
   }
 
   // If authenticated, render the child route
-  return children; // Render the child routes that are passed to ProtectedRoute
+  return children;
 }
 
 export default ProtectedRoute;

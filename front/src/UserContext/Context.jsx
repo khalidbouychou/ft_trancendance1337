@@ -15,7 +15,7 @@ export default function AuthProvider({ children }) {
   const location = useLocation();
 
   async function auth_intra42() {
-    const response = await axios.get("http://10.13.6.2:8000/api/auth_intra/");
+    const response = await axios.get("http://10.13.8.4:8000/api/auth_intra/");
     try {
       if (response.status === 200) {
         setUrl(response.data.url);
@@ -34,13 +34,14 @@ export default function AuthProvider({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
-        const res = await axios.post(`http://10.13.6.2:8000/api/login/`,params,{
+        const res = await axios.post(`http://10.13.8.4:8000/api/login/`,params,{
           withCredentials: true
         });
         if (res.status === 200)
           {
           console.log("res.data:", res.data);
           const token = res.data.user.token;
+          console.log("token:", token);
           localStorage.setItem('token', token);
           setUser(res.data);
           setIslogin(true);

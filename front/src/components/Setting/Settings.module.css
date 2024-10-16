@@ -8,21 +8,20 @@
 
 .content {
 	margin: 5%;
-	width: 80%;
+	width: 90%;
 	height: 1200px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
     justify-content: center;
     gap: 20px;
-    @media (max-width: 768px) {
-        width: 100%;
-        margin: 5% 0 0 0;
-    }
-
+    /* overflow: scroll; */
+    /* @media (max-width: 768px) {
+        width: 95%;
+    } */
 }
 
-.head h1
+.head h1 
 {
     text-align: center;
     font-size:50px; font-weight:300; letter-spacing:15px;
