@@ -12,9 +12,11 @@ RUN pip install -r requirements.txt
 
 COPY . /app
 
-# Change permission for backend.sh
-RUN chmod +x /app/bd/back/backend.sh
+# RUN apt-get update && apt-get install -y make
 
-# Command to run the script
-CMD ["bash", "/app/bd/back/backend.sh"]
+RUN chmod +x back/backend.sh
 
+# # Command to run the script
+CMD ["bash","back/backend.sh"]
+
+# CMD bash -c "back/backend.sh && tail -f /dev/null"

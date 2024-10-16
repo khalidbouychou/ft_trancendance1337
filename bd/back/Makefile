@@ -1,9 +1,11 @@
+
+all : run
+
 run:
 	python3 manage.py runserver 0.0.0.0:8000
 
-migrate_all : clean
-	python3 manage.py makemigrations  login
-	# chat userprofile pongame secondgame
+migrate_all :
+	python3 manage.py makemigrations
 	python3 manage.py migrate
 
 clean:

@@ -1,4 +1,9 @@
-make migrate_all
-export DJANGO_SETTINGS_MODULE=api.settings
-make run
-daphne -e ssl:8000:privateKey=/app/certs/key.key:certKey=/app/certs/cert.crt api.asgi:application
+#!bin/bash
+
+	python3 manage.py makemigrations
+	python3 manage.py migrate
+	python3 manage.py runserver 0.0.0.0:8000
+
+    daphne -e ssl:8000:privateKey=/path/to/private/key.pem:certKey=/path/to/certificate/cert.pem your_app.asgi:application
+
+

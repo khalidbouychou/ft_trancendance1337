@@ -13,20 +13,20 @@ networks:
     driver: bridge
 
 services:
-  trance_db:
-    container_name: postgres_db
-    image: postgres:13
-    environment:
-      POSTGRES_DB: "trance_db"
-      POSTGRES_USER: "khbouych"
-      POSTGRES_PASSWORD: "khbouych_pass"
-    volumes:
-      - trance_volume:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    networks:
-      - trance_network
-    restart: always
+  # trance_db:
+  #   container_name: postgres_db
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: "trance_db"
+  #     POSTGRES_USER: "khbouych"
+  #     POSTGRES_PASSWORD: "khbouych_pass"
+  #   volumes:
+  #     - trance_volume:/var/lib/postgresql/data
+  #   ports:
+  #     - 5432:5432
+  #   networks:
+  #     - trance_network
+  #   restart: always
   bd:
     build:
       context: ./bd
@@ -35,8 +35,8 @@ services:
       - "8000:8000"
     volumes:
       - bd_volume:/app/vbd
-    depends_on:
-      - trance_db
+    # depends_on:
+    #   - trance_db
     networks:
       - trance_network
     restart: always
@@ -49,18 +49,20 @@ services:
       - fd_volume:/app/vfd
     networks:
       - trance_network
+    ports:
+      - "5173:5173"
     depends_on:
       - bd
     restart: always
 
 
-  redis:
-    image: redis:latest
-    container_name: Trance_redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_volume:/data
-    networks:
-      - trance_network
-    restart: always
+  # redis:
+  #   image: redis:latest
+  #   container_name: Trance_redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_volume:/data
+  #   networks:
+  #     - trance_network
+  #   restart: always

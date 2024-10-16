@@ -9,3 +9,8 @@
 # node_modules
 # ./backend/env
 # ./backend/db.sqlite3
+FrontEnd
+backend
+deployment
+bd/db.sqlite3
+# fd/package*.json

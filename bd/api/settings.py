@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'login',
-    # 'pongame',
+    'pongame',
     # 'secondgame',
     # 'userprofile',
     # 'chat',
