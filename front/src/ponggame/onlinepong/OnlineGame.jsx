@@ -98,11 +98,6 @@ export default function  OnlineGame() {
     }, []);
 
     useEffect(() => {
-        // let xusername = '';
-        // let xavatar = '';
-        // let xmylevel = 0;
-        
-        // setLeftPlayerName(username);
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const game_width = 800;
