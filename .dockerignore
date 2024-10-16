@@ -9,8 +9,11 @@
 # node_modules
 # ./backend/env
 # ./backend/db.sqlite3
-FrontEnd
-backend
+
 deployment
-bd/db.sqlite3
+backend/db.sqlite3
+backend/env
+backend/makefile
+front/.env
+front/node_modules
 # fd/package*.json
