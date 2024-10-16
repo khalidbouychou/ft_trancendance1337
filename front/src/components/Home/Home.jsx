@@ -6,7 +6,7 @@ import Tmp1 from './components/Tmp1/Tmp1'
 import { useState, useEffect } from 'react';
 import Tmp2 from './components/Tmp2/Tmp2';
 import SearchCard from './components/SearchCard/Searchcard';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 
 const Home = () => {
 
@@ -40,11 +40,7 @@ const Home = () => {
         const fetchSearchResults = async () => {
           if (searchQuery.trim()) {
             const response = await fetch(
-<<<<<<< HEAD
               `http://10.13.6.2:8000/api/search/?q=${searchQuery}`
-=======
-              `http://10.11.10.12:8000/api/users/search/?q=${searchQuery}`
->>>>>>> 1d0199186d1ecb779155ee6d57f2ae8894a85d09
             );
             const data = await response.json();
             console.log(data);
