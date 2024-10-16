@@ -8,12 +8,25 @@ const Profile = () => {
   const { username } = useParams();
   const { user } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
+<<<<<<< HEAD
   const [error, setError] = useState(null);
   const [ismyprofil, setIsMyProfil] = useState(1);
 
   useEffect(() => {
     if (user && user.user.username === username) {
       setIsMyProfil(0);
+=======
+  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [id, setId] = useState(1);
+
+  const ismyprofil = 1
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`http://10.11.10.12:8000/api/users/${id}/`);
+      setUserData(response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+>>>>>>> 1d0199186d1ecb779155ee6d57f2ae8894a85d09
     }
   }, [user, username]);
 

@@ -24,27 +24,8 @@ export default function  OnlineGame() {
     const [ level, setLevel ] = useState(0);
     const [ player_idx, setPlayerId ] = useState(0);
     const hasFetchedData = useRef(false);
+    const [ FetchedData, setFetchedData] = useState(false);
     let socket = null;
-
-    useEffect(() => {
-		const fetchData = async () => {
-            const response = await api.get('/chat/');
-            if (response.status === 200)
-            {
-                setUser(response.data.user);
-                setUsername(response.data.user.username);
-                setLeftPlayerAvatar(response.data.user.avatar);
-                setAvatar(response.data.user.avatar);
-                console.log("avatar", response.data.avatar);
-                setLevel(response.data.user.level);
-            }
-		};
-		
-		if (!hasFetchedData.current) {
-			fetchData();
-			hasFetchedData.current = true;
-		}
-	}, []);
 
     const leftup = () => {
         if (player_idx === 1 && socket && socket.readyState === WebSocket.OPEN) {
@@ -95,10 +76,28 @@ export default function  OnlineGame() {
     };
 
     useEffect(() => {
-        const xusername = username;
-        const xavatar = avatar;
-        const xmylevel = level / 100;
-        setLeftPlayerName(username);
+        const fetchData = async () => {
+            const response = await api.get('/chat/');
+            if (response.status === 200)
+            {
+                setUser(response.data.user);
+                setUsername(response.data.user.username);
+                setLeftPlayerAvatar(response.data.user.avatar);
+                setAvatar(response.data.user.avatar);
+                setLevel(response.data.user.exp_game);
+            }else {
+                console.log("error:", response.status);
+            }
+        };
+        
+        if (!hasFetchedData.current) {
+            fetchData();
+            hasFetchedData.current = true;
+            setFetchedData(true);
+        }
+    }, []);
+
+    useEffect(() => {
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const game_width = 800;
@@ -113,94 +112,100 @@ export default function  OnlineGame() {
         let player_id = 0;
         let myReq;
         const token = localStorage.getItem('token');
+<<<<<<< HEAD
         socket = new WebSocket(`ws://10.13.6.2:8000/ws/remote-game/?token=${token}`);
+=======
+        if (FetchedData)
+            socket = new WebSocket(`ws://10.11.10.12:8000/ws/remote-game/?token=${token}`);
+>>>>>>> 1d0199186d1ecb779155ee6d57f2ae8894a85d09
 
-        socket.onopen = () => {
-            // console.log('my name is:', username, "my avatar is:", avatar);
-            if (socket.readyState === WebSocket.OPEN) {
-                const message = {
-                    action: 'connect',
-                    username: xusername,
-                    avatar: xavatar,
-                    level: xmylevel,
-                };
-                socket.send(JSON.stringify(message));
-                console.log('WebSocket is open now');
-            } else {
-                console.error('WebSocket is not open. readyState:', socket.readyState);
-            }
-        };
-    
-        window.leftup = leftup;
-        window.leftdown = leftdown;
-        window.rightup = rightup;
-        window.rightdown = rightdown;
-    
-        socket.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                // console.log('Received:', data)
-                if (data.message){
-                    if (data.message === 'game_data'){
-                        ballx = (data.ballx / game_width) * canvas.width
-                        bally = (data.bally / game_height) * canvas.height
-                        rightRacketY = (data.right_paddleY / game_height) * canvas.height
-                        leftRacketY = (data.left_paddleY / game_height) * canvas.height
-                        setRightScore(data.right_score)
-                        setLeftScore(data.left_score)
-                        racketHeight =  data.racketHeight
-                        racketWidth = data.racketWidth
-                        ball_radius = ((canvas.height / game_width + canvas.width / game_height) / 2) * 15
-                    }
+        if (socket) {
+            socket.onopen = () => {
+                if (socket.readyState === WebSocket.OPEN) {
+                    const message = {
+                        action: 'connect',
+                        username: username,
+                        avatar: avatar,
+                        level: level,
+                    };
+                    socket.send(JSON.stringify(message));
+                    console.log('WebSocket is open now');
+                } else {
+                    console.error('WebSocket is not open. readyState:', socket.readyState);
                 }
-                if (data.message){
-                    if (data.message === 'game_started'){
-                        if (data.player_id1 === username){
-                            player_id = 1;
-                            setPlayerId(1);
-                            setLeftPlayerName(data.player_id1);
-                            setRightPlayerName(data.player_id2);
-                            setLeftPlayerAvatar(data.player_1_avatar);
-                            setRightPlayerAvatar(data.player_2_avatar);
+            };
+    
+            window.leftup = leftup;
+            window.leftdown = leftdown;
+            window.rightup = rightup;
+            window.rightdown = rightdown;
+            socket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    // console.log('Received:', data)
+                    if (data.message){
+                        if (data.message === 'game_data'){
+                            ballx = (data.ballx / game_width) * canvas.width
+                            bally = (data.bally / game_height) * canvas.height
+                            rightRacketY = (data.right_paddleY / game_height) * canvas.height
+                            leftRacketY = (data.left_paddleY / game_height) * canvas.height
+                            setRightScore(data.right_score)
+                            setLeftScore(data.left_score)
+                            racketHeight =  data.racketHeight
+                            racketWidth = data.racketWidth
+                            ball_radius = ((canvas.height / game_width + canvas.width / game_height) / 2) * 15
                         }
-                        else if (data.player_id2 === username){
-                            player_id = 2;
-                            setPlayerId(2);
-                            setLeftPlayerName(data.player_id1);
-                            setRightPlayerName(data.player_id2);
-                            setLeftPlayerAvatar(data.player_1_avatar);
-                            setRightPlayerAvatar(data.player_2_avatar);
-                        }
-                        setGameStarted(true);
                     }
-                    else if (data.message === 'disconnected'){
-                        setCondition('D');
+                    if (data.message){
+                        if (data.message === 'game_started'){
+                            if (data.player_id1 === username){
+                                player_id = 1;
+                                setPlayerId(1);
+                                setLeftPlayerName(data.player_id1);
+                                setRightPlayerName(data.player_id2);
+                                setLeftPlayerAvatar(data.player_1_avatar);
+                                setRightPlayerAvatar(data.player_2_avatar);
+                            }
+                            else if (data.player_id2 === username){
+                                player_id = 2;
+                                setPlayerId(2);
+                                setLeftPlayerName(data.player_id1);
+                                setRightPlayerName(data.player_id2);
+                                setLeftPlayerAvatar(data.player_1_avatar);
+                                setRightPlayerAvatar(data.player_2_avatar);
+                            }
+                            setGameStarted(true);
+                        }
+                        else if (data.message === 'disconnected'){
+                            setCondition('D');
+                            socket.close();
+                            setMessage("Opponent left the game");
+                        }
+                    }
+                    if (data.hasOwnProperty('winner')) {
+                        if (data.winner == player_id){
+                            setCondition('W');
+                            setMessage("You won the game");
+                        }
                         socket.close();
-                        setMessage("Opponent left the game");
                     }
-                }
-                if (data.hasOwnProperty('winner')) {
-                    if (data.winner == player_id){
-                        setCondition('W');
-                        setMessage("You won the game");
+                    if (data.hasOwnProperty('loser')) {
+                        if (data.loser == player_id){
+                            setCondition('L');
+                            setMessage("You lost the game");
+                        }
+                        socket.close();
                     }
-                    socket.close();
-                }
-                if (data.hasOwnProperty('loser')) {
-                    if (data.loser == player_id){
-                        setCondition('L');
-                        setMessage("You lost the game");
-                    }
-                    socket.close();
-                }
-        };
-    
-        socket.onclose = () => {
-            console.log('WebSocket connection closed');
-        };
+            };
 
-        socket.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
+            socket.onclose = () => {
+                console.log('WebSocket connection closed');
+            };
+
+
+            socket.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        }
 
         const drawball = () => {
             canvas.width = canvas.clientWidth;
@@ -296,7 +301,7 @@ export default function  OnlineGame() {
                 socket.close(); // Close WebSocket when the component unmounts
             }
         };
-    }, []);
+    }, [username]);
 
     useEffect(() => {
         console.log("gamestarted", gamestarted);

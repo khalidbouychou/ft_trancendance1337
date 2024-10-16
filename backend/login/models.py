@@ -7,7 +7,7 @@ class Player(AbstractUser):
         ('online', _('online')),
         ('offline', _('offline')),
     )
-    STATUS_GAME = (
+    GAME_STATUS = (
         ('available', _('available')),
         ('waiting', _('waiting')),
         ('playing', _('playing')),
@@ -19,8 +19,9 @@ class Player(AbstractUser):
     email = models.EmailField(max_length=200, default='default')
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
-    exp_game = models.IntegerField(default=0)
+    exp_game = models.IntegerField(default=100)
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
+    status_game = models.CharField(max_length=10, choices=GAME_STATUS, default='offline')
     two_factor = models.BooleanField(default=False)
     otp = models.CharField(max_length=6, default='000000')
     otp_verified = models.BooleanField(default=False)

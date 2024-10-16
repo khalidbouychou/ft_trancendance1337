@@ -40,7 +40,11 @@ const Home = () => {
         const fetchSearchResults = async () => {
           if (searchQuery.trim()) {
             const response = await fetch(
+<<<<<<< HEAD
               `http://10.13.6.2:8000/api/search/?q=${searchQuery}`
+=======
+              `http://10.11.10.12:8000/api/users/search/?q=${searchQuery}`
+>>>>>>> 1d0199186d1ecb779155ee6d57f2ae8894a85d09
             );
             const data = await response.json();
             console.log(data);

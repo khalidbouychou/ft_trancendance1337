@@ -155,6 +155,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 'email': user.email,
                 'two_factor': user.two_factor,
                 'is_online': user.status_network,
+                'status_game': user.status_game,
             }
             response_data = {
                 'msg': 'success',
