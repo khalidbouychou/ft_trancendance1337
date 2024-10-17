@@ -15,7 +15,7 @@ def list_notifications(request):
     ).order_by('-created_at')
     expired_notifs = []
     for notif in all_notifs:
-        if notif.is_expired():
+        if notif.notif_type == 'GR' and notif.is_expired():
             expired_notifs.append(notif.id)
     Notification.objects.filter(id__in=expired_notifs).update(status='expired')
     all_notifs = all_notifs.exclude(id__in=expired_notifs)

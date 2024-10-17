@@ -9,18 +9,22 @@ function ChatOptionsMenu({ onPlayPong, onPlayTicTacToe, otherUser, currentUser, 
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
-    const checkBlockStatus = () => {
-      if (currentUser && otherUser) {
-        const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
-        const areFriends = currentUser.friends.some(friend => (
-          (friend.user1.username === otherUser.username && friend.user2.username === otherUser.username)
-        ));
-        console.log('areFriends:', areFriends ? 'friends' : 'None');
-        setIsBlocked(isOtherUserBlocked);
-        setIsFriend(areFriends ? 'friends' : 'None');
+    // const checkBlockStatus = () => {
+    //   if (currentUser && otherUser) {
+    //     const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
+    //     setIsBlocked(isOtherUserBlocked);
+    //   }
+    // };
+    // checkBlockStatus();
+      const areFriends = currentUser.friends.find(friend => 
+        (friend.user1 === otherUser.username || friend.user2 === otherUser.username)
+      );
+      if (areFriends) {
+        console.log('areFriends:', areFriends.status);
+        setIsFriend(areFriends.status);
+      } else {
+        setIsFriend('None');
       }
-    };
-    checkBlockStatus();
   }, [otherUser, currentUser])
 
   const handleMouseEnter = () => setIsOpen(true);
@@ -61,12 +65,6 @@ function ChatOptionsMenu({ onPlayPong, onPlayTicTacToe, otherUser, currentUser, 
             <li onClick={handleFriendClick}>
               <FontAwesomeIcon icon={faUserCheck} />
               Send Friend Request
-            </li>
-          )}
-          {isFriend === 'invited' && (
-            <li onClick={handleFriendClick}>
-              <FontAwesomeIcon icon={faUserCheck} />
-              Accept Friend Request
             </li>
           )}
           {/* <li onClick={handleBlockClick}>

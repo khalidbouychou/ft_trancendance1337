@@ -10,6 +10,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [otherUser, setOtherUser] = useState(null);
     const [isTyping, setIsTyping] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
     const { sendMessage: sendNotifMessage, isConnected } = useNotificationWS();
     const navigate = useNavigate();
 
@@ -37,6 +38,12 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             return () => clearTimeout(timer);
         }
     }, [isTyping])
+
+    useEffect(() => {
+        if (data.user) {
+            setCurrentUser(data.user);
+        }
+    }, [data.user]);
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -66,13 +73,13 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             const token = localStorage.getItem('token');
             const pong_socket = new WebSocket(`ws://10.13.2.2:8000/ws/play-friend/?token=${token}`);
             pong_socket.onopen = () => {
-                const data = {
+                const data2 = {
                     action: 'friend_game',
                     player1: data.user.username,
                     player2: otherUser.username,
                     value: `${'game'+data.user.username+'vs'+otherUser.username}`,
                 }
-                pong_socket.send(JSON.stringify(data));
+                pong_socket.send(JSON.stringify(data2));
                 navigate('/friend-game');
             }
         }
@@ -139,14 +146,14 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                             onPlayPong={handlePlayPong}
                             onPlayTicTacToe={handlePlayTicTacToe}
                             otherUser={otherUser}
-                            currentUserr={data.user}
+                            currentUser={currentUser}
                             viewProfile={viewProfile}
                             onFriendRequest={onFriendRequest}
                         />
                     </div>
                     <div className="chat-messages" ref={chatMessagesRef}>
                         {chat.map((msg, index) => (
-                            <MessageItem key={index} message={msg} currentUserr={data.user} />
+                            <MessageItem key={index} message={msg} currentUser={currentUser} />
                         ))}
                     </div>
                     <div className="chat-form-container">
