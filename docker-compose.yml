@@ -38,17 +38,17 @@ services:
       - trance_network
     restart: always
 
-  # front:
-  #   build:
-  #     context: ./front
-  #     dockerfile: frontend/Dockerfile
-  #   volumes:
-  #     - ./front:/app/front_volume
-  #   networks:
-  #     - trance_network
-  #   ports:
-  #     - "5173:5173"
-  #   restart: always
+  front:
+    build:
+      context: ./front
+      dockerfile: frontend/Dockerfile
+    volumes:
+      - ./front:/app/front_volume
+    networks:
+      - trance_network
+    ports:
+      - "5173:5173"
+    restart: always
 
   # redis:
   #   image: redis:latest
