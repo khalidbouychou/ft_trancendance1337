@@ -40,18 +40,18 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-    const handleBlockUser = (e) => {
-        if (!otherUser) {
-            return;
-        }
-        if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
-            sockets[currentContact.id].send(JSON.stringify({
-                type: 'BLOCK_USER',
-                event: e ? 'BLOCK' : 'UNBLOCK',
-                user_id: otherUser.id
-            }));
-        }
-    };
+    // const handleBlockUser = (e) => {
+    //     if (!otherUser) {
+    //         return;
+    //     }
+    //     if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
+    //         sockets[currentContact.id].send(JSON.stringify({
+    //             type: 'BLOCK_USER',
+    //             event: e ? 'BLOCK' : 'UNBLOCK',
+    //             user_id: otherUser.id
+    //         }));
+    //     }
+    // };
 
     const handlePlayPong = () => {
         console.log('Play Pong');
@@ -64,7 +64,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             });
             //testing
             const token = localStorage.getItem('token');
-            const pong_socket = new WebSocket(`ws://10.13.8.4:8000/ws/play-friend/?token=${token}`);
+            const pong_socket = new WebSocket(`ws://10.13.2.2:8000/ws/play-friend/?token=${token}`);
             pong_socket.onopen = () => {
                 const data = {
                     action: 'friend_game',
@@ -135,7 +135,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                             )}
                         </div>
                         <ChatOptionsMenu
-                            onBlockUser={handleBlockUser}
+                            // onBlockUser={handleBlockUser}
                             onPlayPong={handlePlayPong}
                             onPlayTicTacToe={handlePlayTicTacToe}
                             otherUser={otherUser}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserSlash, faUserCheck, faTableTennis, faGamepad } from '@fortawesome/free-solid-svg-icons';
 
-function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, currentUser, viewProfile, onFriendRequest }) {
+function ChatOptionsMenu({ onPlayPong, onPlayTicTacToe, otherUser, currentUser, viewProfile, onFriendRequest }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
   const [isFriend, setIsFriend] = useState('None');
@@ -12,7 +12,12 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, 
     const checkBlockStatus = () => {
       if (currentUser && otherUser) {
         const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
+        const areFriends = currentUser.friends.some(friend => (
+          (friend.user1.username === otherUser.username && friend.user2.username === otherUser.username)
+        ));
+        console.log('areFriends:', areFriends ? 'friends' : 'None');
         setIsBlocked(isOtherUserBlocked);
+        setIsFriend(areFriends ? 'friends' : 'None');
       }
     };
     checkBlockStatus();
@@ -64,10 +69,10 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, 
               Accept Friend Request
             </li>
           )}
-          <li onClick={handleBlockClick}>
+          {/* <li onClick={handleBlockClick}>
             <FontAwesomeIcon icon={isBlocked ? faUserSlash : faUserCheck} />
             {isBlocked ? "Unblock User" : "Block User"}
-          </li>
+          </li> */}
           <li onClick={onPlayPong}>
             <FontAwesomeIcon icon={faTableTennis} />
             Play Pong
