@@ -1,7 +1,11 @@
 import axios from 'axios';
 
 const api = axios.create({
+<<<<<<< HEAD
     baseURL: 'http://10.13.2.2:8000/api',
+=======
+    baseURL: 'http://localhost:8000/api',
+>>>>>>> khbouych
     headers: {
         'Content-Type': 'application/json',
     },

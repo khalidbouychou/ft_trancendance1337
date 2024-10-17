@@ -113,7 +113,11 @@ export default function  OnlineGame() {
         let myReq;
         const token = localStorage.getItem('token');
         if (FetchedData)
+<<<<<<< HEAD
             socket = new WebSocket(`ws://10.13.2.2:8000/ws/remote-game/?token=${token}`);
+=======
+            socket = new WebSocket(`ws://localhost:8000/ws/remote-game/?token=${token}`);
+>>>>>>> khbouych
 
         if (socket) {
             socket.onopen = () => {

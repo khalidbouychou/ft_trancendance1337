@@ -13,25 +13,22 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
-from django.conf import settings
-from dotenv import load_dotenv  # Import dotenv here
+from dotenv import load_dotenv
+
+# Load the .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-gyx%6(g(2=e_y!!4_^&9!p=87&73$jlc(_*yhj1q*t=i@qvx&@')  # Ensure SECRET_KEY is set in .env
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-gyx%6(g(2=e_y!!4_^&9!p=87&73$jlc(_*yhj1q*t=i@qvx&@'
+DEBUG = os.getenv('DEBUG', 'True') == 'True'  # Load from environment; convert to boolean
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']  # Use specific domains in production
 
 # Application definition
-
 INSTALLED_APPS = [
     'daphne',
     'channels',
@@ -60,8 +57,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ASGI_APPLICATION = 'api.asgi.application'
@@ -74,12 +69,10 @@ CHANNEL_LAYERS = {
 
 ROOT_URLCONF = 'api.urls'
 
-# BASE_DIR = Path(__file__).resolve().parent.parent
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': '',
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,19 +87,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+# Database configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': "postgres",
+        'USER': "postgres",
+        'PASSWORD': "postgres",
+        'HOST': "postgres",
+        'PORT': "5432",
     }
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -122,33 +115,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
+# Static files
 STATIC_URL = 'static/'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-
+# CORS settings
 CORS_ALLOW_CREDENTIALS = True
-
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -162,64 +142,36 @@ CORS_ALLOW_HEADERS = [
     'withcredentials',  
 ]
 
-# *************** jwt ********* 
-
+# JWT settings
 REST_FRAMEWORK = {
-    
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
 }
 
-
-
-
-#************  khbouych ************
-
 AUTH_USER_MODEL = 'login.Player'
-# JWT settings
 SIMPLE_JWT = {
    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
    'REFRESH_TOKEN_LIFETIME': timedelta(days=90),
    'ROTATE_REFRESH_TOKENS': True,
-   'BLACKLIST_AFTER_ROTATION': True
+   'BLACKLIST_AFTER_ROTATION': True,
 }
-
-
 
 ACCESS_TOKEN_LIFETIME = SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
 REFRESH_TOKEN_LIFETIME = SIMPLE_JWT['REFRESH_TOKEN_LIFETIME']
 
-JWT_COOKIE_SECURE = False
-
-
-# These are used for cookie settings
 JWT_AUTH_COOKIE = 'access_token'
 JWT_AUTH_REFRESH_COOKIE = 'refresh_token'
 JWT_AUTH_SECURE = True  # Set to False in development if not using HTTPS
 JWT_AUTH_SAMESITE = 'Lax'
 JWT_REFRESH_TOKEN_LIFETIME = REFRESH_TOKEN_LIFETIME
 
-CORS_ALLOW_ALL_ORIGINS = True  # Set to True for development, but not recommended for production
+# CORS settings (consider restricting in production)
+CORS_ALLOW_ALL_ORIGINS = True  # For development; restrict in production
+CORS_ALLOWED_ORIGINS = ['http://*']  # List of allowed origins
 
-CORS_ALLOWED_ORIGINS = ['http://*']
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': getenv("POSTGRES_DB"),
-#         'USER': getenv("POSTGRES_USER"),
-#         'PASSWORD': getenv("POSTGRES_PASSWORD"),
-#         'HOST': getenv("POSTGRES_HOST"),
-#         'PORT': getenv("POSTGRES_PORT"),
-#     }
-# }
-
-# Load the .env file
-load_dotenv()
-
-
-#************  khbouych ************
+# Security settings for production
+if not DEBUG:
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 3600  # Enable HTTP Strict Transport Security

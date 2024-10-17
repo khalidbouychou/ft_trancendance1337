@@ -84,7 +84,11 @@ function ChatPage() {
 
 	const setupNotificationSocket = () => {
 		const token = localStorage.getItem('token');
+<<<<<<< HEAD
 		const socket = new WebSocket(`ws://10.13.2.2:8000/ws/notification/?token=${token}`);
+=======
+		const socket = new WebSocket(`ws://localhost:8000/ws/notification/?token=${token}`);
+>>>>>>> khbouych
 	
 		socket.onopen = () => {
 			console.log('Connected to notification socket');
@@ -215,7 +219,11 @@ function ChatPage() {
 			}
 		
 			const token = localStorage.getItem('token');
+<<<<<<< HEAD
 			const newSocket = new WebSocket(`ws://10.13.2.2:8000/ws/chat/${room_id}/?token=${token}`)
+=======
+			const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room_id}/?token=${token}`)
+>>>>>>> khbouych
 
 			newSocket.onopen = () => {
 				setSockets(prev => ({

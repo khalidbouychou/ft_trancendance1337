@@ -21,7 +21,11 @@ export default function AuthProvider({ children }) {
         navigate("/login");
         return;
       }
+<<<<<<< HEAD
       const res = await axios.post(`http://10.13.2.2:8000/api/login/`,params,{
+=======
+      const res = await axios.post(`http://localhost:8000/api/login/`,params,{
+>>>>>>> khbouych
             withCredentials: true
           });
       if (res.status === 200){
@@ -40,7 +44,11 @@ export default function AuthProvider({ children }) {
 
   async function auth_intra42() {
     try {
+<<<<<<< HEAD
       const response = await axios.get("http://10.13.2.2:8000/api/auth_intra/");
+=======
+      const response = await axios.get("http://localhost:8000/api/auth_intra/");
+>>>>>>> khbouych
       if (response.status === 200) {
         setUrl(response.data.url);
       }
@@ -57,7 +65,11 @@ export default function AuthProvider({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
+<<<<<<< HEAD
         const res = await axios.post(`http://10.13.2.2:8000/api/login/`,params,{
+=======
+        const res = await axios.post(`http://localhost:8000/api/login/`,params,{
+>>>>>>> khbouych
           withCredentials: true
         });
         if (res.status === 200)

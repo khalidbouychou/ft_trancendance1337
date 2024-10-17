@@ -12,7 +12,11 @@ const Profile = () => {
   const ismyprofil = 1
   const fetchUserData = async () => {
     try {
+<<<<<<< HEAD
       const response = await axios.get(`http://10.13.2.2:8000/api/users/${id}/`);
+=======
+      const response = await axios.get(`http://localhost:8000/api/users/${id}/`);
+>>>>>>> khbouych
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
