@@ -2,6 +2,7 @@ version: "3.8"
 
 volumes:
   db_volume:
+
 networks:
   trance_network:
     name: trance_network
@@ -24,12 +25,13 @@ services:
     networks:
       - trance_network
     restart: always
+
   back:
     build:
       context: ./backend
       dockerfile: back/Dockerfile
     ports:
-      - "8000:8000"
+      - "8000:8000" # Ensure this matches your backend server port
     volumes:
       - ./backend:/app/backend_volume
     depends_on:
@@ -38,18 +40,31 @@ services:
       - trance_network
     restart: always
 
-  front:
-    build:
-      context: ./front
-      dockerfile: frontend/Dockerfile
-    volumes:
-      - ./front:/app/front_volume
-    networks:
-      - trance_network
-    ports:
-      - "5173:5173"
-    restart: always
+  # front:
+  #   build:
+  #     context: ./front
+  #     dockerfile: frontend/Dockerfile
+  #   volumes:
+  #     - ./front:/app/front_volume
+  #   networks:
+  #     - trance_network
+  #   ports:
+  #     - "5173:5173"
+  #   restart: always
 
+  # nginx:
+  #   image: nginx:latest
+  #   ports:
+  #     - "443:443"
+  #     - "80:80"
+  #   volumes:
+  #     - ./certs:/etc/nginx/certs
+  #     - ./backend/back/nginx.conf:/etc/nginx/nginx.conf
+  #   networks:
+  #     - trance_network
+  #   depends_on:
+  #     - back
+  #   restart: always
   # redis:
   #   image: redis:latest
   #   container_name: Trance_redis

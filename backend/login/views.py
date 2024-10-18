@@ -141,7 +141,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
             response.set_cookie(
                 key='token',
                 value=tokens['access'],
-                httponly=True,
+                httponly=False,
                 secure=True,
                 samesite='None'
             )

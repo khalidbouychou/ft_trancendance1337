@@ -21,6 +21,16 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# SSL Configuration
+# ALLOWED_HOSTS = ['yourdomain.com', 'localhost']  # Add your domain
+
+# SSL settings
+SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+SECURE_HSTS_SECONDS = 3600
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-gyx%6(g(2=e_y!!4_^&9!p=87&73$jlc(_*yhj1q*t=i@qvx&@')  # Ensure SECRET_KEY is set in .env
 

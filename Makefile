@@ -1,8 +1,6 @@
 
-# all: ssl
-	# docker-compose up
-all: 
-	docker-compose up 
+all:
+	docker-compose up
 build :
 	docker-compose up --build
 docker :
