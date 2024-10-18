@@ -1,6 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 class Player(AbstractUser):
     STATUS = (
@@ -25,6 +26,7 @@ class Player(AbstractUser):
     otp = models.CharField(max_length=6, default='000000')
     otp_verified = models.BooleanField(default=False)
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
+    friends = models.ManyToManyField('self', symmetrical=True, through='Friend', blank=True)
 
     class Meta:
         db_table = 'player'
@@ -46,3 +48,17 @@ class Player(AbstractUser):
     @staticmethod
     def are_enemies(user1, user2):
         return user1.is_blocked(user2) or user2.is_blocked(user1)
+
+class Friend(models.Model):
+    STATUS = (
+        ('None', _('None')),
+        ('pending', _('pending')),
+        ('friends', _('friends')),
+    )
+
+    user1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="friend_user1")
+    user2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="friend_user2")
+    status = models.CharField(max_length=10, choices=STATUS, default='None')
+
+    class Meta:
+        unique_together = ['user1', 'user2', 'status']

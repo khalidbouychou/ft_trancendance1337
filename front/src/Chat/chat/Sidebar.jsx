@@ -30,7 +30,7 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
 			user.username.toLowerCase().includes(search.toLowerCase())
 		);
 		setMatchedUsers(filteredUsers.slice(0, 5));
-		console.log('matchedUsers: ', matchedUsers)
+		// console.log('matchedUsers: ', matchedUsers)
 	}, [search]);
 
 	useEffect(() => {

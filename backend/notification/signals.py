@@ -5,10 +5,17 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .serializers import NotificationSerializer
 from django.core.exceptions import ObjectDoesNotExist
+from login.models import Friend
+from django.db.models import Q
 
 @receiver(post_save, sender=Notification)
 def notify_user(sender, instance, created, **kwargs):
     if created:
+        if instance.notif_type == 'FR':
+            friends = Friend.objects.filter(Q(user1=instance.from_user, user2=instance.to_user) |
+                                            Q(user1=instance.to_user, user2=instance.from_user))
+            if not friends.exists():
+                Friend.objects.create(user1=instance.from_user, user2=instance.to_user, status='pending')
         channel_layer = get_channel_layer()
         notification_serializer = NotificationSerializer(instance)
         notif_type = instance.notif_type
@@ -20,6 +27,12 @@ def notify_user(sender, instance, created, **kwargs):
                 'notification': notification_serializer.data
             }
         )
+    else:
+        if instance.notif_type == 'FR':
+            friends = Friend.objects.filter(Q(user1=instance.from_user, user2=instance.to_user) |
+                                            Q(user1=instance.to_user, user2=instance.from_user))
+            if friends.exists():
+                friends.update(status='friends' if instance.status == 'accepted' else 'None')
 
 @receiver(pre_save, sender=Notification)
 def check_GR_status_change(sender, instance, **kwargs):
@@ -53,31 +66,3 @@ def check_GR_status_change(sender, instance, **kwargs):
             }
         )
 
-        # if old_instance.notif_type == 'GR' and old_instance.status != instance.status:
-        #     if old_instance.status == 'pending' and instance.status == 'accepted':
-        #         if instance.is_expired():
-        #             Notification.objects.filter(pk=instance.pk).update(status='expired')
-        #             room_group_name = f'user_{instance.to_user.id}_NOTIF'
-        #             notification_serializer = NotificationSerializer(old_instance)
-        #             async_to_sync(channel_layer.group_send)(
-        #                 room_group_name,
-        #                 {
-        #                     'type': 'send_GR_expired_notification',
-        #                     'GR_expired_notification': notification_serializer.data
-        #                 }
-        #             )
-        #         else:
-        #             room_group_name = f'user_{instance.from_user.id}_NOTIF'
-        #             Notification.objects.filter(pk=instance.pk).update(status='accepted')
-        #             instance.refresh_from_db()
-        #             notification_serializer = NotificationSerializer(instance)
-        #             async_to_sync(channel_layer.group_send)(
-        #                 room_group_name,
-        #                 {
-        #                     'type': 'send_GR_accepted_notification',
-        #                     'GR_accepted_notification': notification_serializer.data
-        #                 }
-        #             )
-        #         return
-        # if old_instance.status == 'pending' and 
-        #     Notification.objects.filter(pk=instance.pk).update(status=instance.status)

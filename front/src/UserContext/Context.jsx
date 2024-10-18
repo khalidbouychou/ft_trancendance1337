@@ -41,6 +41,7 @@ export default function AuthProvider({ children }) {
           {
           console.log("res.data:", res.data);
           const token = res.data.user.token;
+          console.log("token:", token);
           localStorage.setItem('token', token);
           setUser(res.data);
           setIslogin(true);

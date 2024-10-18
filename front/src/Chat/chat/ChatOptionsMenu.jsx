@@ -2,19 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserSlash, faUserCheck, faTableTennis, faGamepad } from '@fortawesome/free-solid-svg-icons';
 
-function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, currentUser, viewProfile }) {
+function ChatOptionsMenu({ onPlayPong, onPlayTicTacToe, otherUser, currentUser, viewProfile, onFriendRequest }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
+  const [isFriend, setIsFriend] = useState('None');
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
-    const checkBlockStatus = () => {
-      if (currentUser && otherUser) {
-        const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
-        setIsBlocked(isOtherUserBlocked);
+    // const checkBlockStatus = () => {
+    //   if (currentUser && otherUser) {
+    //     const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
+    //     setIsBlocked(isOtherUserBlocked);
+    //   }
+    // };
+    // checkBlockStatus();
+      const areFriends = currentUser.friends.find(friend => 
+        (friend.user1 === otherUser.username || friend.user2 === otherUser.username)
+      );
+      if (areFriends) {
+        console.log('areFriends:', areFriends.status);
+        setIsFriend(areFriends.status);
+      } else {
+        setIsFriend('None');
       }
-    };
-    checkBlockStatus();
   }, [otherUser, currentUser])
 
   const handleMouseEnter = () => setIsOpen(true);
@@ -38,16 +48,29 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, 
   const handleCancelBlock = () => {
     setShowConfirmation(false);
   };
+
+  const handleFriendClick = () => {
+    if (isFriend) {
+      setIsFriend(false);
+      onFriendRequest(false);
+    }
+  }
   
   return (
     <div className="chat-options-menu" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <button className="menu-toggle">⋮</button>
       {isOpen && (
         <ul className="menu-list">
-          <li onClick={handleBlockClick}>
+          {isFriend === 'None' && (
+            <li onClick={handleFriendClick}>
+              <FontAwesomeIcon icon={faUserCheck} />
+              Send Friend Request
+            </li>
+          )}
+          {/* <li onClick={handleBlockClick}>
             <FontAwesomeIcon icon={isBlocked ? faUserSlash : faUserCheck} />
             {isBlocked ? "Unblock User" : "Block User"}
-          </li>
+          </li> */}
           <li onClick={onPlayPong}>
             <FontAwesomeIcon icon={faTableTennis} />
             Play Pong

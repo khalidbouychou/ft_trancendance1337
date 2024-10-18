@@ -86,9 +86,11 @@ const NotiCardSent = ({request}) => {
                 {request.notif_type === 'FR' ? (
                     `Friend request sent to ${request.to_user.username}`
                 ) : (
+                    <>
                     `Game invitation (${request.game_type}) sent to ${request.to_user.username}`
+                    <span className={styl.timeLeft}> {timeLeft}s</span>
+                    </>
                 )}
-                <span className={styl.timeLeft}> {timeLeft}s</span>
             </p>
         </div>
         <div className={styl.Icon}>
