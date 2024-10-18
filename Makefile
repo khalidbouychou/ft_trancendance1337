@@ -22,7 +22,7 @@ down: clean
 
 push :
 	git add .
-	git commit -m "update"
+	git commit -m "update khbouych dev"
 	git push
 
 
