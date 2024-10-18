@@ -67,7 +67,8 @@ const NotiCard = ({request}) => {
         game_type: request.game_type
       });
       console.log('move to the game page');
-      navigate('/friend-game');
+      const game_key = `${request.from_user.username}vs${request.to_user.username}`;
+      navigate('/friend-game', { state: { game_key } });
     } else {
       console.log('Not connected');
     }

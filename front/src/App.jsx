@@ -52,7 +52,7 @@ function App() {
               <Route path="pingpong-games" element={<PingPongGames />} />
               <Route path="xo-games" element={<XOGames />} />
               <Route path="games/localpong" element={<LocalGame />} />
-              <Route path="friend-game" element={<FriendGame />} />
+              <Route path="/friend-game" element={<FriendGame />} />
               <Route path="games/localteampong" element={<LocalTeamGame />} />
               <Route path="games/onlinepong" element={<OnlineGame />} />
               <Route path="games/tournament" element={<Tournament />} />

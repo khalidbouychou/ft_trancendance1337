@@ -4,10 +4,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../UserContext/Context';
 import api from '../auth/api';
 
-export default function  OnlineGame() {
+export default function  FriendGame() {
 
     const {user, setUser} = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
+    const { game_key } = location.state || {};
 
     const pressedKeys = useRef(new Set());
     const [ rightScore, setRightScore ] = useState(0);
@@ -77,17 +79,24 @@ export default function  OnlineGame() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await api.get('/chat/');
-            if (response.status === 200)
-            {
-                setUser(response.data.user);
-                setUsername(response.data.user.username);
-                setLeftPlayerAvatar(response.data.user.avatar);
-                setAvatar(response.data.user.avatar);
-                setLevel(response.data.user.exp_game);
-            }else {
-                console.log("error:", response.status);
-            }
+            // const response = await api.get('/chat/');
+            // if (response.status === 200)
+            // {
+                // setUser(response.data.user);
+                // setUsername(response.data.user.username);
+                // setLeftPlayerAvatar(response.data.user.avatar);
+                // setAvatar(response.data.user.avatar);
+                // setLevel(response.data.user.exp_game);
+
+                //khedma ta3 bohali
+                console.log('user', user);
+                setUsername(user.user.username);
+                setLeftPlayerAvatar(user.user.avatar);
+                setAvatar(user.user.avatar);
+                setLevel(user.user.exp_game);
+            // }else {
+            //     console.log("error:", response.status);
+            // }
         };
         
         if (!hasFetchedData.current) {
@@ -113,16 +122,18 @@ export default function  OnlineGame() {
         let myReq;
         const token = localStorage.getItem('token');
         if (FetchedData)
-            socket = new WebSocket(`ws://10.11.10.12:8000/ws/play-friend/?token=${token}`);
+            socket = new WebSocket(`ws://10.13.1.12:8000/ws/play-friend/?token=${token}`);
 
         if (socket) {
             socket.onopen = () => {
                 if (socket.readyState === WebSocket.OPEN) {
+                    console.log('WebSocket is open now and the game_id is:', game_key);
                     const message = {
                         action: 'connect',
                         username: username,
                         avatar: avatar,
                         level: level,
+                        game_id: game_key,
                     };
                     socket.send(JSON.stringify(message));
                     console.log('WebSocket is open now');
@@ -137,7 +148,7 @@ export default function  OnlineGame() {
             window.rightdown = rightdown;
             socket.onmessage = (event) => {
                     const data = JSON.parse(event.data);
-                    // console.log('Received:', data)
+                    console.log('Received:', data)
                     if (data.message){
                         if (data.message === 'game_data'){
                             ballx = (data.ballx / game_width) * canvas.width
@@ -176,25 +187,27 @@ export default function  OnlineGame() {
                             socket.close();
                             setMessage("Opponent left the game");
                         }
+                        else if (data.message === 'Leave'){
+                            navigate('/');
+                        }
                     }
                     if (data.hasOwnProperty('winner')) {
                         if (data.winner == player_id){
                             setCondition('W');
                             setMessage("You won the game");
                         }
-                        socket.close();
                     }
                     if (data.hasOwnProperty('loser')) {
                         if (data.loser == player_id){
                             setCondition('L');
                             setMessage("You lost the game");
                         }
-                        socket.close();
                     }
             };
 
             socket.onclose = () => {
                 console.log('WebSocket connection closed');
+                socket.close();
             };
 
 
@@ -270,7 +283,7 @@ export default function  OnlineGame() {
             drawLeftRacket();
             drawRightRacket();
             const currentPath = window.location.pathname;
-            if (currentPath === '/games/onlinepong' && condition === 'N')
+            if (currentPath === '/friend-game' && condition === 'N')
                 return requestAnimationFrame(draw);
             else
                 return cancelAnimationFrame(myReq);
