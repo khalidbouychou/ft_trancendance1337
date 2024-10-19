@@ -6,14 +6,16 @@ from asgiref.sync import async_to_sync
 from .serializers import NotificationSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from login.models import Friend
+from django.db.models import Q
 
 @receiver(post_save, sender=Notification)
 def notify_user(sender, instance, created, **kwargs):
     if created:
         if instance.notif_type == 'FR':
-            friend = Friend.objects.get_or_create(user1=instance.from_user, user2=instance.to_user)
-            friend.status = 'pending'
-            friend.save()
+            friends = Friend.objects.filter(Q(user1=instance.from_user, user2=instance.to_user) |
+                                            Q(user1=instance.to_user, user2=instance.from_user))
+            if not friends.exists():
+                Friend.objects.create(user1=instance.from_user, user2=instance.to_user, status='pending')
         channel_layer = get_channel_layer()
         notification_serializer = NotificationSerializer(instance)
         notif_type = instance.notif_type
@@ -27,9 +29,10 @@ def notify_user(sender, instance, created, **kwargs):
         )
     else:
         if instance.notif_type == 'FR':
-            friend = Friend.objects.get(user1=instance.from_user, user2=instance.to_user)
-            friend.status = 'friends' if instance.status == 'accepted' else 'None'
-            friend.save()
+            friends = Friend.objects.filter(Q(user1=instance.from_user, user2=instance.to_user) |
+                                            Q(user1=instance.to_user, user2=instance.from_user))
+            if friends.exists():
+                friends.update(status='friends' if instance.status == 'accepted' else 'None')
 
 @receiver(pre_save, sender=Notification)
 def check_GR_status_change(sender, instance, **kwargs):

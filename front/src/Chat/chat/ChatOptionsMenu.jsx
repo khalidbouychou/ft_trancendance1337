@@ -2,20 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserSlash, faUserCheck, faTableTennis, faGamepad } from '@fortawesome/free-solid-svg-icons';
 
-function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, currentUser, viewProfile, onFriendRequest }) {
+function ChatOptionsMenu({ onPlayPong, onPlayTicTacToe, otherUser, currentUser, viewProfile, onFriendRequest }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
   const [isFriend, setIsFriend] = useState('None');
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
-    const checkBlockStatus = () => {
-      if (currentUser && otherUser) {
-        const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
-        setIsBlocked(isOtherUserBlocked);
+    // const checkBlockStatus = () => {
+    //   if (currentUser && otherUser) {
+    //     const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
+    //     setIsBlocked(isOtherUserBlocked);
+    //   }
+    // };
+    // checkBlockStatus();
+      const areFriends = currentUser.friends.find(friend => 
+        (friend.user1 === otherUser.username || friend.user2 === otherUser.username)
+      );
+      if (areFriends) {
+        console.log('areFriends:', areFriends.status);
+        setIsFriend(areFriends.status);
+      } else {
+        setIsFriend('None');
       }
-    };
-    checkBlockStatus();
   }, [otherUser, currentUser])
 
   const handleMouseEnter = () => setIsOpen(true);
@@ -58,16 +67,10 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, onPlayTicTacToe, otherUser, 
               Send Friend Request
             </li>
           )}
-          {isFriend === 'invited' && (
-            <li onClick={handleFriendClick}>
-              <FontAwesomeIcon icon={faUserCheck} />
-              Accept Friend Request
-            </li>
-          )}
-          <li onClick={handleBlockClick}>
+          {/* <li onClick={handleBlockClick}>
             <FontAwesomeIcon icon={isBlocked ? faUserSlash : faUserCheck} />
             {isBlocked ? "Unblock User" : "Block User"}
-          </li>
+          </li> */}
           <li onClick={onPlayPong}>
             <FontAwesomeIcon icon={faTableTennis} />
             Play Pong

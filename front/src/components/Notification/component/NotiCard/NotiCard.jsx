@@ -67,7 +67,8 @@ const NotiCard = ({request}) => {
         game_type: request.game_type
       });
       console.log('move to the game page');
-      navigate('/friend-game');
+      const game_key = `${request.from_user.username}vs${request.to_user.username}`;
+      navigate('/friend-game', { state: { game_key } });
     } else {
       console.log('Not connected');
     }
@@ -106,9 +107,11 @@ const NotiCard = ({request}) => {
                 {request.notif_type === 'FR' ? (
                     ' sent you a friend request'
                 ) : (
+                  <>
                     ' invited you to play ' + request.game_type
+                    <span className={styl.timeLeft}> {timeLeft}s</span>
+                  </>
                 )}
-                <span className={styl.timeLeft}> {timeLeft}s</span>
             </p>
         </div>
         <div className={styl.Icon}>

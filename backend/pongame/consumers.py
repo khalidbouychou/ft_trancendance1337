@@ -66,14 +66,14 @@ class GameConsumer(AsyncWebsocketConsumer):
                 }
             )
             self.admin.game_loop = False
-            self.close()
+            # self.close()  //doesn't make sense to close the connection here
             self.channel_layer.group_discard(
                 self.room_group_name,
                 self.channel_name
             )
             GameStateManager.remove_state(self.room_group_name)
-        else:
-            self.close()
+        # else:
+        #     self.close() //doesn't make sense to close the connection here
         if self.name in GameConsumer.queue:
             del GameConsumer.queue[self.name]
 
@@ -131,8 +131,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                     game_state = {
                         'ballx': 400,
                         'bally': 250,
-                        'left_paddle_y': 100,
-                        'right_paddle_y': 100,
+                        'left_paddle_y': 0,
+                        'right_paddle_y': 0,
                         'left_score': 0,
                         'right_score': 0,
                         'left_player': GameConsumer.queue[matched_players[0]]['username'],
@@ -258,11 +258,11 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def run_60_times_per_second(self):
         while self.game_loop:
-            start_time = time.time()
+            # start_time = time.time()
             await self.gamelogic()
-            end_time = time.time()
-            execution_time = end_time - start_time
-            print(f"gamelogic() execution time: {execution_time:.6f} seconds")
+            # end_time = time.time()
+            # execution_time = end_time - start_time
+            # print(f"gamelogic() execution time: {execution_time:.6f} seconds")
             await asyncio.sleep(1/60)
     
     async def gamelogic(self):
@@ -320,7 +320,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     }
                 )
 
-                GameStateManager.remove_state(group_name)
+                GameStateManager.remove_state(self.room_group_name)
 
                 values = list(self.game.values())
 
@@ -372,7 +372,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     'message': data
                 })
 
-                GameStateManager.remove_state(group_name)
+                GameStateManager.remove_state(self.room_group_name)
 
                 values = list(self.game.values())
 
@@ -405,6 +405,9 @@ class GameConsumer(AsyncWebsocketConsumer):
 class inviteConsumer(AsyncWebsocketConsumer):
     game_queue = {}
     started_games = {}
+    room_group_name = ''
+    name = ''
+    admin = None
     ingame = False
     inqueue = False
     instances = {}
@@ -432,11 +435,21 @@ class inviteConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         print('Disconnected')
+        if self.ingame:
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_message',
+                    'message': 'disconnected',
+                }
+            )
+            self.game_loop = False
+            self.channel_layer.group_discard(
+                    self.room_group_name,
+                    self.channel_name
+                )
         if self.inqueue:
-            for game_id, game in inviteConsumer.game_queue.items():
-                if self.channel_name in game['players'].values():
-                    inviteConsumer.game_queue[game_id]['connected'] -= 1
-                    break
+            del inviteConsumer.game_queue[self.name]
 
     async def receive(self, text_data):
         if not text_data.strip():
@@ -450,95 +463,125 @@ class inviteConsumer(AsyncWebsocketConsumer):
             return
 
         action = data.get('action')
-        value = data.get('value')
+        # value = data.get('value')
         
         #this case for invite friend to play
-        print('we receoved something:', data)
+        print('we received something:', data)
         if action == 'friend_game':
-            if action == 'friend_game':
-                inviteConsumer.game_queue[value] = {
-                    'players':  {
-                        data.get('player1'): None,
-                        data.get('player2'): None,
-                    },
-                    'counter': 30,
-                    'connected': 0
-                }
-                # Start the countdown in a separate thread
-                asyncio.create_task(self.start_countdown(data.get('value')))
-                return
+            game_key = data.get('game_id')
+            print(f"Game key: {game_key}")
+            inviteConsumer.game_queue[game_key] = {
+                'player1':  {
+                    'username': data.get('player1'),
+                    'channel_name': None,
+                    'avatar1': data.get('avatar1'),
+                    'instance': None,
+                },
+                'player2': {
+                    'username': data.get('player2'),
+                    'channel_name': None,
+                    'avatar2': data.get('avatar2'),
+                    'instance': None,
+                },
+                'counter': 30,
+                'connected': 0,
+            }
+            # Start the countdown in a separate thread
+            asyncio.create_task(self.start_countdown(game_key))
+            return
 
         #this case if a player join the (invite friend game)
         if action == 'connect':
+            print('a user has connected')
+            username = data.get('username')
             if len(inviteConsumer.game_queue) > 0:
-                game = inviteConsumer.game_queue.get(value)
-                if game:
-                    if data.get('username') not in game['players']:
-                        self.close()
-                    elif data.get('username') in game['players']:
-                        inviteConsumer.game_queue[value]['connected'] += 1
-                        inviteConsumer.game_queue[value]['players'][data.get('username')] = self.channel_name
-                        self.inqueue = True
-                        print(f"Player {data.get('username')} joined game {value}")
+                print('game queue is not empty')
+                game_id = data.get('game_id')
+                print('game_id:', game_id)
+                game = inviteConsumer.game_queue[game_id]
+                if game is not None:
+                    game['connected'] += 1
+                    if game['player1']['username'] == username:
+                        game['player1']['channel_name'] = self.channel_name
+                        game['player1']['instance'] = self
+                    elif game['player2']['username'] == username:
+                        game['player2']['channel_name'] = self.channel_name
+                        game['player2']['instance'] = self
+                    print(f"Player {username} joined game")
+                    if (game['connected'] == 2):
+                        game['player1']['instance'].ingame = True
+                        game['player2']['instance'].ingame = True
+                        game['player1']['instance'].admin = self
+                        game['player2']['instance'].admin = self
+                        group_name = f"{game['player1']['username']}vs{game['player2']['username']}"
+                        game['player1']['instance'].room_group_name = group_name
+                        game['player2']['instance'].room_group_name = group_name
+                        game_state = {
+                            'ballx': 400,
+                            'bally': 250,
+                            'left_paddle_y': 0,
+                            'right_paddle_y': 0,
+                            'left_score': 0,
+                            'right_score': 0,
+                            'left_player': game['player1']['username'],
+                            'right_player': game['player2']['username']
+                        }
+                        GameStateManager.set_state(group_name, game_state)
+
+                        await self.channel_layer.group_add(
+                            self.room_group_name,
+                            game['player1']['channel_name']
+                        )
+                        await self.channel_layer.group_add(
+                            self.room_group_name,
+                            game['player2']['channel_name']
+                        )
+                        data = {
+                            'message': 'game_started',
+                            'player_id1': game['player1']['username'],
+                            'player_1_avatar': game['player1']['avatar1'],
+                            'player_id2': game['player2']['username'],
+                            'player_2_avatar': game['player2']['avatar2'],
+                        }
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            {
+                                'type': 'game_data',
+                                'message': data
+                            }
+                        )
+                        self.game_loop = True
+                        # print(f"game key = {data.get('player1')}vs{data.get('player2')}")
+                        game_key = game['player1']['username'] + 'vs' + game['player2']['username']
+                        del inviteConsumer.game_queue[game_key]
+                        asyncio.create_task(self.run_60_times_per_second())
                 else:
-                    self.close()
+                    # he is not in any of the friend games
+                    message = "Leave"
+                    await self.send(text_data=json.dumps({'message': message}))
             else:
-                self.close()
+                # there are no friends games
+                message = "Leave"
+                await self.send(text_data=json.dumps({'message': message}))
 
-        #if both players joined start the game
-        if (action == 'connect' and inviteConsumer.game_queue[value]['connected'] == 2):
-            inviteConsumer.started_games[value] = {
-                'players': inviteConsumer.game_queue[value]['players'],
-                'channel_group': f'game{value}',
-            }
-            del inviteConsumer.game_queue[value]
-            self.inqueue = False
-            asyncio.create_task(self.start_game())
+        print("maybe it was me")
+        if self.ingame:
+            print("yes it could be me")
+            if action == 'ArrowDown':
+                if self.admin.right_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
+                    self.admin.right_paddleY += 10
+            elif action == 'ArrowUp':
+                if self.admin.right_paddleY >= 10:
+                    self.admin.right_paddleY -= 10
 
+            if action == 's':
+                if self.admin.left_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
+                    self.admin.left_paddleY += 10
+            elif action == 'w':
+                if self.admin.left_paddleY >= 10:
+                    self.admin.left_paddleY -= 10
+            print("it not me")
 
-    async def start_countdown(self, game_id):
-        while game_id in inviteConsumer.game_queue:
-            game = inviteConsumer.game_queue[game_id]
-            if game['counter'] <= 0:
-                print(f"Game {game_id} expired, removing from the queue.")
-                del inviteConsumer.game_queue[game_id]
-                break
-
-            # Sleep for 1 second and decrease the counter
-            await asyncio.sleep(1)
-            inviteConsumer.game_queue[game_id]['counter'] -= 1
-            print(f"Game {game_id} countdown: {inviteConsumer.game_queue[game_id]['counter']} seconds remaining.")
-
-    async def start_game(self):
-        game = inviteConsumer.started_games.get(value)
-        if game:
-            await self.channel_layer.group_add(
-                game['channel_group'],
-                game['players'][data.get('player1')]
-            )
-            await self.channel_layer.group_add(
-                game['channel_group'],
-                game['players'][data.get('player2')]
-            )
-            self.ingame = True
-            self.room_group_name = game['channel_group']
-            self.game_loop = True
-            asyncio.create_task(self.run_60_times_per_second())
-
-            data = {
-                'message': 'game_started',
-                'player_id1': data.get('player1'),
-                'player_id2': data.get('player2'),
-                'group_name': game['channel_group'],
-            }
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'game_data',
-                    'message': data
-                }
-            )
-    
     async def run_60_times_per_second(self):
         while self.game_loop:
             start_time = time.time()
@@ -546,6 +589,74 @@ class inviteConsumer(AsyncWebsocketConsumer):
             end_time = time.time()
             execution_time = end_time - start_time
             print(f"gamelogic() execution time: {execution_time:.6f} seconds")
+            await asyncio.sleep(1/60)
+
+    async def pack_data_to_send(self):
+        data = {
+            'message': 'game_data',
+            'ballx': self.ballx,
+            'bally': self.bally,
+            'right_paddleY': self.right_paddleY,
+            'left_paddleY': self.left_paddleY,
+            'right_score': self.right_score,
+            'left_score': self.left_score,
+            'game_width': self.game_width,
+            'game_height': self.game_height,
+            'ball_radius': 15,
+        }
+
+
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'game_data',
+                'message': data
+            }
+        )
+        packet = {
+            'message': 'game_data',
+            'ballx': self.ballx,
+            'bally': self.bally,
+            'right_paddleY': self.right_paddleY,
+            'left_paddleY': self.left_paddleY,
+            'right_score': self.right_score,
+            'left_score': self.left_score,
+            'game_width': self.game_width,
+            'game_height': self.game_height,
+        }
+        GameStateManager.set_state(self.room_group_name, packet)
+    
+    async def game_data(self, event):
+        data = event['message']
+        await self.send(text_data=json.dumps(data))
+
+    async def game_message(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps({
+            'message': message
+        }))
+
+    async def start_countdown(self, game_id):
+        while game_id in inviteConsumer.game_queue:
+            game = inviteConsumer.game_queue.get(game_id)
+            if game is None or game['counter'] <= 0:
+                print(f"Game {game_id} expired, removing from the queue.")
+                inviteConsumer.game_queue.pop(game_id, None)
+                break
+
+            # Sleep for 1 second and decrease the counter
+            await asyncio.sleep(1)
+            if game_id in inviteConsumer.game_queue:
+                inviteConsumer.game_queue[game_id]['counter'] -= 1
+        print("game started or expired")
+    
+    async def run_60_times_per_second(self):
+        while self.game_loop:
+            # start_time = time.time()
+            await self.gamelogic()
+            # end_time = time.time()
+            # execution_time = end_time - start_time
+            # print(f"gamelogic() execution time: {execution_time:.6f} seconds")
             await asyncio.sleep(1/60)
 
     async def gamelogic(self):
@@ -587,7 +698,7 @@ class inviteConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.right_score += 1
             self.bonus = 0
-            if (self.right_score >= 1000):
+            if (self.right_score >= 5):
                 self.game_loop = False
                 data = {
                     'winner': '2',
@@ -602,4 +713,31 @@ class inviteConsumer(AsyncWebsocketConsumer):
                         'message': data
                     }
                 )
+
+                GameStateManager.remove_state(self.room_group_name)
+
+        elif self.ballx >= self.game_width - 15:
+            self.ballx = 400
+            self.bally = 250
+            self.balldirectionX = 1
+            self.balldirectionY = random.uniform(-1, 1)
+            self.left_score += 1
+            self.bonus = 0
+            if (self.left_score >= 5):
+                self.game_loop = False
+                data = {
+                    'winner': '1',
+                    'left_score': self.left_score,
+                    'loser': '2',
+                    'right_score': self.right_score
+                }
+                await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_data',
+                    'message': data
+                })
+
+                GameStateManager.remove_state(self.room_group_name)
+        await self.pack_data_to_send()
         
