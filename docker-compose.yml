@@ -21,7 +21,7 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - "5432:5432"
     networks:
       - trance_network
     restart: always
@@ -31,7 +31,7 @@ services:
       context: ./backend
       dockerfile: back/Dockerfile
     ports:
-      - "8000:8000" # Ensure this matches your backend server port
+      - "8000:8000"
     volumes:
       - ./backend:/app/backend_volume
     depends_on:
@@ -40,38 +40,16 @@ services:
       - trance_network
     restart: always
 
-  # front:
-  #   build:
-  #     context: ./front
-  #     dockerfile: frontend/Dockerfile
-  #   volumes:
-  #     - ./front:/app/front_volume
-  #   networks:
-  #     - trance_network
-  #   ports:
-  #     - "5173:5173"
-  #   restart: always
-
-  # nginx:
-  #   image: nginx:latest
-  #   ports:
-  #     - "443:443"
-  #     - "80:80"
-  #   volumes:
-  #     - ./certs:/etc/nginx/certs
-  #     - ./backend/back/nginx.conf:/etc/nginx/nginx.conf
-  #   networks:
-  #     - trance_network
-  #   depends_on:
-  #     - back
-  #   restart: always
-  # redis:
-  #   image: redis:latest
-  #   container_name: Trance_redis
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - redis_volume:/data
-  #   networks:
-  #     - trance_network
-  #   restart: always
+  front:
+    build:
+      context: ./front
+      dockerfile: frontend/Dockerfile
+    volumes:
+      - ./front:/app/front_volume
+    networks:
+      - trance_network
+    ports:
+      - "5173:5173"
+    depends_on:
+      - back
+    restart: always
