@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import style from './App.module.css';
 import Login from './Login/intra/Login.jsx';
@@ -11,7 +11,7 @@ import XOGames from './components/Game/components/TicTac/TicTac.jsx';
 import LocalGame from './ponggame/localpong/LocalGame.jsx';
 import LocalTeamGame from './ponggame/teampong/LocalTeamGame.jsx';
 import OnlineGame from './ponggame/onlinepong/OnlineGame.jsx';
-import Tournament from './Tournament.jsx';
+// import Tournament from './Tournament.jsx';
 import Chat from './Chat/Chat.jsx';
 import Profile from './components/Profile/Profile.jsx';
 import Setting from './components/Setting/Setting.jsx';
@@ -19,8 +19,11 @@ import Notificationz from './components/Notification/Notification.jsx';
 import None from './components/None/None.jsx';
 import FriendGame from './ponggame/friendpong/FriendGame.jsx';
 import { NotificationWebSocketProvider } from './contexts/NotifWSContext.jsx';
+// import { AuthContext } from './UserContext/Context.jsx';
 
 function App() {
+  
+
   return (
     <div className={style.EntirePage}>
       <div className={style.MainContent}>
@@ -46,7 +49,7 @@ function App() {
               <Route path="/friend-game" element={<FriendGame />} />
               <Route path="games/localteampong" element={<LocalTeamGame />} />
               <Route path="games/onlinepong" element={<OnlineGame />} />
-              <Route path="games/tournament" element={<Tournament />} />
+              {/* <Route path="games/tournament" element={<Tournament />} /> */}
               <Route path="chat" element={<Chat />} />
               <Route path="profile" element={<Profile />} />
               <Route path="setting" element={<Setting />} />
