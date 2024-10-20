@@ -10,12 +10,11 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [url, setUrl] = useState("");
-  const [islogin, setIslogin] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   async function auth_intra42() {
-    const response = await axios.get("http://10.13.6.2:8000/api/auth_intra/");
+    const response = await axios.get("http://10.12.9.9:8000/api/auth_intra/");
     try {
       if (response.status === 200) {
         setUrl(response.data.url);
@@ -34,18 +33,15 @@ export default function AuthProvider({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
-        const res = await axios.post(`http://10.13.6.2:8000/api/login/`,params,{
+        const res = await axios.post(`http://10.12.9.9:8000/api/login/`,params,{
           withCredentials: true
         });
         if (res.status === 200)
           {
-          console.log("res.data:", res.data);
           const token = res.data.user.token;
           console.log("token:", token);
-          localStorage.setItem('token', token);
+          // localStorage.setItem('token', token);
           setUser(res.data);
-          setIslogin(true);
-          console.log("i will send you to home");
           navigate("/");
         } else {
           navigate("/login");
@@ -65,7 +61,7 @@ export default function AuthProvider({ children }) {
 
 
   return (
-    <AuthContext.Provider value={{ islogin,user,url, setUser , Login , auth_intra42}}>
+    <AuthContext.Provider value={{ user,url, setUser , Login , auth_intra42}}>
       {children}
     </AuthContext.Provider>
   );
