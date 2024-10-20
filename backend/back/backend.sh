@@ -1,7 +1,7 @@
 #!bin/bash
 
 sleep 5
-bash back/nginx_ssl.sh
+# bash back/nginx_ssl.sh
 python3 manage.py makemigrations login chat matches notification pongame
 python3 manage.py migrate
 python3 manage.py runserver 0.0.0.0:8000

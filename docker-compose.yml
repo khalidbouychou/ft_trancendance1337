@@ -2,15 +2,11 @@ version: "3.8"
 
 volumes:
   db_volume:
-networks:
-  trance_network:
-    name: trance_network
-    driver: bridge
 
 services:
   postgres:
     container_name: postgres_db
-    image: postgres:13
+    image: postgres:latest
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -22,7 +18,7 @@ services:
     ports:
       - 5432:5432
     networks:
-      - trance_network
+      - connexion
     restart: always
   back:
     build:
@@ -35,17 +31,15 @@ services:
     depends_on:
       - postgres
     networks:
-      - trance_network
+      - connexion
     restart: always
 
   front:
-    build:
-      context: ./front
-      dockerfile: frontend/Dockerfile
+    build: ./front
     volumes:
-      - ./front:/app/front_volume
+      - ./front:/app
     networks:
-      - trance_network
+      - connexion
     ports:
       - "5173:5173"
     restart: always
@@ -60,3 +54,7 @@ services:
   #   networks:
   #     - trance_network
   #   restart: always
+
+networks:
+  connexion:
+    driver: bridge
