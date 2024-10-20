@@ -11,7 +11,7 @@ import os
 
 C_ID = "u-s4t2ud-085c8b590e926b7ec5551ac8d7ff08d4fa9dada88636e2ea0fbb708fa5761602"
 SCID = "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"
-REDIRECT_URI = "http://10.12.9.9:3000"
+REDIRECT_URI = "http://localhost:3000"
 
 
 def search_user(username):

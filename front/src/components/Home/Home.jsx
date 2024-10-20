@@ -40,7 +40,7 @@ const Home = () => {
         const fetchSearchResults = async () => {
           if (searchQuery.trim()) {
             const response = await fetch(
-              `http://10.12.9.9:8000/api/users/search/?q=${searchQuery}`
+              `http://localhost:8000/api/users/search/?q=${searchQuery}`
             );
             const data = await response.json();
             console.log(data);

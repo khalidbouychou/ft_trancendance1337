@@ -71,7 +71,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             });
             //testing
             const token = localStorage.getItem('token');
-            const pong_socket = new WebSocket(`ws://10.12.9.9:8000/ws/play-friend/?token=${token}`);
+            const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
             pong_socket.onopen = () => {
                 const data2 = {
                     action: 'friend_game',
