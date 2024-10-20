@@ -11,7 +11,7 @@ import os
 
 C_ID = os.getenv('C_ID')
 SCID = os.getenv('SCID')
-REDIRECT_URI = os.getenv('REDIRECT_URI')
+REDIRECT_URI = "http://10.12.9.9:3000"
 
 
 def search_user(username):

@@ -1,7 +1,8 @@
 #!bin/bash
 
 sleep 10
- 
+bash back/nginx_ssl.sh
+sleep 5
 python manage.py makemigrations login chat matches notification pongame
 sleep 5
 python manage.py migrate
