@@ -9,9 +9,9 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 import os
 
-C_ID = os.getenv('C_ID')
-SCID = os.getenv('SCID')
-REDIRECT_URI = os.getenv('REDIRECT_URI')
+C_ID = "u-s4t2ud-085c8b590e926b7ec5551ac8d7ff08d4fa9dada88636e2ea0fbb708fa5761602"
+SCID = "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"
+REDIRECT_URI = "http://10.12.9.9:3000"
 
 
 def search_user(username):
@@ -50,7 +50,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
         user = Player(
             username=user_data['username'],
             avatar=user_data['avatar'],
-            email=user_data['email'],
             wins=0,
             losses=0,
             exp_game=0,
@@ -60,9 +59,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             otp='000000',
             otp_verified=False,
         )
-        user.avatar = user_data['avatar']
-        user.cover = user_data['avatar']
-        user.email = user_data['email']
         user.set_unusable_password()  # Assuming password is not used
         user.save()
         return user
@@ -112,7 +108,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             user_data = {
                 'username': intra_data.get('login'),
                 'avatar': intra_data.get('image')['link'],
-                'email': intra_data.get('email'),
             }
             # Check if user exists
             user = Player.objects.filter(
@@ -123,12 +118,12 @@ class PlayerViewSet(viewsets.ModelViewSet):
             print('user ---- >', user)
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
+            print('token ---- >', tokens)
             # Create response
             user = {
                 'token': tokens['access'],
                 'username': user.username,
                 'avatar': user.avatar,
-                'email': user.email,
                 'two_factor': user.two_factor,
                 'is_online': user.status_network,
                 'status_game': user.status_game,
@@ -141,9 +136,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             response.set_cookie(
                 key='token',
                 value=tokens['access'],
-                httponly=True,
-                secure=True,
-                samesite='None'
             )
             return response
         except requests.RequestException as e:
