@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expose the port Vite will run on
-EXPOSE 5173
+EXPOSE 3000
 
 # Start the Vite development server
 CMD ["npm", "run", "dev"]
