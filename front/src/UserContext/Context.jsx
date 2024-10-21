@@ -14,10 +14,13 @@ export default function AuthProvider({ children }) {
   const location = useLocation();
 
   async function auth_intra42() {
-    const response = await axios.get("https://trance-beta.vercel.app//api/auth_intra/");
+    const response = await axios.get("http://localhost:8000/api/auth_intra/" , {
+      withCredentials: true
+    });
     try {
       if (response.status === 200) {
         setUrl(response.data.url);
+        console.log("url---------:", url);
       }
     } catch (error) {
       console.log(error);
@@ -33,7 +36,7 @@ export default function AuthProvider({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
-        const res = await axios.post(`https://trance-beta.vercel.app//api/login/`,params,{
+        const res = await axios.post(`http://localhost:8000/api/login/`,params,{
           withCredentials: true
         });
         if (res.status === 200)

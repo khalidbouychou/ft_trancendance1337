@@ -1,6 +1,10 @@
-FROM node:20.9.0-alpine
+FROM node:16
+
+
 WORKDIR /app
+
+RUN npm install -g npm@8.1.2
 COPY package*.json ./
-RUN npm i
 COPY . .
-CMD ["npm", "run", "dev"]
+
+CMD npm install && npm run dev

@@ -4,7 +4,7 @@
 CERT_DIR="./certs"          # Directory to store the certificate
 CERT_NAME="cert.pem"        # Name of the certificate file
 DAYS_VALID=365              # Validity in days
-DOMAIN_NAME="localhost"     # Change to your domain or IP
+DOMAIN_NAME="http://localhost"     # Change to your domain or IP
 
 # Create the directory for the certificate if it doesn't exist
 mkdir -p $CERT_DIR

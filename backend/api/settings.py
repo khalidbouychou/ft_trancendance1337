@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-gyx%6(g(2=e_y!!4_^&9!p=87&73$jlc(_*yhj1q*t=i@qvx&@')  # Ensure SECRET_KEY is set in .env
 
-DEBUG = os.getenv('DEBUG', 'True') == 'True'  # Load from environment; convert to boolean
+DEBUG = True 
+# Load from environment; convert to boolean
 
 ALLOWED_HOSTS = ['*']  # Use specific domains in production
 
@@ -90,15 +91,15 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # Database configuration
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
         
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'postgres',
-        'PORT': '5432',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'postgres',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'postgres',
+        # 'HOST': 'postgres',
+        # 'PORT': '5432',
 }
 }
 

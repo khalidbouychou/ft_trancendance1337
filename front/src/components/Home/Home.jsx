@@ -40,7 +40,7 @@ const Home = () => {
         const fetchSearchResults = async () => {
           if (searchQuery.trim()) {
             const response = await fetch(
-              `https://trance-beta.vercel.app//api/users/search/?q=${searchQuery}`
+              `http://localhost:8000/api/users/search/?q=${searchQuery}`
             );
             const data = await response.json();
             console.log(data);

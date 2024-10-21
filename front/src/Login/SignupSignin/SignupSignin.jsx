@@ -1,14 +1,21 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 
-import AuthContext from "../../UserContext/Context";
+import {AuthContext} from "../../UserContext/Context";
+import { useEffect } from "react";
+
 import "./SignupSignin.css";
+import { Link } from "react-router-dom";
 export default function LoginSignup() {
   const [avatar, setAvatar] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
-//   const  {url , auth_intra42} = useContext(AuthContext);
-//   useEffect(() => {
-//     auth_intra42();
-//   }, []);
+
+  const {url , auth_intra42 } = useContext(AuthContext);
+
+  useEffect(() => {
+    auth_intra42();
+    console.log("url", url);
+    !url && auth_intra42();
+  }, []);
 
   const handleAvatarUpload = (event) => {
     console.log(event.target)
@@ -47,9 +54,11 @@ export default function LoginSignup() {
             <button className="button sign-in">SIGN IN</button>
             <div className="separator">
               <hr />
-              <span>or</span>
+              <span>OR</span>
             </div>
-            <button className="button intra">42</button>
+            <button className="button intra" onClick={() => {
+                window.location.href = url;
+            }}  > INTRA 42</button>
           </div>
         ) : (
           <div className="form signup-form">
@@ -59,7 +68,7 @@ export default function LoginSignup() {
                   <img src={avatar} alt="Avatar" className="avatar-image" />
                 ) : (
                   <img className="avatar-plus"
-                     src="upload/donkey.png" alt="Plus"
+                     src="../../../public/donkey.jpeg" alt="Plus"
                   />
                 )}
               </div>
@@ -91,7 +100,7 @@ export default function LoginSignup() {
               placeholder="password"
               className="input signup-input"
             />
-            <button className="button sign-up">SIGN UP</button>
+            <button className="button sign-up" onClick={() => setIsLogin(true)}>SIGN UP</button>
             <div className="separator">
               <hr />
             </div>
