@@ -61,4 +61,7 @@ class Friend(models.Model):
     status = models.CharField(max_length=10, choices=STATUS, default='None')
 
     class Meta:
+        db_table = 'Friend'
         unique_together = ['user1', 'user2', 'status']
+
+       

@@ -7,7 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 RUN apt-get update && apt-get install -y openssl
 RUN mkdir -p /app/certs && \
-    openssl req -nodes -new -x509 -keyout /app/certs/cert.pem -out /app/certs/cert.pem -days 365 -subj "/CN=10.12.9.9"
+    openssl req -nodes -new -x509 -keyout /app/certs/cert.pem -out /app/certs/cert.pem -days 365 -subj "/CN=10.13.7.1"
 RUN chmod +x back/main.sh
 RUN chmod +x back/backend.sh
 RUN chmod +x back/nginx_ssl.sh
