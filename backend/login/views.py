@@ -50,16 +50,9 @@ class PlayerViewSet(viewsets.ModelViewSet):
         user = Player(
             username=user_data['username'],
             avatar=user_data['avatar'],
-            wins=0,
-            losses=0,
-            exp_game=0,
-            status_network='online',
-            status_game='offline',
-            two_factor=False,
-            otp='000000',
-            otp_verified=False,
+            profile_name=user_data['username'],
         )
-        user.set_unusable_password()  # Assuming password is not used
+        # user.set_unusable_password()  # Assuming password is not used
         user.save()
         return user
 
@@ -91,7 +84,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                     'redirect_uri': REDIRECT_URI
                 }
             )
-            response.raise_for_status()
+            response.raise_for_status() # Check if the request was successful
             token = response.json().get('access_token')
             if not token:
                 return Response({'error': 'Intra Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
@@ -108,17 +101,15 @@ class PlayerViewSet(viewsets.ModelViewSet):
             user_data = {
                 'username': intra_data.get('login'),
                 'avatar': intra_data.get('image')['link'],
+                'profile_name': intra_data.get('login'),
             }
             # Check if user exists
             user = Player.objects.filter(
                 username=user_data['username']).first()
             if not user:
                 user = self.create_user(user_data)
-
-            print('user ---- >', user)
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
-            print('token ---- >', tokens)
             # Create response
             user = {
                 'token': tokens['access'],

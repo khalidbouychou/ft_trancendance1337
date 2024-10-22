@@ -8,18 +8,18 @@ import Layout from './Layout.jsx';
 import LoginSignup from './Login/SignupSignin/SignupSignin.jsx';
 function App() {
   
+  
 
   return (
     <div className={style.EntirePage}>
       <div className={style.MainContent}>
-      <AuthProvider>
+      
         {/* <Layout /> */}
         <Routes>
             <Route path="/" element={<h1>main page</h1>} />
             <Route path="/home" element={<h1>Home</h1>} />
             <Route path="/login" element={<LoginSignup />} />
           </Routes>
-      </AuthProvider>
         </div>
       </div>
      // </BrowserRouter>

@@ -14,9 +14,8 @@ class Player(AbstractUser):
         ('playing', _('playing')),
         ('offline', _('offline')),
     )
-    username = models.CharField(max_length=255, default='default_username', unique=True, blank=False)
     avatar = models.URLField(max_length=200, default='default_avatar')
-    email = models.EmailField(max_length=200, default='default')
+    profile_name = models.URLField(max_length=200, default='default_profile')
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
     exp_game = models.IntegerField(default=100)
