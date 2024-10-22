@@ -33,4 +33,4 @@ class TokenAuthMiddleware:
         return await self.inner(scope, receive, send)
 
 def TokenAuthMiddlewareStack(inner):
-    return TokenAuthMiddleware(AuthMiddlewareStack(inner))
+    return TokenAuthMiddleware(AuthMiddlewareStack(inner)) 

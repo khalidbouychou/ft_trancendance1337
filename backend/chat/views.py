@@ -11,8 +11,12 @@ from login.models import Friend
 from .serializers import ChatRoomSerializer, MessageSerializer
 from login.serializers import PlayerSerializer, FriendSerializer
 from django.db import models
+from rest_framework.authentication import SessionAuthentication
+
+from rest_framework.decorators import authentication_classes
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def list_chat(request):
     chat_rooms = ChatRoom.objects.filter(
@@ -35,6 +39,8 @@ def list_chat(request):
         'contacts': contacts,
     }
     return Response(context)
+
+
 
 # @csrf_exempt
 # @api_view(['POST'])

@@ -4,7 +4,7 @@ all: build
 ssl:
 	@bash ./generate-ssl.sh
 
-build:
+build: clean
 	@docker-compose up --build
 
 docker:

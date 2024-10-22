@@ -28,7 +28,7 @@ DEBUG = True
 # Load from environment; convert to boolean
 
 ALLOWED_HOSTS = ['*']  # Use specific domains in production
-
+# ASGI_APPLICATION = 'api.asgi.application'
 # Application definition
 INSTALLED_APPS = [
     'daphne',
@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     'matches',
     'chat',
     'notification',
+    # 'dj-rest-auth',
+    # 'allauth', 
+    # 'allauth.account',
+    
 ]
 
 MIDDLEWARE = [
@@ -58,9 +62,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    ''
 ]
 
-ASGI_APPLICATION = 'api.asgi.application'
+# ASGI_APPLICATION = 'application'
 
 CHANNEL_LAYERS = {
     'default': {
@@ -150,6 +155,7 @@ CORS_ALLOW_HEADERS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
@@ -179,3 +185,8 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_HSTS_SECONDS = 3600  # Enable HTTP Strict Transport Security
+
+    # Set to True if using HTTPS
+    # SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+
+ASGI_APPLICATION = 'api.asgi.application'

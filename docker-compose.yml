@@ -27,7 +27,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app/backend_volume
+      - ./backend:/app
     depends_on:
       - postgres
     networks:

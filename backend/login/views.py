@@ -6,6 +6,7 @@ from .serializers import PlayerSerializer
 from .models import Player as Player
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework.authentication import SessionAuthentication
 
 import os
 
@@ -28,6 +29,8 @@ def check_user_if_exist(login):
     return False
 
 
+
+
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
@@ -47,10 +50,11 @@ class PlayerViewSet(viewsets.ModelViewSet):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def create_user(self, user_data):
-        user = Player(
+        user = Player.Objects.create(
             username=user_data['username'],
+            email=user_data['email'],
             avatar=user_data['avatar'],
-            profile_name=user_data['username'],
+            profile_name=user_data['profile_name'],
         )
         # user.set_unusable_password()  # Assuming password is not used
         user.save()
@@ -108,6 +112,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 username=user_data['username']).first()
             if not user:
                 user = self.create_user(user_data)
+                login(request, user)
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
             # Create response
@@ -127,6 +132,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
             response.set_cookie(
                 key='token',
                 value=tokens['access'],
+                samesite='lax',
+                secure=True,
             )
             return response
         except requests.RequestException as e:
