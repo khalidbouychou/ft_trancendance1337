@@ -73,12 +73,12 @@
         color: white;
     }
     &:hover {
-        background-color: rgba(255, 255, 255, 0.1); /* Optional: change background on hover */
-        transform: scale(1.05); /* Optional: add scale effect */
-        transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: scale(1.05);
+        transition: transform 0.3s ease, background-color 0.3s ease;
         
         p {
-            color: #FFD700; /* Change text color on hover */
+            color: #FFD700;
         }
     }
 }

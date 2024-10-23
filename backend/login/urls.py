@@ -29,6 +29,7 @@ urlpatterns = [
     # path('verify_2fa/'),PlayerViewSet.as_view({'post': 'verify_2fa'}),
     # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('getuser/<str:username>/', PlayerViewSet.as_view({'get': 'get_user_by_profile_name'}), name='get_user'),
     path('search/', PlayerViewSet.as_view({'get': 'search_users'}), name='search_users'),
     path('pingdata/', get_all_ping_data, name='get_all_ping_data'),
     path('ticdata/', get_all_tic_data, name='get_all_tic_data'),

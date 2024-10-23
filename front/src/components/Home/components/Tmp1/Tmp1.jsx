@@ -10,10 +10,12 @@ import { RxTextAlignJustify } from "react-icons/rx";
 
 
 const Tmp1 = ({ Data, myData}) => {
-    console.log('daaata-->', myData)
     const total = 15 + 10;
     const winPercentage = (15 / total) * 100;
     const lossPercentage = (10 / total) * 100;
+    const [daTa, setDaTa] = useState(Data.ping || [])
+    const [mydaTa, setMydaTa] = useState(myData.Ping.ping_data[0] || [])
+    console.log('daaata-->', daTa)
     const data = [
         { time: 'Jan', wins: 5, losses: 3 },
         { time: 'Feb', wins: 8, losses: 2 },
@@ -33,6 +35,18 @@ const Tmp1 = ({ Data, myData}) => {
         setSett(prevSett => prevSett === 'none' ? 'flex' : 'none')
     }
 
+    const handlepingDataClick = () => {
+        setDaTa(Data.ping || [])
+        setMydaTa(myData.Ping.ping_data[0]|| [])
+    }
+
+    console.log('pp::}++>', mydaTa)
+
+    const handleticDataClick = () => {
+        setDaTa(Data.tic || [])
+        setMydaTa(myData.Tic.tic_data[0] || [])
+    }
+
   return (
     <div className={styl.tmp1}>
         <div className={styl.Head}>
@@ -40,11 +54,11 @@ const Tmp1 = ({ Data, myData}) => {
                 <button className={styl.sett} onClick={handelSetClick}>
                     <RxTextAlignJustify />
                     <div className={styl.choiceGame} style={{display: sett}}>
-                        <button className={styl.game}>
+                        <button className={styl.game} onClick={handlepingDataClick}>
                             <p >Ping Pong</p>
                         </button>
-                        <button className={styl.game}>
-                            <p >Ping Pong</p>
+                        <button className={styl.game} onClick={handleticDataClick}>
+                            <p >Tic Tac Toe</p>
                         </button>
                     </div>
                 </button>
@@ -65,7 +79,7 @@ const Tmp1 = ({ Data, myData}) => {
                     <p style={{width: '20%', height: '100%'}}>LVL</p>
                 </div>
                 <div className={styl.cards}>
-                    {Data.ping.map((item, index) => (
+                    {daTa.map((item, index) => (
                         <CardRank key={index} data={item} index={index} />
                     ))
                     }
@@ -82,8 +96,8 @@ const Tmp1 = ({ Data, myData}) => {
                         }}>
                         </div>
                         <div className={styl.chartText}>
-                            <p>Wins: {myData.ping_data[0].wins}</p>
-                            <p>Losses: {myData.ping_data[0].losses}</p>
+                            <p>Wins: {mydaTa.wins}</p>
+                            <p>Losses: {mydaTa.losses}</p>
                         </div>
                     </div>
                     <div className={styl.CurveChart}>

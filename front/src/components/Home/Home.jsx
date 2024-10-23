@@ -52,7 +52,7 @@ const Home = () => {
     const fetchSearchResults = async () => {
       if (searchQuery.trim()) {
         const response = await fetch(
-          `http://10.13.7.1:8000/api/search/?q=${searchQuery}`
+          `http://localhost:8000/api/search/?q=${searchQuery}`
         );
         const data = await response.json();
         console.log(data);
@@ -93,7 +93,7 @@ const Home = () => {
   useEffect(() => {
     const fetchDataResults = async () => {
       try {
-        const response = await fetch(`http://10.13.7.1:8000/api/pingdata/`);
+        const response = await fetch(`http://localhost:8000/api/pingdata/`);
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -105,7 +105,7 @@ const Home = () => {
         const userData = data.find((item) => item.username === username);
         // console.log('username***>', item)
         setFilteredPingData(userData);
-        const ticData = await fetch(`http://10.13.7.1:8000/api/ticdata/`);
+        const ticData = await fetch(`http://localhost:8000/api/ticdata/`);
         const ticDataJson = await ticData.json();
         setTicData(ticDataJson);
         const ticUserData = ticDataJson.find((item) => item.username === username);
@@ -173,11 +173,11 @@ const Home = () => {
           </div>
         </div>
         <div className={styl.last}>
-          {pingData.length > 0 && filteredPingData ? (
+          {pingData.length > 0 && filteredPingData && filteredTicData ? (
             isMobile ? (
-              <Tmp2 Data={{ ping: pingData, tic: ticData }} myData={filteredPingData} />
+              <Tmp2 Data={{ ping: pingData, tic: ticData }} myData={{ping : filteredPingData, tic: filteredTicData}} />
             ) : (
-              <Tmp1 Data={{ ping: pingData, tic: ticData }} myData={filteredPingData} />
+              <Tmp1 Data={{ ping: pingData, tic: ticData }} myData={{Ping : filteredPingData, Tic: filteredTicData}} />
             )
           ) : (
             <p>Loading data...</p>

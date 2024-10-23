@@ -75,9 +75,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             profile_name=user_data['username'],
             avatar=user_data['avatar'],
             email=user_data['email'],
-            # wins=0,
-            # losses=0,
-            # exp_game=0,
             status_network='online',
             status_game='offline',
             two_factor=False,
@@ -159,6 +156,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 'two_factor': user.two_factor,
                 'is_online': user.status_network,
                 'status_game': user.status_game,
+                # 'ping_data': PingDataSerializer(user.ping_data).data,
+                # 'tic_data': TicDataSerializer(user.tic_data).data
             }
             response_data = {
                 'msg': 'success',

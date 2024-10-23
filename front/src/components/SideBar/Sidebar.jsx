@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import styl from './Sidebar.module.css'
 import pinglogo from './assets/pinglogo.png'
 import { FaAnglesLeft } from "react-icons/fa6";
@@ -13,6 +13,7 @@ import CmpCard from '../CmpCard/CmpCard';
 import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
 import { MdNotifications, MdNotificationImportant } from "react-icons/md";
 import { useLocationContext } from '../../contexts/LocationContext.jsx';
+import { AuthContext } from "../../UserContext/Context";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
@@ -20,6 +21,7 @@ const Sidebar = () => {
     const [sidebarWidth, setSidebarWidth] = useState('300px');
     const { notif } = useNotificationWS();
     const { currentLocation } = useLocationContext();
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         if (notif && notif.status === 'pending' && currentLocation !== '/notification') {
@@ -68,7 +70,7 @@ const Sidebar = () => {
         <div className={styl.cont} >
             <CmpCard isOpen={isOpen} ICON={MdOutlineHome} name={'Home'} link={'/home'}/>
             {/* <CmpCard isOpen={isOpen} ICON={MdOutlineHome} name={'Home'} link={'/search'}/> */}
-            <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={'/profile'}/>
+            <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={`/profile/${user?.user?.profile_name}`}/>
             <CmpCard isOpen={isOpen} ICON={IoChatbubbleEllipsesOutline} name={'Chat'} link={'/chat'}/>
             <CmpCard isOpen={isOpen} ICON={IoLogoGameControllerB} name={'Game'} link={'/games'}/>
             {/* <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/> */}

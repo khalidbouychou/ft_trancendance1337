@@ -10,6 +10,8 @@ import { TbLock } from "react-icons/tb";
 import { BsChatDots } from "react-icons/bs";
 import UserImage from '../../assets/nouahidi.jpeg'
 import SearchRes from "./components/SearchRes/SearchRes";
+import { FaAnglesLeft } from "react-icons/fa6";
+
 
 const UserData = ({userData, ismyprofil}) => {
   const baseXP = 100;
@@ -33,13 +35,13 @@ const UserData = ({userData, ismyprofil}) => {
         <div className={styl.user}>
           <div className={styl.Image}>
             <div className={styl.imgStl}>
-              <img src={userData.image}></img>
-              <div className={styl.rndOnli} style={{ backgroundColor: userData?.online ? 'green' : 'red' }}></div>
+              <img src={userData.avatar}></img>
+              <div className={styl.rndOnli} style={{ backgroundColor: 'red' }}></div>
             </div>
           </div>
 
           <div className={styl.Name}>
-            <p>{userData.name.toUpperCase()}</p>
+            <p>{userData.profile_name.toUpperCase()}</p>
           </div>
         </div>
         {ismyprofil !== 0 ? (
@@ -73,6 +75,18 @@ const UserData = ({userData, ismyprofil}) => {
         ) : (null)}
         <div className={styl.statistic}>
           <div className={styl.sttcStyl}>
+            <div className={styl.choiceGame}>
+              <button >
+                <FaAnglesLeft id={styl.butChoice}/>
+                {/* <hr style={{right: '-24%'}}/> */}
+              </button>
+              <p >Ping Pong</p>
+              <button >
+                {/* <hr style={{left: '-24%'}}/> */}
+                <FaAnglesLeft id={styl.butChoice} style={{rotate: '180deg'}}/>
+              </button>
+            </div>
+            {/* <hr /> */}
             <div className={styl.res}>
               <div className={styl.aspects}>
                 <CiMedal />
@@ -81,7 +95,7 @@ const UserData = ({userData, ismyprofil}) => {
                 <p>WINS</p>
               </div>
               <div className={styl.aspects}>
-                <p>{userData.wins}</p>
+                <p>2</p>
               </div>
             </div>
             <div className={styl.res}>
@@ -92,7 +106,7 @@ const UserData = ({userData, ismyprofil}) => {
                 <p>LOSE</p>
               </div>
               <div className={styl.aspects}>
-                <p>{userData.losses}</p>
+                <p>3</p>
               </div>
             </div>
             <div className={styl.res}>
@@ -103,7 +117,7 @@ const UserData = ({userData, ismyprofil}) => {
                 <p>GAMES</p>
               </div>
               <div className={styl.aspects}>
-                <p>{userData.match_total}</p>
+                <p>5</p>
               </div>
             </div>
           </div>
@@ -113,7 +127,7 @@ const UserData = ({userData, ismyprofil}) => {
         <div className={styl.externFrame}>
           <div className={styl.percentage} style={{ width: "80%" }}></div>
         </div>
-        <p>{userData.level} - {Math.round(percentageProgress)}%</p>
+        <p>5 - 80%</p>
       </div>
     </div>
   );

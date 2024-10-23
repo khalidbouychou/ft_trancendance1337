@@ -53,7 +53,7 @@ function App() {
               <Route path="games/onlinepong" element={<OnlineGame />} />
               {/* <Route path="games/tournament" element={<Tournament />} /> */}
               <Route path="chat" element={<Chat />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path="profile/:username" element={<Profile />} />
               <Route path="setting" element={<Setting />} />
               <Route path="notification" element={<Notificationz />} />
             </Route>
