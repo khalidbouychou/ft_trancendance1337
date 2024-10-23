@@ -5,8 +5,9 @@ import 'react-circular-progressbar/dist/styles.css';
 import Tmp1 from './components/Tmp1/Tmp1'
 import { useState, useEffect } from 'react';
 import Tmp2 from './components/Tmp2/Tmp2';
-import SearchCard from './components/SearchCard/Searchcard';
-import Cookies from 'js-cookie';
+import SearchCard from './components/SearchCard/SearchCard';
+// import SearchCard from './components/SearchCard/Searchcard';
+
 
 const Home = () => {
 
@@ -88,11 +89,11 @@ const Home = () => {
                 <div className={styl.searchResult}>
                     {searchResults.length > 0 && (
                         <div className={styl.searchResult} >
-                        {searchResults.map((user) => (
-                        <SearchCard key={user.id} user={user} />
-                    ))}
-                </div>
-                )}
+                            {searchResults.map((user) => (
+                                <SearchCard key={user.id} user={user} /> // Uncomment this line and provide a unique key prop
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
             <div className={styl.first}>

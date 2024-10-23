@@ -4,6 +4,7 @@ ssl:
 	@bash ./generate-ssl.sh
 
 up:
+	@rm -rf front/node_modules front/package-lock.json
 	@docker-compose up
 
 build:

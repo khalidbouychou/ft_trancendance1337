@@ -1,15 +1,16 @@
 import axios from 'axios'
 import { createContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { SyncLoader } from "react-spinners";
 
 export const AuthContext = createContext(null)
 
 export default function AuthProvider ({ children }) {
   const [user, setUser] = useState(null)
   const [url, setUrl] = useState('')
+  const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
   const location = useLocation()
-
 
   async function auth_intra42() {
     const response = await axios.get("http://localhost:8000/api/auth_intra/" , {
@@ -35,19 +36,21 @@ export default function AuthProvider ({ children }) {
           withCredentials: true
         });
         console.log(res)
+        
         if (res.status === 200)
           {
             const token = res.data.user.token;
             console.log("token:", token);
-            navigate("/home");
+            navigate("/");
             setUser(res.data);
           } else {
-            console.log("---------------> error");
-            navigate('/login')
+            // navigate('/login')
           }
         }
       } catch (error) {
-        navigate('/login')
+        // navigate('/login')
+    } finally {
+      setLoading(false);
     }
   }
   
@@ -56,7 +59,7 @@ export default function AuthProvider ({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user,url, setUser , Login , auth_intra42}}>
+    <AuthContext.Provider value={{loading, user, url, setUser, Login, auth_intra42 }}>
       {children}
     </AuthContext.Provider>
   )

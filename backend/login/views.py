@@ -101,11 +101,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             login(request, user)
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
-            
-            if request.user.is_authenticated:
-                print('User is authenticated')
-            else :
-                print('User is not authenticated')
             # Create response
             data = {
                 'user': {
@@ -136,7 +131,9 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 try:
                     access_token = AccessToken(token)
                     user = access_token.user
-                    return True, user, "Authenticated via JWT"
+                    if user and user.is_authenticated:
+                        return True, user, "Authenticated via token"
+                    
                 except TokenError:
                     return False, None, "Invalid or expired token"
             # Check session authentication

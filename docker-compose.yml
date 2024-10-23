@@ -5,7 +5,7 @@ volumes:
 
 services:
   postgres:
-    container_name: dbpostgres
+    container_name: postgres
     image: postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -38,15 +38,15 @@ services:
       - connexion
     restart: always
 
-  # front:
-  #   container_name: front
-  #   build:
-  #     context: ./front
-  #   ports:
-  #     - "5173:5173"
-  #   networks:
-  #     - connexion
-  #   restart: always
+  front:
+    container_name: front
+    build:
+      context: ./front
+    ports:
+      - "5173:5173"
+    networks:
+      - connexion
+    restart: always
 networks:
   connexion:
     driver: bridge
