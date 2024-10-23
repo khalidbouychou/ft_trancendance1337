@@ -7,6 +7,10 @@ from .models import Player as Player
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework.authentication import SessionAuthentication
+from django.contrib.auth import authenticate
+from django.http import HttpResponse
+from django.contrib.auth import login
+
 
 import os
 
@@ -50,11 +54,10 @@ class PlayerViewSet(viewsets.ModelViewSet):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def create_user(self, user_data):
-        user = Player.Objects.create(
+        user = Player.objects.create(
             username=user_data['username'],
-            email=user_data['email'],
             avatar=user_data['avatar'],
-            profile_name=user_data['profile_name'],
+            profile_name=user_data['username'],
         )
         # user.set_unusable_password()  # Assuming password is not used
         user.save()
@@ -88,20 +91,22 @@ class PlayerViewSet(viewsets.ModelViewSet):
                     'redirect_uri': REDIRECT_URI
                 }
             )
-            response.raise_for_status() # Check if the request was successful
+            response.raise_for_status()
+            
             token = response.json().get('access_token')
             if not token:
                 return Response({'error': 'Intra Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
+            # Fetch user data
             headers = {
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             }
-            response = requests.get(
-                'https://api.intra.42.fr/v2/me', headers=headers)
-            response.raise_for_status()  # Check if the request was successful
+            response = requests.get('https://api.intra.42.fr/v2/me', headers=headers)
+            response.raise_for_status()
+            
             intra_data = response.json()
-
+            print("intra login data ---- >", intra_data.get('login'))
             user_data = {
                 'username': intra_data.get('login'),
                 'avatar': intra_data.get('image')['link'],
@@ -112,30 +117,31 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 username=user_data['username']).first()
             if not user:
                 user = self.create_user(user_data)
-                login(request, user)
+                user = authenticate(request, username=user_data['username'])
+            # Log the user in
+            login(request, user)  # This creates the session
+
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
+
             # Create response
-            user = {
-                'token': tokens['access'],
-                'username': user.username,
-                'avatar': user.avatar,
-                'two_factor': user.two_factor,
-                'is_online': user.status_network,
-                'status_game': user.status_game,
-            }
             response_data = {
                 'msg': 'success',
-                'user': user,
+                'user': {
+                    'token': tokens['access'],
+                    'username': user.username,
+                    'avatar': user.avatar,
+                    'two_factor': user.two_factor,
+                    'is_online': user.status_network,
+                    'status_game': user.status_game,
+                },
             }
+            
             response = Response(response_data, status=status.HTTP_200_OK)
-            response.set_cookie(
-                key='token',
-                value=tokens['access'],
-                samesite='lax',
-                secure=True,
-            )
+            response.set_cookie(key='token', value=tokens['access'], samesite='lax', secure=True)
+            
             return response
+
         except requests.RequestException as e:
             return Response({'error': 'Request failed: {}'.format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

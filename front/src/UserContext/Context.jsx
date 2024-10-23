@@ -1,17 +1,15 @@
+import axios from 'axios'
+import { createContext, useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-import axios from "axios";
-import { createContext, useEffect, useState } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import Cookies from 'js-cookie';
+export const AuthContext = createContext(null)
 
-export const AuthContext = createContext(null);
+export default function AuthProvider ({ children }) {
+  const [user, setUser] = useState(null)
+  const [url, setUrl] = useState('')
+  const navigate = useNavigate()
+  const location = useLocation()
 
-export default function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [url, setUrl] = useState("");
-  const navigate = useNavigate();
-  const location = useLocation();
 
   async function auth_intra42() {
     const response = await axios.get("http://localhost:8000/api/auth_intra/" , {
@@ -23,16 +21,18 @@ export default function AuthProvider({ children }) {
         console.log("url---------:", url);
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
-  async function Login() {
+  async function Login () {
     try {
-      const urlParams = new URLSearchParams(location.search);
-      const error = urlParams.get("error");
-      if (error) {navigate("/login");}
-      const code = urlParams.get("code");
+      const urlParams = new URLSearchParams(location.search)
+      const error = urlParams.get('error')
+      if (error) {
+        navigate('/login')
+      }
+      const code = urlParams.get('code')
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
@@ -47,25 +47,22 @@ export default function AuthProvider({ children }) {
           setUser(res.data);
           navigate("/");
         } else {
-          navigate("/login");
+          navigate('/login')
         }
       }
     } catch (error) {
-      navigate("/login");
-      console.log(error);
+      navigate('/login')
+      console.log(error)
     }
   }
 
   useEffect(() => {
-    Login();
-  }
-  , []);
-
-
+    Login()
+  }, [])
 
   return (
     <AuthContext.Provider value={{ user,url, setUser , Login , auth_intra42}}>
       {children}
     </AuthContext.Provider>
-  );
+  )
 }

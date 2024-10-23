@@ -1,12 +1,12 @@
 
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import style from './App.module.css';
 
-import AuthProvider from './UserContext/Context.jsx';
+// import AuthProvider from './UserContext/Context.jsx';
 
 // import Settings from './components/Setting/Setting.jsx';
 import LoginSignup from './Login/SignupSignin/SignupSignin.jsx';
-import { useContext, useEffect } from 'react';
+// import { useContext, useEffect } from 'react';
 function App() {
   
   // const {user} = useContext(AuthProvider);
@@ -19,6 +19,7 @@ function App() {
   // }
 
   // , [user, navigate]);
+
 
   return (
     <div className={style.EntirePage}>
@@ -36,5 +37,6 @@ function App() {
      
   );
 }
+
 
 export default App;
