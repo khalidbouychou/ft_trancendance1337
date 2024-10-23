@@ -1,24 +1,23 @@
 
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import style from './App.module.css';
 
-// import AuthProvider from './UserContext/Context.jsx';
-
+import { AuthContext } from './UserContext/Context.jsx';
 // import Settings from './components/Setting/Setting.jsx';
 import LoginSignup from './Login/SignupSignin/SignupSignin.jsx';
-// import { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 function App() {
   
-  // const {user} = useContext(AuthProvider);
-  // const navigate = useNavigate();
-  // useEffect (() => {
+  const {user} = useContext(AuthContext);
+  const navigate = useNavigate();
+  useEffect (() => {
 
-  //   if (!user)
-  //     navigate('/login');
-  //   console.log(user);
-  // }
+    if (!user)
+      navigate('/login');
+    console.log(user);
+  }
 
-  // , [user, navigate]);
+  , [user, navigate]);
 
 
   return (

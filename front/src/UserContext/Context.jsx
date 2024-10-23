@@ -16,10 +16,7 @@ export default function AuthProvider ({ children }) {
       withCredentials: true
     });
     try {
-      if (response.status === 200) {
-        setUrl(response.data.url);
-        console.log("url---------:", url);
-      }
+      if (response.status === 200) {setUrl(response.data.url);}
     } catch (error) {
       console.log(error)
     }
@@ -29,9 +26,7 @@ export default function AuthProvider ({ children }) {
     try {
       const urlParams = new URLSearchParams(location.search)
       const error = urlParams.get('error')
-      if (error) {
-        navigate('/login')
-      }
+      if (error) {navigate('/login')}
       const code = urlParams.get('code')
       if (code) {
         const params = new URLSearchParams();
@@ -39,23 +34,23 @@ export default function AuthProvider ({ children }) {
         const res = await axios.post(`http://localhost:8000/api/login/`,params,{
           withCredentials: true
         });
+        console.log(res)
         if (res.status === 200)
           {
-          const token = res.data.user.token;
-          console.log("token:", token);
-          // localStorage.setItem('token', token);
-          setUser(res.data);
-          navigate("/");
-        } else {
-          navigate('/login')
+            const token = res.data.user.token;
+            console.log("token:", token);
+            navigate("/home");
+            setUser(res.data);
+          } else {
+            console.log("---------------> error");
+            navigate('/login')
+          }
         }
-      }
-    } catch (error) {
-      navigate('/login')
-      console.log(error)
+      } catch (error) {
+        navigate('/login')
     }
   }
-
+  
   useEffect(() => {
     Login()
   }, [])

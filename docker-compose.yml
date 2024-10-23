@@ -19,6 +19,8 @@ services:
       - 5432:5432
     networks:
       - connexion
+    env_file:
+      - .env
     restart: always
 
   back:
@@ -36,19 +38,15 @@ services:
       - connexion
     restart: always
 
-  front:
-    container_name: front
-    build:
-      context: ./front
-    ports:
-      - "5173:5173"
-    networks:
-      - connexion
-    # volumes:
-    #   - ./fd_volume:/app
-    # depends_on:
-    #   - back
-    restart: always
+  # front:
+  #   container_name: front
+  #   build:
+  #     context: ./front
+  #   ports:
+  #     - "5173:5173"
+  #   networks:
+  #     - connexion
+  #   restart: always
 networks:
   connexion:
     driver: bridge

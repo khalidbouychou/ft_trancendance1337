@@ -12,8 +12,6 @@ export default function LoginSignup() {
   const {url , auth_intra42 } = useContext(AuthContext);
 
   useEffect(() => {
-    auth_intra42();
-    console.log("url", url);
     !url && auth_intra42();
   }, []);
 
