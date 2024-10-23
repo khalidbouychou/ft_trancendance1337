@@ -2,7 +2,7 @@
 from django.urls import path, include
 from .views import PlayerViewSet
 from rest_framework import routers
-from .views import get_ping_data_by_username ,get_all_ping_data
+from .views import get_ping_data_by_username ,get_all_ping_data, get_all_tic_data
 # from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView
 
 router = routers.DefaultRouter()
@@ -31,5 +31,6 @@ urlpatterns = [
     # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('search/', PlayerViewSet.as_view({'get': 'search_users'}), name='search_users'),
     path('pingdata/', get_all_ping_data, name='get_all_ping_data'),
+    path('ticdata/', get_all_tic_data, name='get_all_tic_data'),
     path('pingdata/<str:username>/', get_ping_data_by_username, name='get_ping_data_by_username'),
 ]

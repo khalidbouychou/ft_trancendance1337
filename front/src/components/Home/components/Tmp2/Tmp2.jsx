@@ -7,10 +7,10 @@ import { FaRankingStar } from "react-icons/fa6";
 import { FaChartArea } from "react-icons/fa";
 
 
-const Tmp2 = ({Data}) => {
+const Tmp2 = ({ Data, myData  }) => {
     const [selectedTab, setSelectedTab] = useState('leaderBoard');
 
-    console.log('Data-->', Data)
+    console.log('-->Data-->', myData.ping_data[0].wins)
 
     const handleTabClick = (tab) => {
         setSelectedTab(tab);
@@ -49,9 +49,19 @@ const Tmp2 = ({Data}) => {
                 </button>
             </div>
             {selectedTab === 'leaderBoard' ? (
-                <div className={styl.cards}>
-                    <CardRank data={Data} />
-                    {/* <CardRank /> */}
+                <div className={styl.cardGn}>
+                    <div className={styl.bar}>
+                        <p className={styl.Nname}>RANK</p>
+                        <p className={styl.Nname} style={{width: '40%'}}>PLAYER</p>
+                        <p className={styl.Nname}>WINS</p>
+                        <p className={styl.Nname}>LVL</p>
+                    </div>
+                    <div className={styl.cards}>
+                    {Data.ping.map((item, index) => (
+                        <CardRank index={index} key={index} data={item}/>
+                    ))
+                    }
+                    </div>
                 </div> 
                 ) : (
                 <div className={styl.statistic}>
@@ -65,8 +75,8 @@ const Tmp2 = ({Data}) => {
                             }}>
                             </div>
                             <div className={styl.chartText}>
-                                <p>Wins: 15</p>
-                                <p>Losses: 10</p>
+                                <p>Wins: {myData.ping_data[0].wins}</p>
+                                <p>Losses: {myData.ping_data[0].losses}</p>
                             </div>
                         </div>
                         <div className={styl.CurveChart}>

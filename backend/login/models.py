@@ -64,7 +64,7 @@ class Friend(models.Model):
 class PingData(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='ping_data')
     wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0) 
     exp_game = models.IntegerField(default=100)
     timestamp = models.DateTimeField(auto_now_add=True)
 

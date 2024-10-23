@@ -4,7 +4,7 @@ from django.http import JsonResponse
 import requests
 from django.contrib.auth.models import User
 from .serializers import PlayerSerializer, PingDataSerializer, TicDataSerializer
-from .models import Player ,PingData
+from .models import Player, PingData, TicData
 from rest_framework import viewsets, status
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
@@ -75,9 +75,9 @@ class PlayerViewSet(viewsets.ModelViewSet):
             profile_name=user_data['username'],
             avatar=user_data['avatar'],
             email=user_data['email'],
-            wins=0,
-            losses=0,
-            exp_game=0,
+            # wins=0,
+            # losses=0,
+            # exp_game=0,
             status_network='online',
             status_game='offline',
             two_factor=False,
@@ -89,6 +89,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
         user.email = user_data['email']
         user.set_unusable_password()  # Assuming password is not used
         user.save()
+        PingData.objects.create(player=user)
+        TicData.objects.create(player=user)
         return user
 
     def auth_intra(self, request):
@@ -262,19 +264,37 @@ def get_all_ping_data(request):
     
     all_ping_data = []
 
-    # Loop through each player to get their ping data
     for player in players:
-        pingdata = PingData.objects.filter(player=player)  # Get ping data for each player
+        pingdata = PingData.objects.filter(player=player)
         serializer = PingDataSerializer(pingdata, many=True)
         
-        # Append the player's username and their ping data
         all_ping_data.append({
             'username': player.username,
-            'total_exp_game': player.total_exp_game or 0,  # Use 0 if no ping data
+            'profile_name': player.profile_name,
+            'avatar': player.avatar,
             'ping_data': serializer.data,
         })
 
     return JsonResponse(all_ping_data, safe=False)
+
+def get_all_tic_data(request):
+    # Get all players, and annotate their exp_game by summing the related PingData exp_game
+    players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game')
+    
+    all_tic_data = []
+
+    for player in players:
+        ticdata = TicData.objects.filter(player=player)
+        serializer = TicDataSerializer(ticdata, many=True)
+        
+        all_tic_data.append({
+            'username': player.username,
+            'profile_name': player.profile_name,
+            'avatar': player.avatar,
+            'ping_data': serializer.data,
+        })
+
+    return JsonResponse(all_tic_data, safe=False)
 
 #------------------------------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styl from './Tmp1.module.css'
 import { FaRankingStar } from "react-icons/fa6";
 import { FaChartArea } from "react-icons/fa";
@@ -6,8 +6,11 @@ import CurveChart from '../CurveChart/CurveChart';
 import CurveLevel from '../CurveLevel/CurveLevel';
 import userImage from '../../assets/nouahidi.jpeg'
 import CardRank from '../CardRank/CardRank';
+import { RxTextAlignJustify } from "react-icons/rx";
 
-const Tmp1 = () => {
+
+const Tmp1 = ({ Data, myData}) => {
+    console.log('daaata-->', myData)
     const total = 15 + 10;
     const winPercentage = (15 / total) * 100;
     const lossPercentage = (10 / total) * 100;
@@ -23,10 +26,28 @@ const Tmp1 = () => {
         { level: 3, time: 20 },
         { level: 4, time: 25 },
     ];
+    const [sett, setSett] = useState('none')
+
+
+    const handelSetClick = () => {
+        setSett(prevSett => prevSett === 'none' ? 'flex' : 'none')
+    }
+
   return (
     <div className={styl.tmp1}>
         <div className={styl.Head}>
             <div className={styl.But} style={{width: '35%'}}>
+                <button className={styl.sett} onClick={handelSetClick}>
+                    <RxTextAlignJustify />
+                    <div className={styl.choiceGame} style={{display: sett}}>
+                        <button className={styl.game}>
+                            <p >Ping Pong</p>
+                        </button>
+                        <button className={styl.game}>
+                            <p >Ping Pong</p>
+                        </button>
+                    </div>
+                </button>
                 <h2 >Leaderboard</h2>
                 <FaRankingStar className={styl.Icon}/>
             </div>
@@ -44,7 +65,10 @@ const Tmp1 = () => {
                     <p style={{width: '20%', height: '100%'}}>LVL</p>
                 </div>
                 <div className={styl.cards}>
-                    <CardRank />
+                    {Data.ping.map((item, index) => (
+                        <CardRank key={index} data={item} index={index} />
+                    ))
+                    }
                 </div>
             </div>
             <div className={styl.statistic}>
@@ -58,8 +82,8 @@ const Tmp1 = () => {
                         }}>
                         </div>
                         <div className={styl.chartText}>
-                            <p>Wins: 15</p>
-                            <p>Losses: 10</p>
+                            <p>Wins: {myData.ping_data[0].wins}</p>
+                            <p>Losses: {myData.ping_data[0].losses}</p>
                         </div>
                     </div>
                     <div className={styl.CurveChart}>

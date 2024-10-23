@@ -7,7 +7,7 @@ from .models import Player, Friend, PingData, TicData
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ['id', 'username', 'profile_name', 'avatar', 'email', 'status_network', 'two_factor', 'otp', 'otp_verified', 'blocked_users']
+        fields = ['id', 'username', 'profile_name', 'avatar', 'email', 'status_network', 'two_factor', 'otp', 'otp_verified', 'blocked_users', 'ping_data']
 
 
 class FriendSerializer(serializers.ModelSerializer):
