@@ -5,7 +5,7 @@ volumes:
 
 services:
   postgres:
-    container_name: postgres_db
+    container_name: dbpostgres
     image: postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -20,7 +20,9 @@ services:
     networks:
       - connexion
     restart: always
+
   back:
+    container_name: backend
     build: ./backend
     env_file:
       - .env
@@ -42,10 +44,10 @@ services:
       - "5173:5173"
     networks:
       - connexion
-    volumes:
-      - ./front:/app
-    depends_on:
-      - back
+    # volumes:
+    #   - ./fd_volume:/app
+    # depends_on:
+    #   - back
     restart: always
 networks:
   connexion:

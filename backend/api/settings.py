@@ -15,6 +15,7 @@ import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
+
 # Load the .env file
 load_dotenv()
 
@@ -30,6 +31,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']  # Use specific domains in production
 # ASGI_APPLICATION = 'api.asgi.application'
 # Application definition
+
 INSTALLED_APPS = [
     'daphne',
     'channels',
@@ -155,7 +157,7 @@ CORS_ALLOW_HEADERS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
@@ -189,4 +191,6 @@ if not DEBUG:
     # Set to True if using HTTPS
     # SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 
+# ASGI_APPLICATION = 'asgi.application'
+WSGI_APPLICATION = 'api.wsgi.application'
 ASGI_APPLICATION = 'api.asgi.application'
