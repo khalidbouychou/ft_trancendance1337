@@ -2,9 +2,10 @@ import { useContext } from "react";
 import { AuthContext } from "../../UserContext/Context";
 import { useEffect } from "react";
 const Signin = () => {
-  const { url, auth_intra42 } = useContext(AuthContext);
+  const { url, auth_intra42 ,Login } = useContext(AuthContext);
 
   useEffect(() => {
+    console.log("***************************");
     !url && auth_intra42();
   }, []);
 

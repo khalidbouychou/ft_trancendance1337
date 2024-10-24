@@ -16,12 +16,9 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 function App() {
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
-  useEffect(() => {
-    !user && navigate("/login");
-  }
-  , [user,window.location.pathname]);
+
+
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -30,6 +27,8 @@ function App() {
 
     return () => clearTimeout(timer);
   }, [window.location.pathname]);
+
+
 
   return (
     !loading ? (

@@ -16,13 +16,14 @@ const Logout = () => {
     const [loading, setLoading] = useState(true);
 
     async function Logout () {
+      console.log("token",user.token)
         try {
           const res = await axios.post(`http://localhost:8000/api/logout/`, {}, {
             withCredentials: true,
             headers : {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${user.user.token}`
+                'Authorization': `Bearer ${user.token}`
             }
           }
         )

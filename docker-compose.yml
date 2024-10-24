@@ -36,6 +36,11 @@ services:
       - postgres
     networks:
       - connexion
+    healthcheck:
+        test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health/ || exit 1"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
     restart: always
 
   front:
@@ -50,7 +55,8 @@ services:
       - ./front:/app
       - /app/node_modules
     depends_on:
-      - back
+      back :
+        condition: service_healthy
     restart: always
 networks:
   connexion:

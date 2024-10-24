@@ -74,7 +74,7 @@ CHANNEL_LAYERS = {
 }
 
 ROOT_URLCONF = 'api.urls'
-
+APPEND_SLASH = True
 # BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMPLATES = [

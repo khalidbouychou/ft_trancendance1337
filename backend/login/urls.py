@@ -4,6 +4,7 @@ from .views import PlayerViewSet
 from rest_framework import routers
 # from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView
 
+from .views import health_check , AuthUser
 router = routers.DefaultRouter()
 router.register('Player', PlayerViewSet)
 
@@ -13,4 +14,7 @@ urlpatterns = [
     path('auth_intra/', PlayerViewSet.as_view({'get': 'auth_intra'})),
     path('users/', PlayerViewSet.as_view({'get': 'getusers'})),
     path('logout/', PlayerViewSet.as_view({'post': 'logout'})),
+    path('health/', health_check, name='health_check'),
+    # path('<str:username>/', PlayerViewSet.as_view({'get': 'get_auth_user'})),
+    path('user/', AuthUser.as_view(), name='auth_user'),
     ]

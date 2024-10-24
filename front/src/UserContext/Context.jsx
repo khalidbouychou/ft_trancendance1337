@@ -18,9 +18,7 @@ export default function AuthProvider ({ children }) {
     });
     try {
       if (response.status === 200) {setUrl(response.data.url);}
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
 
 
@@ -36,45 +34,44 @@ export default function AuthProvider ({ children }) {
         const res = await axios.post(`http://localhost:8000/api/login/`,params,{
           withCredentials: true
         });
-        console.log(res)
-        
-        if (res.status === 200)
-          {
-            const token = res.data.user.token;
-            console.log("token:", token);
-            navigate("/");
-            setUser(res.data);
-          } else {
-            // navigate('/login')
-          }
+        if (res.status === 200){navigate("/");}
         }
       } catch (error) {
-        // navigate('/login')
+        navigate('/login')
     } finally {
       setLoading(false);
     }
   }
 
-  // async function Logout () {
-  //   try {
-  //     const res = await axios.get(`http://localhost:8000/api/logout/`, {
-  //       withCredentials: true
-  //     })
-  //     if (res.status === 200) {
-  //       setUser(null)
-  //       navigate('/login')
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-  
-  useEffect(() => {
-    Login()
-  }, [])
+  async function get_auth_user() {
+    try {
+      const res = await axios.get(`http://localhost:8000/api/user/`, {
+        withCredentials: true
+      });
+      if (res.status === 200) {
+        if (window.location.pathname === "/login") { navigate("/home");}
+        setUser(res.data);
+      }
+      else {
+        navigate('/login')
+        setUser(null);
+      }
+    } catch (error) {
+      navigate('/login')
+      setUser(null);
+    }
+  }
 
+
+  // function that logged the user
+  useEffect(() => {Login()}, [window.location.pathname]);
+  // fetch user data
+  useEffect(() => {
+    get_auth_user();
+  },[window.location.pathname]);
+  
   return (
-    <AuthContext.Provider value={{loading, user, url, setUser,setUser, Login, auth_intra42 }}>
+    <AuthContext.Provider value={{loading, user, url, setUser,setUser, Login, auth_intra42,get_auth_user }}>
       {children}
     </AuthContext.Provider>
   )

@@ -14,10 +14,11 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import logout 
 from rest_framework_simplejwt.exceptions import TokenError
 from datetime import timedelta
-
+from rest_framework.decorators import action
 import logging
 import os
 
+from rest_framework.views import APIView
 
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
@@ -182,7 +183,44 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 return Response({'error': 'No valid authentication found'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # def get_auth_user(self, request, username = None):
+    #     try:
+    #         user = Player.objects.filter(username=username).first()
+    #         if user:
+    #             data = PlayerSerializer(user).data
+    #             return Response(data, status=status.HTTP_200_OK)
+    #         else:
+    #             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    #     except Exception as e:
+    #         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
         
 #------------------------------------------------------------------------------------------------
 
+from django.http import HttpResponse
+def health_check(request):
+    return HttpResponse("OK", status=200)
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+class AuthUser(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        try:
+            user = request.user
+            print('user',user)
+            if user.is_authenticated:
+                data = {
+                   'data': PlayerSerializer(user).data,
+                   'token': request.COOKIES.get('token'),
+                }
+                return Response(data, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST) 
