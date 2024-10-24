@@ -60,6 +60,7 @@ const Sidebar = () => {
 
   return (
     <div className={styl.Sidebar} style={{ width: isOpen ? '300px' : sidebarWidth }}>
+        {/* <div className={styl.search}><h1 style={{width: '100%'}}>search</h1></div> */}
         <Link to='/'><div className={styl.Card} style={{top: '0%'}}>
             <div className={styl.icon}>
                 <img src={pinglogo}/>

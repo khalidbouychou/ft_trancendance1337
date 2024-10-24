@@ -386,3 +386,11 @@ ul:last-of-type li {
         font-weight: 1000;
     }
 }
+
+.search {
+    position: absolute;
+    width: 1000vh;
+    height: 80px;
+    background-color: aqua;
+    left: 100%;
+}
