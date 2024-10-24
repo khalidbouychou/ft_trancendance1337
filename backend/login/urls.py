@@ -12,5 +12,5 @@ urlpatterns = [
     path('login/', PlayerViewSet.as_view({'post': 'login'})),
     path('auth_intra/', PlayerViewSet.as_view({'get': 'auth_intra'})),
     path('users/', PlayerViewSet.as_view({'get': 'getusers'})),
-    path('logout/', PlayerViewSet.as_view({'get': 'logout'})),
+    path('logout/', PlayerViewSet.as_view({'post': 'logout'})),
     ]

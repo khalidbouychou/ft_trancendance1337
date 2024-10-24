@@ -1,15 +1,16 @@
-import { Routes, Route} from "react-router-dom";
-import style from "./App.module.css";
 
 import { AuthContext } from "./UserContext/Context.jsx";
-import LoginSignup from "./Login/SignupSignin/SignupSignin.jsx";
-import { useEffect, useState } from "react";
-
 import Home from "./components/Home/Home.jsx";
 
+
+import { Routes, Route} from "react-router-dom";
+import style from "./App.module.css";
+import LoginSignup from "./Login/SignupSignin/SignupSignin.jsx";
+import { useEffect, useState } from "react";
 import { SyncLoader } from "react-spinners";
 import Layout from "./Layout.jsx";
-
+import Logout from "./Login/Logout/Logout.jsx";
+import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -25,11 +26,19 @@ function App() {
     !loading ? (
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
-          {( window.location.pathname !== "/login" || window.location.pathname !== "/Logout") && ( <Layout /> )}
+           {/* <Layout /> */}
           <Routes>
-            <Route path="/" element={<h1>home</h1>} />
+            <Route path='/' element={<Layout />}>
+              <Route path="home" element={<h1>home</h1>} />
+              <Route path="chat" element={<h1>chat</h1>} />
+              <Route path="profile" element={<h1>profile</h1>} />
+              <Route path="games" element={<h1>games</h1>} />
+              <Route path="setting" element={<h1>settings</h1>} />
+              <Route path="notification" element={<h1>notification</h1>} />
+            </Route>
             <Route path="/login" element={<LoginSignup />} />
             <Route path="/Logout" element={<Logout />} />
+            <Route path="/*" element={<PageNotFound/>}/>
           </Routes>
         </div>
       </div>

@@ -5,14 +5,19 @@ from django.contrib.auth.models import User
 from .serializers import PlayerSerializer
 from .models import Player as Player
 from rest_framework import viewsets, status
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.contrib.auth import login
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import logout 
+from rest_framework_simplejwt.exceptions import TokenError
+from datetime import timedelta
 
-
+import logging
 import os
+
 
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
@@ -148,15 +153,23 @@ class PlayerViewSet(viewsets.ModelViewSet):
     
  
     def logout(self, request):
-        try:
+        try :
             token = request.COOKIES.get('token')
             if token:
-                refresh_token = RefreshToken(token)
-                refresh_token.blacklist()
-            
-            response.delete_cookie('token')
-            return response
+                    access_token = AccessToken(token)
+                    user = access_token.user
+                    if user and user.is_authenticated:
+                        user.status_network = 'offline'
+                        user.status_game = 'offline'
+                        user.save()
+                        return Response({'msg': 'Logged out'}, status=status.HTTP_200_OK)
+                    else:
+                        return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'No valid authentication found'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        
 #------------------------------------------------------------------------------------------------
 

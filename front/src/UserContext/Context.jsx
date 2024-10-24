@@ -23,6 +23,7 @@ export default function AuthProvider ({ children }) {
     }
   }
 
+
   async function Login () {
     try {
       const urlParams = new URLSearchParams(location.search)
@@ -53,6 +54,20 @@ export default function AuthProvider ({ children }) {
       setLoading(false);
     }
   }
+
+  // async function Logout () {
+  //   try {
+  //     const res = await axios.get(`http://localhost:8000/api/logout/`, {
+  //       withCredentials: true
+  //     })
+  //     if (res.status === 200) {
+  //       setUser(null)
+  //       navigate('/login')
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
   
   useEffect(() => {
     Login()

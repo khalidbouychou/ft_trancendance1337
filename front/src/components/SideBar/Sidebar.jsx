@@ -10,14 +10,18 @@ import { CiSettings } from "react-icons/ci";
 import { AiOutlineLogout } from "react-icons/ai";
 import { MdOutlineHome } from "react-icons/md";
 import CmpCard from '../CmpCard/CmpCard';
-import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
-import { MdNotifications, MdNotificationImportant } from "react-icons/md";
-import { useLocationContext } from '../../contexts/LocationContext.jsx';
 
+import { MdNotifications, MdNotificationImportant } from "react-icons/md";
+
+import {useNavigate} from 'react-router-dom';
+
+
+import { Navigate } from 'react-router-dom';
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
     const [hasNotification, setHasNotification] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState('300px');
+    const navigate = useNavigate();
     // const { notif } = useNotificationWS();
     // const { currentLocation } = useLocationContext();
 
@@ -56,17 +60,10 @@ const Sidebar = () => {
         }
     }, [])
 
-    async function LogoutUser() {
-        try {
-            const res = await axios.get('http://localhost:8000/api/logout', { withCredentials: true });
-            console.log(res.data);
-            if (res.data.status === 'success')
-                navigate('/login');
-        }
-        catch (err) {
-            console.log(err);
-        }
+    const LogoutUser = () => {
+        navigate('/logout');
     }
+    
 
   return (
     <div className={styl.Sidebar} style={{ width: isOpen ? '300px' : sidebarWidth }}>
