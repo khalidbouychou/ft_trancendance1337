@@ -8,6 +8,6 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
 RUN chmod +x backend.sh
-
+RUN sleep 30
 # Wait for the PostgreSQL container to be running
-CMD ["bash", "-c", "sleep 30 && bash backend.sh"]
+CMD ["bash", "backend.sh"]

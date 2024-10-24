@@ -74,7 +74,7 @@ export default function AuthProvider ({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{loading, user, url, setUser, Login, auth_intra42 }}>
+    <AuthContext.Provider value={{loading, user, url, setUser,setUser, Login, auth_intra42 }}>
       {children}
     </AuthContext.Provider>
   )

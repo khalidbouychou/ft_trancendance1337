@@ -11,8 +11,17 @@ import { SyncLoader } from "react-spinners";
 import Layout from "./Layout.jsx";
 import Logout from "./Login/Logout/Logout.jsx";
 import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
+import { useContext } from "react";
+
+import { useNavigate } from "react-router-dom";
 function App() {
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+    !user && navigate("/login");
+  }
+  , [user,window.location.pathname]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,7 +29,7 @@ function App() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [window.location.pathname]);
 
   return (
     !loading ? (

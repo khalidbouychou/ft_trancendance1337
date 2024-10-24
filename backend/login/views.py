@@ -152,19 +152,32 @@ class PlayerViewSet(viewsets.ModelViewSet):
             return False, None, f"Authentication error: {str(e)}"
     
  
+  
+
     def logout(self, request):
-        try :
+        try:
             token = request.COOKIES.get('token')
             if token:
+                try:
                     access_token = AccessToken(token)
-                    user = access_token.user
+                    user_id = access_token.payload.get('user_id')
+                    user = Player.objects.filter(id=user_id).first()
                     if user and user.is_authenticated:
                         user.status_network = 'offline'
                         user.status_game = 'offline'
                         user.save()
-                        return Response({'msg': 'Logged out'}, status=status.HTTP_200_OK)
+                        logout(request)  # Destroy the session
+                        # access_token.blacklist()  # Blacklist the token
+                        response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK)
+                        response.delete_cookie('token')  # Delete token cookie
+                        response.delete_cookie('refresh')  # Delete refresh cookie
+                        response.delete_cookie('sessionid')  # Delete sessionid cookie
+                        response.delete_cookie('csrftoken')  # Delete csrftoken cookie
+                        return response
                     else:
                         return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
+                except TokenError:
+                    return Response({'error': 'Given token not valid for any token type'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({'error': 'No valid authentication found'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

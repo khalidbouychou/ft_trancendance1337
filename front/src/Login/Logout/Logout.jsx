@@ -12,7 +12,7 @@ import { AuthContext } from '../../UserContext/Context';
 import { useContext } from 'react';
 const Logout = () => {
     const navigate = useNavigate();
-    const {user} = useContext(AuthContext);
+    const {user,setUser} = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
 
     async function Logout () {
@@ -22,7 +22,7 @@ const Logout = () => {
             headers : {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${user.token}`
+                'Authorization': `Bearer ${user.user.token}`
             }
           }
         )

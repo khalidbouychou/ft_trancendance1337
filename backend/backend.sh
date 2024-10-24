@@ -1,5 +1,6 @@
 #!bin/bash
 
+sleep 10
 echo "-------------------------- Starting backend server ------------------------------------"
 # sleep 40
 # Find and delete all migration files
