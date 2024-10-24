@@ -1,6 +1,7 @@
 #!bin/bash
 
-sleep 40
+echo "-------------------------- Starting backend server ------------------------------------"
+# sleep 40
 # Find and delete all migration files
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 find . -path "*/migrations/*.pyc"  -delete

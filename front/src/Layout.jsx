@@ -10,12 +10,12 @@ const Layout = () => {
     // <AuthProvider>
 
     <div className={style.EntirePage}>
-      <NotificationWebSocketProvider>
-        <LocationProvider>
+      {/* <NotificationWebSocketProvider>
+        <LocationProvider> */}
           <Sidebar />
           <Outlet />
-        </LocationProvider>
-      </NotificationWebSocketProvider>
+        {/* </LocationProvider>
+      </NotificationWebSocketProvider> */}
     </div>
     // </AuthProvider>
   );

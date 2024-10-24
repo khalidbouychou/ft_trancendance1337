@@ -18,20 +18,20 @@ const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
     const [hasNotification, setHasNotification] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState('300px');
-    const { notif } = useNotificationWS();
-    const { currentLocation } = useLocationContext();
+    // const { notif } = useNotificationWS();
+    // const { currentLocation } = useLocationContext();
 
-    useEffect(() => {
-        if (notif && notif.status === 'pending' && currentLocation !== '/notification') {
-            setHasNotification(true);
-        }
-    }, [notif]);
+    // useEffect(() => {
+    //     if (notif && notif.status === 'pending' && currentLocation !== '/notification') {
+    //         setHasNotification(true);
+    //     }
+    // }, [notif]);
 
-    useEffect(() => {
-        if (currentLocation === '/notification') {
-            setHasNotification(false);
-        }
-    }, [currentLocation]);
+    // useEffect(() => {
+    //     if (currentLocation === '/notification') {
+    //         setHasNotification(false);
+    //     }
+    // }, [currentLocation]);
 
 
     const handleClick = () => {
@@ -56,6 +56,18 @@ const Sidebar = () => {
         }
     }, [])
 
+    async function LogoutUser() {
+        try {
+            const res = await axios.get('http://localhost:8000/api/logout', { withCredentials: true });
+            console.log(res.data);
+            if (res.data.status === 'success')
+                navigate('/login');
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
   return (
     <div className={styl.Sidebar} style={{ width: isOpen ? '300px' : sidebarWidth }}>
         <Link to='/'><div className={styl.Card} style={{top: '0%'}}>
@@ -73,7 +85,7 @@ const Sidebar = () => {
             {/* <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/> */}
             <CmpCard isOpen={isOpen} ICON={hasNotification ? MdNotificationImportant : MdNotifications} name={'Notification'} link={'/notification'}/>
             <CmpCard isOpen={isOpen} ICON={CiSettings} name={'Setting'} link={'/setting'}/>
-            <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'} top={'43%'}/>
+            <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'} link={'/logout'} top={'43%'}   onClick={LogoutUser}/>
         </div>
         <button className={styl.cirButton} onClick={handleClick} style={{left: isOpen ? '96%' : '85%'}}>
             <FaAnglesLeft style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}}/>

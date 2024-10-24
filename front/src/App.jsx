@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import Home from "./components/Home/Home.jsx";
 
 import { SyncLoader } from "react-spinners";
+import Layout from "./Layout.jsx";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -24,9 +25,11 @@ function App() {
     !loading ? (
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
+          {( window.location.pathname !== "/login" || window.location.pathname !== "/Logout") && ( <Layout /> )}
           <Routes>
             <Route path="/" element={<h1>home</h1>} />
             <Route path="/login" element={<LoginSignup />} />
+            <Route path="/Logout" element={<Logout />} />
           </Routes>
         </div>
       </div>

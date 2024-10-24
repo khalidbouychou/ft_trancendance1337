@@ -101,10 +101,12 @@ class PlayerViewSet(viewsets.ModelViewSet):
             login(request, user)
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
+            print('+++++++++++++++ > ',tokens)
             # Create response
             data = {
                 'user': {
                     'token': tokens['access'],
+                    'refresh': tokens['refresh'],
                     'username': user.username,
                     'avatar': user.avatar,
                     'is_authenticated': request.user.is_authenticated,
@@ -113,6 +115,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
             response = Response(data, status=status.HTTP_200_OK)
             response.set_cookie(key='token', value=tokens['access'], samesite='lax', secure=True)
+            response.set_cookie(key='refresh', value=tokens['refresh'], samesite='lax', secure=True)
             
             return response
         except requests.RequestException as e:
@@ -142,6 +145,18 @@ class PlayerViewSet(viewsets.ModelViewSet):
             return False, None, "No valid authentication found"
         except Exception as e:
             return False, None, f"Authentication error: {str(e)}"
-
+    
+ 
+    def logout(self, request):
+        try:
+            token = request.COOKIES.get('token')
+            if token:
+                refresh_token = RefreshToken(token)
+                refresh_token.blacklist()
+            
+            response.delete_cookie('token')
+            return response
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 #------------------------------------------------------------------------------------------------
 

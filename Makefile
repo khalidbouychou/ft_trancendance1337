@@ -4,11 +4,11 @@ ssl:
 	@bash ./generate-ssl.sh
 
 up:
-	@rm -rf front/node_modules front/package-lock.json
 	@docker-compose up
 
 build:
-	docker-compose build --no-cache && docker-compose up
+	
+	@docker-compose build --no-cache && docker-compose up
 
 
 docker:
@@ -16,6 +16,7 @@ docker:
 	@./deployment/initdocker.sh
 
 clean:
+	@rm -rf front/node_modules front/package-lock.json
 	@docker-compose down
 	@docker system prune -af
 	@rm -rf db
