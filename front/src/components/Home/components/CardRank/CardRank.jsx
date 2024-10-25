@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import styl from './CardRank.module.css'
 import userImage from '../../assets/nouahidi.jpeg'
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const CardRank = ({data, index}) => {
     // if (data.ping_data && data.ping_data.length > 0)
-        console.log('data pp-->', index)
     const [name, setName] = useState('');
     const [wins, setWins] = useState('');
     const [lvl, setLvl] = useState('');
     const [avatar, setAvatar] = useState('');
+    const [username, setUsername] = useState(null);
+    const Navigate = useNavigate();
 
     useEffect(() => {
         if (data) {
@@ -17,13 +19,19 @@ const CardRank = ({data, index}) => {
                 setWins(data.ping_data[0].wins);
                 setAvatar(data.avatar);
                 setLvl(data.ping_data[0].exp_game / 100)
+                setUsername(data.username);
                 console.log('exxxx==>data-->', lvl)
             }
             // setLvl(data.losses);
         }
     }, [data]);
+
+    const handelclick = () => {
+        Navigate(`/profile/${username}`);
+    }
+
   return (
-    <div className={styl.cardRank}>
+    <button className={styl.cardRank} onClick={handelclick}>
         <div className={styl.ranking}>
             <p >{index + 1}</p>
         </div>
@@ -38,7 +46,7 @@ const CardRank = ({data, index}) => {
         <div className={styl.lvl}>
             <p >{lvl}</p>
         </div>
-    </div>
+    </button>
   )
 }
 

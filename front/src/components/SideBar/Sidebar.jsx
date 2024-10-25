@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import React, {useState, useEffect, useContext} from 'react'
 import styl from './Sidebar.module.css'
 import pinglogo from './assets/pinglogo.png'
@@ -14,6 +14,9 @@ import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
 import { MdNotifications, MdNotificationImportant } from "react-icons/md";
 import { useLocationContext } from '../../contexts/LocationContext.jsx';
 import { AuthContext } from "../../UserContext/Context";
+import { FaSearchengin } from "react-icons/fa";
+import SearchCard from '../Home/components/SearchCard/Searchcard.jsx';
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
@@ -22,6 +25,7 @@ const Sidebar = () => {
     const { notif } = useNotificationWS();
     const { currentLocation } = useLocationContext();
     const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (notif && notif.status === 'pending' && currentLocation !== '/notification') {
@@ -58,9 +62,62 @@ const Sidebar = () => {
         }
     }, [])
 
+    const [searchResults, setSearchResults] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => {
+        const fetchSearchResults = async () => {
+          if (searchQuery.trim()) {
+            const response = await fetch(
+              `http://localhost:8000/api/search/?q=${searchQuery}`
+            );
+            const data = await response.json();
+            console.log(data);
+            setSearchResults(data);
+          } else {
+            setSearchResults([]);
+          }
+        };
+    
+        fetchSearchResults();
+      }, [searchQuery]);
+
+      const handleSearch = () => {
+        if (searchQuery.trim()) {
+          navigate(`/search?q=${searchQuery}`);
+        }
+      };
+
+      const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+          handleSearch();
+        }
+      };
+
   return (
     <div className={styl.Sidebar} style={{ width: isOpen ? '300px' : sidebarWidth }}>
-        {/* <div className={styl.search}><h1 style={{width: '100%'}}>search</h1></div> */}
+        <div className={styl.search}>
+            <div className={styl.iconSearch }>
+                <FaSearchengin style={{width: '50%', height: '50%'}}/>
+            </div>
+            <div className={styl.inputSearch}>
+                <input type="text" placeholder='Search...' onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={handleKeyDown}/>
+            </div>
+            <div className={styl.searchResult}>
+            {searchResults.length > 0 && (
+              <div className={styl.searchResult}>
+                {searchResults.map((user) => (
+                  <SearchCard key={user.id} user={user} />
+                ))}
+              </div>
+            )}
+            {searchResults.length === 0 && searchQuery.trim() !== "" && (
+              <div className={styl.noResult}>
+                <p>No results found</p>
+              </div>
+            )}
+          </div>
+        </div>
         <Link to='/'><div className={styl.Card} style={{top: '0%'}}>
             <div className={styl.icon}>
                 <img src={pinglogo}/>

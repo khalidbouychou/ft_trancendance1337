@@ -128,7 +128,7 @@ const Home = () => {
         <div className={styl.head}>
           <h1>HOME</h1>
         </div>
-        <div className={styl.search}>
+        {/* <div className={styl.search}>
           <div className={styl.extFrame}>
             <div className={styl.innerFrame}>
               <input
@@ -157,7 +157,7 @@ const Home = () => {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
         <div className={styl.first}>
           <div className={styl.intro}>
             <p className={styl.str}>
