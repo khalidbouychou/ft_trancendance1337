@@ -19,11 +19,10 @@ function App() {
 
 
 
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 1100);
 
     return () => clearTimeout(timer);
   }, [window.location.pathname]);

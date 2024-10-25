@@ -9,7 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , Blacklis
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
-from django.contrib.auth import login
+from django.contrib.auth import login , logout as django_logout
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import logout 
 from rest_framework_simplejwt.exceptions import TokenError
@@ -120,8 +120,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
             }
 
             response = Response(data, status=status.HTTP_200_OK)
-            response.set_cookie(key='token', value=tokens['access'], samesite='lax', secure=True)
-            response.set_cookie(key='refresh', value=tokens['refresh'], samesite='lax', secure=True)
+            response.set_cookie(key='token', value=tokens['access'], secure=True , httponly=True ,samesite='None' ) 
+            response.set_cookie(key='refresh', value=tokens['refresh'], secure=True , httponly=True , samesite='None')
             
             return response
         except requests.RequestException as e:
@@ -161,14 +161,18 @@ class PlayerViewSet(viewsets.ModelViewSet):
             if token:
                 try:
                     access_token = AccessToken(token)
+                    if not access_token:
+                        return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
                     user_id = access_token.payload.get('user_id')
+                    if not user_id:
+                        return Response({'error': 'No user ID found in token'}, status=status.HTTP_400_BAD_REQUEST)
                     user = Player.objects.filter(id=user_id).first()
                     if user and user.is_authenticated:
                         user.status_network = 'offline'
                         user.status_game = 'offline'
                         user.save()
-                        logout(request)  # Destroy the session
-                        # access_token.blacklist()  # Blacklist the token
+                        django_logout(request)
+                        # access_token.blacklist()  # Blacklist the token if using blacklisting
                         response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK)
                         response.delete_cookie('token')  # Delete token cookie
                         response.delete_cookie('refresh')  # Delete refresh cookie
@@ -183,19 +187,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 return Response({'error': 'No valid authentication found'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
-    # def get_auth_user(self, request, username = None):
-    #     try:
-    #         user = Player.objects.filter(username=username).first()
-    #         if user:
-    #             data = PlayerSerializer(user).data
-    #             return Response(data, status=status.HTTP_200_OK)
-    #         else:
-    #             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-    #     except Exception as e:
-    #         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-        
+
 #------------------------------------------------------------------------------------------------
 
 from django.http import HttpResponse
@@ -224,3 +216,13 @@ class AuthUser(APIView):
                 return Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST) 
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+class VerifyToken(APIView): 
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get (self, request):
+       token = request.COOKIES.get('token')
+       print ('token',token)
+       Response({'msg': 'Token is valid'}, status=status.HTTP_200_OK)

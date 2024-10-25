@@ -198,7 +198,7 @@ JWT_COOKIE_SECURE = False
 
 
 # These are used for cookie settings
-JWT_AUTH_COOKIE = 'access_token'
+JWT_AUTH_COOKIE = 'access_token' 
 JWT_AUTH_REFRESH_COOKIE = 'refresh_token'
 JWT_AUTH_SECURE = True  # Set to False in development if not using HTTPS
 JWT_AUTH_SAMESITE = 'Lax'
@@ -206,7 +206,9 @@ JWT_REFRESH_TOKEN_LIFETIME = REFRESH_TOKEN_LIFETIME
 
 CORS_ALLOW_ALL_ORIGINS = True  # Set to True for development, but not recommended for production
 
-CORS_ALLOWED_ORIGINS = ['http://*']
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    ]
 
 DATABASES = {
     'default': {

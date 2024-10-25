@@ -7,7 +7,7 @@ up:
 	@docker-compose up
 
 build:
-	
+	@rm -rf db
 	@docker-compose build --no-cache && docker-compose up
 
 

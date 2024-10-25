@@ -2,10 +2,10 @@
 
 
 # Wait for PostgreSQL to be ready
-until pg_isready -h postgres -U postgres; do
-  echo "Waiting for PostgreSQL to be ready..."
-  sleep 10
-done
+# until pg_isready -h postgres -U postgres; do
+#   echo "Waiting for PostgreSQL to be ready..."
+#   sleep 10
+# done
 echo "-------------------------- Starting backend server ------------------------------------"
 # sleep 40
 # Find and delete all migration files

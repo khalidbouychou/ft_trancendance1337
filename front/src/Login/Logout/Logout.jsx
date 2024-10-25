@@ -38,16 +38,14 @@ const Logout = () => {
         }
       }
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-         Logout();
-          setLoading(false);
-        }, 1000);
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //      Logout();
+    //       setLoading(false);
+    //     }, 1000);
     
-        return () => clearTimeout(timer);
-      }, []);
-
-    if (loading) {
+    //     return () => clearTimeout(timer);
+    //   }, []);
         return (
             <div
               style={{
@@ -60,11 +58,6 @@ const Logout = () => {
               <SyncLoader color="#ffff" loading={loading} height={80} width={8} />
             </div>
           )
-    }
-   else 
-    {
-        return;
-    }
 }
 
 export default Logout
