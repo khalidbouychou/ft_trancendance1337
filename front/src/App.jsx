@@ -17,8 +17,6 @@ import { useNavigate } from "react-router-dom";
 function App() {
   const [loading, setLoading] = useState(true);
 
-
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -44,7 +42,7 @@ function App() {
               <Route path="notification" element={<h1>notification</h1>} />
             </Route>
             <Route path="/login" element={<LoginSignup />} />
-            <Route path="/Logout" element={<Logout />} />
+            {/* <Route  element={<Logout loading/>} /> */}
             <Route path="/*" element={<PageNotFound/>}/>
           </Routes>
         </div>

@@ -2,9 +2,9 @@ import React from 'react'
 import styl from './CmpCard.module.css'
 import { Link } from 'react-router-dom';
 
-const CmpCard = ({isOpen, ICON, name, top, link}) => {
+const CmpCard = ({isOpen, ICON, name, top, link , event}) => {
   return (
-    <div className={styl.Card} style={{top: top}}>
+    <div className={styl.Card} style={{top: top}} onClick={event}>
         <Link to={link}><button >
             <div className={styl.icon}>
                 <ICON className={styl.iconStyl}/>

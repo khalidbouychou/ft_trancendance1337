@@ -81,6 +81,29 @@ async function VerifyToken ()
   }
 }
 
+async function Logout () {
+  console.log("token",user.token)
+    try {
+      const res = await axios.post(`http://localhost:8000/api/logout/`, {}, {
+        withCredentials: true,
+        headers : {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${user.token}`
+        }
+      }
+    )
+      console.log(res)
+      if (res.status === 200) {
+        console.log("---------------- logout success ----------------")
+        navigate('/login')
+        setUser(null)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   // function that logged the user
   useEffect(() => {Login()}, [window.location.pathname]);
@@ -89,13 +112,13 @@ async function VerifyToken ()
     get_auth_user();
   },[window.location.pathname]);
   
-  useEffect  (() => {
-    VerifyToken();
-  }
-  ,[window.location.pathname]);
+  // useEffect  (() => {
+  //   VerifyToken();
+  // }
+  // ,[window.location.pathname]);
 
   return (
-    <AuthContext.Provider value={{loading, user, url, setUser,setUser, Login, auth_intra42,get_auth_user }}>
+    <AuthContext.Provider value={{loading, user, url, Logout ,setUser,setUser, Login, auth_intra42,get_auth_user }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import styl from './Sidebar.module.css'
 import pinglogo from './assets/pinglogo.png'
 import { FaAnglesLeft } from "react-icons/fa6";
@@ -17,11 +17,14 @@ import {useNavigate} from 'react-router-dom';
 
 
 import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../../UserContext/Context';
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
     const [hasNotification, setHasNotification] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState('300px');
     const navigate = useNavigate();
+
+    const {Logout} = useContext(AuthContext);
     // const { notif } = useNotificationWS();
     // const { currentLocation } = useLocationContext();
 
@@ -60,11 +63,6 @@ const Sidebar = () => {
         }
     }, [])
 
-    const LogoutUser = () => {
-        navigate('/logout');
-    }
-    
-
   return (
     <div className={styl.Sidebar} style={{ width: isOpen ? '300px' : sidebarWidth }}>
         <Link to='/'><div className={styl.Card} style={{top: '0%'}}>
@@ -82,8 +80,8 @@ const Sidebar = () => {
             {/* <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/> */}
             <CmpCard isOpen={isOpen} ICON={hasNotification ? MdNotificationImportant : MdNotifications} name={'Notification'} link={'/notification'}/>
             <CmpCard isOpen={isOpen} ICON={CiSettings} name={'Setting'} link={'/setting'}/>
-            <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'} link={'/logout'} top={'43%'}   onClick={LogoutUser}/>
         </div>
+            <a onClick={Logout}><CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'}  top={'0%'} />  </a>
         <button className={styl.cirButton} onClick={handleClick} style={{left: isOpen ? '96%' : '85%'}}>
             <FaAnglesLeft style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}}/>
         </button>
