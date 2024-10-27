@@ -122,7 +122,7 @@ export default function  FriendGame() {
         let myReq;
         const token = localStorage.getItem('token');
         if (FetchedData)
-            socket = new WebSocket(`ws://10.13.6.2:8000/ws/play-friend/?token=${token}`);
+            socket = new WebSocket(`ws://localhostcalhost:8000/ws/play-friend/?token=${token}`);
 
         if (socket) {
             socket.onopen = () => {

@@ -3,15 +3,10 @@ version: "3.8"
 volumes:
   db_volume:
 
-networks:
-  trance_network:
-    name: trance_network
-    driver: bridge
-
 services:
   postgres:
-    container_name: postgres_db
-    image: postgres:13
+    container_name: postgres
+    image: postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -21,35 +16,57 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
     networks:
-      - trance_network
+      - connexion
+    env_file:
+      - .env
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 2
+
+   
 
   back:
-    build:
-      context: ./backend
-      dockerfile: back/Dockerfile
+    container_name: backend
+    build: ./backend
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app/backend_volume
+      - ./backend:/app
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      
     networks:
-      - trance_network
+      - connexion
+    healthcheck:
+        test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health/ || exit 1"]
+        interval: 10s
+        timeout: 5s
+        retries: 2
     restart: always
 
   front:
+    container_name: front
     build:
       context: ./front
-      dockerfile: frontend/Dockerfile
-    volumes:
-      - ./front:/app/front_volume
-    networks:
-      - trance_network
     ports:
       - "5173:5173"
+    networks:
+      - connexion
+    volumes:
+      - ./front:/app
+      - /app/node_modules
     depends_on:
-      - back
+      back :
+        condition: service_healthy
     restart: always
+networks:
+  connexion:
+    driver: bridge

@@ -169,6 +169,7 @@ ul:last-of-type li {
     overflow: auto;
     flex-direction: column;
     gap: 20px;
+    overflow: hidden;
     &::-webkit-scrollbar {
 		width: 10px;
 		height: 100%;

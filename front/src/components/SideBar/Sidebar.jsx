@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import styl from './Sidebar.module.css'
 import pinglogo from './assets/pinglogo.png'
 import { FaAnglesLeft } from "react-icons/fa6";
@@ -10,29 +10,21 @@ import { CiSettings } from "react-icons/ci";
 import { AiOutlineLogout } from "react-icons/ai";
 import { MdOutlineHome } from "react-icons/md";
 import CmpCard from '../CmpCard/CmpCard';
-import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
-import { MdNotifications, MdNotificationImportant } from "react-icons/md";
-import { useLocationContext } from '../../contexts/LocationContext.jsx';
 
+import { MdNotifications, MdNotificationImportant } from "react-icons/md";
+
+import {useNavigate} from 'react-router-dom';
+
+
+import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../../UserContext/Context';
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
     const [hasNotification, setHasNotification] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState('300px');
-    const { notif } = useNotificationWS();
-    const { currentLocation } = useLocationContext();
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        if (notif && notif.status === 'pending' && currentLocation !== '/notification') {
-            setHasNotification(true);
-        }
-    }, [notif]);
-
-    useEffect(() => {
-        if (currentLocation === '/notification') {
-            setHasNotification(false);
-        }
-    }, [currentLocation]);
-
+    const {Logout} = useContext(AuthContext);
 
     const handleClick = () => {
         setIsOpen(!isOpen)
@@ -73,8 +65,8 @@ const Sidebar = () => {
             {/* <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/> */}
             <CmpCard isOpen={isOpen} ICON={hasNotification ? MdNotificationImportant : MdNotifications} name={'Notification'} link={'/notification'}/>
             <CmpCard isOpen={isOpen} ICON={CiSettings} name={'Setting'} link={'/setting'}/>
-            <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'} top={'43%'}/>
         </div>
+            <a onClick={Logout}><CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'}  top={'0%'} />  </a>
         <button className={styl.cirButton} onClick={handleClick} style={{left: isOpen ? '96%' : '85%'}}>
             <FaAnglesLeft style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}}/>
         </button>

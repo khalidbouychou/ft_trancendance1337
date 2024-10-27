@@ -5,33 +5,34 @@ from django.contrib.auth.models import User
 from .serializers import PlayerSerializer
 from .models import Player as Player
 from rest_framework import viewsets, status
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
-
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken
+from rest_framework.authentication import SessionAuthentication
+from django.contrib.auth import authenticate
+from django.http import HttpResponse
+from django.contrib.auth import login , logout as django_logout
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import logout 
+from rest_framework_simplejwt.exceptions import TokenError
+from datetime import timedelta
+from rest_framework.decorators import action
+import logging
 import os
+from django.http import HttpResponse
 
-C_ID = os.getenv('C_ID')
-SCID = os.getenv('SCID')
-REDIRECT_URI = os.getenv('REDIRECT_URI')
-
-
-def search_user(username):
-    try:
-        user = User.objects.get(username=username)
-        return user
-    except User.DoesNotExist:
-        return None
+from rest_framework import status
 
 
-def check_user_if_exist(login):
-    if User.objects.filter(username=login).exists():
-        return True
-    return False
 
+from rest_framework.views import APIView
 
+#--------------------------------------------------------------------------------------------
+
+def health_check(request):
+    return HttpResponse("OK", status=200)
+#--------------------------------------------------------------------------------------------
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
-
     def generate_qr_code(self, request):
         token = request.COOKIES.get('access')
         if not token:
@@ -47,30 +48,22 @@ class PlayerViewSet(viewsets.ModelViewSet):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def create_user(self, user_data):
-        user = Player(
+        user = Player.objects.create(
             username=user_data['username'],
             avatar=user_data['avatar'],
-            email=user_data['email'],
-            wins=0,
-            losses=0,
-            exp_game=0,
+            profile_name=user_data['username'],
             status_network='online',
-            status_game='offline',
-            two_factor=False,
-            otp='000000',
-            otp_verified=False,
         )
-        user.avatar = user_data['avatar']
-        user.cover = user_data['avatar']
-        user.email = user_data['email']
-        user.set_unusable_password()  # Assuming password is not used
+        # user.set_unusable_password()  # Assuming password is not used
         user.save()
         return user
 
     def auth_intra(self, request):
+        CID = os.environ.get('C_ID')
+        REDIRECT_URI = os.environ.get('REDIRECT_URI')
         try:
             response = Response(
-                {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={C_ID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
+                {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
             return response
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -89,133 +82,164 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 'https://api.intra.42.fr/oauth/token/',
                 data={
                     'grant_type': 'authorization_code',
-                    'client_id': C_ID,
-                    'client_secret': SCID,
+                    'client_id': os.environ.get('C_ID'),
+                    'client_secret': os.environ.get('SCID'),
                     'code': request.data.get('code'),
-                    'redirect_uri': REDIRECT_URI
+                    'redirect_uri': os.environ.get('REDIRECT_URI')
                 }
             )
             response.raise_for_status()
+            
             token = response.json().get('access_token')
             if not token:
                 return Response({'error': 'Intra Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
+            # Fetch user data
             headers = {
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             }
-            response = requests.get(
-                'https://api.intra.42.fr/v2/me', headers=headers)
-            response.raise_for_status()  # Check if the request was successful
+            response = requests.get('https://api.intra.42.fr/v2/me', headers=headers)
+            response.raise_for_status()
+            
             intra_data = response.json()
-
             user_data = {
                 'username': intra_data.get('login'),
                 'avatar': intra_data.get('image')['link'],
-                'email': intra_data.get('email'),
+                'profile_name': intra_data.get('login'), 
             }
             # Check if user exists
             user = Player.objects.filter(
                 username=user_data['username']).first()
             if not user:
                 user = self.create_user(user_data)
-
-            print('user ---- >', user)
+            authenticate(request, username=user_data['username'])
+            login(request, user)
             # Create JWT tokens
             tokens = self.create_jwt_token(user)
+            user.oldtoken = tokens['access']
+            user.save()
+            print('+++++++++++++++ > ',user.oldtoken) 
             # Create response
-            user = {
-                'token': tokens['access'],
-                'username': user.username,
-                'avatar': user.avatar,
-                'email': user.email,
-                'two_factor': user.two_factor,
-                'is_online': user.status_network,
-                'status_game': user.status_game,
+            data = {
+                'user': {
+                    'token': tokens['access'],
+                    'refresh': tokens['refresh'],
+                    'username': user.username,
+                    'avatar': user.avatar,
+                    'is_authenticated': request.user.is_authenticated,
+                },
             }
-            response_data = {
-                'msg': 'success',
-                'user': user,
-            }
-            response = Response(response_data, status=status.HTTP_200_OK)
-            response.set_cookie(
-                key='token',
-                value=tokens['access'],
-                httponly=False,
-                secure=True,
-                samesite='None'
-            )
+
+            response = Response(data, status=status.HTTP_200_OK)
+            response.set_cookie(key='token', value=tokens['access'], secure=True , httponly=True ,samesite='None' ) 
+            response.set_cookie(key='refresh', value=tokens['refresh'], secure=True , httponly=True , samesite='None')
+            
             return response
         except requests.RequestException as e:
             return Response({'error': 'Request failed: {}'.format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    def getusers (self,request):
+        users = Player.objects.all()
+        data = PlayerSerializer(users, many=True)
+        return Response(data.data, status=status.HTTP_200_OK)
+    def check_authentication(self, request):
+        try:
+            token = request.COOKIES.get('token')
+            if token:
+                try:
+                    access_token = AccessToken(token)
+                    user = access_token.user
+                    if user and user.is_authenticated:
+                        return True, user, "Authenticated via token"
+                    
+                except TokenError:
+                    return False, None, "Invalid or expired token"
+            # Check session authentication
+            if request.user.is_authenticated:
+                return True, request.user, "Authenticated via session"
+            return False, None, "No valid authentication found"
+        except Exception as e:
+            return False, None, f"Authentication error: {str(e)}"
+    
+ 
+  
 
     def logout(self, request):
         try:
-            token = request.COOKIES.get('access')
-            if not token:
-                return Response({'msg': 'none'}, status=status.HTTP_200_OK)
-            response = Response({'msg': 'Token deleted'},
-                                status=status.HTTP_200_OK)
-            response.delete_cookie('access')
-            return response
+            token = request.COOKIES.get('token')
+            if token:
+                try:
+                    access_token = AccessToken(token)
+                    if not access_token:
+                        return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+                    user_id = access_token.payload.get('user_id')
+                    if not user_id:
+                        return Response({'error': 'No user ID found in token'}, status=status.HTTP_400_BAD_REQUEST)
+                    user = Player.objects.filter(id=user_id).first()
+                    if user and user.is_authenticated:
+                        user.status_network = 'offline'
+                        user.status_game = 'offline'
+                        user.save()
+                        django_logout(request)
+                        # access_token.blacklist()  # Blacklist the token if using blacklisting
+                        response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK)
+                        response.delete_cookie('token')  # Delete token cookie
+                        response.delete_cookie('refresh')  # Delete refresh cookie
+                        response.delete_cookie('sessionid')  # Delete sessionid cookie
+                        response.delete_cookie('csrftoken')  # Delete csrftoken cookie
+                        return response
+                    else:
+                        return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
+                except TokenError:
+                    return Response({'error': 'Given token not valid for any token type'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'No valid authentication found'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def user_status(self, request):
-        token = request.COOKIES.get('access')
-        if not token:
-            return Response({'msg': 'none'}, status=status.HTTP_200_OK)
+#------------------------------------------------------------------------------------------------
+class AuthUser(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
         try:
-            print('user_status ---- >', token)
-            AccessToken(token)
-            return Response({'msg': 'isauth'}, status=200)
-        except Exception:
-            return Response({'msg': 'notauth'}, status=400)
-
-    def check_2fa(self, request):
-        player = request.user
-        serializer = PlayerSerializer(player)
-        return Response(serializer.data)
-
-    def getallusers(self, request):
-        players = Player.objects.all()
-        serializer = PlayerSerializer(players, many=True)
-        users = [{
-            'username': player['username'],
-            'avatar': player['avatar'],
-            'email': player['email'],
-            'two_factor': player['two_factor'],
-            'is_online': player['is_online']
-        }
-            for player in serializer.data
-        ]
-        return Response(users)
-
-    def verifytoken(self, request):
+            user = request.user
+            print('user',user)
+            if user.is_authenticated:
+                data = {
+                   'data': PlayerSerializer(user).data,
+                   'token': request.COOKIES.get('token'),
+                }
+                return Response(data, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST) 
+#------------------------------------------------------------------------------------------------
+import jwt
+import os  # Add missing import statement
+from rest_framework.exceptions import AuthenticationFailed
+class VerifyToken(APIView): 
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get (self, request):
         try:
+            serializer = PlayerSerializer(request.user).data
+            if not serializer.get('oldtoken'):
+                return Response({'error': 'No old token found'}, status=status.HTTP_400_BAD_REQUEST)
+            oldtoken = serializer.get('oldtoken')
+            if not oldtoken:
+                return Response({'error': 'No old token found'}, status=status.HTTP_400_BAD_REQUEST)
             token = request.COOKIES.get('token')
             if not token:
-                return Response({'msg': 'Token is invalid or expired'}, status=status.HTTP_400_BAD_REQUEST)
-            decoded_token = AccessToken(token)
-            payload = decoded_token.payload
-            if not payload.get("user_id"):
-                return Response({'msg': 'Token is invalid or expired '}, status=status.HTTP_400_BAD_REQUEST)
-            user = Player.objects.get(id=payload.get("user_id"))
-            print('user ---- >', user)
-            data = {
-                'msg': 'valid',
-                'user': PlayerSerializer(user).data
-            }
-            return Response(data)
-        except Exception as e:
-            print('error ---- >', e)
-            return Response({'msg': 'Token is invalid or expired'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-#------------------------------------------------------------------------------------------------
-
+                return Response({'error': 'No token found'}, status=status.HTTP_400_BAD_REQUEST)
+            payload = jwt.decode(token, os.environ.get('SECRET_KEY'), algorithms=['HS256'])
+            if not payload:
+                return Response({'error': 'No payload found in token'}, status=status.HTTP_400_BAD_REQUEST)
+        except jwt.ExpiredSignatureError:
+            return Response({'error': 'Token expired'}, status=status.HTTP_400_BAD_REQUEST)
+        except jwt.InvalidTokenError:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
