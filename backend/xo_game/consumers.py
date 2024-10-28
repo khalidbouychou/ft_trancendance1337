@@ -128,6 +128,10 @@ class Game(WebsocketConsumer):
             opponent=second_player,
             winner=first_player.username,
             loser=second_player.username,
+            winner_profile_name=first_player.profile_name,
+            loser_profile_name=second_player.profile_name,
+            winner_avatar=first_player.avatar,
+            loser_avatar=second_player.avatar,
             left_score=data['win_score'],
             right_score=data['lose_score'],
             game_type='XO'
@@ -293,6 +297,10 @@ class GameInvite(WebsocketConsumer):
             opponent=second_player,
             winner=first_player.username,
             loser=second_player.username,
+            winner_profile_name=first_player.profile_name,
+            loser_profile_name=second_player.profile_name,
+            winner_avatar=first_player.avatar,
+            loser_avatar=second_player.avatar,
             left_score=data['win_score'],
             right_score=data['lose_score'],
             game_type='XO'

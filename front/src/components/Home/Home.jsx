@@ -25,7 +25,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   const handleClick = () => {
-    navigate("/game");
+    navigate("/games");
   };
 
   const handleResize = () => {

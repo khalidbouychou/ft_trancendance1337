@@ -62,3 +62,23 @@
 		}
 	}
 }
+
+
+{/* <div className={styl.cardMatch}>
+	<div className={styl.opponent}>
+	<div className={styl.img}>
+		<img src={'null'}/>
+	</div>
+	<div className={styl.userName}>
+		<p className={styl.name}>
+		NOUAHIDI
+		</p>
+		<p className={styl.name}>
+		LVL: 1 20%
+		</p>
+	</div>
+	</div>
+	<div className={styl.record}>
+	<p >VICTORY</p>
+	</div>
+</div> */}

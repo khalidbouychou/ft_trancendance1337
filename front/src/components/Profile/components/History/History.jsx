@@ -4,10 +4,11 @@ import CardFriend from "./components/CardFriend/CardFriend";
 import CardBlocked from "./components/CardBlocked/CardBlocked";
 import CardMatch from "./components/CardMatch/CardMatch";
 import { IoIosArrowForward } from "react-icons/io";
-import Add from '../../assets/Add.svg'
-import Chat from '../../assets/Chat.svg'
-import Block from '../../assets/Block.svg'
+import Add from "../../assets/Add.svg";
+import Chat from "../../assets/Chat.svg";
+import Block from "../../assets/Block.svg";
 import Settings from "./components/Settings/Settings";
+import { RxTextAlignJustify } from "react-icons/rx";
 
 const History = ({ username, ismyprofil }) => {
   const [activeSection, setActiveSection] = useState("matchhistory");
@@ -19,6 +20,7 @@ const History = ({ username, ismyprofil }) => {
   const [matches, setMatches] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [sett, setSett] = useState('none')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +30,9 @@ const History = ({ username, ismyprofil }) => {
       setError(null);
 
       try {
-        const response = await fetch(`http://localhost:8000/matches/matches/${username}/`);
+        const response = await fetch(
+          `http://localhost:8000/matches/matches/${username}/`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch match history");
         }
@@ -59,14 +63,21 @@ const History = ({ username, ismyprofil }) => {
     setIsIconRotated(!isIconRotated);
   };
 
-  console.log('matches', matches)
+  const handelSetClick = () => {
+    setSett(prevSett => prevSett === 'none' ? 'flex' : 'none')
+  }
+
+  console.log("matches", matches);
+  console.log("username", username);
   return (
     <div className={styl.last}>
       <div className={styl.Title}>
         <div className={styl.button}>
           <button
             onClick={() => handleClick("matchhistory")}
-            className={`${styl.Button} ${activeSection === "matchhistory" ? styl.Clicked : ""}`}
+            className={`${styl.Button} ${
+              activeSection === "matchhistory" ? styl.Clicked : ""
+            }`}
           >
             MATCH HISTORY
           </button>
@@ -74,7 +85,9 @@ const History = ({ username, ismyprofil }) => {
         <div className={styl.button}>
           <button
             onClick={() => handleClick("friends")}
-            className={`${styl.Button} ${activeSection === "friends" ? styl.Clicked : ""}`}
+            className={`${styl.Button} ${
+              activeSection === "friends" ? styl.Clicked : ""
+            }`}
           >
             FRIENDS
           </button>
@@ -83,7 +96,9 @@ const History = ({ username, ismyprofil }) => {
           <div className={styl.button}>
             <button
               onClick={() => handleClick("blocked")}
-              className={`${styl.Button} ${activeSection === "blocked" ? styl.Clicked : ""}`}
+              className={`${styl.Button} ${
+                activeSection === "blocked" ? styl.Clicked : ""
+              }`}
             >
               BLOCKED
             </button>
@@ -93,45 +108,28 @@ const History = ({ username, ismyprofil }) => {
 
       <div className={styl.cont}>
         {activeSection === "matchhistory" && (
-          <div className={styl.cont} style={{ flexDirection: 'column' }}>
-            <div className={styl.choiseGame}>
-              <button onClick={handleToggleGame2}>
-                <IoIosArrowForward className={`${styl.icon} ${isIconRotated ? styl.rotated : ""}`} />
+          <div className={styl.cont} style={{ flexDirection: "column" }}>
+              <button className={styl.sett} onClick={handelSetClick}>
+                <RxTextAlignJustify />
+                <div className={styl.choiceGame} style={{ display: sett }}>
+                  <button className={styl.game} >
+                    <p>Ping Pong</p>
+                  </button>
+                  <button className={styl.game} >
+                    <p>Tic Tac Toe</p>
+                  </button>
+                </div>
               </button>
-              <div className={styl.gameName}>
-                <p>{currentGame}</p>
-              </div>
-            </div>
-            {isGame2Visible && (
-              <div className={styl.game2}>
-                <button onClick={handleGameChange}>
-                  <p>{currentGame === "Ping Pong" ? "Tic Tac Toe" : "Ping Pong"}</p>
-                </button>
-              </div>
-            )}
             <div className={styl.matchHistory}>
-              {/* {isLoading ? (
+              {isLoading ? (
                 <p>Loading matches...</p>
               ) : error ? (
                 <p>Error: {error}</p>
               ) : (
-                matches.map((match) => <CardMatch key={match.id} match={match} />)
-              )} */}
-              <div className={styl.cardMatch}>
-                <div className={styl.res}></div>
-                <div className={styl.img}>
-                  <img src={'null'}/>
-                </div>
-                <div className={styl.userName}>
-                  <p >NOUAHIDI</p>
-                </div>
-                <div className={styl.img}>
-                  <img src={'null'}/>
-                </div>
-                <div className={styl.userName}>
-                  <p >NOUAHIDI</p>
-                </div>
-              </div>
+                matches.map((match) => (
+                  <CardMatch key={match.id} match={match} username={username} />
+                ))
+              )}
             </div>
           </div>
         )}

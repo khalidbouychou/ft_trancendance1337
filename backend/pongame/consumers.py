@@ -345,6 +345,10 @@ class GameConsumer(AsyncWebsocketConsumer):
                     player=first_player,
                     opponent=second_player,
                     winner=second_player.username,
+                    winner_profile_name=second_player.profile_name,
+                    loser_profile_name=first_player.profile_name,
+                    winner_avatar=second_player.avatar,
+                    loser_avatar=first_player.avatar,
                     loser=first_player.username,
                     left_score=self.left_score,
                     right_score=self.right_score
@@ -400,6 +404,12 @@ class GameConsumer(AsyncWebsocketConsumer):
                     opponent=second_player,
                     winner=first_player.username,
                     loser=second_player.username,
+                    
+                    winner_profile_name=first_player.profile_name,
+                    loser_profile_name=second_player.profile_name,
+                    winner_avatar=first_player.avatar,
+                    loser_avatar=second_player.avatar,
+                    
                     left_score=self.left_score,
                     right_score=self.right_score
                 )

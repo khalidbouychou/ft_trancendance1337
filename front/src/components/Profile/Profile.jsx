@@ -62,7 +62,7 @@ const Profile = () => {
           <h1>PROFILE</h1>
         </div>
         <UserData userData={userData} ismyprofil={ismyprofil} />
-        <History username={username} ismyprofil={ismyprofil}/>
+        <History username={username} ismyprofil={ismyprofil} />
       </div>
     </div>
   );

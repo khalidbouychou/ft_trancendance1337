@@ -100,7 +100,7 @@ const UserData = ({ userData, ismyprofil }) => {
 
         <div className={styl.statistic}>
           <div className={styl.sttcStyl}>
-            <div className={styl.choiceGame}>
+            <div className={styl.chooseGame}>
               <button onClick={handleGameToggle}>
                 <FaAnglesLeft id={styl.butChoice} />
               </button>
@@ -152,7 +152,7 @@ const UserData = ({ userData, ismyprofil }) => {
 
       <div className={styl.level}>
         <div className={styl.externFrame}>
-          <div className={styl.percentage} style={{ width: "80%" }}></div>
+          <div className={styl.percentage} style={{ width: percentage }}></div>
         </div>
         <p>{level} - {percentage.toFixed(0)}%</p>
       </div>
