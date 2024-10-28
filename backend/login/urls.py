@@ -2,12 +2,11 @@
 from django.urls import path, include
 from .views import PlayerViewSet
 from rest_framework import routers
-from .views import get_ping_data_by_username ,get_all_ping_data, get_all_tic_data
+from .views import get_ping_data_by_username ,get_all_ping_data, get_all_tic_data, get_tic_data_by_username
 # from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView
 
 router = routers.DefaultRouter()
 router.register('Player', PlayerViewSet)
-
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -34,4 +33,5 @@ urlpatterns = [
     path('pingdata/', get_all_ping_data, name='get_all_ping_data'),
     path('ticdata/', get_all_tic_data, name='get_all_tic_data'),
     path('pingdata/<str:username>/', get_ping_data_by_username, name='get_ping_data_by_username'),
+    path('ticdata/<str:username>/', get_tic_data_by_username, name='get_tic_data_by_username'),
 ]

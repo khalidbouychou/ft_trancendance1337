@@ -3,54 +3,25 @@ import json
 from .models import Notification
 from django.db import DatabaseError
 from channels.db import database_sync_to_async
-
-# class NotificationRouterConsumer(AsyncWebsocketConsumer):
-#     async def connect(self):
-#         self.user_id = self.scope['user'].id
-#         if self.user_id is None:
-#             await self.close()
-#             return
-
-#         self.fr_consumer = FriendRequestConsumer()
-#         self.gr_consumer = GameRequestConsumer()
-
-#         self.fr_consumer.scope = self.scope
-#         self.gr_consumer.scope = self.scope
-#         self.fr_consumer.channel_layer = self.channel_layer
-#         self.gr_consumer.channel_layer = self.channel_layer
-#         self.fr_consumer.channel_name = self.channel_name
-#         self.gr_consumer.channel_name = self.channel_name
-
-#         await self.fr_consumer.connect()
-#         await self.gr_consumer.connect()
-
-#         await self.accept()
-
-#     async def disconnect(self, close_code):
-#         await self.fr_consumer.disconnect(close_code)
-#         await self.gr_consumer.disconnect(close_code)
-
-#     async def receive(self, text_data):
-#         text_data_json = json.loads(text_data)
-#         message_type = text_data_json.get('type')
-
-#         if message_type.endswith('_FR'):
-#             await self.fr_consumer.receive(text_data)
-#         elif message_type.endswith('_GR'):
-#             await self.gr_consumer.receive(text_data)
-#         else:
-#             await self.send(text_data=json.dumps({
-#                 'type': 'error',
-#                 'message': 'Unknown message type'
-#             }))
+from django.contrib.auth.models import AnonymousUser
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from login.models import Player
 
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.user = self.scope['user']
-        if self.user is None:
+        self.notification_group_name = f'_'
+        self.token = self.scope['session'].get('token')
+        if self.token:
+            self.scope['user'] = await self.auth_user(self.token)
+            if self.scope['user'] == AnonymousUser():
+                await self.close()
+                return
+        else:
+            print("Notifcation consumer: No token found in cookies")
             await self.close()
             return
-        self.user_id = self.user.id
+        self.user_id = self.scope['user'].id
         self.notification_group_name = f'user_{self.user_id}_NOTIF'
 
         await self.channel_layer.group_add(
@@ -193,11 +164,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     def send_GR(self, text_data_json, game_type):
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
+        game_room = text_data_json.get('game_room', '')
         notifs = Notification.objects.filter(
             from_user_id=from_user_id, 
             to_user_id=to_user_id, 
             notif_type='GR', 
             game_type=game_type, 
+            game_room=game_room,
             status='pending'
         )
         for notif in notifs:
@@ -208,6 +181,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             from_user_id=from_user_id,
             to_user_id=to_user_id,
             notif_type='GR',
+            game_room=game_room,
             game_type=game_type,
             status='pending'
         )
@@ -226,4 +200,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'operation': operation,
             'error': str(error)
         }))
+
+    @database_sync_to_async
+    def auth_user(self, token):
+        try:
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+            return Player.objects.get(id=user_id)
+        except (InvalidToken, TokenError, Player.DoesNotExist):
+            return AnonymousUser()
 

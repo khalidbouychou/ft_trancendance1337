@@ -302,6 +302,8 @@ function ChatPage() {
 
 	const sendMessage = (e) => {
 		e.preventDefault()
+		console.log('roomId:', roomId)
+		console.log('Current contact id:', currentContact.id)
 		if (message) {
 			sockets[roomId].send(JSON.stringify({
 				type: 'MESSAGE',

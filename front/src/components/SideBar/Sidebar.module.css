@@ -389,8 +389,7 @@ ul:last-of-type li {
 
 .search {
     position: absolute;
-    width: 200vh;
-    /* min-width: 1500px; */
+    width: 2500px;
     height: 60px;
     background-color: rgba(55, 13, 94, 0.4);
     left: 100%;
@@ -412,8 +411,7 @@ ul:last-of-type li {
 
 .iconSearch {
     height: 100%;
-    width: 5%;
-    /* background-color: green; */
+    width: 3%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -443,7 +441,7 @@ ul:last-of-type li {
     justify-content: center;
     /* align-items: center; */
     position: absolute;
-    width: 50%;
+    width: 48%;
     top: 110%;
     left: 2%;
     z-index: 1;
@@ -451,15 +449,23 @@ ul:last-of-type li {
     flex-direction: column;
     gap: 10px;
     border-radius: 0 0 10px 10px;
-    /* @media (max-width: 640px) {
-        width: 80%;
-    } */
 }
 
 .searchCard {
-    width: 210px;
     height: 60px;
     display: flex;
     cursor: pointer;
     position: relative;
+}
+
+.noResult {
+    display: flex;
+    width: 48%;
+}
+
+@media (max-width: 768px) {
+    .searchResult {
+        left: 0.5%;
+        width: 35%;
+    }
 }

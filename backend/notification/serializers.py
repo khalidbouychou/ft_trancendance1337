@@ -9,7 +9,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notification
-        fields = ['id', 'from_user', 'to_user', 'notif_type', 'game_type', 'status', 'created_at']
+        fields = ['id', 'from_user', 'to_user', 'notif_type', 'game_type', 'status', 'created_at', 'game_room']
 
     def get_from_user(self, obj):
         return PlayerSerializer(obj.from_user).data

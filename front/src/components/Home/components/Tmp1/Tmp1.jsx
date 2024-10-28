@@ -47,6 +47,7 @@ const Tmp1 = ({ Data, myData}) => {
         setMydaTa(myData.Tic.tic_data[0] || [])
     }
 
+
   return (
     <div className={styl.tmp1}>
         <div className={styl.Head}>
@@ -80,7 +81,7 @@ const Tmp1 = ({ Data, myData}) => {
                 </div>
                 <div className={styl.cards}>
                     {daTa.map((item, index) => (
-                        <CardRank key={index} data={item} index={index} />
+                        <CardRank key={index} data={item} index={index}/>
                     ))
                     }
                 </div>

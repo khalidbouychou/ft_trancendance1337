@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .consumers import GameStateManager
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from login.models import Player, PingData
 
 @api_view(['GET'])
 def game_state_view(request, room_name):
@@ -17,7 +18,7 @@ def game_state_view(request, room_name):
 def user_data(request):
     context = {
         'user': request.user.username,
-        'level': request.user.level,
         'avatar': request.user.avatar,
+        'exp_game': PingData.objects.get(player=request.user).exp_game,
     }
     return JsonResponse(context)

@@ -78,8 +78,10 @@ export default function  FriendGame() {
     };
 
     useEffect(() => {
+        console.log("im here");
         const fetchData = async () => {
-            // const response = await api.get('/chat/');
+            const response = await api.get('/pingpong/');
+            console.log('response:', response);
             // if (response.status === 200)
             // {
                 // setUser(response.data.user);
@@ -90,10 +92,10 @@ export default function  FriendGame() {
 
                 //khedma ta3 bohali
                 console.log('user', user);
-                setUsername(user.user.username);
-                setLeftPlayerAvatar(user.user.avatar);
-                setAvatar(user.user.avatar);
-                setLevel(user.user.exp_game);
+                setUsername(response.data.user);
+                setLeftPlayerAvatar(response.data.avatar);
+                setAvatar(response.data.avatar);
+                setLevel(response.data.exp_game);
             // }else {
             //     console.log("error:", response.status);
             // }
@@ -101,7 +103,6 @@ export default function  FriendGame() {
         
         if (!hasFetchedData.current) {
             fetchData();
-            hasFetchedData.current = true;
             setFetchedData(true);
         }
     }, []);

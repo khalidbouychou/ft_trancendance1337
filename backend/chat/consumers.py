@@ -8,12 +8,25 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from .serializers import MessageSerializer, ChatRoomSerializer
 from login.serializers import PlayerSerializer
+from django.contrib.auth.models import AnonymousUser
 import sys
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_pk']
         self.room_group_name = f'chat_room_{self.room_name}'
+        self.token = self.scope['session'].get('token')
+        if self.token:
+            self.scope['user'] = await self.auth_user(self.token)
+            if self.scope['user'] == AnonymousUser():
+                await self.close()
+                return
+        else:
+            print("chat consumer: No token found in cookies", file=sys.stderr)
+            await self.close()
+            return
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -33,7 +46,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json.get('content')
         sender = text_data_json.get('sender')
         room_pk = text_data_json.get('room_id')
-        print(f"received message type: {message_type}", file=sys.stderr)
+        # print(f"received message type: {message_type}", file=sys.stderr)
         try:
             if message_type == 'MESSAGE':
                 message = await self.create_message(room_pk, sender, message)
@@ -72,7 +85,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 try:
                     user1 = await self.get_user_by_username(username)
                     user2 = self.scope['user']
-                    if user2 is None or user1 is None:
+                    if user2 == AnonymousUser() or user1 == None:
                         return
                     chat_room = await self.create_or_get_chat_room(user1, user2)
                     chat_room_serializer = await self.get_chat_room_serializer(chat_room)
@@ -206,14 +219,31 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = Player.objects.get(id=user)
         room.messages.filter(chat_room=room).exclude(sender=user).update(is_read=True)
 
+    @database_sync_to_async
+    def auth_user(self, token):
+        try:
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+            return Player.objects.get(id=user_id)
+        except (InvalidToken, TokenError, Player.DoesNotExist):
+            return AnonymousUser()
+
 
 class UserNotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.user = self.scope["user"]
-        if self.user is None:
+        self.notification_group_name = f'__'
+        self.token = self.scope['session'].get('token')
+        if self.token:
+            self.scope['user'] = await self.auth_user(self.token)
+            if self.scope['user'] == AnonymousUser():
+                await self.close()
+                return
+        else:
+            print("chat consumer: No token found in cookies", file=sys.stderr)
             await self.close()
             return
-        self.notification_group_name = f'user_{self.user.id}_notification'
+        self.user_id = self.scope['user'].id
+        self.notification_group_name = f'user_{self.user_id}_notification'
 
         await self.channel_layer.group_add(
             self.notification_group_name,
@@ -238,3 +268,12 @@ class UserNotificationConsumer(AsyncWebsocketConsumer):
             'type': 'NEW_ROOM',
             'room_data': room_data
         }))
+    
+    @database_sync_to_async
+    def auth_user(self, token):
+        try:
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+            return Player.objects.get(id=user_id)
+        except (InvalidToken, TokenError, Player.DoesNotExist):
+            return AnonymousUser()

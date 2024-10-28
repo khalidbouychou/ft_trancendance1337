@@ -6,40 +6,64 @@ export function NotificationWebSocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [notif, setNotif] = useState(null);
+  const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const ws = new WebSocket(`ws://localhost:8000/ws/notif/?token=${token}`);
+    let reconnectTimeout;
 
-    ws.onopen = () => {
-      console.log('Notification WebSocket connected');
-      setSocket(ws);
-      setIsConnected(true);
+    const connect = () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        handleReconnect();
+        return;
+      }
+
+      let ws;
+      try {
+        ws = new WebSocket(`ws://localhost:8000/ws/notif/?token=${token}`);
+      } catch (error) {
+        handleReconnect();
+        return;
+      }
+
+      ws.onopen = () => {
+        // console.log('Notification WebSocket connected');
+        setSocket(ws);
+        setIsConnected(true);
+        setReconnectAttempts(0);
+      };
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        // console.log(data.type, ':', data.notification);
+        setNotif(data.notification);
+      };
+
+      ws.onclose = handleReconnect;
+
+      ws.onerror = (error) => {
+        handleReconnect();
+      };
     };
 
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data.type, ':', data.notification);
-      setNotif(data.notification);
-    };
-
-    ws.onclose = () => {
-      console.log('Notification WebSocket disconnected');
+    const handleReconnect = () => {
+      // console.log('Notification WebSocket disconnected or encountered an error');
       setSocket(null);
       setIsConnected(false);
-      // setTimeout(() => {
-      //   console.log('Attempting to reconnect...');
-      //   connect();
-      // }, 3000);
+      clearTimeout(reconnectTimeout);
+      reconnectTimeout = setTimeout(() => {
+        // console.log('Attempting to reconnect...');
+        setReconnectAttempts((attempts) => attempts + 1);
+        connect();
+      }, 1000);
     };
 
-    ws.onerror = (error) => {
-      console.error('Notification WebSocket error:', error);
-    };
+    connect();
 
     return () => {
-      if (ws) {
-        ws.close();
+      clearTimeout(reconnectTimeout);
+      if (socket) {
+        socket.close();
       }
     };
   }, []);
@@ -48,7 +72,7 @@ export function NotificationWebSocketProvider({ children }) {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(message));
     } else {
-      console.error('WebSocket is not connected');
+      // console.error('WebSocket is not connected');
     }
   }, [socket]);
 

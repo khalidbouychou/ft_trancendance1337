@@ -1,4 +1,4 @@
-import styl from './GameSettings.module.css'
+import styl from './gameSettings.module.css'
 import React, { useEffect, useState } from 'react'
 import userImage from '../../assets/nouahidi.jpeg'
 import camera from '../../assets/camera.svg'

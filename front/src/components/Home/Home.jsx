@@ -5,7 +5,7 @@ import "react-circular-progressbar/dist/styles.css";
 import Tmp1 from "./components/Tmp1/Tmp1";
 import { useState, useEffect, useContext } from "react";
 import Tmp2 from "./components/Tmp2/Tmp2";
-import SearchCard from "./components/SearchCard/Searchcard";
+import SearchCard from "./components/SearchCard/SearchCard";
 import { AuthContext } from "../../UserContext/Context";
 import Cookies from "js-cookie";
 

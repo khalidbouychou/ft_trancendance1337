@@ -24,7 +24,7 @@ const Game = () => {
                   <div className={styl.gameName}>
                     <p>Tic Tac Toe</p>
                   </div>
-                  <Link to={"/xo-games"}><button className={styl.image} >
+                  <Link to={"/xo"}><button className={styl.image} >
                     <img src={tic} alt="Tic Tac Toe" />
                   </button></Link>
                 </div>

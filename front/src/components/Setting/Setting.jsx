@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import styl from './Settings.module.css'
-import gameSettings from './components/gameSettings/GameSettings'
+import gameSettings from './components/gameSettings/gameSettings'
 import userImage from './assets/nouahidi.jpeg'
 import camera from './assets/camera.svg'
 import pencil from './assets/pencil.svg'
 import QRCode from 'react-qr-code'
 import { MdOutlineKeyboardDoubleArrowDown } from "react-icons/md";
 import { MdLock } from "react-icons/md";
-import GameSettings from './components/gameSettings/GameSettings'
+import GameSettings from './components/gameSettings/gameSettings'
 
 
 const Settings = () => {

@@ -1,7 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.db import models
 
 class Player(AbstractUser):
     STATUS = (
@@ -41,7 +41,7 @@ class Player(AbstractUser):
         self.blocked_users.remove(user_to_unblock)
 
     def is_blocked(self, user):
-        return self.blocked_users.filter(id=user.id).exists()
+        return self.blocked_users.filter(id=user.id).exists() 
 
     @staticmethod
     def are_enemies(user1, user2):

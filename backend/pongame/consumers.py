@@ -5,7 +5,7 @@ from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 import asyncio
 from channels.layers import get_channel_layer
-from login.models import Player
+from login.models import Player, PingData
 from matches.models import Matches
 from django.utils import timezone
 
@@ -94,7 +94,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         value = data.get('value', 0)
 
         if action == 'connect':
-            print('a user has connected')
+            print('...........................a user has connected', data.get('username'))
             if (data.get('username') in GameConsumer.queue):
                 self.close()
             GameConsumer.queue[data.get('username')] = {
@@ -116,7 +116,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 for i, (player1, data1) in enumerate(players_list):
                     for j, (player2, data2) in enumerate(players_list):
                         if i != j:
-                            if abs(data1['level'] - data2['level']) <= 5:
+                            if abs((data1['level'] / 100) - (data2['level']) / 100) <= 5:
                                 match_found = True
                                 matched_players = [player1, player2]
                                 break
@@ -304,7 +304,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.right_score += 1
             self.bonus = 0
-            if (self.right_score >= 5):
+            if (self.right_score >= 5000):
                 self.game_loop = False
                 data = {
                     'winner': '2',
@@ -328,20 +328,22 @@ class GameConsumer(AsyncWebsocketConsumer):
                 second_element = values[1]
 
                 first_player = await sync_to_async(Player.objects.get)(username=first_element['username'])
+                first_player_data = await sync_to_async(PingData.objects.get)(player=first_player.id)
                 second_player = await sync_to_async(Player.objects.get)(username=second_element['username'])
+                second_player_data = await sync_to_async(PingData.objects.get)(player=second_player.id)
 
-                first_player.losses += 1
-                first_player.exp_game += 1
-                second_player.wins += 1
-                second_player.exp_game += 10
+                first_player_data.losses += 1
+                first_player_data.exp_game += 1
+                second_player_data.wins += 1
+                second_player_data.exp_game += 10
 
-                await sync_to_async(first_player.save)()
-                await sync_to_async(second_player.save)()
+                await sync_to_async(first_player_data.save)()
+                await sync_to_async(second_player_data.save)()
 
                 match = await sync_to_async(Matches.objects.create)(
+                    game_type='Pong',
                     player=first_player,
                     opponent=second_player,
-                    date=timezone.now().date(),
                     winner=second_player.username,
                     loser=first_player.username,
                     left_score=self.left_score,
@@ -357,7 +359,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.left_score += 1
             self.bonus = 0
-            if (self.left_score >= 5):
+            if (self.left_score >= 5000):
                 self.game_loop = False
                 data = {
                     'winner': '1',
@@ -378,21 +380,24 @@ class GameConsumer(AsyncWebsocketConsumer):
 
                 first_element = values[0]
                 second_element = values[1]
+                
                 first_player = await sync_to_async(Player.objects.get)(username=first_element['username'])
+                first_player_data = await sync_to_async(PingData.objects.get)(player=first_player.id)
                 second_player = await sync_to_async(Player.objects.get)(username=second_element['username'])
+                second_player_data = await sync_to_async(PingData.objects.get)(player=second_player.id)
 
-                first_player.wins += 1
-                first_player.exp_game += 10
-                second_player.losses += 1
-                second_player.exp_game += 1
+                first_player_data.wins += 1
+                first_player_data.exp_game += 10
+                second_player_data.losses += 1
+                second_player_data.exp_game += 1
 
-                await sync_to_async(first_player.save)()
-                await sync_to_async(second_player.save)()
+                await sync_to_async(first_player_data.save)()
+                await sync_to_async(second_player_data.save)()
 
                 match = await sync_to_async(Matches.objects.create)(
+                    game_type='Pong',
                     player=first_player,
                     opponent=second_player,
-                    date=timezone.now().date(),
                     winner=first_player.username,
                     loser=second_player.username,
                     left_score=self.left_score,

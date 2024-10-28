@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'matches',
     'chat',
     'notification',
+    'xo_game'
 ]
 
 MIDDLEWARE = [

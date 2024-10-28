@@ -77,14 +77,18 @@ export default function  OnlineGame() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await api.get('/chat/');
+            const response = await api.get('/pingpong/');
+            // console.log('response: ',response.data);
+            // console.log('username:', response.data.user);
+            // console.log('avatar:', response.data.avatar);
+            // console.log('exp_game:', response.data.exp_game);
             if (response.status === 200)
             {
-                setUser(response.data.user);
-                setUsername(response.data.user.username);
-                setLeftPlayerAvatar(response.data.user.avatar);
-                setAvatar(response.data.user.avatar);
-                setLevel(response.data.user.exp_game);
+                // setUser(response.data);
+                setUsername(response.data.user);
+                setLeftPlayerAvatar(response.data.avatar);
+                setAvatar(response.data.avatar);
+                setLevel(response.data.exp_game);
             }else {
                 console.log("error:", response.status);
             }
