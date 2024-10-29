@@ -40,13 +40,13 @@ export default function AuthProvider ({ children }) {
           toast.success("login success",
           {
             position: "top-right",
-            autoClose: 1000,
+            autoClose: 1200,
             closeOnClick: true,
           });
           setTimeout(() => {
             navigate("/");
             
-          }, 2500);
+          }, 1000);
 
         }
         }
