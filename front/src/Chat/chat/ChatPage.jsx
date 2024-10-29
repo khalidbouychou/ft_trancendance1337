@@ -32,10 +32,6 @@ function ChatPage() {
 		}
 	}, [chat]);
 
-	// useEffect(() => {
-	// 	console.log('blocked users: ', data.user.blocked_users);
-	// }, [data.user]);
-
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -44,9 +40,7 @@ function ChatPage() {
 				setupSocket(1);
 				setupNotificationSocket();
 				initUnreadMessages(response.data);
-				console.log('Current User:', response.data.user);
 			} catch (error) {
-				console.warn('Chat page inaccessible:', error);
 				navigate('/login');
 			}
 		};
@@ -87,13 +81,12 @@ function ChatPage() {
 		const socket = new WebSocket(`ws://localhost:8000/ws/notification/?token=${token}`);
 	
 		socket.onopen = () => {
-			console.log('Connected to notification socket');
 		};
 	
 		socket.onmessage = (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'NEW_ROOM') {
-				console.log('New room created:', data.room_data);
+
 				setData(prevData => ({
 					...prevData,
 					chat_rooms: [...prevData.chat_rooms, data.room_data]
@@ -102,11 +95,9 @@ function ChatPage() {
 		};
 	
 		socket.onerror = (error) => {
-			console.error('Notification socket error:', error);
 		};
 	
 		socket.onclose = (event) => {
-			console.log('Notification socket closed:', event);
 		};
 	
 		setNotificationSocket(socket);
@@ -128,16 +119,6 @@ function ChatPage() {
 			}
 		}
 	}, [currentContact]);
-
-	// useEffect(() => {
-	// 	Object.entries(unreadMessages).forEach(([userId, count]) => {
-	// 		const user = data.chat_rooms.flatMap(room => [room.user1, room.user2])
-	// 			.find(user => user.id === parseInt(userId));
-	// 		if (user && count > 0) {
-	// 			console.log(`${count} unread messages from ${user.username}`);
-	// 		}
-	// 	});
-	// }, [unreadMessages]);
 
 	useEffect(() => {
 		if (!receivedMessage) {
@@ -234,15 +215,15 @@ function ChatPage() {
 				const data_re = JSON.parse(event.data)
 				switch (data_re.type) {
 					case 'USERS_LIST':
-						console.log('Received users list:', data_re)
+						
 						setAllUsers(data_re.users);
 						break
 					case 'MESSAGE':
 						if (!data_re.message || !data_re.message.sender) {
-							// console.log('Received empty message, ignoring');
+							// 
 							break;
 						}
-						console.log('Received message:', data_re.message)
+						
 						setData(prevData => updateChatRooms(prevData, data_re.message))
 
 						setReceivedMessage(data_re.message)
@@ -258,7 +239,7 @@ function ChatPage() {
 						}
 						break
 					case 'BLOCK_USER':
-						console.log('Blocked user:', data_re);
+						
 						if (data_re.event === 'BLOCK') {
 							setData(prevData => ({
 								...prevData,
@@ -278,13 +259,13 @@ function ChatPage() {
 						}
 						break
 					default:
-						console.log('Unknown message type:', data_re.type)
+						
 						break
 				}
 			}
 
 			newSocket.onclose = (event) => {
-				console.log(`Disconnected from server for room ${room_id}. Code: ${event.code}, Reason: ${event.reason}`);
+				
 				setSockets(prev => {
 					const { [room_id]: _, ...newSockets } = prev;
 					return newSockets;

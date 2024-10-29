@@ -61,9 +61,9 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
     // };
 
     const handlePlayPong = () => {
-        console.log('Play Pong');
+       
         if (isConnected) {
-            console.log('Connected');
+           
             sendNotifMessage({
                 type: 'SEND_GR',
                 game_type: 'PONG',
@@ -87,7 +87,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             }
         }
         else {
-            console.log('Not connected');
+           
         }
         // return () => {
         //     if (pong_socket && pong_socket.readyState === WebSocket.OPEN) {
@@ -96,7 +96,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
     };
 
     const handlePlayTicTacToe = () => {
-        console.log('Play Tic-Tac-Toe');
+       
         if (isConnected) {
             sendNotifMessage({
                 type: 'SEND_GR',
@@ -107,12 +107,12 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
     };
 
     const viewProfile = () => {
-        console.log('View Profile');
+       
         // navigate(`/profile/${otherUser.id}`);
     };
 
     const onFriendRequest = () => {
-        console.log('Friend Request:', otherUser.username);
+       
         if (isConnected) {
             sendNotifMessage({
                 type: 'SEND_FR',

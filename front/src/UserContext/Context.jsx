@@ -3,6 +3,8 @@ import { createContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { SyncLoader } from "react-spinners";
 
+import { toast } from 'react-toastify';
+
 export const AuthContext = createContext(null)
 
 export default function AuthProvider ({ children }) {
@@ -13,9 +15,6 @@ export default function AuthProvider ({ children }) {
   const location = useLocation()
 
 
-// Empty dependency array means this runs once on mount
-
-  //--------------------------------------------
   async function auth_intra42() {
     const response = await axios.get("http://localhost:8000/api/auth_intra/" , {
       withCredentials: true
@@ -38,10 +37,31 @@ export default function AuthProvider ({ children }) {
         const res = await axios.post(`http://localhost:8000/api/login/`,params,{
           withCredentials: true
         });
-        if (res.status === 200){navigate("/");}
+        if (res.status === 200){
+          
+          toast.success("login success",
+          {
+            position: "top-right",
+            autoClose: 1000,
+            closeOnClick: true,
+          });
+          setTimeout(() => {
+            navigate("/");
+            
+          }, 2500);
+
+        }
         }
       } catch (error) {
-        navigate('/login')
+        toast.error("login failed",
+        {
+          position: "top-right",
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          navigate("/");
+          
+        }, 100);
     } finally {
       setLoading(false);
     }
@@ -52,75 +72,41 @@ export default function AuthProvider ({ children }) {
       const res = await axios.get(`http://localhost:8000/api/user/`, {
         withCredentials: true
       });
+      
       if (res.status === 200) {
         setUser(res.data);
         if (window.location.pathname === "/login") { navigate("/home");}
       }
-      else {
-        navigate('/login')
-        setUser(null);
-      }
     } catch (error) {
+      
       navigate('/login')
       setUser(null);
     }
-  }
 
-
-async function VerifyToken () 
-{
-  try {
-    const res = await axios.get(`http://localhost:8000/api/verifytoken/`, {
-    withCredentials: true,
-    headers : {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'user': user
-    }
-  });
-    if (res.status !== 200) {
-      setUser(null);
-      navigate('/login');
-    }
   }
-  catch (error) {
-    setUser(null);
-  }
-}
 
 async function Logout () {
-  console.log("token",user.token)
+  
     try {
       const res = await axios.get(`http://localhost:8000/api/logout/`,{
         withCredentials: true,
 
       });
-
-      console.log(res)
+      
       if (res.status === 200) {
-        console.log("---------------- logout success ----------------")
-        navigate('/login')
+        
         setUser(null)
+        navigate('/login')
       }
     } catch (error) {
-      console.log(error)
+      
     }
   }
 
-
-  // function that logged the user
   useEffect(() => {Login()}, [window.location.pathname]);
-  // fetch user data
   useEffect(() => {
-    VerifyToken();
     get_auth_user();
   },[window.location.pathname]);
-  
-  // useEffect  (() => {
-  //   VerifyToken();
-  // }
-  // ,[window.location.pathname]);
-
   return (
     <AuthContext.Provider value={{loading, user, url, Logout,setUser, Login, auth_intra42,get_auth_user }}>
       {children}

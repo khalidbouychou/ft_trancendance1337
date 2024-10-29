@@ -66,7 +66,7 @@ const Sidebar = () => {
             <CmpCard isOpen={isOpen} ICON={hasNotification ? MdNotificationImportant : MdNotifications} name={'Notification'} link={'/notification'}/>
             <CmpCard isOpen={isOpen} ICON={CiSettings} name={'Setting'} link={'/setting'}/>
         </div>
-            <a onClick={Logout}><CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'}  top={'0%'} />  </a>
+            <div onClick={Logout}>  <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'}  top={'0%'} /> </div>
         <button className={styl.cirButton} onClick={handleClick} style={{left: isOpen ? '96%' : '85%'}}>
             <FaAnglesLeft style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}}/>
         </button>

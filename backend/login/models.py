@@ -14,8 +14,8 @@ class Player(AbstractUser):
         ('playing', _('playing')),
         ('offline', _('offline')),
     )
-    avatar = models.URLField(max_length=200, default='default_avatar')
-    profile_name = models.URLField(max_length=200, default='default_profile')
+    avatar = models.URLField(max_length=200, default='backend/uploads/avatar.jpg')
+    profile_name = models.CharField(max_length=50, default='Player')
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
     exp_game = models.IntegerField(default=100)
@@ -27,7 +27,7 @@ class Player(AbstractUser):
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
     friends = models.ManyToManyField('self', symmetrical=True, through='Friend', blank=True)
     oldtoken = models.CharField(max_length=300, default='')
-
+    
     class Meta:
         db_table = 'player'
 

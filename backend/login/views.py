@@ -2,7 +2,7 @@
 from rest_framework.response import Response
 import requests
 from django.contrib.auth.models import User
-from .serializers import PlayerSerializer
+from .serializers import PlayerSerializer , SignupSerializer , SigninSerializer
 from .models import Player as Player
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken
@@ -15,13 +15,15 @@ from django.contrib.auth import logout
 from rest_framework_simplejwt.exceptions import TokenError
 from datetime import timedelta
 from rest_framework.decorators import action
-import logging
 import os
 from django.http import HttpResponse
-
+from rest_framework import generics
+# from django.contrib.auth import authenticate, login
 from rest_framework import status
 
-
+import jwt
+import os  # Add missing import statement
+from rest_framework.exceptions import AuthenticationFailed
 
 from rest_framework.views import APIView
 
@@ -54,7 +56,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             profile_name=user_data['username'],
             status_network='online',
         )
-        # user.set_unusable_password()  # Assuming password is not used
         user.save()
         return user
 
@@ -77,7 +78,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
     def login(self, request):
         try:
-            # Exchange authorization code for access token
             response = requests.post(
                 'https://api.intra.42.fr/oauth/token/',
                 data={
@@ -94,7 +94,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             if not token:
                 return Response({'error': 'Intra Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Fetch user data
             headers = {
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
@@ -108,19 +107,15 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 'avatar': intra_data.get('image')['link'],
                 'profile_name': intra_data.get('login'), 
             }
-            # Check if user exists
             user = Player.objects.filter(
                 username=user_data['username']).first()
             if not user:
                 user = self.create_user(user_data)
             authenticate(request, username=user_data['username'])
             login(request, user)
-            # Create JWT tokens
             tokens = self.create_jwt_token(user)
             user.oldtoken = tokens['access']
             user.save()
-            print('+++++++++++++++ > ',user.oldtoken) 
-            # Create response
             data = {
                 'user': {
                     'token': tokens['access'],
@@ -157,7 +152,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
                     
                 except TokenError:
                     return False, None, "Invalid or expired token"
-            # Check session authentication
             if request.user.is_authenticated:
                 return True, request.user, "Authenticated via session"
             return False, None, "No valid authentication found"
@@ -183,13 +177,13 @@ class PlayerViewSet(viewsets.ModelViewSet):
                         user.status_network = 'offline'
                         user.status_game = 'offline'
                         user.save()
+                        blacklisted_token = OutstandingToken.objects.filter(user=user)
+                        blacklisted_token.delete()
                         django_logout(request)
-                        # access_token.blacklist()  # Blacklist the token if using blacklisting
                         response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK)
-                        response.delete_cookie('token')  # Delete token cookie
-                        response.delete_cookie('refresh')  # Delete refresh cookie
-                        response.delete_cookie('sessionid')  # Delete sessionid cookie
-                        response.delete_cookie('csrftoken')  # Delete csrftoken cookie
+                        response.delete_cookie('token') 
+                        response.delete_cookie('refresh')  
+                        response.delete_cookie('csrftoken')  
                         return response
                     else:
                         return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
@@ -207,7 +201,6 @@ class AuthUser(APIView):
     def get(self, request):
         try:
             user = request.user
-            print('user',user)
             if user.is_authenticated:
                 data = {
                    'data': PlayerSerializer(user).data,
@@ -219,9 +212,7 @@ class AuthUser(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST) 
 #------------------------------------------------------------------------------------------------
-import jwt
-import os  # Add missing import statement
-from rest_framework.exceptions import AuthenticationFailed
+
 class VerifyToken(APIView): 
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -243,3 +234,34 @@ class VerifyToken(APIView):
             return Response({'error': 'Token expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.InvalidTokenError:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+        
+
+class SignupForm (generics.CreateAPIView):
+    queryset = Player.objects.all()
+    serializer_class = SignupSerializer
+    
+
+class SigninForm(generics.CreateAPIView):
+    queryset = Player.objects.all()
+    serializer_class = SigninSerializer
+
+    def post(self, request):
+        try:
+            username = request.data.get('username')
+            password = request.data.get('password')
+            getuser = Player.objects.filter(username=username)
+            getuser = authenticate(username=username, password=password)
+            if not getuser:
+                return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+            login(request, getuser)
+            refresh = RefreshToken.for_user(getuser)
+            access = str(refresh.access_token)
+            
+            response = Response(status=status.HTTP_200_OK) 
+            response.set_cookie(key='token', value=access , secure=True , httponly=True ,samesite='None')
+            response.set_cookie(key='refresh', value=refresh , secure=True , httponly=True ,samesite='None')
+            return response
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)  

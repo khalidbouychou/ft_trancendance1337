@@ -60,17 +60,17 @@ const NotiCard = ({request}) => {
 
   const handleAccept = () => {
     if (isConnected) {
-      console.log('Connected');
+
       sendNotifMessage({
         type: request.notif_type === 'FR' ? 'ACCEPT_FR' : 'ACCEPT_GR',
         from_user_id: request.from_user.id,
         game_type: request.game_type
       });
-      console.log('move to the game page');
+
       const game_key = `${request.from_user.username}vs${request.to_user.username}`;
       navigate('/friend-game', { state: { game_key } });
     } else {
-      console.log('Not connected');
+
     }
     setIsVisible(false);
   };

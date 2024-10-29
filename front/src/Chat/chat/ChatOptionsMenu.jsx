@@ -9,18 +9,10 @@ function ChatOptionsMenu({ onPlayPong, onPlayTicTacToe, otherUser, currentUser, 
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
-    // const checkBlockStatus = () => {
-    //   if (currentUser && otherUser) {
-    //     const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
-    //     setIsBlocked(isOtherUserBlocked);
-    //   }
-    // };
-    // checkBlockStatus();
       const areFriends = currentUser.friends.find(friend => 
         (friend.user1 === otherUser.username || friend.user2 === otherUser.username)
       );
       if (areFriends) {
-        console.log('areFriends:', areFriends.status);
         setIsFriend(areFriends.status);
       } else {
         setIsFriend('None');

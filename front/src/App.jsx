@@ -15,34 +15,29 @@ import { useContext } from "react";
 
 import { useNavigate } from "react-router-dom";
 
-//---------------------------
 
-if (process.env.NODE_ENV === 'development') {
-  const suppressedWarnings = [/specific warning text/, /another warning text/];
+// const originalConsoleError = console.error;
+// console.error = (...args) => {
+//   // Check if the error is related to your API calls
+//   const isApiError = args.some(arg => 
+//     typeof arg === 'string' && 
+//     (arg.includes('http://localhost:8000/api/user') ||
+//      arg.includes('api/signup'))
+//   );
+  
+//   // Don't log API-related errors
+//   if (!isApiError) {
+//     originalConsoleError.apply(console, args);
+//   }
+// };
 
-  const originalWarn = console.warn;
-  console.warn = (message, ...args) => {
-      if (!suppressedWarnings.some(entry => entry.test(message))) {
-          originalWarn(message, ...args);
-      }
-  };
-
-  const originalError = console.error;
-  console.error = (message, ...args) => {
-      if (!suppressedWarnings.some(entry => entry.test(message))) {
-          originalError(message, ...args);
-      }
-  };
-}
-
-//--------------------------------
 function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1100);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [window.location.pathname]);

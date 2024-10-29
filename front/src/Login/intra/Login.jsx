@@ -16,7 +16,6 @@ const PongParadise = () => {
   // const navigate = useNavigate();
   // const myCookie = Cookies.get('token');
   useEffect(() => {
-    console.log("url", url);
         auth_intra42();
     }
     , []);

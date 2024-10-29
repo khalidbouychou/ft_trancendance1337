@@ -1,6 +1,6 @@
 
 from django.urls import path, include
-from .views import PlayerViewSet
+from .views import PlayerViewSet, SignupForm, SigninForm
 from rest_framework import routers
 # from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView
 
@@ -18,4 +18,6 @@ urlpatterns = [
     # path('<str:username>/', PlayerViewSet.as_view({'get': 'get_auth_user'})),
     path('user/', AuthUser.as_view(), name='auth_user'),
     path ('verifytoken/', VerifyToken.as_view(), name='verify_token'),
+    path('signup/', SignupForm.as_view(), name='signup'),
+    path('singin/', SigninForm.as_view(), name='singin'),
     ]

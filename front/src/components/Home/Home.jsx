@@ -44,7 +44,6 @@ const Home = () => {
               `http://localhost:8000/api/users/search/?q=${searchQuery}`
             );
             const data = await response.json();
-            console.log(data);
             setSearchResults(data);
           } else {
             setSearchResults([]);

@@ -11,38 +11,6 @@ import axios from 'axios';
 import { AuthContext } from '../../UserContext/Context';
 import { useContext } from 'react';
 const Logout = (loading) => {
-    // const navigate = useNavigate();
-    // const {user,setUser} = useContext(AuthContext);
-
-    // async function Logout () {
-    //   console.log("token",user.token)
-    //     try {
-    //       const res = await axios.post(`http://localhost:8000/api/logout/`, {}, {
-    //         withCredentials: true,
-    //         headers : {
-    //             'Content-Type': 'application/json',
-    //             'Accept': 'application/json',
-    //             'Authorization': `Bearer ${user.token}`
-    //         }
-    //       }
-    //     )
-    //       console.log(res)
-    //       if (res.status === 200) {
-    //         console.log("---------------- logout success ----------------")
-    //         navigate('/login')
-    //         setUser(null)
-    //       }
-    //     } catch (error) {
-    //       console.log(error)
-    //     }
-    //   }
-
-    // useEffect(() => {
-
-    //      Logout();
-
-
-    //   }, []);
         return (
             <div
               style={{

@@ -13,11 +13,8 @@ const LoginPage = () => {
         e.preventDefault();
         try {
             const data = await login(username, password);
-            console.log('Login data:', data);
             navigate('/api/chat');
         } catch (error) {
-            console.error('Error logging in:', error);
-            setError('Invalid username or password');
         }
     };
 

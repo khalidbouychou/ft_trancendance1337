@@ -22,7 +22,7 @@ const History = ({ onFriendClick, id, ismyprofil} ) => {
     try {
       const response = await axios.get(`http://localhost:8000/api/users/${userId}/user_friends/`);
       setFriends(response.data);
-      console.log('Fetched friends:', response.data);
+  
     }
     catch {
       console.error("Error fetching user friends")
