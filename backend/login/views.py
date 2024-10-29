@@ -272,4 +272,30 @@ class SigninForm(generics.CreateAPIView):
             response.set_cookie(key='refresh', value=refresh , secure=True , httponly=True ,samesite='None')
             return response
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)  
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+#------------------------------------------------------------------------------------------------
+
+
+import pyotp
+import time
+import qrcode
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view  , permission_classes , authentication_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
+
+class generate_qrcode(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        print("-------------------->",request.user)    
+        key = pyotp.random_base32()
+        totp = pyotp.TOTP(key)
+        url = totp.provisioning_uri(name=request.user.username, issuer_name='ft_transcendence')
+        img = qrcode.make(url)
+        img.save('uploads/qrcode.png')
+        path_qrcode = 'http://localhost:8000/uploads/qrcode.png'
+        return Response({'path': path_qrcode}, status=status.HTTP_200_OK)

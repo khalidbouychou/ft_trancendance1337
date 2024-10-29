@@ -19,6 +19,7 @@ class Player(AbstractUser):
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
     status_game = models.CharField(max_length=10, choices=GAME_STATUS, default='offline')
     two_factor = models.BooleanField(default=False)
+    # mfa_secret = models.CharField(max_length=16, default='' ,blank=True , null=True) 
     otp = models.CharField(max_length=6, default='000000')
     otp_verified = models.BooleanField(default=False)
     oldtoken = models.CharField(max_length=300, default='')

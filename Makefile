@@ -1,4 +1,4 @@
-all: build
+all: up
 
 ssl:
 	@bash ./generate-ssl.sh
