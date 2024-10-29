@@ -18,11 +18,11 @@ from rest_framework.decorators import action
 import os
 from django.http import HttpResponse
 from rest_framework import generics
-# from django.contrib.auth import authenticate, login
+
 from rest_framework import status
 
 import jwt
-import os  # Add missing import statement
+
 from rest_framework.exceptions import AuthenticationFailed
 
 from rest_framework.views import APIView
@@ -98,7 +98,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             }
-            response = requests.get('https://api.intra.42.fr/v2/me', headers=headers)
+            response = requests.get('https://api.intra.42.fr/v2/me', headers=headers) 
             response.raise_for_status()
             
             intra_data = response.json()
@@ -123,6 +123,14 @@ class PlayerViewSet(viewsets.ModelViewSet):
                     'username': user.username,
                     'avatar': user.avatar,
                     'is_authenticated': request.user.is_authenticated,
+                    'profile_name': user.profile_name,
+                    'status_network': user.status_network,
+                    'status_game': user.status_game,
+                    'two_factor': user.two_factor,
+                    'otp': user.otp,
+                    'otp_verified': user.otp_verified,
+                    'two_factor': user.two_factor,
+                    
                 },
             }
 

@@ -47,10 +47,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework',
     'login',
-    'pongame',
-    'matches',
-    'chat',
-    'notification',
 ]
 
 MIDDLEWARE = [
@@ -140,12 +136,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-# STATIC_URL = 'static/'
-STATIC_URL = 'uploads/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "./uploads",
-]
 
 
 
@@ -171,23 +161,26 @@ CORS_ALLOW_HEADERS =  list(default_headers) + [
     'withcredentials',  
     'user'
 ]
+#************  khbouych ************
+# STATIC_URL = 'static/'
+STATIC_URL = 'uploads/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "./uploads",
+]
+
 
 # *************** jwt ********* 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
     ),
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
+
 }
 
 
 
 
-#************  khbouych ************
 
 AUTH_USER_MODEL = 'login.Player'
 # JWT settings

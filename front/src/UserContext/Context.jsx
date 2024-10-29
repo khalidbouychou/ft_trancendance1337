@@ -34,9 +34,7 @@ export default function AuthProvider ({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
-        const res = await axios.post(`http://localhost:8000/api/login/`,params,{
-          withCredentials: true
-        });
+        const res = await axios.post(`http://localhost:8000/api/login/`,params,{withCredentials: true});
         if (res.status === 200){
           
           toast.success("login success",
@@ -99,7 +97,7 @@ async function Logout () {
         navigate('/login')
       }
     } catch (error) {
-      
+      navigate('/login')
     }
   }
 

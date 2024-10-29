@@ -1,7 +1,7 @@
  
 from rest_framework import serializers
 
-from .models import Player, Friend
+from .models import Player
 from django.contrib.auth.hashers import make_password
 
 
@@ -65,19 +65,19 @@ class SigninSerializer(serializers.ModelSerializer):
 
 
 
-class FriendSerializer(serializers.ModelSerializer):
-    user1 = serializers.SerializerMethodField()
-    user2 = serializers.SerializerMethodField()
+# class FriendSerializer(serializers.ModelSerializer):
+#     user1 = serializers.SerializerMethodField()
+#     user2 = serializers.SerializerMethodField()
 
-    class Meta:
-        model = Friend
-        fields = ['user1', 'user2', 'status']
+#     class Meta:
+#         model = Friend
+#         fields = ['user1', 'user2', 'status']
 
-    def get_user1(self, obj):
-        return obj.user1.username
+#     def get_user1(self, obj):
+#         return obj.user1.username
 
-    def get_user2(self, obj):
-        return obj.user2.username
+#     def get_user2(self, obj):
+#         return obj.user2.username
 
 
 # class TwoFASerializer(serializers.ModelSerializer):

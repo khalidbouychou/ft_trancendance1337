@@ -15,8 +15,8 @@ find . -path "*/migrations/*.pyc"  -delete
 # Find and delete all __pycache__ directories
 find . -type d -name "__pycache__" -exec rm -r {} +
 
-python3 manage.py makemigrations login chat matches notification pongame
-# python3 manage.py makemigrations 
+# python3 manage.py makemigrations login chat matches notification pongame
+python3 manage.py makemigrations 
 python3 manage.py migrate
 python3 manage.py runserver 0.0.0.0:8000
 

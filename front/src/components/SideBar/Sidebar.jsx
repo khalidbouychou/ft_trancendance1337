@@ -22,9 +22,10 @@ const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
     const [hasNotification, setHasNotification] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState('300px');
+    const [avatar, setAvatar] = useState('');
     const navigate = useNavigate();
 
-    const {Logout} = useContext(AuthContext);
+    const {Logout } = useContext(AuthContext);
 
     const handleClick = () => {
         setIsOpen(!isOpen)
@@ -53,6 +54,7 @@ const Sidebar = () => {
         <Link to='/'><div className={styl.Card} style={{top: '0%'}}>
             <div className={styl.icon}>
                 <img src={pinglogo}/>
+                {/* <img src={user.avatar}/> */}
             </div>
             <div className={styl.gameName} style={{display: isOpen ? 'flex' : 'none'}}><p >ping pong</p></div>
         </div>
