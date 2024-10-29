@@ -77,7 +77,7 @@ export default function AuthProvider ({ children }) {
       }
     } catch (error) {
       
-      navigate('/login')
+      // navigate('/login')
       setUser(null);
     }
 
@@ -94,10 +94,10 @@ async function Logout () {
       if (res.status === 200) {
         
         setUser(null)
-        navigate('/login')
+        // navigate('/login')
       }
     } catch (error) {
-      navigate('/login')
+      // navigate('/login')
     }
   }
 

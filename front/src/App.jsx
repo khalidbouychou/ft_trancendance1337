@@ -7,6 +7,7 @@ import Layout from "./Layout.jsx";
 
 import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
 
+import Twofa from "./Login/2fa/twofa.jsx";
 const originalConsoleError = console.error;
 console.error = (...args) => {
   // Check if the error is related to your API calls
@@ -45,6 +46,7 @@ function App() {
             <Route path="games" element={<h1>games</h1>} />
             <Route path="setting" element={<h1>settings</h1>} />
             <Route path="notification" element={<h1>notification</h1>} />
+            <Route path="twofa" element={<Twofa/>} />
           </Route>
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/*" element={<PageNotFound />} />

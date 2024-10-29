@@ -21,7 +21,7 @@ const Layout = () => {
   , [])
   return (
     <div className={style.EntirePage}>
-          {( location.pathname !== "/login" || location.pathname !== "/Logout") &&  <Sidebar /> }
+          {( location.pathname !== "/login" && location.pathname !== "/twofa" ) &&  <Sidebar /> }
           <Outlet />
     </div>
   );
