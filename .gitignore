@@ -1,0 +1,9 @@
+front/node_modules
+backend/env
+backend/.env
+backend/db.sqlite3
+
+backend/*/migrations
+backend/*/__pycache__
+
+deployment
