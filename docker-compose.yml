@@ -46,27 +46,27 @@ services:
     networks:
       - connexion
     healthcheck:
-        test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health/ || exit 1"]
+        test: ["CMD-SHELL", "curl -f http://10.13.1.9:8000/api/health/ || exit 1"]
         interval: 10s
         timeout: 5s
         retries: 2
     restart: always
 
-  front:
-    container_name: front
-    build:
-      context: ./front
-    ports:
-      - "5173:5173"
-    networks:
-      - connexion
-    volumes:
-      - ./front:/app
-      - /app/node_modules
-    depends_on:
-      back :
-        condition: service_healthy
-    restart: always
+  # front:
+  #   container_name: front
+  #   build:
+  #     context: ./front
+  #   ports:
+  #     - "5173:5173"
+  #   networks:
+  #     - connexion
+  #   volumes:
+  #     - ./front:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     back :
+  #       condition: service_healthy
+  #   restart: always
 networks:
   connexion:
     driver: bridge

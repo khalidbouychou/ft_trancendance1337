@@ -16,7 +16,7 @@ export default function AuthProvider ({ children }) {
 
 
   async function auth_intra42() {
-    const response = await axios.get("http://localhost:8000/api/auth_intra/" , {
+    const response = await axios.get("http://10.13.1.9:8000/api/auth_intra/" , {
       withCredentials: true
     });
     try {
@@ -34,7 +34,7 @@ export default function AuthProvider ({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
-        const res = await axios.post(`http://localhost:8000/api/login/`,params,{withCredentials: true});
+        const res = await axios.post(`http://10.13.1.9:8000/api/login/`,params,{withCredentials: true});
         if (res.status === 200){
           
           toast.success("login success",
@@ -67,7 +67,7 @@ export default function AuthProvider ({ children }) {
 
   async function get_auth_user() {
     try {
-      const res = await axios.get(`http://localhost:8000/api/user/`, {
+      const res = await axios.get(`http://10.13.1.9:8000/api/user/`, {
         withCredentials: true
       });
       
@@ -86,7 +86,7 @@ export default function AuthProvider ({ children }) {
 async function Logout () {
   
     try {
-      const res = await axios.get(`http://localhost:8000/api/logout/`,{
+      const res = await axios.get(`http://10.13.1.9:8000/api/logout/`,{
         withCredentials: true,
 
       });

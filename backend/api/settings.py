@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+ 
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -209,7 +209,9 @@ JWT_REFRESH_TOKEN_LIFETIME = REFRESH_TOKEN_LIFETIME
 CORS_ALLOW_ALL_ORIGINS = True  # Set to True for development, but not recommended for production
 
 CORS_ALLOWED_ORIGINS = [
+    "http://10.13.1.9:3000",
     "http://localhost:3000",
+    "http://*"
     ]
 
 DATABASES = {
@@ -224,6 +226,13 @@ DATABASES = {
 }
 
 
+
+
+# Adjust settings only in development
+SESSION_COOKIE_SECURE = False  # Set to True in production
+CSRF_COOKIE_SECURE = False     # Set to True in production
+SESSION_COOKIE_SAMESITE = None # Set to 'Lax' or 'Strict' in production if cross-site access is not needed
+CSRF_COOKIE_SAMESITE = None    # Same here
 
 
 #************  khbouych ************

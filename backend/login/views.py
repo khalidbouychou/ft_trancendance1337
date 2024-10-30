@@ -135,8 +135,10 @@ class PlayerViewSet(viewsets.ModelViewSet):
             }
 
             response = Response(data, status=status.HTTP_200_OK)
-            response.set_cookie(key='token', value=tokens['access'], secure=True , httponly=True ,samesite='None' ) 
-            response.set_cookie(key='refresh', value=tokens['refresh'], secure=True , httponly=True , samesite='None')
+             # Check if the request is secure (HTTPS)
+            is_secure = request.is_secure()
+            response.set_cookie(key='token', value=tokens['access'], secure=is_secure , httponly=True ,samesite='Lax' ) 
+            response.set_cookie(key='refresh', value=tokens['refresh'], secure=is_secure , httponly=True , samesite='Lax') 
             
             return response
         except requests.RequestException as e:
@@ -266,10 +268,11 @@ class SigninForm(generics.CreateAPIView):
             login(request, getuser)
             refresh = RefreshToken.for_user(getuser)
             access = str(refresh.access_token)
-            
+            # Check if the request is secure (HTTPS)
+            is_secure = request.is_secure()
             response = Response(status=status.HTTP_200_OK) 
-            response.set_cookie(key='token', value=access , secure=True , httponly=True ,samesite='None')
-            response.set_cookie(key='refresh', value=refresh , secure=True , httponly=True ,samesite='None')
+            response.set_cookie(key='token', value=access , secure=is_secure, httponly=True ,samesite='Lax')
+            response.set_cookie(key='refresh', value=refresh , secure=is_secure, httponly=True ,samesite='Lax')
             return response
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)  
