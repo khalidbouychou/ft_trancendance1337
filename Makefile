@@ -6,6 +6,9 @@ ssl:
 up:
 	@docker-compose up
 
+down :
+	@docker-compose down
+
 build:
 	@rm -rf db
 	@docker-compose build --no-cache && docker-compose up

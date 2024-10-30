@@ -15,21 +15,22 @@ import os
 from datetime import timedelta
 from django.conf import settings
 from corsheaders.defaults import default_headers
-from dotenv import load_dotenv  # Import dotenv here
+
+from dotenv import load_dotenv
+# Load the .env file
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# Load the .env file
-load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+ 
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -208,13 +209,17 @@ JWT_REFRESH_TOKEN_LIFETIME = REFRESH_TOKEN_LIFETIME
 
 CORS_ALLOW_ALL_ORIGINS = True  # Set to True for development, but not recommended for production
 
+# Read environment variables
+ip_frontendl = os.getenv("IP_FRONTEND")
+ip_backend = os.getenv("IP_BACKEND")
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    origin for origin in [ip_frontendl, ip_backend] if origin  
     ]
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql', 
         'NAME': os.getenv("POSTGRES_DB"),
         'USER': os.getenv("POSTGRES_USER"),
         'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
@@ -224,6 +229,13 @@ DATABASES = {
 }
 
 
+
+
+# Adjust settings only in development
+SESSION_COOKIE_SECURE = False  # Set to True in production
+CSRF_COOKIE_SECURE = False     # Set to True in production
+SESSION_COOKIE_SAMESITE = None # Set to 'Lax' or 'Strict' in production if cross-site access is not needed
+CSRF_COOKIE_SAMESITE = None    # Same here
 
 
 #************  khbouych ************
