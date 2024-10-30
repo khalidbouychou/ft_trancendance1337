@@ -5,6 +5,8 @@ import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import AuthProvider from './UserContext/Context.jsx'
 
+
+
 // Add error handlers before rendering the app
 window.addEventListener('error', (event) => {
   if (event.target?.src?.includes('http://10.13.1.9:8000/api/user/')) {

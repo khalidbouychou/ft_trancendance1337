@@ -13,7 +13,7 @@ console.error = (...args) => {
   const isApiError = args.some(
     (arg) =>
       typeof arg === "string" &&
-      (arg.includes("http://10.13.1.9:8000/api/user") ||
+      (arg.includes("http://localhostuser") ||
         arg.includes("api/signup"))
   );
 

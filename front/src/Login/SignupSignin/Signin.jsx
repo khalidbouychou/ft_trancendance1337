@@ -15,7 +15,7 @@ const Signin = () => {
   const handelogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://10.13.1.9:8000/api/singin/", {
+      const response = await axios.post("http://localhostsingin/", {
         username,
         password,
       }, {

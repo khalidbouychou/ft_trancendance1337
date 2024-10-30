@@ -17,6 +17,7 @@
     "@syncfusion/ej2-react-inputs": "^26.2.14",
     "axios": "^1.7.5",
     "chart.js": "^4.4.4",
+    "dotenv": "^16.4.5",
     "js-cookie": "^3.0.5",
     "prop-types": "^15.8.1",
     "qrcode.react": "^4.0.1",

@@ -193,7 +193,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                         response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK)
                         response.delete_cookie('token') 
                         response.delete_cookie('refresh')  
-                        response.delete_cookie('csrftoken')  
+                        response.delete_cookie('csrftoken')   
                         return response
                     else:
                         return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
