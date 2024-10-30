@@ -214,7 +214,11 @@ ip_frontendl = os.getenv("IP_FRONTEND")
 ip_backend = os.getenv("IP_BACKEND")
 
 CORS_ALLOWED_ORIGINS = [
-    origin for origin in [ip_frontendl, ip_backend] if origin  
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'http://10.13.1.9:3000',
+    'http://10.13.1.9',
+    'http://10.13.1.9:8000',
     ]
 
 DATABASES = {
@@ -222,7 +226,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql', 
         'NAME': os.getenv("POSTGRES_DB"),
         'USER': os.getenv("POSTGRES_USER"),
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"), 
         'HOST': os.getenv("POSTGRES_HOST"),
         'PORT': os.getenv("POSTGRES_PORT"),
     }
