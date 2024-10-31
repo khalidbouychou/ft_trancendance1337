@@ -4,7 +4,6 @@ ssl:
 	@bash ./generate-ssl.sh
 
 up:
-
 	@docker-compose up
 
 down :
@@ -28,7 +27,7 @@ clean:
 	@rm -rf */*/.env
 	@rm -rf */*/.env.example
 	@rm -rf front/certs
-	@rm -rf backend
+	@rm -rf backend/certs
 	@rm -rf db
 
 	@rm -rf front/node_modules front/package-lock.json
