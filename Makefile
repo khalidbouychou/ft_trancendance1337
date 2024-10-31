@@ -29,6 +29,7 @@ clean:
 	@rm -rf */*/.env.example
 	@rm -rf front/certs
 	@rm -rf backend
+	@rm -rf db
 
 	@rm -rf front/node_modules front/package-lock.json
 	@docker-compose down
