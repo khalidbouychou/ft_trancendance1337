@@ -13,7 +13,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
 
     e.preventDefault();
     try {
-      const res = await axios.post("http://10.13.1.9:8000/api/signup/", {
+      const res = await axios.post("http://localhost:8000/api/signup/", {
         username,
         profile_name: displayname,
         password
@@ -30,7 +30,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
         , 2000);
       }
     } catch (err) {
-      toast.error("Opps something went wrong",
+      toast.error("Opps something went wrong",  
       {
         position: "top-right",
         autoClose: 1000,
@@ -45,7 +45,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
         type="text" required
         name="username"
         placeholder="Username"
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={(e) => setUsername(e.target.value)} 
         value={username}
         className="input signup-input"
         />
@@ -73,7 +73,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
       </div>
     </form>
     <ToastContainer />
-        </>
+    </>
   );
 };
 
