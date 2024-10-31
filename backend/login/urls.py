@@ -1,6 +1,6 @@
 
 from django.urls import path, include
-from .views import PlayerViewSet, SignupForm, SigninForm , generate_qrcode
+from .views import PlayerViewSet, SignupForm, SigninForm , generate_qrcode , LogoutView
 from rest_framework import routers
 # from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView
 
@@ -13,7 +13,7 @@ urlpatterns = [
     path('login/', PlayerViewSet.as_view({'post': 'login'})),
     path('auth_intra/', PlayerViewSet.as_view({'get': 'auth_intra'})),
     path('users/', PlayerViewSet.as_view({'get': 'getusers'})),
-    path('logout/', PlayerViewSet.as_view({'get': 'logout'})),
+    path('logout/', LogoutView.as_view(), name='logout'),
     path('health/', health_check, name='health_check'),
     # path('<str:username>/', PlayerViewSet.as_view({'get': 'get_auth_user'})),
     path('user/', AuthUser.as_view(), name='auth_user'),

@@ -9,14 +9,17 @@ import {useLocation} from 'react-router-dom';
 import { useEffect } from "react";
 import { useContext } from "react";
 import { AuthContext } from "./UserContext/Context";
+import { useNavigate } from "react-router-dom";
 
 
 const Layout = () => {
+  const navigate = useNavigate();
   const location = useLocation();
  const {user ,get_auth_user} = useContext(AuthContext);
 
   useEffect(() => {
-    !user && get_auth_user()
+    console.log("user", user)
+    user ? get_auth_user(): navigate("/login")
   }
   , [])
   return (

@@ -2,7 +2,7 @@
 from rest_framework.response import Response
 import requests
 from django.contrib.auth.models import User
-from .serializers import PlayerSerializer , SignupSerializer , SigninSerializer
+from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer
 from .models import Player as Player
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken
@@ -18,6 +18,7 @@ from rest_framework.decorators import action
 import os
 from django.http import HttpResponse
 from rest_framework import generics
+from django.forms.models import model_to_dict
 
 from rest_framework import status
 
@@ -169,58 +170,73 @@ class PlayerViewSet(viewsets.ModelViewSet):
             return False, None, f"Authentication error: {str(e)}"
     
  
-  
 
-    def logout(self, request):
+
+#------------------------------------------------------------------------------------------------
+
+
+#------------------------------------------------------------------------------------------------
+
+
+class LogoutView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
         try:
-            token = request.COOKIES.get('token')
-            if token:
-                try:
-                    access_token = AccessToken(token)
-                    if not access_token:
-                        return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
-                    user_id = access_token.payload.get('user_id')
-                    if not user_id:
-                        return Response({'error': 'No user ID found in token'}, status=status.HTTP_400_BAD_REQUEST)
-                    user = Player.objects.filter(id=user_id).first()
-                    if user and user.is_authenticated:
-                        user.status_network = 'offline'
-                        user.status_game = 'offline'
-                        user.save()
-                        blacklisted_token = OutstandingToken.objects.filter(user=user)
-                        blacklisted_token.delete()
-                        django_logout(request)
-                        response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK)
-                        response.delete_cookie('token') 
-                        response.delete_cookie('refresh')  
-                        response.delete_cookie('csrftoken')   
-                        return response
-                    else:
-                        return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
-                except TokenError:
-                    return Response({'error': 'Given token not valid for any token type'}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({'error': 'No valid authentication found'}, status=status.HTTP_400_BAD_REQUEST)
+            user = request.user
+            if not user.is_authenticated:
+                return Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
+            django_logout(request)
+            response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK) 
+            response.delete_cookie('token')
+            response.delete_cookie('refresh')
+            response.delete_cookie('sessionid')
+            response.delete_cookie('csrftoken')
+            return response
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-#------------------------------------------------------------------------------------------------
+
+
 class AuthUser(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
             user = request.user
+            token = request.COOKIES.get('token')
+            if not token:
+                django_logout(request)
+                response = Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+                response.delete_cookie('token')
+                response.delete_cookie('refresh')
+                response.delete_cookie('sessionid')
+                response.delete_cookie('csrftoken')
+            isvalid = AccessToken(token)
+            if not isvalid:
+                django_logout(request)
+                response = Response({'error': 'Invalid token or expired'}, status=status.HTTP_400_BAD_REQUEST)
+                response.delete_cookie('token')
+                response.delete_cookie('refresh')
+                response.delete_cookie('sessionid')
+                response.delete_cookie('csrftoken')
             if user.is_authenticated:
                 data = {
                    'data': PlayerSerializer(user).data,
-                   'token': request.COOKIES.get('token'),
+                   'token': request.COOKIES.get('token'), 
                 }
                 return Response(data, status=status.HTTP_200_OK)
             else:
-                return Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
+                django_logout(request)
+                response = Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
+                response.delete_cookie('token')
+                response.delete_cookie('refresh')
+                response.delete_cookie('sessionid')
+                response.delete_cookie('csrftoken')
+                return response
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST) 
+
 #------------------------------------------------------------------------------------------------
 
 class VerifyToken(APIView): 
@@ -273,6 +289,22 @@ class SigninForm(generics.CreateAPIView):
             response = Response(status=status.HTTP_200_OK) 
             response.set_cookie(key='token', value=access , secure=is_secure, httponly=True ,samesite='Lax')
             response.set_cookie(key='refresh', value=refresh , secure=is_secure, httponly=True ,samesite='Lax')
+            user = model_to_dict(getuser)
+            data = {
+                'username': user['username'],
+                'avatar': user['avatar'],
+                'profile_name': user['profile_name'],
+                'status_network': 'online',
+                'status_game': user['status_game'],
+                'two_factor': user['two_factor'],
+                'otp': user['otp'],
+                'otp_verified': user['otp_verified'],
+                'is_authenticated': request.user.is_authenticated,
+                'token': access,            
+            }
+            response.data = {
+                'user' : data,
+            }               
             return response
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

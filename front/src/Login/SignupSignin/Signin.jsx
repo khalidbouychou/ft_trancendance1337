@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Signin = () => {
-  const { url, auth_intra42, user, get_auth_user } = useContext(AuthContext);
+  const { url, auth_intra42 , setUser } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -15,14 +15,23 @@ const Signin = () => {
   const handelogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://10.13.1.9:8000/api/singin/", {
+      if (!username || !password) {
+        toast.error("Please fill all the fields",
+        {
+          position: "top-right",
+          autoClose: 1000,
+        });
+        return;
+      }
+
+        const response = await axios.post("http://localhost:8000/api/singin/", {
         username,
         password,
       }, {
         withCredentials: true,
       });
-
       if (response.status === 200) {
+        setUser(response.data.user);
         toast.success("login success",
         {
           position: "top-right",
@@ -32,7 +41,7 @@ const Signin = () => {
         setTimeout(() => {
           navigate("/");
           
-        }, 1500);
+        }, 1300);
       }
     } catch (err) {
       toast.error("login failed",
