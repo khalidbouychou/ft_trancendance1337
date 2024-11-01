@@ -13,4 +13,6 @@ dj-rest-auth==2.1.3
 djangorestframework-simplejwt==5.0.0
 pyotp
 qrcode
-pillow 
+pillow
+ # this to save the session in the redis server thats help to make the chat work in the real time
+channels_redis # this for channels_redis to save the session in the redis server thats help to make the chat work in the real time and when containers restart the session still saved

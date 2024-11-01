@@ -67,9 +67,14 @@ ASGI_APPLICATION = 'api.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],  # Use the service name from docker-compose
+        },
     },
 }
+
 
 ROOT_URLCONF = 'api.urls'
 APPEND_SLASH = True

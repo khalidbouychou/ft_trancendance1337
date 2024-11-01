@@ -1,9 +1,37 @@
 version: "3.8"
 
-volumes:
-  db_volume:
+networks:
+  connexion:
+    driver: bridge
 
 services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - "80:80"
+    networks:
+      - connexion
+    depends_on: 
+      - back
+      - front
+    restart: always
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - connexion
+    restart: always
+    volumes:
+      - .:/data
+    depends_on:
+      - back
+      - front
+      - postgres
+
   postgres:
     container_name: postgres
     image: postgres
@@ -27,8 +55,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-
-   
 
   back:
     container_name: backend
@@ -67,6 +93,3 @@ services:
       back :
         condition: service_healthy
     restart: always
-networks:
-  connexion:
-    driver: bridge

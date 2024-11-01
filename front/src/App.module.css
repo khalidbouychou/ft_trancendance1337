@@ -2,6 +2,7 @@ body{
   background:linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.01)),  url('./background.svg') no-repeat center center;
   background-size: cover;
   color: aliceblue;
+  
 
 }
 
