@@ -8,7 +8,7 @@ from django.contrib.auth.hashers import make_password
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = [ 'username', 'avatar' ,'profile_name', 'oldtoken']
+        fields = [ 'username', 'avatar' ,'profile_name']
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
@@ -61,7 +61,6 @@ class SigninSerializer(serializers.ModelSerializer):
 
         # If authentication is successful, return the validated data
         return data
-
 
 
 

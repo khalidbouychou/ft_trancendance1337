@@ -14,18 +14,18 @@ class Player(AbstractUser):
         ('playing', _('playing')),
         ('offline', _('offline')),
     )
-    avatar = models.URLField(max_length=200, default='backend/uploads/avatar.jpg')
+    avatar = models.URLField(max_length=200, default='../uploads/avatar.jpg')
     profile_name = models.CharField(max_length=50, default='Player')
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
     status_game = models.CharField(max_length=10, choices=GAME_STATUS, default='offline')
     two_factor = models.BooleanField(default=False)
-    # mfa_secret = models.CharField(max_length=16, default='' ,blank=True , null=True) 
-    otp = models.CharField(max_length=6, default='000000')
+    mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False) 
     otp_verified = models.BooleanField(default=False)
-    oldtoken = models.CharField(max_length=300, default='')
+    qrcode_path = models.CharField(max_length=255, default='', blank=False, null=False) 
     
-    class Meta:
-        db_table = 'player'
+    
+    class Meta: 
+        db_table = 'player' 
 
 #     def save(self, *args, **kwargs):
 #         if self.status_network == 'offline':
@@ -59,5 +59,8 @@ class Player(AbstractUser):
 #     class Meta:
 #         db_table = 'Friend'
 #         unique_together = ['user1', 'user2', 'status']
+
+
+
 
        

@@ -1,6 +1,6 @@
 
 from django.urls import path, include
-from .views import PlayerViewSet, SignupForm, SigninForm , generate_qrcode , LogoutView
+from .views import PlayerViewSet, SignupForm, SigninForm , GenerateQRcode ,DesableTwoFactor , LogoutView
 from rest_framework import routers
 # from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView
 
@@ -20,5 +20,6 @@ urlpatterns = [
     path ('verifytoken/', VerifyToken.as_view(), name='verify_token'),
     path('signup/', SignupForm.as_view(), name='signup'),
     path('singin/', SigninForm.as_view(), name='singin'),
-    path('generate_qrcode/',generate_qrcode.as_view(), name='generate_qtcode'), 
+    path('qrcode/',GenerateQRcode.as_view(), name='qrcode'),
+    path('d_2fa/',DesableTwoFactor.as_view(), name='disabletwofactor'),  
     ]

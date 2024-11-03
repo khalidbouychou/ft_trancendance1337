@@ -5,13 +5,12 @@ from django.contrib.auth.models import User
 from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer
 from .models import Player as Player
 from rest_framework import viewsets, status
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken
-from rest_framework.authentication import SessionAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken ,TokenError
+
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.contrib.auth import login , logout as django_logout
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import logout 
+
 from rest_framework_simplejwt.exceptions import TokenError
 from datetime import timedelta
 from rest_framework.decorators import action
@@ -20,13 +19,19 @@ from django.http import HttpResponse
 from rest_framework import generics
 from django.forms.models import model_to_dict
 
-from rest_framework import status
+
 
 import jwt
 
 from rest_framework.exceptions import AuthenticationFailed
 
 from rest_framework.views import APIView
+import pyotp
+import time
+import qrcode
+from rest_framework.decorators import api_view  , permission_classes , authentication_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 
 #--------------------------------------------------------------------------------------------
 
@@ -128,9 +133,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                     'status_network': user.status_network,
                     'status_game': user.status_game,
                     'two_factor': user.two_factor,
-                    'otp': user.otp,
                     'otp_verified': user.otp_verified,
-                    'two_factor': user.two_factor,
                     
                 },
             }
@@ -201,6 +204,7 @@ class LogoutView(APIView):
 class AuthUser(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         try:
             user = request.user
@@ -212,30 +216,28 @@ class AuthUser(APIView):
                 response.delete_cookie('refresh')
                 response.delete_cookie('sessionid')
                 response.delete_cookie('csrftoken')
-            isvalid = AccessToken(token)
-            if not isvalid:
+                return response
+
+            try:
+                isvalid = AccessToken(token)
+                # Token is valid
+                print("isvalid-----", isvalid)
+                print("token-------", token)
+            except TokenError as e:
+                # Token is invalid or expired
                 django_logout(request)
                 response = Response({'error': 'Invalid token or expired'}, status=status.HTTP_400_BAD_REQUEST)
                 response.delete_cookie('token')
                 response.delete_cookie('refresh')
                 response.delete_cookie('sessionid')
                 response.delete_cookie('csrftoken')
-            if user.is_authenticated:
-                data = {
-                   'data': PlayerSerializer(user).data,
-                   'token': request.COOKIES.get('token'), 
-                }
-                return Response(data, status=status.HTTP_200_OK)
-            else:
-                django_logout(request)
-                response = Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
-                response.delete_cookie('token')
-                response.delete_cookie('refresh')
-                response.delete_cookie('sessionid')
-                response.delete_cookie('csrftoken')
                 return response
+
+            # If token is valid, proceed with the response
+            return Response({'msg': 'Token is valid'}, status=status.HTTP_200_OK)
+
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST) 
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 #------------------------------------------------------------------------------------------------
 
@@ -289,21 +291,25 @@ class SigninForm(generics.CreateAPIView):
             response = Response(status=status.HTTP_200_OK) 
             response.set_cookie(key='token', value=access , secure=is_secure, httponly=True ,samesite='Lax')
             response.set_cookie(key='refresh', value=refresh , secure=is_secure, httponly=True ,samesite='Lax')
-            user = model_to_dict(getuser)
-            data = {
-                'username': user['username'],
-                'avatar': user['avatar'],
-                'profile_name': user['profile_name'],
-                'status_network': 'online',
-                'status_game': user['status_game'],
-                'two_factor': user['two_factor'],
-                'otp': user['otp'],
-                'otp_verified': user['otp_verified'],
-                'is_authenticated': request.user.is_authenticated,
-                'token': access,            
-            }
+            removedfilieds =[
+                'password',
+                'mfa_secret',
+                'first_name',
+                'last_name',
+                'email',
+                'is_superuser',
+                'is_staff',
+                'is_active',
+                'date_joined',
+                'last_login',
+                'groups',
+                'user_permissions',
+                'is_online',
+                'is_staff',
+            ]
             response.data = {
-                'user' : data,
+                'user' : model_to_dict(getuser, exclude=removedfilieds),
+                'token': access,
             }               
             return response
         except Exception as e:
@@ -313,24 +319,45 @@ class SigninForm(generics.CreateAPIView):
 #------------------------------------------------------------------------------------------------
 
 
-import pyotp
-import time
-import qrcode
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.decorators import api_view  , permission_classes , authentication_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication
 
-class generate_qrcode(APIView):
+
+class GenerateQRcode(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self,request):
-        print("-------------------->",request.user)    
-        key = pyotp.random_base32()
-        totp = pyotp.TOTP(key)
-        url = totp.provisioning_uri(name=request.user.username, issuer_name='ft_transcendence')
-        img = qrcode.make(url)
-        img.save('uploads/qrcode.png')
-        path_qrcode = 'http://localhost:8000/uploads/qrcode.png'
-        return Response({'path': path_qrcode}, status=status.HTTP_200_OK)
+        print("-------------------->",request.user)
+        user = request.user
+        user.mfa_secret = pyotp.random_base32()
+        url  = qrcode.make(pyotp.totp.TOTP(user.mfa_secret).provisioning_uri(name=user.username, issuer_name='ft_transcendence'))
+        createdir = os.path.exists('uploads') #check if the directory exists 
+        if not createdir:
+            os.makedirs('uploads')
+        url.save(f'uploads/{user.username}.png') 
+        user.qrcode_path = f'uploads/{user.username}.png'
+        user.save()
+        response = Response({'msg': 'QR code generated'}, status=status.HTTP_200_OK)
+        response.data = {
+            'path': user.qrcode_path,
+        }
+        return response
+
+
+class DesableTwoFactor(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        user = request.user
+        if not user.qrcode_path:
+            return Response({'error': 'No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
+        user.two_factor = False
+        user.otp_is_verified = False
+        user.mfa_secret = ''
+        if os.path.exists(user.qrcode_path):
+            os.remove(user.qrcode_path)
+        user.qrcode_path = ""        
+        user.save()
+        response = Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
+        response.data = {
+            'path': user.qrcode_path,
+        }
+        return response

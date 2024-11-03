@@ -18,7 +18,7 @@ const Layout = () => {
  const {user ,get_auth_user} = useContext(AuthContext);
 
   useEffect(() => {
-    console.log("user", user)
+    console.log("layout user", user)
     user ? get_auth_user(): navigate("/login")
   }
   , [])

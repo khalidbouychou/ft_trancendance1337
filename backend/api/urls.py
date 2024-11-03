@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.urls import path, include
 from login import views
 from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView, TokenVerifyView
+from django.conf import settings 
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,4 +16,4 @@ urlpatterns = [
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     # path('api/chat/', include('chat.urls')),
     # path('api/notif/', include('notification.urls')),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) 

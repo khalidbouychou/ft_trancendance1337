@@ -75,12 +75,12 @@ export default function AuthProvider({ children }) {
       if (res.status === 200) {
         setUser(res.data);
         if (window.location.pathname === "/login") {
-          navigate("/home");
+          navigate("/");
         }
       }
     } catch (error) {
-      navigate("/login");
       setUser(null);
+      navigate("/login");
     }
   }
 
@@ -95,7 +95,8 @@ export default function AuthProvider({ children }) {
         navigate("/login");
       }
     } catch (error) {
-      navigate("/login");
+        setUser(null);
+      // navigate("/login");
     }
   }
 
@@ -103,13 +104,14 @@ export default function AuthProvider({ children }) {
     () => {
       Login();
     },
-    [window.location.pathname]
+    []
   );
   useEffect(
     () => {
-      user && get_auth_user();
+      console.log("constext user", user);
+      !user && get_auth_user();
     },
-    [window.location.pathname]
+    [user , location.pathname]
   );
   return (
     <AuthContext.Provider
