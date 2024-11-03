@@ -8,7 +8,7 @@ from django.contrib.auth.hashers import make_password
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = [ 'username', 'avatar' ,'profile_name']
+        fields = '__all__'
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
@@ -36,7 +36,8 @@ class SignupSerializer(serializers.ModelSerializer):
 class SigninSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ['username', 'password']
+        # fields = ['username', 'password']
+        fields = '__all__'
         extra_kwargs = {
             'password': {'write_only': True, 'required': True, 'min_length': 8, 'max_length': 16},
             'username': {'required': True, 'min_length': 9, 'max_length': 16}

@@ -120,26 +120,9 @@ class PlayerViewSet(viewsets.ModelViewSet):
             authenticate(request, username=user_data['username'])
             login(request, user)
             tokens = self.create_jwt_token(user)
-            user.oldtoken = tokens['access']
             user.save()
-            data = {
-                'user': {
-                    'token': tokens['access'],
-                    'refresh': tokens['refresh'],
-                    'username': user.username,
-                    'avatar': user.avatar,
-                    'is_authenticated': request.user.is_authenticated,
-                    'profile_name': user.profile_name,
-                    'status_network': user.status_network,
-                    'status_game': user.status_game,
-                    'two_factor': user.two_factor,
-                    'otp_verified': user.otp_verified,
-                    
-                },
-            }
-
+            data= PlayerSerializer(user).data
             response = Response(data, status=status.HTTP_200_OK)
-             # Check if the request is secure (HTTPS)
             is_secure = request.is_secure()
             response.set_cookie(key='token', value=tokens['access'], secure=is_secure , httponly=True ,samesite='Lax' ) 
             response.set_cookie(key='refresh', value=tokens['refresh'], secure=is_secure , httponly=True , samesite='Lax') 
@@ -220,21 +203,20 @@ class AuthUser(APIView):
 
             try:
                 isvalid = AccessToken(token)
-                # Token is valid
-                print("isvalid-----", isvalid)
-                print("token-------", token)
             except TokenError as e:
-                # Token is invalid or expired
-                django_logout(request)
-                response = Response({'error': 'Invalid token or expired'}, status=status.HTTP_400_BAD_REQUEST)
-                response.delete_cookie('token')
-                response.delete_cookie('refresh')
-                response.delete_cookie('sessionid')
-                response.delete_cookie('csrftoken')
+                refresh = request.COOKIES.get('refresh')
+                crstf = request.COOKIES.get('csrftoken')
+                res = requests.post('http://localhost:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
+                res.raise_for_status() # Raise an exception if the status code is not 2xx
+                access = res.json().get('access')
+                refresh = res.json().get('refresh')
+                is_secure = request.is_secure()
+                response = Response({'msg': 'Token refreshed'}, status=status.HTTP_200_OK)
+                response.set_cookie(key='token', value=access , secure=is_secure, httponly=True ,samesite='Lax')
+                response.set_cookie(key='refresh', value=refresh , secure=is_secure, httponly=True ,samesite='Lax')
                 return response
-
-            # If token is valid, proceed with the response
-            return Response({'msg': 'Token is valid'}, status=status.HTTP_200_OK)
+            userdata = SigninSerializer(user).data
+            return Response({'msg': 'Token is valid' , 'user' :userdata}, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

@@ -125,7 +125,6 @@ export default function AuthProvider({ children }) {
         Login,
         auth_intra42,
         get_auth_user,
-        setUser
       }}
     >
       {children}
