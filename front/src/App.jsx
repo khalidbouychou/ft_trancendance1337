@@ -8,21 +8,6 @@ import Layout from "./Layout.jsx";
 import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
 
 import Twofa from "./Login/2fa/twofa.jsx";
-const originalConsoleError = console.error;
-console.error = (...args) => {
-  // Check if the error is related to your API calls
-  const isApiError = args.some(
-    arg =>
-      typeof arg === "string" &&
-      (arg.includes("http://localhost:8000/api/user") ||
-        arg.includes("api/signup"))
-  );
-
-  // Don't log API-related errors
-  if (!isApiError) {
-    originalConsoleError.apply(console, args);
-  }
-};
 
 function App() {
   const [loading, setLoading] = useState(true);

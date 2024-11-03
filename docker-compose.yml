@@ -5,32 +5,32 @@ networks:
     driver: bridge
 
 services:
-  nginx:
-    container_name: nginx
-    image: nginx
-    ports:
-      - "80:80"
-    networks:
-      - connexion
-    depends_on: 
-      - back
-      - front
-    restart: always
+  # nginx:
+  #   container_name: nginx
+  #   image: nginx
+  #   ports:
+  #     - "80:80"
+  #   networks:
+  #     - connexion
+  #   depends_on: 
+  #     - back
+  #     - front
+  #   restart: always
 
-  redis:
-    container_name: redis
-    image: redis
-    ports:
-      - 6379:6379
-    networks:
-      - connexion
-    restart: always
-    volumes:
-      - .:/data
-    depends_on:
-      - back
-      - front
-      - postgres
+  # redis:
+  #   container_name: redis
+  #   image: redis
+  #   ports:
+  #     - 6379:6379
+  #   networks:
+  #     - connexion
+  #   restart: always
+  #   volumes:
+  #     - .:/data
+  #   depends_on:
+  #     - back
+  #     - front
+  #     - postgres
 
   postgres:
     container_name: postgres
