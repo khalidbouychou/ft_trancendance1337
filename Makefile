@@ -41,7 +41,7 @@ clean:
 	@rm -rf ./frontd/certs
 	@rm -rf ./backend/certs
 
-push:
+push: clean
 	@git add .
 	@git commit -m "$(m)"
 	@git push

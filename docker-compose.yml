@@ -58,7 +58,7 @@ services:
 
   back:
     container_name: backend
-    build: ./backend
+    build: backend/docker-backend
     env_file:
       - .env
     ports:
@@ -81,7 +81,7 @@ services:
   front:
     container_name: front
     build:
-      context: ./front
+      context: ./front/docker-front
     ports:
       - "5173:5173"
     networks:
