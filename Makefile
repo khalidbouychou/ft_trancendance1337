@@ -19,6 +19,10 @@ docker:
 	@./deployment/initdocker.sh
 
 clean:
+	@rm -rf **/node_modules
+	@rm -rf backend/uploads
+	@rm -rf deployment
+	@rm -rf front/README.md
 	@rm -rf /**/node_modules
 	@rm -rf /**/package-lock.json
 	@rm -rf */*/migrations

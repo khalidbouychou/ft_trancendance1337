@@ -109,8 +109,8 @@ export default function AuthProvider({ children }) {
   useEffect(
     () => {
       // console.log("constext user", user);
-      // !user && get_auth_user();
-      get_auth_user();
+      !user && get_auth_user();
+      // get_auth_user();
     },
     [location.pathname]
   );

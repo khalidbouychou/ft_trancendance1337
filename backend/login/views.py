@@ -10,34 +10,28 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , Blacklis
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.contrib.auth import login , logout as django_logout
-
-from rest_framework_simplejwt.exceptions import TokenError
 from datetime import timedelta
-from rest_framework.decorators import action
-import os
-from django.http import HttpResponse
+import os 
 from rest_framework import generics
 from django.forms.models import model_to_dict
-
-
-
 import jwt
-
 from rest_framework.exceptions import AuthenticationFailed
-
 from rest_framework.views import APIView
 import pyotp
 import time
 import qrcode
-from rest_framework.decorators import api_view  , permission_classes , authentication_classes
+from rest_framework.decorators import api_view  , permission_classes , authentication_classes ,action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 
-#--------------------------------------------------------------------------------------------
+#---------------------------------CHECK HEALTH OF THE BACKEND-----------------------------------------------------------
 
 def health_check(request):
     return HttpResponse("OK", status=200)
-#--------------------------------------------------------------------------------------------
+#---------------------------------CHECK HEALTH OF THE BACKEND-----------------------------------------------------------
+
+#------------------------------------LOGIN INTRA------------------------------------------------------------
+
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
@@ -158,10 +152,10 @@ class PlayerViewSet(viewsets.ModelViewSet):
  
 
 
-#------------------------------------------------------------------------------------------------
+#------------------------------------LOGIN INTRA------------------------------------------------------------
 
 
-#------------------------------------------------------------------------------------------------
+#-----------------------------------Logout-------------------------------------------------------------
 
 
 class LogoutView(APIView):
@@ -193,8 +187,8 @@ class AuthUser(APIView):
             user = request.user
             token = request.COOKIES.get('token')
             if not token:
-                django_logout(request)
                 response = Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+                django_logout(request)
                 response.delete_cookie('token')
                 response.delete_cookie('refresh')
                 response.delete_cookie('sessionid')
@@ -202,7 +196,7 @@ class AuthUser(APIView):
                 return response
 
             try:
-                isvalid = AccessToken(token)
+                isvalid = AccessToken(token) # Check if the token is valid
             except TokenError as e:
                 refresh = request.COOKIES.get('refresh')
                 crstf = request.COOKIES.get('csrftoken')
@@ -211,42 +205,19 @@ class AuthUser(APIView):
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')
                 is_secure = request.is_secure()
-                response = Response({'msg': 'Token refreshed'}, status=status.HTTP_200_OK)
+                user_data = SigninSerializer(user).data
+                response = Response({'msg': 'Token refreshed', 'user':user_data}, status=status.HTTP_200_OK)
                 response.set_cookie(key='token', value=access , secure=is_secure, httponly=True ,samesite='Lax')
                 response.set_cookie(key='refresh', value=refresh , secure=is_secure, httponly=True ,samesite='Lax')
                 return response
             userdata = SigninSerializer(user).data
-            return Response({'msg': 'Token is valid' , 'user' :userdata}, status=status.HTTP_200_OK)
+            return Response({'user' :userdata}, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+#-----------------------------------Logout-------------------------------------------------------------
 
-#------------------------------------------------------------------------------------------------
-
-class VerifyToken(APIView): 
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
-    def get (self, request):
-        try:
-            serializer = PlayerSerializer(request.user).data
-            if not serializer.get('oldtoken'):
-                return Response({'error': 'No old token found'}, status=status.HTTP_400_BAD_REQUEST)
-            oldtoken = serializer.get('oldtoken')
-            if not oldtoken:
-                return Response({'error': 'No old token found'}, status=status.HTTP_400_BAD_REQUEST)
-            token = request.COOKIES.get('token')
-            if not token:
-                return Response({'error': 'No token found'}, status=status.HTTP_400_BAD_REQUEST)
-            payload = jwt.decode(token, os.environ.get('SECRET_KEY'), algorithms=['HS256'])
-            if not payload:
-                return Response({'error': 'No payload found in token'}, status=status.HTTP_400_BAD_REQUEST)
-        except jwt.ExpiredSignatureError:
-            return Response({'error': 'Token expired'}, status=status.HTTP_400_BAD_REQUEST)
-        except jwt.InvalidTokenError:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        
-        
+#-----------------------------------Form-------------------------------------------------------------
 
 class SignupForm (generics.CreateAPIView):
     queryset = Player.objects.all()
@@ -273,24 +244,8 @@ class SigninForm(generics.CreateAPIView):
             response = Response(status=status.HTTP_200_OK) 
             response.set_cookie(key='token', value=access , secure=is_secure, httponly=True ,samesite='Lax')
             response.set_cookie(key='refresh', value=refresh , secure=is_secure, httponly=True ,samesite='Lax')
-            removedfilieds =[
-                'password',
-                'mfa_secret',
-                'first_name',
-                'last_name',
-                'email',
-                'is_superuser',
-                'is_staff',
-                'is_active',
-                'date_joined',
-                'last_login',
-                'groups',
-                'user_permissions',
-                'is_online',
-                'is_staff',
-            ]
             response.data = {
-                'user' : model_to_dict(getuser, exclude=removedfilieds),
+                'user' : SigninSerializer(getuser).data,
                 'token': access,
             }               
             return response
@@ -298,10 +253,17 @@ class SigninForm(generics.CreateAPIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
 
-#------------------------------------------------------------------------------------------------
+#-----------------------------------Form-------------------------------------------------------------
+
+#-----------------------------------2FA-------------------------------------------------------------
 
 
-
+class UserStatus(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        user = request.user
+        return Response({'user': PlayerSerializer(user).data}, status=status.HTTP_200_OK)
 
 class GenerateQRcode(APIView):
     authentication_classes = [SessionAuthentication]
@@ -316,11 +278,13 @@ class GenerateQRcode(APIView):
             os.makedirs('uploads')
         url.save(f'uploads/{user.username}.png') 
         user.qrcode_path = f'uploads/{user.username}.png'
+        user.two_factor = True
         user.save()
         response = Response({'msg': 'QR code generated'}, status=status.HTTP_200_OK)
         response.data = {
-            'path': user.qrcode_path,
+            'user': PlayerSerializer(user).data,
         }
+        print("on 2fa -------",user.qrcode_path)
         return response
 
 
@@ -335,11 +299,12 @@ class DesableTwoFactor(APIView):
         user.otp_is_verified = False
         user.mfa_secret = ''
         if os.path.exists(user.qrcode_path):
-            os.remove(user.qrcode_path)
+            os.remove(user.qrcode_path) 
         user.qrcode_path = ""        
         user.save()
         response = Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
         response.data = {
-            'path': user.qrcode_path,
+            'user': PlayerSerializer(user).data,
         }
-        return response
+        return response 
+#-----------------------------------2FA-------------------------------------------------------------

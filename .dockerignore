@@ -12,3 +12,13 @@ backend/db.sqlite3
 **/.git
 **/.DS_Store
 # **/node_modules
+
+
+backend/env
+backend/.env
+backend/db.sqlite3
+
+backend/*/migrations
+backend/*/__pycache__
+backend/uploads
+deployment

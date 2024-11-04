@@ -5,5 +5,8 @@ backend/db.sqlite3
 
 backend/*/migrations
 backend/*/__pycache__
-
+backend/uploads
 deployment
+dump.rdb
+front/README.md
+**/README.md

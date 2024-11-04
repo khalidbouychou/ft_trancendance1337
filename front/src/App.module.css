@@ -1,5 +1,5 @@
 body{
-  background:linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.01)),  url('./background.svg') no-repeat center center;
+  background:linear-gradient(rgba(51, 7, 61, 0.01), rgba(0, 0, 0, 0.01)),  url('./background.svg') no-repeat center center;
   background-size: cover;
   color: aliceblue;
   

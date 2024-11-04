@@ -1,7 +1,6 @@
 
 /* Main container */
 .container {
-background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('./background.svg') no-repeat center center;
   background-size: cover;
   display: flex;
   /* background-color: rgba(30, 94, 222, 0.8); */
