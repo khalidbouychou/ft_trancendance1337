@@ -19,6 +19,7 @@ docker:
 	@./deployment/initdocker.sh
 
 clean:
+	@rm -rf dump.rdb
 	@rm -rf **/node_modules
 	@rm -rf backend/uploads
 	@rm -rf deployment
@@ -41,7 +42,7 @@ clean:
 	@rm -rf ./frontd/certs
 	@rm -rf ./backend/certs
 
-push: clean
+push: 
 	@git add .
 	@git commit -m "$(m)"
 	@git push
