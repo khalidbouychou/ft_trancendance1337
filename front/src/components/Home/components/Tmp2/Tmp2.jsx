@@ -10,7 +10,7 @@ import { RxTextAlignJustify } from "react-icons/rx";
 const Tmp2 = ({ Data, myData }) => {
   const [selectedTab, setSelectedTab] = useState("leaderBoard");
   const [daTa, setDaTa] = useState(Data.ping || [])
-  const [mydaTa, setMydaTa] = useState(myData.ping.ping_data[0] || [])
+  const [mydaTa, setMydaTa] = useState(myData.ping.data[0] || [])
   const total = 15 + 10;
   const winPercentage = (15 / total) * 100;
   const lossPercentage = (10 / total) * 100;

@@ -259,35 +259,37 @@ def get_all_ping_data(request):
 	all_ping_data = []
 
 	for player in players:
-		pingdata = PingData.objects.filter(player=player)
+		pingdata = PingData.objects.filter(player=player).order_by('-exp_game', '-wins')
 		serializer = PingDataSerializer(pingdata, many=True)
 		
 		all_ping_data.append({
 			'username': player.username,
 			'profile_name': player.profile_name,
 			'avatar': player.avatar,
-			'ping_data': serializer.data,
+			'data': serializer.data,
 		})
 
 	return JsonResponse(all_ping_data, safe=False)
 
 def get_all_tic_data(request):
-	players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game')
-	
-	all_tic_data = []
+    players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game')
 
-	for player in players:
-		ticdata = TicData.objects.filter(player=player)
-		serializer = TicDataSerializer(ticdata, many=True)
-		
-		all_tic_data.append({
-			'username': player.username,
-			'profile_name': player.profile_name,
-			'avatar': player.avatar,
-			'ping_data': serializer.data,
-		})
+    all_tic_data = []
 
-	return JsonResponse(all_tic_data, safe=False)
+    for player in players:
+        ticdata = TicData.objects.filter(player=player)
+        serializer = TicDataSerializer(ticdata, many=True)
+        
+        sorted_data = sorted(serializer.data, key=lambda x: (-x['exp_game'], -x['wins']))
+
+        all_tic_data.append({
+            'username': player.username,
+            'profile_name': player.profile_name,
+            'avatar': player.avatar,
+            'data': sorted_data,
+        })
+
+    return JsonResponse(all_tic_data, safe=False)
 
 def get_tic_data_by_username(request, username):
 	Player = get_user_model()

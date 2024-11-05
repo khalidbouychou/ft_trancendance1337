@@ -1,4 +1,4 @@
-#!/goinfre/nouahidi/mytrans/backend/strong_backend/bin/python3.12
+#!/goinfre/nouahidi/new/backend/strong_backend/bin/python3.12
 
 # http://www.python.org/doc/2.4.4/lib/module-itertools.html
 import itertools
