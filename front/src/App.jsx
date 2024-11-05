@@ -8,9 +8,11 @@ import Layout from "./Layout.jsx";
 import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
 
 import Twofa from "./Login/2fa/twofa.jsx";
-
+import Settings from "./Setting/Setting.jsx";
+import { useLocation } from "react-router-dom";
 function App() {
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(
     () => {
@@ -21,7 +23,7 @@ function App() {
 
       return () => clearTimeout(timer);
     },
-    [window.location.pathname]
+    [location.pathname]
   );
 
   return !loading ? <div className={style.EntirePage}>
@@ -34,7 +36,8 @@ function App() {
               <Route path="games" element={<h1>games</h1>} />
               {/* <Route path="setting" element={<h1>settings</h1>} /> */}
               <Route path="notification" element={<h1>notification</h1>} />
-              <Route path="setting" element={<Twofa />} />
+              <Route path="twofa" element={<Twofa />} />
+              <Route path="setting" element={<Settings/>} />
             </Route>
             <Route path="/login" element={<LoginSignup />} />
             <Route path="/*" element={<PageNotFound />} />

@@ -10,13 +10,28 @@ const Twofa = () => {
     const location = useLocation();
   const numInputs = 6;
 
-  const QR_CODE_URL = "http://localhost:8000/api/qrcode/";
-  const DISABLE_2FA_URL = "http://localhost:8000/api/d_2fa/";
-  const USER_STATUS_URL = "http://localhost:8000/api/user_status/";
+  const QR_CODE_URL = "http://e3r10p16.1337.ma:8000/api/qrcode/";
+  const DISABLE_2FA_URL = "http://e3r10p16.1337.ma:8000/api/d_2fa/";
+  const USER_STATUS_URL = "http://e3r10p16.1337.ma:8000/api/user_status/";
 
+  // Add the missing import statement
+
+  // const checkinputs = (e) => {
+  //   let val = e.target.value;
+  //   if (!/^[0-9]+$/.test(val)) {
+  //     alert("Please enter a number");
+  //     val = "";
+  //   } else {
+  //     const nextSibling = e.target.nextElementSibling;
+  //     if (nextSibling) {
+  //       nextSibling.focus();
+  //     }
+  //   }
+  // };
+  
   const renderInputs = () => {
     return Array.from({ length: numInputs }).map((_, i) => (
-      <input key={i} type="text" className="otp-input" maxLength={1} />
+      <input key={i} type="text" className="otp-input" maxLength={1}  />
     ));
   };
 
@@ -26,7 +41,7 @@ const Twofa = () => {
         if (res.status === 200) {
           setTwofa(res.data.user.two_factor); // Set the 2FA status from the backend
           if (res.data.user.two_factor && res.data.user.qrcode_path) {
-            setQrcode(`http://localhost:8000/${res.data.user.qrcode_path}`);
+            setQrcode(`http://e3r10p16.1337.ma:8000/${res.data.user.qrcode_path}`);
           }
         }
     };
@@ -48,7 +63,7 @@ const Twofa = () => {
         setUser(res.data.user);
         if (isOn) {
           // setTwofa(true);
-          setQrcode(`http://localhost:8000/${res.data.user.qrcode_path}`);
+          setQrcode(`http://e3r10p16.1337.ma:8000/${res.data.user.qrcode_path}`);
         } else {
           // setTwofa(false);
           setQrcode("");

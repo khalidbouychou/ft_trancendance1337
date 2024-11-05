@@ -219,8 +219,8 @@ ip_frontendl = os.getenv("IP_FRONTEND")
 ip_backend = os.getenv("IP_BACKEND")
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://localhost:8000',  
+    'http://e3r10p16.1337.ma:3000',
+    'http://e3r10p16.1337.ma:8000',  
     ]
 
 DATABASES = {

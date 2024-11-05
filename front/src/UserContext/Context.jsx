@@ -15,9 +15,12 @@ export default function AuthProvider({ children }) {
   const location = useLocation();
 
   async function auth_intra42() {
-    const response = await axios.get("http://localhost:8000/api/auth_intra/", {
-      withCredentials: true
-    });
+    const response = await axios.get(
+      "http://e3r10p16.1337.ma:8000/api/auth_intra/",
+      {
+        withCredentials: true
+      }
+    );
     try {
       if (response.status === 200) {
         setUrl(response.data.url);
@@ -37,7 +40,7 @@ export default function AuthProvider({ children }) {
         const params = new URLSearchParams();
         params.append("code", code);
         const res = await axios.post(
-          `http://localhost:8000/api/login/`,
+          `http://e3r10p16.1337.ma:8000/api/login/`,
           params,
           { withCredentials: true }
         );
@@ -68,7 +71,7 @@ export default function AuthProvider({ children }) {
 
   async function get_auth_user() {
     try {
-      const res = await axios.get(`http://localhost:8000/api/user/`, {
+      const res = await axios.get(`http://e3r10p16.1337.ma:8000/api/user/`, {
         withCredentials: true
       });
 
@@ -86,7 +89,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`http://localhost:8000/api/logout/`, {
+      const res = await axios.get(`http://e3r10p16.1337.ma:8000/api/logout/`, {
         withCredentials: true
       });
 
@@ -95,17 +98,14 @@ export default function AuthProvider({ children }) {
         navigate("/login");
       }
     } catch (error) {
-        setUser(null);
+      setUser(null);
       // navigate("/login");
     }
   }
 
-  useEffect(
-    () => {
-      Login();
-    },
-    []
-  );
+  useEffect(() => {
+    Login();
+  }, []);
   useEffect(
     () => {
       // console.log("constext user", user);
@@ -124,7 +124,7 @@ export default function AuthProvider({ children }) {
         setUser,
         Login,
         auth_intra42,
-        get_auth_user,
+        get_auth_user
       }}
     >
       {children}

@@ -1,9 +1,16 @@
+# Load environment variables from .env file
+ifneq ("$(wildcard .env)","")
+    include .env
+endif
+
+
 all: up
 
-ssl:
-	@bash ./generate-ssl.sh
+ssl : 
+	openssl req -newkey rsa:2048 -nodes -keyout $BACKEND/$DOMAIN.key -x509 -days 365 -out $BACKEND/$DOMAIN.crt -subj "/CN=$DOMAIN"
 
-up:
+
+up: ssl
 	@docker-compose up
 
 down :
@@ -13,10 +20,6 @@ build:
 	@rm -rf db
 	@docker-compose build --no-cache && docker-compose up
 
-
-docker:
-	@chmod +x deployment/initdocker.sh
-	@./deployment/initdocker.sh
 
 clean:
 	@rm -rf dump.rdb
@@ -34,7 +37,6 @@ clean:
 	@rm -rf front/certs
 	@rm -rf backend/certs
 	@rm -rf db
-
 	@rm -rf front/node_modules front/package-lock.json
 	@docker-compose down
 	@docker system prune -af
@@ -47,7 +49,8 @@ push:
 	@git commit -m "$(m)"
 	@git push
 
-re: all
+
+re: clean all
 
 
 

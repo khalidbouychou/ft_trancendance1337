@@ -21,7 +21,7 @@ const Layout = () => {
     console.log("layout user", user)
     user ? get_auth_user(): navigate("/login")
   }
-  , [])
+  , [location.pathname])
   return (
     <div className={style.EntirePage}>
           {( location.pathname !== "/login" && location.pathname !== "/twofa" ) &&  <Sidebar /> }

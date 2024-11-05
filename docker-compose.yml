@@ -5,68 +5,71 @@ networks:
     driver: bridge
 
 services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - connexion
+    env_file:
+      - .env
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
-  # postgres:
-  #   container_name: postgres
-  #   image: postgres
-  #   environment:
-  #     POSTGRES_DB: ${POSTGRES_DB}
-  #     POSTGRES_USER: ${POSTGRES_USER}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #     POSTGRES_HOST: ${POSTGRES_HOST}
-  #     POSTGRES_PORT: ${POSTGRES_PORT}
-  #   volumes:
-  #     - ./db:/var/lib/postgresql/data
-  #   ports:
-  #     - 5432:5432
-  #   networks:
-  #     - connexion
-  #   env_file:
-  #     - .env
-  #   restart: always
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 10
+  back:
+    container_name: backend
+    build: backend/docker-backend
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
 
-  # back:
-  #   container_name: backend
-  #   build: backend/docker-backend
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - ./backend:/app
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-      
-  #   networks:
-  #     - connexion
-  #   healthcheck:
-  #       test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health/ || exit 1"]
-  #       interval: 10s
-  #       timeout: 5s
-  #       retries: 10
-  #   restart: always
+    networks:
+      - connexion
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://e3r10p16.1337.ma:8000/api/health/ || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: always
 
-  # front:
-  #   container_name: front
-  #   build:
-  #     context: ./front/docker-front
-  #   ports:
-  #     - "5173:5173"
-  #   networks:
-  #     - connexion
-  #   volumes:
-  #     - ./front:/app
-  #     - /app/node_modules
-  #   depends_on:
-  #     back :
-  #       condition: service_healthy
-  #   restart: always
+  front:
+    container_name: front
+    build:
+      context: ./front/docker-front
+    ports:
+      - "5173:5173"
+    networks:
+      - connexion
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    depends_on:
+      back:
+        condition: service_healthy
+    restart: always
 
   # nginx:
   #   image: nginx
@@ -82,10 +85,3 @@ services:
   #   networks:
   #     - connexion
   #   restart: always
-
-  # certbot:
-  #   image: certbot/certbot
-  #   volumes:
-  #     - ./backend/certs:/etc/letsencrypt
-  #     - ./nginx/certbot.conf:/etc/nginx/conf.d/certbot.conf
-  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
