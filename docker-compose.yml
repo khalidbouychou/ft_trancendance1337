@@ -48,7 +48,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://e3r10p16.1337.ma:8000/api/health/ || exit 1"
+          "curl -f http://e3r2p13.1337.ma:8000/api/health/ || exit 1"
         ]
       interval: 10s
       timeout: 5s
@@ -67,21 +67,8 @@ services:
       - ./front:/app
       - /app/node_modules
     depends_on:
+      postgres:
+        condition: service_healthy
       back:
         condition: service_healthy
     restart: always
-
-  # nginx:
-  #   image: nginx
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - .backend/docker-backend/nginx/nginx.conf:/etc/nginx/nginx.conf
-  #     - ./backend/docker-backend/nginx/ssl:/etc/letsencrypt
-  #   depends_on:
-  #     - backend
-  #     - front
-  #   networks:
-  #     - connexion
-  #   restart: always

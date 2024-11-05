@@ -200,7 +200,7 @@ class AuthUser(APIView):
             except TokenError as e:
                 refresh = request.COOKIES.get('refresh')
                 crstf = request.COOKIES.get('csrftoken')
-                res = requests.post('http://e3r10p16.1337.ma:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
+                res = requests.post('http://e3r2p13.1337.ma:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
                 res.raise_for_status() # Raise an exception if the status code is not 2xx
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')
@@ -306,5 +306,24 @@ class DesableTwoFactor(APIView):
         response.data = {
             'user': PlayerSerializer(user).data,
         }
-        return response 
+        return response
+class VerifyOtp(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self,request):
+        user = request.user
+        otp = request.data.get('otp')
+        print("otp",otp)
+        print("secret",user.mfa_secret)
+        if not user.mfa_secret:
+            return Response({'error': 'No secret found'}, status=status.HTTP_400_BAD_REQUEST)
+        if pyotp.TOTP(user.mfa_secret).verify(otp):
+            user.otp_is_verified = True
+            user.save()
+            response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK)
+            response.data = {
+                'user': PlayerSerializer(user).data,
+            }
+            return response
+        return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
 #-----------------------------------2FA-------------------------------------------------------------

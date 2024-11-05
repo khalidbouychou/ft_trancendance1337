@@ -10,6 +10,7 @@ import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
 import Twofa from "./Login/2fa/twofa.jsx";
 import Settings from "./Setting/Setting.jsx";
 import { useLocation } from "react-router-dom";
+import Desable2fa from "./Login/2fa/Desable2fa.jsx";
 function App() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
@@ -37,9 +38,10 @@ function App() {
               {/* <Route path="setting" element={<h1>settings</h1>} /> */}
               <Route path="notification" element={<h1>notification</h1>} />
               <Route path="twofa" element={<Twofa />} />
-              <Route path="setting" element={<Settings/>} />
+              <Route path="setting" element={<Settings />} />
             </Route>
             <Route path="/login" element={<LoginSignup />} />
+            {/* <Route path="/desable" element={<Desable2fa/>} /> */}
             <Route path="/*" element={<PageNotFound />} />
           </Routes>
         </div>

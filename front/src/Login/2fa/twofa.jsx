@@ -3,32 +3,21 @@ import axios from "axios";
 import "./twofa.css";
 import { AuthContext } from "../../UserContext/Context";
 import { useLocation } from "react-router-dom";
+import Desable2fa from "./Desable2fa";
+import Off from "./Off";
 const Twofa = () => {
   const [twofa, setTwofa] = useState(false);
   const [qrcode, setQrcode] = useState("");
   const { user, setUser, get_auth_user } = useContext(AuthContext);
+  const [isEnable, setEnable] = useState(false);
     const location = useLocation();
   const numInputs = 6;
 
-  const QR_CODE_URL = "http://e3r10p16.1337.ma:8000/api/qrcode/";
-  const DISABLE_2FA_URL = "http://e3r10p16.1337.ma:8000/api/d_2fa/";
-  const USER_STATUS_URL = "http://e3r10p16.1337.ma:8000/api/user_status/";
+  const QR_CODE_URL = "http://e3r2p13.1337.ma:8000/api/qrcode/";
+  const DISABLE_2FA_URL = "http://e3r2p13.1337.ma:8000/api/d_2fa/";
+  const USER_STATUS_URL = "http://e3r2p13.1337.ma:8000/api/user_status/";
 
-  // Add the missing import statement
 
-  // const checkinputs = (e) => {
-  //   let val = e.target.value;
-  //   if (!/^[0-9]+$/.test(val)) {
-  //     alert("Please enter a number");
-  //     val = "";
-  //   } else {
-  //     const nextSibling = e.target.nextElementSibling;
-  //     if (nextSibling) {
-  //       nextSibling.focus();
-  //     }
-  //   }
-  // };
-  
   const renderInputs = () => {
     return Array.from({ length: numInputs }).map((_, i) => (
       <input key={i} type="text" className="otp-input" maxLength={1}  />
@@ -41,7 +30,7 @@ const Twofa = () => {
         if (res.status === 200) {
           setTwofa(res.data.user.two_factor); // Set the 2FA status from the backend
           if (res.data.user.two_factor && res.data.user.qrcode_path) {
-            setQrcode(`http://e3r10p16.1337.ma:8000/${res.data.user.qrcode_path}`);
+            setQrcode(`http://e3r2p13.1337.ma:8000/${res.data.user.qrcode_path}`);
           }
         }
     };
@@ -63,9 +52,11 @@ const Twofa = () => {
         setUser(res.data.user);
         if (isOn) {
           // setTwofa(true);
-          setQrcode(`http://e3r10p16.1337.ma:8000/${res.data.user.qrcode_path}`);
+          setEnable(true);
+          setQrcode(`http://e3r2p13.1337.ma:8000/${res.data.user.qrcode_path}`);
         } else {
           // setTwofa(false);
+          setEnable(false);
           setQrcode("");
         }
         // await get_auth_user();
@@ -76,17 +67,48 @@ const Twofa = () => {
       console.error("Error toggling 2FA:", error);
     }
   };
+
+
+  const handlverify = async () => {
+    const inputs = document.getElementsByClassName("otp-input");
+    const otp = Array.from(inputs)
+      .map((input) => input.value)
+      .join("");
+    console.log("---------------> otp", otp);
+    try {
+      const res = await axios.post(
+        "http://e3r2p13.1337.ma:8000/api/otpverify/",
+        {
+          otp,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("csrftoken="))
+              .split("=")[1],
+          },
+        }
+      );
+      if (res.status === 200) {
+        console.log("------------>", res.data);
+        console.log("2FA verified");
+        // setTwofa(true);
+        // await get_auth_user();
+        // setTwofa(user.two_factor);
+      }
+    } catch (error) {
+      console.error("Error verifying 2FA:", error);
+    }
+  };
   
-  // useEffect(() => {
-  //   get_auth_user();
-  //   console.log("userrrr", user);
-  //   setTwofa(user.two_factor);
-  //   console.log("twofa", twofa);
-  // }, [location.pathname]);
   return (
     <div className="container">
       <div className="qrcode-container">
         <div className="switch-container">
+          <div className="on">
           <label htmlFor="qrcode-on">ON</label>
           <input
             type="radio"
@@ -95,7 +117,10 @@ const Twofa = () => {
             value="On"
             checked={twofa}
             onClick={handleSwitch}
-          />
+            />
+          </div>
+          <div className="off">
+
           <label htmlFor="qrcode-off">OFF</label>
           <input
             type="radio"
@@ -104,15 +129,19 @@ const Twofa = () => {
             value="Off"
             checked={!twofa}
             onClick={handleSwitch}
-          />
+            />
+          </div>
         </div>
 
         {!twofa ? (
-          <h1>2FA is disabled</h1>
+           <Desable2fa message="If you want to desable 2fa entre OTP code" isEnabel={isEnable} setEnable={setEnable} setTwofa={setTwofa} twofa={twofa} />
         ) : (
-          <>
+            <>
+              {/* <h1>Already Enabled √ </h1> */}
+             
             <h1>Scan the QR code</h1>
-            <div className="content">
+              <div className="content">
+                <div className="cont">
               <div className="qr">
                 <img
                   src={
@@ -120,12 +149,11 @@ const Twofa = () => {
                     "https://plus.unsplash.com/premium_photo-1682310093719-443b6fe140e8?q=80&w=5112&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                   }
                   alt="QR Code"
-                />
+                  />
                 <h1>Enter the OTP code</h1>
                 <div className="inputs-container">{renderInputs()}</div>
                 <div className="btns">
-                  <button className="btn btn-verify">Verify</button>
-                  <button className="btn btn-cancel">Cancel</button>
+                  <button className="btn btn-verify" onClick={handlverify}>Verify</button>
                 </div>
               </div>
               <div className="instructions">
@@ -135,6 +163,7 @@ const Twofa = () => {
                   3. Click on Verify.
                 </p>
               </div>
+          </div>
             </div>
           </>
         )}

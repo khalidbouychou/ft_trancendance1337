@@ -10,7 +10,7 @@ ssl :
 	openssl req -newkey rsa:2048 -nodes -keyout $BACKEND/$DOMAIN.key -x509 -days 365 -out $BACKEND/$DOMAIN.crt -subj "/CN=$DOMAIN"
 
 
-up: ssl
+up:
 	@docker-compose up
 
 down :

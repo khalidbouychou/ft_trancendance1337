@@ -21,7 +21,10 @@ from dotenv import load_dotenv
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+# Add this setting to the end of the file or before the MIDDLEWARE setting
+CSRF_TRUSTED_ORIGINS = [
+    'http://e3r2p13.1337.ma:5173',
+]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -154,9 +157,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS =  list(default_headers) + [
+CORS_ALLOW_HEADERS =  list(default_headers) + [ 
     'accept',
-    'accept-encoding',
+    'accept-encoding', 
     'authorization',
     'content-type',
     'dnt',
@@ -172,7 +175,8 @@ CORS_ALLOW_HEADERS =  list(default_headers) + [
 STATIC_URL = 'uploads/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "uploads",
+    BASE_DIR / "uploads", 
+    # BASE_DIR / "static",
 ]
 
 
@@ -219,8 +223,8 @@ ip_frontendl = os.getenv("IP_FRONTEND")
 ip_backend = os.getenv("IP_BACKEND")
 
 CORS_ALLOWED_ORIGINS = [
-    'http://e3r10p16.1337.ma:3000',
-    'http://e3r10p16.1337.ma:8000',  
+    'http://e3r2p13.1337.ma:3000',
+    'http://e3r2p13.1337.ma:8000',  
     ]
 
 DATABASES = {
