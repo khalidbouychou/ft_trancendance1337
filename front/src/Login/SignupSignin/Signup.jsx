@@ -13,7 +13,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
 
     e.preventDefault();
     try {
-      const res = await axios.post("http://e3r2p13.1337.ma:8000/api/signup/", {
+      const res = await axios.post("http://localhost:8000/api/signup/", {
         username,
         profile_name: displayname,
         password
