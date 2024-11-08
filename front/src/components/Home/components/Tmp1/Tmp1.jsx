@@ -36,14 +36,14 @@ const Tmp1 = ({ Data, myData}) => {
 
     const handlepingDataClick = () => {
         setDaTa(Data.ping || [])
-        setMydaTa(myData.Ping.ping_data[0]|| [])
+        setMydaTa(myData.Ping.data[0]|| [])
     }
 
     console.log('pp::}++>', mydaTa)
 
     const handleticDataClick = () => {
         setDaTa(Data.tic || [])
-        setMydaTa(myData.Tic.tic_data[0] || [])
+        setMydaTa(myData.Tic.data[0] || [])
     }
 
     console.log('daTa = ', daTa)

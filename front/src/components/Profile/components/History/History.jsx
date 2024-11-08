@@ -110,7 +110,7 @@ const History = ({ username, ismyprofil }) => {
         {activeSection === "matchhistory" && (
           <div className={styl.cont} style={{ flexDirection: "column" }}>
               <button className={styl.sett} onClick={handelSetClick}>
-                <RxTextAlignJustify />
+                <RxTextAlignJustify id={styl.butM}/>
                 <div className={styl.choiceGame} style={{ display: sett }}>
                   <button className={styl.game} >
                     <p>Ping Pong</p>

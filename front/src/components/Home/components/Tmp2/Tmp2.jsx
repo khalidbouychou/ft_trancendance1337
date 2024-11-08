@@ -9,12 +9,12 @@ import { RxTextAlignJustify } from "react-icons/rx";
 
 const Tmp2 = ({ Data, myData }) => {
   const [selectedTab, setSelectedTab] = useState("leaderBoard");
-  const [daTa, setDaTa] = useState(Data.ping || [])
-  const [mydaTa, setMydaTa] = useState(myData.ping.data[0] || [])
+  const [daTa, setDaTa] = useState(Data.ping || []);
+  const [mydaTa, setMydaTa] = useState(myData.ping.data[0] || []);
   const total = 15 + 10;
   const winPercentage = (15 / total) * 100;
   const lossPercentage = (10 / total) * 100;
-  const [sett, setSett] = useState('none')
+  const [sett, setSett] = useState("none");
   const data = [
     { time: "Jan", wins: 5, losses: 3 },
     { time: "Feb", wins: 8, losses: 2 },
@@ -33,20 +33,20 @@ const Tmp2 = ({ Data, myData }) => {
   };
 
   const handelSetClick = () => {
-    setSett(prevSett => prevSett === 'none' ? 'flex' : 'none')
-}
+    setSett((prevSett) => (prevSett === "none" ? "flex" : "none"));
+  };
 
   const handlepingDataClick = () => {
-      setDaTa(Data.ping || [])
-      setMydaTa(myData.Ping.ping_data[0]|| [])
-  }
+    setDaTa(Data.ping || []);
+    setMydaTa(myData.Ping.data[0] || []);
+  };
 
-  console.log('pp::}++>', mydaTa)
+  console.log("pp::}++>", mydaTa);
 
   const handleticDataClick = () => {
-      setDaTa(Data.tic || [])
-      setMydaTa(myData.Tic.tic_data[0] || [])
-  }
+    setDaTa(Data.tic || []);
+    setMydaTa(myData.Tic.data[0] || []);
+  };
 
   return (
     <div className={styl.tmp2}>
@@ -88,9 +88,11 @@ const Tmp2 = ({ Data, myData }) => {
             <p className={styl.Nname}>LVL</p>
           </div>
           <div className={styl.cards}>
-            {Data.ping.map((item, index) => (
-              <CardRank index={index} key={index} data={item} />
-            ))}
+            {daTa
+              .sort((a, b) => b.data[0].exp_game - a.data[0].exp_game)
+              .map((item, index) => (
+                <CardRank key={index} data={item} index={index} />
+              ))}
           </div>
         </div>
       ) : (

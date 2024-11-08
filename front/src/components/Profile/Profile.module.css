@@ -4,13 +4,15 @@
 	width: 100%;
 	height: 100%;
 	overflow: auto;
+	background-color: bisque;
 }
 
-.content {
+/* .content {
 	margin: 3%;
 	margin-top: 70px;
 	width: 90%;
-	height: 1300px;
+	height: 100%;
+	min-height: 1300px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -89,7 +91,6 @@
 				flex-direction: column;
 				gap: 10px;
 				padding: 5% 0 0 5%;
-				/* background-color: blanchedalmond; */
 				width: 100%;
 				height: 100%;
 				overflow: auto;
@@ -107,7 +108,6 @@
 		display: flex;
 
 		.player {
-			/* background-color: black; */
 			flex: 1;
 			height: 100%;
 			display: flex;
@@ -648,4 +648,225 @@
 		transform: scale(1);
 		opacity: 0.2;
 	}
+} */
+
+.content {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	background-color: aqua;
+	margin-top: 60px;
+	gap: 30px;
 }
+
+.prf {
+	display: flex;
+	width: 70%;
+	height: 100%;
+	background-color: black;
+	justify-content: center;
+}
+
+.users {
+	background-color: azure;
+	width: 30%;
+	height: 100%;
+}
+
+.character {
+	display: flex;
+	width: 100%;
+	height: 30%;
+	background-color: blue;
+	margin: 20px;
+	margin-top: 100px;
+	/* justify-content: center; */
+	align-items: center;
+}
+
+.avatar {
+	display: flex;
+	width: 30%;
+	height: 100%;
+	background-color: aquamarine;
+	align-items: center;
+	flex-direction: column;
+}
+
+.image {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 190px;
+	height: 220px;
+	background-color: bisque;
+	clip-path: polygon(
+		50% 0%, 
+		100% 25%, 
+		100% 75%, 
+		50% 100%, 
+		0% 75%, 
+		0% 25%
+	);
+	position: relative;
+	bottom: 50px;
+}
+
+.dupeImage {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 180px;
+	height: 200px;
+	background-color: green;
+	clip-path: polygon(
+		50% 0%, 
+		100% 25%, 
+		100% 75%, 
+		50% 100%, 
+		0% 75%, 
+		0% 25%
+	);
+	position: relative;
+}
+
+.namesett {
+	width: 100%;
+	height: 100px;
+	background-color: bisque;
+	display: flex;
+	padding: 3%;
+}
+
+.name {
+	display: flex;
+	width: 70%;
+	height: 100%;
+	background-color: green;
+	justify-content: center;
+	align-items: center;
+	p {
+		color: white;
+		font-size: 18px;
+		letter-spacing: 2px;
+	}
+}
+
+.sett {
+	display: flex;
+	width: 30%;
+	height: 100%;
+	background-color: aqua;
+	justify-content: center;
+	align-items: center;
+}
+
+.change {
+	width: 50px;
+	height: 60px;
+	cursor: pointer;
+	background: linear-gradient(135deg, rgba(0, 128, 0, 0.6), rgba(0, 255, 0, 0.8));
+	border: none;
+
+	clip-path: polygon(
+		50% 0%, 
+		100% 25%, 
+		100% 75%, 
+		50% 100%, 
+		0% 75%, 
+		0% 25%
+	);
+	transition: background 0.3s ease;
+}
+
+.plusIcon {
+	width: 40%;
+	height: 40%;
+	color: green;
+}
+
+.level {
+	display: flex;
+	width: 70%;
+	height: 94%;
+	background-color: white;
+	margin: 3%;
+	gap: 5px;
+	flex-direction: column;
+}
+
+.lvl {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: aqua;
+	width: 100%;
+	height: 40%;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.ext {
+	display: flex;
+	width: 70%;
+	height: 30px;
+	background-color: yellow;
+	border-radius: 20px;
+	overflow: hidden;
+}
+
+.int {
+	display: flex;
+	height: 100%;
+	background-color: green;
+	border-radius: 20px;
+}
+
+.tmp {
+	display: flex;
+	width: 70%;
+	justify-content: space-between;
+	p {
+		color: white;
+		font-size: 13px;
+		font-weight: 800;
+		letter-spacing: 0.5px;
+	}
+}
+
+.option {
+	display: flex;
+	width: 100%;
+	height: 20%;
+	background-color: antiquewhite;
+	justify-content: center;
+	align-items: end;
+	padding: 10px;
+	gap: 10%;
+	p {
+		color: rgba(255, 255, 255, 0.5);
+	}
+}
+
+@media (max-width: 1600px) {
+	.image {
+		width: 160px;
+		height: 160px;
+		bottom: 40px;
+	}
+	.dupeImage {
+		width: 150px;
+		height: 150px;
+	}
+	.name {
+		p {
+			font-size: 16px;
+		}
+	}
+	.change {
+		width: 40px;
+		height: 50px;
+	}
+}
+
