@@ -22,7 +22,7 @@ services:
       - connexion
     env_file:
       - .env
-    restart: always
+    restart: on-failure
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -45,15 +45,11 @@ services:
     networks:
       - connexion
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -f http://e3r2p13.1337.ma:8000/api/health/ || exit 1"
-        ]
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:8000/api/health/ || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
-    restart: always
+    restart: on-failure
 
   front:
     container_name: front
@@ -71,4 +67,23 @@ services:
         condition: service_healthy
       back:
         condition: service_healthy
-    restart: always
+    restart: on-failure
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - connexion
+    restart: on-failure
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - connexion
+    restart: on-failure

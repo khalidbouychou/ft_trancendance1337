@@ -22,9 +22,11 @@ build:
 
 
 clean:
+	@rm -rf front/.vite-cashe/*
+	@rm -rf front/.vite-cashe
 	@rm -rf dump.rdb
 	@rm -rf **/node_modules
-	@rm -rf backend/uploads
+	@rm -rf backend/uploads/*
 	@rm -rf deployment
 	@rm -rf front/README.md
 	@rm -rf /**/node_modules
