@@ -296,7 +296,7 @@ class DesableTwoFactor(APIView):
         if not user.qrcode_path:
             return Response({'error': 'No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
         user.two_factor = False
-        user.otp_is_verified = False
+        user.otp_verified = False  
         if user.mfa_secret:
             user.mfa_secret=""
         if os.path.exists(user.qrcode_path):
@@ -332,7 +332,7 @@ class VerifyOtp(APIView):
         print("Is OTP valid:", is_valid)
 
         if is_valid:
-            user.otp_isverified = True  # Update variable name from otp_verified to otp_is_verified
+            user.otp_verified = True  # Update variable name from otp_verified to otp_is_verified
             user.save()
             response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK)
             response.data = {'user': PlayerSerializer(user).data}
