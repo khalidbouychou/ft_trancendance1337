@@ -53,6 +53,7 @@ const Twofa = () => {
         if (isOn) {
           // setTwofa(true);
           setEnable(true);
+          console.log("res.data.user.qrcode_path", res.data.user.qrcode_path);
           setQrcode(`http://127.0.0.1:8000/${res.data.user.qrcode_path}`);
         } else {
           // setTwofa(false);
@@ -79,19 +80,20 @@ const Twofa = () => {
       const res = await axios.post(
         "http://127.0.0.1:8000/api/otpverify/",
         {
-          otp,
+          "otp": otp,
         },
         {
-          withCredentials: true,
+          withCredentials:true,
           headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": document.cookie
               .split("; ")
-              .find((row) => row.startsWith("csrftoken="))
+              .find((row) => row.startsWith("csrftoken=")) 
               .split("=")[1],
           },
         }
       );
+      console.log("-------------------------- > res", res);
       if (res.status === 200) {
         console.log("------------>", res.data);
         console.log("2FA verified");

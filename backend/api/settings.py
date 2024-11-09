@@ -32,7 +32,7 @@ CSRF_TRUSTED_ORIGINS = [
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True # Set to False in production
  
 ALLOWED_HOSTS = ['*']
 
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt.token_blacklist', 
     'rest_framework',
     'login',
 ]
@@ -157,9 +157,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS =  list(default_headers) + [ 
+CORS_ALLOW_HEADERS =  list(default_headers) + [
     'accept',
-    'accept-encoding', 
+    'accept-encoding',
     'authorization',
     'content-type',
     'dnt',
@@ -170,13 +170,15 @@ CORS_ALLOW_HEADERS =  list(default_headers) + [
     'withcredentials',  
     'user'
 ]
-#************  khbouych ************
+#************  khbouych ************ 
 # STATIC_URL = 'static/'
 STATIC_URL = 'uploads/'
 
+
 STATICFILES_DIRS = [
-    BASE_DIR / "uploads", 
+    BASE_DIR / "uploads",
     # BASE_DIR / "static",
+    
 ]
 
 
@@ -223,8 +225,8 @@ ip_frontendl = os.getenv("IP_FRONTEND")
 ip_backend = os.getenv("IP_BACKEND")
 
 CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:8000',  
+    'http://e3r2p13.1337.ma:3000',
+    'http://e3r2p13.1337.ma:8000',  
     ]
 
 DATABASES = {

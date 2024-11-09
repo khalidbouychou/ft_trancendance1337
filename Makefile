@@ -7,7 +7,8 @@ endif
 all: up
 
 ssl : 
-	openssl req -newkey rsa:2048 -nodes -keyout $BACKEND/$DOMAIN.key -x509 -days 365 -out $BACKEND/$DOMAIN.crt -subj "/CN=$DOMAIN"
+	chmod +x ./ssl.sh
+	./ssl.sh
 
 
 up:
@@ -22,8 +23,7 @@ build:
 
 
 clean:
-	@rm -rf front/.vite-cashe/*
-	@rm -rf front/.vite-cashe
+	@rm -rf front/.vite-cache
 	@rm -rf dump.rdb
 	@rm -rf **/node_modules
 	@rm -rf backend/uploads/*

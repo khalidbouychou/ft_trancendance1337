@@ -205,12 +205,12 @@ class AuthUser(APIView):
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')
                 is_secure = request.is_secure()
-                user_data = SigninSerializer(user).data
+                user_data = PlayerSerializer(user).data
                 response = Response({'msg': 'Token refreshed', 'user':user_data}, status=status.HTTP_200_OK)
                 response.set_cookie(key='token', value=access , secure=is_secure, httponly=True ,samesite='Lax')
                 response.set_cookie(key='refresh', value=refresh , secure=is_secure, httponly=True ,samesite='Lax')
                 return response
-            userdata = SigninSerializer(user).data
+            userdata = PlayerSerializer(user).data
             return Response({'user' :userdata}, status=status.HTTP_200_OK)
 
         except Exception as e:
@@ -280,7 +280,7 @@ class GenerateQRcode(APIView):
         user.qrcode_path = f'uploads/{user.username}.png'
         user.two_factor = True
         user.save()
-        response = Response({'msg': 'QR code generated'}, status=status.HTTP_200_OK)
+        response = Response({'msg': 'QR code generated'}, status=status.HTTP_200_OK)  
         response.data = {
             'user': PlayerSerializer(user).data,
         }
@@ -297,7 +297,8 @@ class DesableTwoFactor(APIView):
             return Response({'error': 'No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
         user.two_factor = False
         user.otp_is_verified = False
-        user.mfa_secret = ''
+        if user.mfa_secret:
+            user.mfa_secret=""
         if os.path.exists(user.qrcode_path):
             os.remove(user.qrcode_path) 
         user.qrcode_path = ""        
@@ -307,23 +308,35 @@ class DesableTwoFactor(APIView):
             'user': PlayerSerializer(user).data,
         }
         return response
+
 class VerifyOtp(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
-    def post(self,request):
+
+    def post(self, request):
         user = request.user
         otp = request.data.get('otp')
-        print("otp",otp)
-        print("secret",user.mfa_secret)
+        
         if not user.mfa_secret:
-            return Response({'error': 'No secret found'}, status=status.HTTP_400_BAD_REQUEST)
-        if pyotp.TOTP(user.mfa_secret).verify(otp):
-            user.otp_is_verified = True
+            return Response({'error': 'No secret found'}, status=status.HTTP_400_BAD_REQUEST) 
+
+        # Log the received OTP and the user's MFA secret
+        print("Received OTP:", otp)
+        print("User's MFA Secret:", user.mfa_secret)
+
+        # Verify the OTP
+        totp = pyotp.TOTP(user.mfa_secret)
+        is_valid = totp.verify(otp)
+        
+        # Log the result of the OTP verification
+        print("Is OTP valid:", is_valid)
+
+        if is_valid:
+            user.otp_isverified = True  # Update variable name from otp_verified to otp_is_verified
             user.save()
             response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK)
-            response.data = {
-                'user': PlayerSerializer(user).data,
-            }
+            response.data = {'user': PlayerSerializer(user).data}
             return response
+
         return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
 #-----------------------------------2FA-------------------------------------------------------------

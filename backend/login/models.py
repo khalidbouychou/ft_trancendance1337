@@ -14,7 +14,7 @@ class Player(AbstractUser):
         ('playing', _('playing')),
         ('offline', _('offline')),
     )
-    avatar = models.URLField(max_length=200, default='../uploads/avatar.jpg')
+    avatar = models.URLField(max_length=200 , default='https://www.gravatar.com/avatar/')
     profile_name = models.CharField(max_length=50, default='Player')
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
     status_game = models.CharField(max_length=10, choices=GAME_STATUS, default='offline')
