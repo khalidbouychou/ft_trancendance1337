@@ -2,8 +2,12 @@ import React from "react";
 import "./twofa.css";
 import Off from "./Off";
 import Twofa from "./twofa";
+import { AuthContext } from "../../UserContext/Context";
+import {useContext} from "react";
 
-const Desable2fa = ({ message, isEnabel, setEnable, setTwofa, twofa }) => {
+import axios from "axios";
+import { useEffect } from "react";
+const Desable2fa = (props) => {
   const renderInputs = () => {
     return Array.from({
       length: 6
@@ -15,7 +19,6 @@ const Desable2fa = ({ message, isEnabel, setEnable, setTwofa, twofa }) => {
   const handlverify = async () => {
     const inputs = document.getElementsByClassName("otp-input");
     const otp = Array.from(inputs).map(input => input.value).join("");
-    console.log("---------------> otp", otp);
     try {
       const res = await axios.post(
         "http://127.0.0.1:8000/api/otpverify/",
@@ -34,41 +37,32 @@ const Desable2fa = ({ message, isEnabel, setEnable, setTwofa, twofa }) => {
       if (res.status === 200) {
         console.log("------------>", res.data);
         console.log("2FA verified");
-        // setTwofa(true);
-        // await get_auth_user();
-        // setTwofa(user.two_factor);
       }
     } catch (error) {
       console.error("Error verifying 2FA:", error);
     }
   };
 
-  return (
+  return props.isEnable ?
     <div className="container">
-      <h2>
-        {message}{" "}
-      </h2>
-      <div className="inputs-container">
-        {renderInputs()}
-      </div>
-      <div className="btns">
-        <button
-          onClick={handlverify}
-          style={{
-            backgroundColor: "#4CAF50",
-            color: "white",
-            padding: "14px 20px",
-            margin: "8px 0",
-            border: "none",
-            cursor: "pointer",
-            width: "450px"
-          }}
-        >
-          Verify
-        </button>
-      </div>
+        {console.log("------------->", props.isEnable)}
+        <h2>
+          {props.message}{" "}
+        </h2>
+        <div className="inputs-container">
+          {renderInputs()}
+        </div>
+        <div className="btns">
+          <button onClick={handlverify} style={{ backgroundColor: "#4CAF50", color: "white", padding: "14px 20px", margin: "8px 0", border: "none", cursor: "pointer", width: "450px" }}>
+            Verify
+          </button>
+        </div>
     </div>
-  );
+    :
+    <>
+      {console.log("------------->", props.isEnable)}
+    <h1>2fa desabled </h1>;
+    </>
 };
 
 export default Desable2fa;

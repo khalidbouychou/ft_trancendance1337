@@ -1,9 +1,11 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { SyncLoader } from "react-spinners";
 
 import { toast } from "react-toastify";
+
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
 export const AuthContext = createContext(null);
 
@@ -50,7 +52,7 @@ export default function AuthProvider({ children }) {
           });
           setTimeout(() => {
             navigate("/");
-          }, 1000);
+          }, 1200);
         }
       }
     } catch (error) {

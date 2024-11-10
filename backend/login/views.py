@@ -23,7 +23,7 @@ import qrcode
 from rest_framework.decorators import api_view  , permission_classes , authentication_classes ,action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
-
+import random
 #---------------------------------CHECK HEALTH OF THE BACKEND-----------------------------------------------------------
 
 def health_check(request):
@@ -276,9 +276,12 @@ class GenerateQRcode(APIView):
         createdir = os.path.exists('uploads') #check if the directory exists 
         if not createdir:
             os.makedirs('uploads')
-        url.save(f'uploads/{user.username}.png') 
-        user.qrcode_path = f'uploads/{user.username}.png'
-        user.two_factor = True
+        number_random = random.randint(1, 10000000)
+        num = number_random % 1000
+        path = f'uploads/{user.username}_{num}.png'
+        url.save(path)
+        user.qrcode_path = path
+        # user.two_factor = True
         user.save()
         response = Response({'msg': 'QR code generated'}, status=status.HTTP_200_OK)  
         response.data = {
@@ -295,13 +298,13 @@ class DesableTwoFactor(APIView):
         user = request.user
         if not user.qrcode_path:
             return Response({'error': 'No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
-        user.two_factor = False
-        user.otp_verified = False  
         if user.mfa_secret:
             user.mfa_secret=""
         if os.path.exists(user.qrcode_path):
             os.remove(user.qrcode_path) 
-        user.qrcode_path = ""        
+            user.qrcode_path = ""        
+        user.two_factor = False
+        user.otp_verified = False  
         user.save()
         response = Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
         response.data = {
@@ -332,7 +335,9 @@ class VerifyOtp(APIView):
         print("Is OTP valid:", is_valid)
 
         if is_valid:
-            user.otp_verified = True  # Update variable name from otp_verified to otp_is_verified
+            user.two_factor = True
+            user.otp_verified = True
+            # user.qrcode_path = ""
             user.save()
             response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK)
             response.data = {'user': PlayerSerializer(user).data}

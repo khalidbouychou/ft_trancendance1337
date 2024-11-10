@@ -6,12 +6,14 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Desable2fa from "./Desable2fa";
 import { ToastContainer, toast } from "react-toastify";
+import Alert from '@mui/material/Alert';
+
 import Off from "./Off";
 const Twofa = () => {
   const [twofa, setTwofa] = useState(false);
   const [qrcode, setQrcode] = useState("");
   const { user, setUser, get_auth_user } = useContext(AuthContext);
-  const [isEnable, setEnable] = useState(false);
+  const [isEnable, setEnable] = useState("Off");
   const [verified, setVerified] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -28,53 +30,78 @@ const Twofa = () => {
   };
 
   useEffect(() => {
+    console.log("enable", isEnable);
     const fetchTwofaStatus = async () => {
       await get_auth_user();
       const res = await axios.get(USER_STATUS_URL, { withCredentials: true });
       if (res.status === 200) {
         setVerified(res.data.user.otp_verified);
-        setTwofa(res.data.user.two_factor); // Set the 2FA status from the backend
-        if (res.data.user.two_factor && res.data.user.qrcode_path) {
+        setTwofa(res.data.user.two_factor);
+        setEnable(res.data.user.two_factor);
+        console.log("enable", res.data.user.two_factor);
+        if (res.data.user.qrcode_path) {
           setQrcode(`http://127.0.0.1:8000/${res.data.user.qrcode_path}`);
+          console.log("--------- >enable", isEnable);
         }
       }
     };
     console.log(".................verified", verified);
     fetchTwofaStatus();
   }, [location.pathname]);
-
   const handleSwitch = async (e) => {
-    e.preventDefault();
+   
     const isOn = e.target.value === "On";
-    // setTwofa(isOn);
-    setTwofa(isOn);
+    setEnable(isOn);
+    const url = isOn && QR_CODE_URL;
 
-    try {
-      const url = isOn ? QR_CODE_URL : DISABLE_2FA_URL;
-      const res = await axios.get(url, { withCredentials: true });
-
-      if (res.status === 200) {
-        setUser(res.data.user);
-        if (isOn) {
-          // setTwofa(true);
-          setEnable(true);
-          console.log("res.data.user.qrcode_path", res.data.user.qrcode_path);
-          setQrcode(`http://127.0.0.1:8000/${res.data.user.qrcode_path}`);
-        } else {
-          // setTwofa(false);
-          setEnable(false);
-          setQrcode("");
-        }
-        // await get_auth_user();
-        // setTwofa(user.two_factor);
-        // console.log("userrrrrr....", user);
-      }
-    } catch (error) {
-      console.error("Error toggling 2FA:", error);
+    if (url == "undefined") {
+      setEnable(!isOn);
+      setQrcode("");
+      setTwofa(false);
     }
+    else {
+      try {
+        await get_auth_user();
+        const res = await axios.get(url, { withCredentials: true });
+        if (res.status === 200) {
+
+          setQrcode(`http://127.0.0.1:8000/${res.data.user.qrcode_path}`)
+          // setEnable(isOn);
+        }
+      }
+      catch (error) {
+        console.error("Error toggling 2FA:", error);
+      }
+    }
+
+    // try {
+    //   console.log("------------ > url", url);
+      // const res = await axios.get(url, { withCredentials: true });
+
+      // if (res.status === 200) {
+      //   setUser(res.data.user);
+      //   if (isOn) {
+      //     // setTwofa(true);
+      //     console.log("res.data.user.qrcode_path", res.data.user.qrcode_path);
+      //     setQrcode(`http://127.0.0.1:8000/${res.data.user.qrcode_path}`);
+      //   } else {
+      //     // setTwofa(false);
+      //     setEnable(false);
+      //     setQrcode("");
+      //   }
+      //   // await get_auth_user();
+      //   // setTwofa(user.two_factor);
+      //   // console.log("userrrrrr....", user);
+      // }
+    // } catch (error) {
+    //   console.error("Error toggling 2FA:", error);
+    // }
   };
 
+
+
   const handlverify = async () => {
+    await get_auth_user();
     const inputs = document.getElementsByClassName("otp-input");
     const otp = Array.from(inputs)
       .map((input) => input.value)
@@ -97,7 +124,6 @@ const Twofa = () => {
           }
         }
       );
-      console.log("-------------------------- > res", res);
       if (res.status === 200) {
         setVerified(true);
         toast.success("2FA verified", {
@@ -105,11 +131,7 @@ const Twofa = () => {
           autoClose: 1000,
           closeOnClick: true
         });
-        console.log("------------>", res.data);
         console.log("2FA verified");
-        // setTwofa(true);
-        // await get_auth_user();
-        // setTwofa(user.two_factor);
       }
     } catch (test) {
       toast.error("OTP code is not correct", {
@@ -120,6 +142,12 @@ const Twofa = () => {
       // console.error("Error verifying 2FA:", error);
     }
   };
+
+
+  const test = async (e) => {
+   setEnable(e.target.value === "On");
+    console.log("----------------------> enable", isEnable);
+  }
 
   return (
     <>
@@ -133,7 +161,9 @@ const Twofa = () => {
                 id="qrcode-on"
                 name="qrcode"
                 value="On"
-                checked={twofa}
+                checked={isEnable}
+                // onClick={test}
+                // checked={twofa}
                 onClick={handleSwitch}
               />
             </div>
@@ -144,20 +174,16 @@ const Twofa = () => {
                 id="qrcode-off"
                 name="qrcode"
                 value="Off"
-                checked={!twofa}
                 onClick={handleSwitch}
+                checked={!isEnable}
+                // onClick={test}
+                // checked={!twofa}
               />
             </div>
           </div>
 
-          {!twofa ? (
-            <Desable2fa
-              message="If you want to desable 2fa entre OTP code"
-              isEnabel={isEnable}
-              setEnable={setEnable}
-              setTwofa={setTwofa}
-              twofa={twofa}
-            />
+          {!isEnable ? (
+            <Desable2fa isEnable={twofa} message="If you want to desable 2fa entre OTP code"/>
           ) : (
               <>
               

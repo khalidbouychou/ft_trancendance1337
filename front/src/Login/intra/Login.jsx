@@ -1,24 +1,13 @@
-import axios from "axios";
-// import styl from "./login.module.css";
 import { useContext, useEffect, useState } from "react";
 import "./test.css";
 import { AuthContext } from "../../UserContext/Context";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { authContext } from "../Context/Context";
-
-// import Cookies from 'js-cookie';
-// const Login = () => {
 const PongParadise = () => {
-  const backgroundimage = '/img/loginbg.jpg'; // For public assets
-  const logo = '/img/42logo.png'; // For public assets
-  const {url , auth_intra42 } = useContext(AuthContext);
-  // const location = useLocation();
-  // const navigate = useNavigate();
-  // const myCookie = Cookies.get('token');
+  const backgroundimage = "/img/loginbg.jpg"; // For public assets
+  const logo = "/img/42logo.png"; // For public assets
+  const { url, auth_intra42 } = useContext(AuthContext);
   useEffect(() => {
-        auth_intra42();
-    }
-    , []);
+    auth_intra42();
+  }, []);
 
   return (
     <div
