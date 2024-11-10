@@ -70,11 +70,11 @@ ASGI_APPLICATION = 'api.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-        # "BACKEND": "channels_redis.core.RedisChannelLayer",
-        # "CONFIG": {
-        #     "hosts": [("redis", 6379)],  # Use the service name from docker-compose
-        # },
+        # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],  # Use the service name from docker-compose
+        },
     },
 }
 
@@ -225,8 +225,8 @@ ip_frontendl = os.getenv("IP_FRONTEND")
 ip_backend = os.getenv("IP_BACKEND")
 
 CORS_ALLOWED_ORIGINS = [
-    'http://e3r2p13.1337.ma:3000',
-    'http://e3r2p13.1337.ma:8000',  
+    'http://127.0.0.1:5175',
+    'http://127.0.0.1:8000',  
     ]
 
 DATABASES = {

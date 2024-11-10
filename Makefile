@@ -3,13 +3,13 @@ ifneq ("$(wildcard .env)","")
     include .env
 endif
 
+.PHONY: all
 
 all: up
 
 ssl : 
 	chmod +x ./ssl.sh
 	./ssl.sh
-
 
 up:
 	@docker-compose up
@@ -20,7 +20,6 @@ down :
 build:
 	@rm -rf db
 	@docker-compose build --no-cache && docker-compose up
-
 
 clean:
 	@rm -rf front/.vite-cache
@@ -50,7 +49,6 @@ push:
 	@git add .
 	@git commit -m "$(m)"
 	@git push
-
 
 re: clean all
 

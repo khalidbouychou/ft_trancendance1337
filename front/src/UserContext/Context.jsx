@@ -41,7 +41,9 @@ export default function AuthProvider({ children }) {
         const res = await axios.post(
           `http://127.0.0.1:8000/api/login/`,
           params,
-          { withCredentials: true }
+          {
+            withCredentials: true
+          }
         );
         if (res.status === 200) {
           setUser(res.data);
