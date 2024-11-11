@@ -1,27 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import "./twofa.css";
 import { AuthContext } from "../../UserContext/Context";
 import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import Desable2fa from "./Desable2fa";
 import { ToastContainer, toast } from "react-toastify";
-import Alert from '@mui/material/Alert';
 
-import Off from "./Off";
 const Twofa = () => {
   const [twofa, setTwofa] = useState(false);
   const [qrcode, setQrcode] = useState("");
-  const { user, setUser, get_auth_user } = useContext(AuthContext);
+  const { get_auth_user } = useContext(AuthContext);
   const [isEnable, setEnable] = useState("Off");
   const [verified, setVerified] = useState(false);
-  const [loading, setLoading] = useState(true);
+
   const location = useLocation();
-  const navigate = useNavigate();
+
   const numInputs = 6;
 
   const QR_CODE_URL = "http://127.0.0.1:8000/api/qrcode/";
-  const DISABLE_2FA_URL = "http://127.0.0.1:8000/api/d_2fa/";
   const USER_STATUS_URL = "http://127.0.0.1:8000/api/user_status/";
 
   const renderInputs = () => {
@@ -49,6 +45,7 @@ const Twofa = () => {
     console.log(".................verified", verified);
     fetchTwofaStatus();
   }, [location.pathname]);
+
   const handleSwitch = async (e) => {
    
     const isOn = e.target.value === "On";
@@ -74,29 +71,6 @@ const Twofa = () => {
         console.error("Error toggling 2FA:", error);
       }
     }
-
-    // try {
-    //   console.log("------------ > url", url);
-      // const res = await axios.get(url, { withCredentials: true });
-
-      // if (res.status === 200) {
-      //   setUser(res.data.user);
-      //   if (isOn) {
-      //     // setTwofa(true);
-      //     console.log("res.data.user.qrcode_path", res.data.user.qrcode_path);
-      //     setQrcode(`http://127.0.0.1:8000/${res.data.user.qrcode_path}`);
-      //   } else {
-      //     // setTwofa(false);
-      //     setEnable(false);
-      //     setQrcode("");
-      //   }
-      //   // await get_auth_user();
-      //   // setTwofa(user.two_factor);
-      //   // console.log("userrrrrr....", user);
-      // }
-    // } catch (error) {
-    //   console.error("Error toggling 2FA:", error);
-    // }
   };
 
 
@@ -134,7 +108,7 @@ const Twofa = () => {
         });
         console.log("2FA verified");
       }
-    } catch (test) {
+    } catch (error) {
       toast.error("OTP code is not correct", {
         position: "top-right",
         autoClose: 1000,
@@ -143,12 +117,6 @@ const Twofa = () => {
       // console.error("Error verifying 2FA:", error);
     }
   };
-
-
-  const test = async (e) => {
-   setEnable(e.target.value === "On");
-    console.log("----------------------> enable", isEnable);
-  }
 
   return (
     <>

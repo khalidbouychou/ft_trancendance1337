@@ -172,8 +172,20 @@
 .disable-2fa
 {
   display: flex;
+  border: none;
   justify-content: center;
   align-items: center;
-  width: 50%;
-  margin-top: 20px;
+  color: #fff;
+  font-size: large;
+  font-weight: bold;
+  border-radius: 10px;
+  background-color: #e2252b;
+  width: 455px;
+  height: 60px;
+  cursor: pointer;
+}
+
+.disable-2fa:hover
+{
+  background-color: #140115;
 }
