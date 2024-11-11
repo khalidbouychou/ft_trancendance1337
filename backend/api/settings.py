@@ -23,7 +23,9 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Add this setting to the end of the file or before the MIDDLEWARE setting
 CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:5173',
+    'http://127.0.0.1', 
+    'http://localhost',
+    'http://localhost:8000',
 ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -34,7 +36,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # Set to False in production
  
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 # Application definition
 
@@ -222,7 +224,7 @@ CORS_ALLOW_ALL_ORIGINS = True  # Set to True for development, but not recommende
 
 # Read environment variables
 ip_frontendl = os.getenv("IP_FRONTEND")
-ip_backend = os.getenv("IP_BACKEND")
+ip_backend = os.getenv("IP_BACKEND") 
 
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5175',

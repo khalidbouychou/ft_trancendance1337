@@ -15,6 +15,7 @@ const Twofa = () => {
   const { user, setUser, get_auth_user } = useContext(AuthContext);
   const [isEnable, setEnable] = useState("Off");
   const [verified, setVerified] = useState(false);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const numInputs = 6;
@@ -183,7 +184,7 @@ const Twofa = () => {
           </div>
 
           {!isEnable ? (
-            <Desable2fa isEnable={twofa} message="If you want to desable 2fa entre OTP code"/>
+            <Desable2fa setVerified={setVerified} setEnable={setEnable} isEnable={twofa} message="If you want to desable 2fa entre OTP code"/>
           ) : (
               <>
               
@@ -202,7 +203,7 @@ const Twofa = () => {
                                 qrcode ||
                                 "https://plus.unsplash.com/premium_photo-1682310093719-443b6fe140e8?q=80&w=5112&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                               }
-                              alt="QR Code"
+                                alt="QR Code"
                             />
                             <h1>Enter the OTP code</h1>
                             <div className="inputs-container">{renderInputs()}</div>

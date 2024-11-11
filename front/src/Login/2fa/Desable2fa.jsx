@@ -5,9 +5,11 @@ import Twofa from "./twofa";
 import { AuthContext } from "../../UserContext/Context";
 import {useContext} from "react";
 
+import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { useEffect } from "react";
+
 const Desable2fa = (props) => {
+  const { get_auth_user } = useContext(AuthContext);
   const renderInputs = () => {
     return Array.from({
       length: 6
@@ -17,29 +19,46 @@ const Desable2fa = (props) => {
   };
 
   const handlverify = async () => {
+    await get_auth_user();
     const inputs = document.getElementsByClassName("otp-input");
-    const otp = Array.from(inputs).map(input => input.value).join("");
+    const otp = Array.from(inputs)
+      .map((input) => input.value)
+      .join("");
+    console.log("---------------> otp", otp);
     try {
       const res = await axios.post(
         "http://127.0.0.1:8000/api/otpverify/",
-        { otp },
+        {
+          otp: otp
+        },
         {
           withCredentials: true,
           headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": document.cookie
               .split("; ")
-              .find(row => row.startsWith("csrftoken="))
+              .find((row) => row.startsWith("csrftoken="))
               .split("=")[1]
           }
         }
       );
       if (res.status === 200) {
-        console.log("------------>", res.data);
+        props.setVerified(false);
+        props.setEnable(false);
+        toast.success("2FA verified", {
+          position: "top-right",
+          autoClose: 1000,
+          closeOnClick: true
+        });
         console.log("2FA verified");
       }
-    } catch (error) {
-      console.error("Error verifying 2FA:", error);
+    } catch (test) {
+      toast.error("OTP code is not correct", {
+        position: "top-right",
+        autoClose: 1000,
+        closeOnClick: true
+      });
+      // console.error("Error verifying 2FA:", error);
     }
   };
 
@@ -49,12 +68,12 @@ const Desable2fa = (props) => {
         <h2>
           {props.message}{" "}
         </h2>
-        <div className="inputs-container">
+        <div className="inputs-container"> 
           {renderInputs()}
         </div>
         <div className="btns">
-          <button onClick={handlverify} style={{ backgroundColor: "#4CAF50", color: "white", padding: "14px 20px", margin: "8px 0", border: "none", cursor: "pointer", width: "450px" }}>
-            Verify
+          <button className="disable-2fa" onClick={handlverify}>
+           Disable Two Factor Authentication (2FA)
           </button>
         </div>
     </div>
