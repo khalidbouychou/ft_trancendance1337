@@ -43,8 +43,8 @@ const Desable2fa = ({ isEnable ,message ,setEnable ,setVerified }) => {
         }
       );
       if (res.status === 200) {
-        setVerified(false);
-        setEnable(false);
+        // setVerified(false);
+        // setEnable(false);
         toast.success("2FA Disabled", {
           position: "top-right",
           autoClose: 1000,
@@ -53,7 +53,7 @@ const Desable2fa = ({ isEnable ,message ,setEnable ,setVerified }) => {
         console.log("2FA verified");
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       toast.error("OTP code is not correct", {
         position: "top-right",
         autoClose: 1000,
