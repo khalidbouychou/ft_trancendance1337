@@ -9,9 +9,10 @@ import { ToastContainer, toast } from "react-toastify";
 const Twofa = () => {
   const [twofa, setTwofa] = useState(false);
   const [qrcode, setQrcode] = useState("");
-  const { get_auth_user } = useContext(AuthContext);
+  const { user,get_auth_user } = useContext(AuthContext);
   const [isEnable, setEnable] = useState("Off");
   const [verified, setVerified] = useState(false);
+   
 
   const location = useLocation();
 
@@ -55,7 +56,7 @@ const Twofa = () => {
     if (url == "undefined") {
       setEnable(!isOn);
       setQrcode("");
-      setTwofa(false);
+      setTwofa(user.user.two_factor);
     }
     else {
       try {
@@ -81,7 +82,7 @@ const Twofa = () => {
     const otp = Array.from(inputs)
       .map((input) => input.value)
       .join("");
-    console.log("---------------> otp", otp);
+    // console.log("---------------> otp", otp);
     try {
       const res = await axios.post(
         "http://127.0.0.1:8000/api/otpverify/",

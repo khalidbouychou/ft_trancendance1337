@@ -3,13 +3,25 @@ import PropTypes from "prop-types"; // Add missing import
 
 import "./twofa.css";
 import { AuthContext } from "../../UserContext/Context";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import axios from "axios";
 
 const Desable2fa = ({ isEnable ,message ,setEnable ,setVerified }) => {
-  const { get_auth_user } = useContext(AuthContext);
+  const { user, get_auth_user } = useContext(AuthContext);
+  const [formsg, setFormsg] = useState(false); 
+
+  useEffect(() => {
+    console.log(".................. formsg", formsg);
+    get_auth_user();
+    // if (isEnable) {
+     console.log("..........----------user", user);
+      setFormsg(user.user.otp_verified);
+    // }
+    console.log("formsg ------------------------ ", formsg);
+  }, []);
+
   const renderInputs = () => {
     return Array.from({
       length: 6
@@ -19,7 +31,7 @@ const Desable2fa = ({ isEnable ,message ,setEnable ,setVerified }) => {
   };
 
   const Disable_twofa = async () => {
-    await get_auth_user();
+    
     const inputs = document.getElementsByClassName("otp-input");
     const otp = Array.from(inputs)
       .map((input) => input.value)
@@ -42,9 +54,10 @@ const Desable2fa = ({ isEnable ,message ,setEnable ,setVerified }) => {
           }
         }
       );
+      console.log("res", res.data);
       if (res.status === 200) {
-        // setVerified(false);
-        // setEnable(false);
+        setVerified(res.data.otp_verified);
+        setFormsg(res.data.otp_verified);
         toast.success("2FA Disabled", {
           position: "top-right",
           autoClose: 1000,
@@ -63,9 +76,9 @@ const Desable2fa = ({ isEnable ,message ,setEnable ,setVerified }) => {
     }
   };
 
-  return isEnable ? (
+  return formsg ? (
     <div className="container">
-      {console.log("------------->", isEnable)}
+      {console.log("8989", formsg)}
       <h2>{message} </h2>
       <div className="inputs-container">{renderInputs()}</div>
       <div className="btns">
@@ -76,7 +89,7 @@ const Desable2fa = ({ isEnable ,message ,setEnable ,setVerified }) => {
     </div>
   ) : (
     <>
-      {console.log("------------->", isEnable)}
+      {console.log("----------8989--->", formsg)}
       <h1>2fa desabled </h1>
     </>
   );

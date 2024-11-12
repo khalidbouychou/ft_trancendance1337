@@ -294,7 +294,7 @@ class GenerateQRcode(APIView):
 class DesableTwoFactor(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
-    def get(self,request):
+    def post(self,request):
         user = request.user
         if not user.qrcode_path:
             return Response({'error': 'No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
