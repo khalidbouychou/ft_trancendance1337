@@ -27,7 +27,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 3
       start_period: 30s
 
   back:
@@ -44,12 +44,12 @@ services:
         condition: service_healthy
     networks:
       - connexion
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://127.0.0.1:8000/api/health/ || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl -f https://127.0.0.1/api/health/ || exit 1"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 30s
     restart: on-failure
 
   front:
@@ -65,8 +65,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      back:
-        condition: service_healthy
+      # back:
+      #   condition: service_healthy
     restart: on-failure
 
   redis:
@@ -77,10 +77,8 @@ services:
     networks:
       - connexion
     depends_on:
-      back:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
+      - back
+      - front
     restart: on-failure
 
   nginx:
@@ -88,13 +86,14 @@ services:
     image: nginx:latest
     ports:
       - "80:80"
-      # - "443:443"
+      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl/:/etc/nginx/
+      - ./nginx/mime.types:/etc/nginx/mime.types
     networks:
       - connexion
     depends_on:
-      - front
       - back
-      - postgres
+      - front
     restart: on-failure

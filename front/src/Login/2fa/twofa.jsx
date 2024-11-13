@@ -5,21 +5,21 @@ import { AuthContext } from "../../UserContext/Context";
 import { useLocation } from "react-router-dom";
 import Desable2fa from "./Desable2fa";
 import { ToastContainer, toast } from "react-toastify";
+import BounceLoader from "react-spinners/BounceLoader";
 
 const Twofa = () => {
   const [twofa, setTwofa] = useState(false);
   const [qrcode, setQrcode] = useState("");
-  const { user,get_auth_user } = useContext(AuthContext);
+  const { user, get_auth_user } = useContext(AuthContext);
   const [isEnable, setEnable] = useState("Off");
   const [verified, setVerified] = useState(false);
-   
 
   const location = useLocation();
 
   const numInputs = 6;
 
-  const QR_CODE_URL = "http://127.0.0.1:8000/api/qrcode/";
-  const USER_STATUS_URL = "http://127.0.0.1:8000/api/user_status/";
+  const QR_CODE_URL = "https://127.0.0.1/api/qrcode/";
+  const USER_STATUS_URL = "https://127.0.0.1/api/user_status/";
 
   const renderInputs = () => {
     return Array.from({ length: numInputs }).map((_, i) => (
@@ -38,7 +38,9 @@ const Twofa = () => {
         setEnable(res.data.user.two_factor);
         console.log("enable", res.data.user.two_factor);
         if (res.data.user.qrcode_path) {
-          setQrcode(`http://127.0.0.1:8000/${res.data.user.qrcode_path}`);
+          setTimeout(() => {
+            setQrcode(`https://127.0.0.1/${res.data.user?.qrcode_path}`);
+          }, 2000);
           console.log("--------- >enable", isEnable);
         }
       }
@@ -48,33 +50,33 @@ const Twofa = () => {
   }, [location.pathname]);
 
   const handleSwitch = async (e) => {
-   
     const isOn = e.target.value === "On";
     setEnable(isOn);
     const url = isOn && QR_CODE_URL;
 
+    if (!isOn) {
+      setQrcode("");
+    }
     if (url == "undefined") {
       setEnable(!isOn);
       setQrcode("");
-      setTwofa(user.user.two_factor);
-    }
-    else {
+      setTwofa(user.user?.two_factor);
+    } else {
       try {
         await get_auth_user();
         const res = await axios.get(url, { withCredentials: true });
         if (res.status === 200) {
-
-          setQrcode(`http://127.0.0.1:8000/${res.data.user.qrcode_path}`)
+          console.log("qrcode_path", res.data.user?.qrcode_path);
+          setTimeout(() => {
+            setQrcode(`https://127.0.0.1/${res.data.user?.qrcode_path}`);
+          }, 2000);
           // setEnable(isOn);
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.error("Error toggling 2FA:", error);
       }
     }
   };
-
-
 
   const handlverify = async () => {
     await get_auth_user();
@@ -85,7 +87,7 @@ const Twofa = () => {
     // console.log("---------------> otp", otp);
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/otpverify/",
+        "https://127.0.0.1/api/otpverify/",
         {
           otp: otp
         },
@@ -153,50 +155,55 @@ const Twofa = () => {
           </div>
 
           {!isEnable ? (
-            <Desable2fa setVerified={setVerified} setEnable={setEnable} isEnable={twofa} message="If you want to desable 2fa entre OTP code"/>
+            <Desable2fa
+              setVerified={setVerified}
+              setEnable={setEnable}
+              isEnable={twofa}
+              message="If you want to desable 2fa entre OTP code"
+            />
           ) : (
-              <>
-              
-                {
-                  verified ? (
-                   <h1> 2fa enabled </h1>
-                    
-                  ): (
-                    <>
-                            <h1>Scan the QR code</h1>
-                            <div className="content">
-                        <div className="cont">
-                          <div className="qr">
-                            <img
-                              src={
-                                qrcode ||
-                                "https://plus.unsplash.com/premium_photo-1682310093719-443b6fe140e8?q=80&w=5112&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                              }
-                                alt="QR Code"
-                            />
-                            <h1>Enter the OTP code</h1>
-                            <div className="inputs-container">{renderInputs()}</div>
-                            <div className="btns">
-                              <button className="btn btn-verify" onClick={handlverify}>
-                                Verify
-                              </button>
-                            </div>
-                          </div>
-                          <div className="instructions">
-                            <p>
-                              1. Open your authenticator app and scan the QR code.
-                              <br />
-                              2. Enter the 6-digit code displayed on the app.
-                              <br />
-                              3. Click on Verify.
-                            </p>
-                          </div>
+            <>
+              {verified ? (
+                <h1> 2fa enabled </h1>
+              ) : (
+                <>
+                  <h1>Scan the QR code</h1>
+                  <div className="content">
+                    <div className="cont">
+                      <div className="qr">
+                        {!qrcode ? (
+                          <BounceLoader
+                            color={"#fff"}
+                            loading={qrcode ? false : true}
+                            size={150}
+                          />
+                        ) : (
+                          <img src={qrcode} alt="QR Code" />
+                        )}
+                        <h1>Enter the OTP code</h1>
+                        <div className="inputs-container">{renderInputs()}</div>
+                        <div className="btns">
+                          <button
+                            className="btn btn-verify"
+                            onClick={handlverify}
+                          >
+                            Verify
+                          </button>
                         </div>
                       </div>
-                    </>
-                  
-                  )
-                }
+                      <div className="instructions">
+                        <p>
+                          1. Open your authenticator app and scan the QR code.
+                          <br />
+                          2. Enter the 6-digit code displayed on the app.
+                          <br />
+                          3. Click on Verify.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

@@ -17,7 +17,7 @@ export default function AuthProvider({ children }) {
   const location = useLocation();
 
   async function auth_intra42() {
-    const response = await axios.get("http://127.0.0.1:8000/api/auth_intra/", {
+    const response = await axios.get("https://127.0.0.1/api/auth_intra/", {
       withCredentials: true
     });
     try {
@@ -38,13 +38,9 @@ export default function AuthProvider({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
-        const res = await axios.post(
-          `http://127.0.0.1:8000/api/login/`,
-          params,
-          {
-            withCredentials: true
-          }
-        );
+        const res = await axios.post(`https://127.0.0.1/api/login/`, params, {
+          withCredentials: true
+        });
         if (res.status === 200) {
           setUser(res.data);
           toast.success("login success", {
@@ -72,7 +68,7 @@ export default function AuthProvider({ children }) {
 
   async function get_auth_user() {
     try {
-      const res = await axios.get(`http://127.0.0.1:8000/api/user/`, {
+      const res = await axios.get(`https://127.0.0.1/api/user/`, {
         withCredentials: true
       });
 
@@ -90,7 +86,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`http://127.0.0.1:8000/api/logout/`, {
+      const res = await axios.get(`https://127.0.0.1/api/logout/`, {
         withCredentials: true
       });
 
@@ -107,14 +103,11 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     Login();
   }, []);
-  useEffect(
-    () => {
-      // console.log("constext user", user);
-      !user && get_auth_user();
-      // get_auth_user();
-    },
-    [location.pathname]
-  );
+  useEffect(() => {
+    // console.log("constext user", user);
+    !user && get_auth_user();
+    // get_auth_user();
+  }, [location.pathname]);
   return (
     <AuthContext.Provider
       value={{

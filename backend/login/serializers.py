@@ -17,10 +17,12 @@ class SignupSerializer(serializers.ModelSerializer):
                         'username': {
                             'required': True,
                             'min_length': 9,
-                            'max_length': 16,
+                            'max_length': 15,
                             } , 
                         'profile_name': {'write_only': True ,
-                                         'required': True, 'min_length': 9} }
+                                         'required': True, 'min_length': 9,
+                                         'max_length': 15
+                                         } }
 
     def create(self, validated_data):
         user = Player.objects.create_user(

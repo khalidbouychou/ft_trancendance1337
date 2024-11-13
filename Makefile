@@ -5,9 +5,9 @@ endif
 
 .PHONY: all
 
-all: up
+all: s up
 
-ssl : 
+s : 
 	chmod +x ./ssl.sh
 	./ssl.sh
 
@@ -44,6 +44,8 @@ clean:
 	@rm -rf db
 	@rm -rf ./frontd/certs
 	@rm -rf ./backend/certs
+	@rm -rf nginx/ssl.*
+	@rm -rf ssl/*
 
 push: 
 	@git add .

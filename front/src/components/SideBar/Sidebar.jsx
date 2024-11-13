@@ -24,6 +24,7 @@ const Sidebar = () => {
     const [sidebarWidth, setSidebarWidth] = useState('300px');
     const [avatar, setAvatar] = useState('');
     const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
 
     const {Logout } = useContext(AuthContext);
 
@@ -50,30 +51,86 @@ const Sidebar = () => {
     }, [])
 
   return (
-    <div className={styl.Sidebar} style={{ width: isOpen ? '300px' : sidebarWidth }}>
-        <Link to='/'><div className={styl.Card} style={{top: '0%'}}>
-            <div className={styl.icon}>
-                <img src={pinglogo}/>
-                {/* <img src={user.avatar}/> */}
-            </div>
-            <div className={styl.gameName} style={{display: isOpen ? 'flex' : 'none'}}><p >ping pong</p></div>
+    <div
+      className={styl.Sidebar}
+      style={{ width: isOpen ? "300px" : sidebarWidth }}
+    >
+      <Link to="/">
+        <div className={styl.Card} style={{ top: "0%" }}>
+          <div className={styl.icon}>
+            <img style={{ width: !isOpen && "70px" }} src={user.user?.avatar} />
+            <p style={{ display: !isOpen && "none" }}>
+              {user.user?.profile_name}
+            </p>
+
+            {/* <img src={user.avatar}/> */}
+          </div>
+          {/* <div
+            className={styl.gameName}
+            style={{ display: isOpen ? "flex" : "none" }}
+          >
+          </div> */}
         </div>
-        </Link>
-        <div className={styl.cont} >
-            <CmpCard isOpen={isOpen} ICON={MdOutlineHome} name={'Home'} link={'/home'}/>
-            <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={'/profile'}/>
-            <CmpCard isOpen={isOpen} ICON={IoChatbubbleEllipsesOutline} name={'Chat'} link={'/chat'}/>
-            <CmpCard isOpen={isOpen} ICON={IoLogoGameControllerB} name={'Game'} link={'/games'}/>
-            {/* <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/> */}
-            <CmpCard isOpen={isOpen} ICON={hasNotification ? MdNotificationImportant : MdNotifications} name={'Notification'} link={'/notification'}/>
-            <CmpCard isOpen={isOpen} ICON={CiSettings} name={'Setting'} link={'/setting'}/>
-        </div>
-            <div onClick={Logout}>  <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'}  top={'0%'} /> </div>
-        <button className={styl.cirButton} onClick={handleClick} style={{left: isOpen ? '96%' : '85%'}}>
-            <FaAnglesLeft style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}}/>
-        </button>
+      </Link>
+      <div className={styl.cont}>
+        <CmpCard
+          isOpen={isOpen}
+          ICON={MdOutlineHome}
+          name={"Home"}
+          link={"/home"}
+        />
+        <CmpCard
+          isOpen={isOpen}
+          ICON={CgProfile}
+          name={"Profile"}
+          link={"/profile"}
+        />
+        <CmpCard
+          isOpen={isOpen}
+          ICON={IoChatbubbleEllipsesOutline}
+          name={"Chat"}
+          link={"/chat"}
+        />
+        <CmpCard
+          isOpen={isOpen}
+          ICON={IoLogoGameControllerB}
+          name={"Game"}
+          link={"/games"}
+        />
+        {/* <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/> */}
+        <CmpCard
+          isOpen={isOpen}
+          ICON={hasNotification ? MdNotificationImportant : MdNotifications}
+          name={"Notification"}
+          link={"/notification"}
+        />
+        <CmpCard
+          isOpen={isOpen}
+          ICON={CiSettings}
+          name={"Setting"}
+          link={"/setting"}
+        />
+      </div>
+      <div onClick={Logout}>
+        {" "}
+        <CmpCard
+          isOpen={isOpen}
+          ICON={AiOutlineLogout}
+          name={"Log Out"}
+          top={"0%"}
+        />{" "}
+      </div>
+      <button
+        className={styl.cirButton}
+        onClick={handleClick}
+        style={{ left: isOpen ? "96%" : "85%" }}
+      >
+        <FaAnglesLeft
+          style={{ transform: isOpen ? "rotate(0deg)" : "rotate(180deg)" }}
+        />
+      </button>
     </div>
-  )
+  );
 }
 
 export default Sidebar

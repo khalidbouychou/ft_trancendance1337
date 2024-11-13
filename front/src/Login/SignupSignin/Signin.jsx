@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../UserContext/Context";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signin = () => {
-  const { url, auth_intra42 , setUser } = useContext(AuthContext);
+  const { url, auth_intra42, setUser } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -16,38 +16,38 @@ const Signin = () => {
     e.preventDefault();
     try {
       if (!username || !password) {
-        toast.error("Please fill all the fields",
-        {
+        toast.error("Please fill all the fields", {
           position: "top-right",
-          autoClose: 1000,
+          autoClose: 1000
         });
         return;
       }
-        const response = await axios.post("http://127.0.0.1:8000/api/singin/", {
-        username,
-        password,
-      }, {
-        withCredentials: true,
-      });
-      if (response.status === 200) {
-        console.log('++++++++++++++++++++')
-        setUser(response.data.user);
-        toast.success("login success",
+      const response = await axios.post(
+        "https://127.0.0.1/api/singin/",
         {
+          username,
+          password
+        },
+        {
+          withCredentials: true
+        }
+      );
+      if (response.status === 200) {
+        console.log("++++++++++++++++++++");
+        setUser(response.data.user);
+        toast.success("login success", {
           position: "top-right",
           autoClose: 1000,
-          closeOnClick: true,
+          closeOnClick: true
         });
         setTimeout(() => {
           navigate("/");
-          
         }, 1300);
       }
     } catch (err) {
-      toast.error("login failed",
-      {
+      toast.error("login failed", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 1000
       });
     }
   };
@@ -57,7 +57,6 @@ const Signin = () => {
       auth_intra42();
     }
   }, [url, auth_intra42]);
- 
 
   return (
     <>
@@ -78,13 +77,15 @@ const Signin = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" className="button sign-in">SIGN IN</button>
+        <button type="submit" className="button sign-in">
+          SIGN IN
+        </button>
         <div className="separator">
           <hr />
           <span>OR</span>
         </div>
         <button
-          className="button intra" 
+          className="button intra"
           onClick={() => {
             window.location.href = url;
           }}
