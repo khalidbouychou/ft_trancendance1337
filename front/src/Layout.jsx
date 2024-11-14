@@ -20,11 +20,12 @@ const Layout = () => {
   useEffect(() => {
     console.log("-------------layout user", user)
     user ? get_auth_user(): navigate("/login")
+    console.log("-------------2025", user.otp_verified, user.two_factor ,user.bool_login)
   }
   , [location.pathname])
   return (
     <div className={style.EntirePage}>
-          {( location.pathname !== "/login" && location.pathname !== "/twofa" ) &&  <Sidebar /> }
+          {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> }
           <Outlet />
     </div>
   );

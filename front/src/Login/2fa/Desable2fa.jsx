@@ -38,12 +38,12 @@ const Desable2fa = ({ isEnable, message, setEnable, setVerified }) => {
     console.log("---------------> otp", otp);
     try {
       const res = await axios.post(
-        "https://127.0.0.1/api/d_2fa/",
+        "http://127.0.0.1:8000/api/d_2fa/",
         {
-          otp: otp
+          otp:otp
         },
         {
-          withCredentials: true,
+          withCredentials:true,
           headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": document.cookie

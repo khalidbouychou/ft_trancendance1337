@@ -18,8 +18,8 @@ const Twofa = () => {
 
   const numInputs = 6;
 
-  const QR_CODE_URL = "https://127.0.0.1/api/qrcode/";
-  const USER_STATUS_URL = "https://127.0.0.1/api/user_status/";
+  const QR_CODE_URL = "http://127.0.0.1:8000/api/qrcode/";
+  const USER_STATUS_URL = "http://127.0.0.1:8000/api/user_status/";
 
   const renderInputs = () => {
     return Array.from({ length: numInputs }).map((_, i) => (
@@ -39,13 +39,11 @@ const Twofa = () => {
         console.log("enable", res.data.user.two_factor);
         if (res.data.user.qrcode_path) {
           setTimeout(() => {
-            setQrcode(`https://127.0.0.1/${res.data.user?.qrcode_path}`);
+            setQrcode(`http://127.0.0.1:8000/${res.data.user?.qrcode_path}`);
           }, 2000);
-          console.log("--------- >enable", isEnable);
         }
       }
     };
-    console.log(".................verified", verified);
     fetchTwofaStatus();
   }, [location.pathname]);
 
@@ -55,22 +53,28 @@ const Twofa = () => {
     const url = isOn && QR_CODE_URL;
 
     if (!isOn) {
-      setQrcode("");
+      if (!twofa) {
+        try {
+          const res = await axios.get("http://127.0.0.1:8000/api/clearqrcode/", { withCredentials: true });
+          if (res.status === 200)setQrcode("");
+        }
+        catch (err){setQrcode("");}
+      }
+      else {setQrcode("");}
     }
-    if (url == "undefined") {
+    else if (url == "undefined") {
       setEnable(!isOn);
       setQrcode("");
       setTwofa(user.user?.two_factor);
     } else {
       try {
         await get_auth_user();
-        const res = await axios.get(url, { withCredentials: true });
+        const res = await axios.get(url, { withCredentials: true }); 
         if (res.status === 200) {
           console.log("qrcode_path", res.data.user?.qrcode_path);
           setTimeout(() => {
-            setQrcode(`https://127.0.0.1/${res.data.user?.qrcode_path}`);
+            setQrcode(`http://127.0.0.1:8000/${res.data.user?.qrcode_path}`);
           }, 2000);
-          // setEnable(isOn);
         }
       } catch (error) {
         console.error("Error toggling 2FA:", error);
@@ -87,7 +91,7 @@ const Twofa = () => {
     // console.log("---------------> otp", otp);
     try {
       const res = await axios.post(
-        "https://127.0.0.1/api/otpverify/",
+        "http://127.0.0.1:8000/api/otpverify/",
         {
           otp: otp
         },
@@ -117,7 +121,6 @@ const Twofa = () => {
         autoClose: 1000,
         closeOnClick: true
       });
-      // console.error("Error verifying 2FA:", error);
     }
   };
 
@@ -134,8 +137,6 @@ const Twofa = () => {
                 name="qrcode"
                 value="On"
                 checked={isEnable}
-                // onClick={test}
-                // checked={twofa}
                 onClick={handleSwitch}
               />
             </div>
@@ -148,8 +149,6 @@ const Twofa = () => {
                 value="Off"
                 onClick={handleSwitch}
                 checked={!isEnable}
-                // onClick={test}
-                // checked={!twofa}
               />
             </div>
           </div>

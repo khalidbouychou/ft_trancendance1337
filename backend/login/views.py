@@ -166,6 +166,8 @@ class LogoutView(APIView):
             user = request.user
             if not user.is_authenticated:
                 return Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
+            user.bool_login = False
+            user.save()
             django_logout(request)
             response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK) 
             response.delete_cookie('token')
@@ -200,7 +202,7 @@ class AuthUser(APIView):
             except TokenError as e:
                 refresh = request.COOKIES.get('refresh')
                 crstf = request.COOKIES.get('csrftoken')
-                res = requests.post('https://127.0.0.1/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
+                res = requests.post('http://127.0.0.1:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
                 res.raise_for_status() # Raise an exception if the status code is not 2xx
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')
@@ -269,11 +271,10 @@ class GenerateQRcode(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self,request):
-        print("-------------------->",request.user)
         user = request.user
         user.mfa_secret = pyotp.random_base32()
         url  = qrcode.make(pyotp.totp.TOTP(user.mfa_secret).provisioning_uri(name=user.username, issuer_name='ft_transcendence'))
-        createdir = os.path.exists('uploads') #check if the directory exists 
+        createdir = os.path.exists('uploads')
         if not createdir:
             os.makedirs('uploads')
         number_random = random.randint(1, 10000000)
@@ -281,13 +282,11 @@ class GenerateQRcode(APIView):
         path = f'uploads/{user.username}_{num}.png'
         url.save(path)
         user.qrcode_path = path
-        # user.two_factor = True
         user.save()
         response = Response({'msg': 'QR code generated'}, status=status.HTTP_200_OK)  
         response.data = {
             'user': PlayerSerializer(user).data,
         }
-        print("on 2fa -------",user.qrcode_path)
         return response
 
 
@@ -296,21 +295,19 @@ class DesableTwoFactor(APIView):
     permission_classes = [IsAuthenticated]
     def post(self,request):
         user = request.user
-        if not user.qrcode_path:
-            return Response({'error': 'No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
-        if user.mfa_secret:
-            user.mfa_secret=""
-        if os.path.exists(user.qrcode_path):
-            os.remove(user.qrcode_path) 
-            user.qrcode_path = ""        
+        otp = request.data.get('otp')
+        if not user.mfa_secret or not otp :
+            return Response({'error': 'No secret found Or Otp invalide'}, status=status.HTTP_400_BAD_REQUEST)
         user.two_factor = False
-        user.otp_verified = False  
+        user.mfa_secret = ""
+        user.otp_verified = False
+        user.qrcode_path = ""
+        user.bool_login = True
         user.save()
-        response = Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
-        response.data = {
-            'user': PlayerSerializer(user).data,
-        }
-        return response
+        if not is_valid:
+            return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
+        
 
 class VerifyOtp(APIView):
     authentication_classes = [SessionAuthentication]
@@ -319,29 +316,35 @@ class VerifyOtp(APIView):
     def post(self, request):
         user = request.user
         otp = request.data.get('otp')
-        
         if not user.mfa_secret:
             return Response({'error': 'No secret found'}, status=status.HTTP_400_BAD_REQUEST) 
-
-        # Log the received OTP and the user's MFA secret
-        print("Received OTP:", otp)
-        print("User's MFA Secret:", user.mfa_secret)
-
-        # Verify the OTP
         totp = pyotp.TOTP(user.mfa_secret)
         is_valid = totp.verify(otp)
-        
-        # Log the result of the OTP verification
         print("Is OTP valid:", is_valid)
-
         if is_valid:
             user.two_factor = True
             user.otp_verified = True
-            # user.qrcode_path = ""
+            user.bool_login = True
             user.save()
             response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK)
             response.data = {'user': PlayerSerializer(user).data}
             return response
 
         return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+
+class ClearQrcode (APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        user = request.user
+        if not user.mfa_secret:
+            return Response({'error': 'No secret found'}, status=status.HTTP_400_BAD_REQUEST)
+        if not user.qrcode_path:
+            return Response({'error': 'No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
+        os.remove(user.qrcode_path)
+        user.qrcode_path = ""
+        user.save()
+        response = Response({'msg': 'QR code cleared'}, status=status.HTTP_200_OK)
+        response.data = {'user': PlayerSerializer(user).data}
+        return response
 #-----------------------------------2FA-------------------------------------------------------------

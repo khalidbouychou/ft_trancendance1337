@@ -7,7 +7,7 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/4.2/ref/settings/
+https://docs.djangoproject.com/en/4.2/ref/settings/ 
 """
 
 from pathlib import Path
@@ -23,12 +23,10 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent 
 # Add this setting to the end of the file or before the MIDDLEWARE setting
 CSRF_TRUSTED_ORIGINS = [
-    'https://127.0.0.1', 
+    'http://127.0.0.1', 
     'http://localhost',
     'http://localhost:8000',
-    'https://127.0.0.1', 
-    'https://localhost',
-    'https://localhost:8000',
+    'http://127.0.0.1:5173'
 ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -46,7 +44,6 @@ ALLOWED_HOSTS = ['127.0.0.1','localhost']
 INSTALLED_APPS = [
     'daphne',
     'channels',
-    'django_extensions',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -231,38 +228,29 @@ ip_frontendl = os.getenv("IP_FRONTEND")
 ip_backend = os.getenv("IP_BACKEND") 
 
 CORS_ALLOWED_ORIGINS = [
-    'https://127.0.0.1:5175',
-    'https://127.0.0.1',  
-    'https://127.0.0.1:5175',
-    'https://127.0.0.1',
-     'https://127.0.0.1:443',
-    'https://127.0.0.1:443',
-     'https://127.0.0.1',
-    'https://127.0.0.1:80',
-    'http://localhost:5175',
-    'http://localhost:8000', 
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:8000',  
     ]
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql', 
         'NAME': os.getenv("POSTGRES_DB"),
-        'USER': os.getenv("POSTGRES_USER"),
+        'USER': os.getenv("POSTGRES_USER"), 
         'PASSWORD': os.getenv("POSTGRES_PASSWORD"), 
         'HOST': os.getenv("POSTGRES_HOST"),
         'PORT': os.getenv("POSTGRES_PORT"),
     }
 }
 
+
+
+
 # Adjust settings only in development
 SESSION_COOKIE_SECURE = False  # Set to True in production
 CSRF_COOKIE_SECURE = False     # Set to True in production
 SESSION_COOKIE_SAMESITE = None # Set to 'Lax' or 'Strict' in production if cross-site access is not needed
 CSRF_COOKIE_SAMESITE = None    # Same here
-
-# SSL Configuration
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
 
 
 #************  khbouych ************

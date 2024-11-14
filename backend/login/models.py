@@ -22,43 +22,10 @@ class Player(AbstractUser):
     mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False) 
     otp_verified = models.BooleanField(default=False)
     qrcode_path = models.CharField(max_length=255, default='', blank=False, null=False) 
-    
+    bool_login = models.BooleanField(default=False)
     
     class Meta: 
         db_table = 'player' 
-
-#     def save(self, *args, **kwargs):
-#         if self.status_network == 'offline':
-#             self.status_game = 'offline'
-#         super().save(*args, **kwargs)
-
-#     def block_user(self, user_to_block):
-#         self.blocked_users.add(user_to_block)
-
-#     def unblock_user(self, user_to_unblock):
-#         self.blocked_users.remove(user_to_unblock)
-
-#     def is_blocked(self, user):
-#         return self.blocked_users.filter(id=user.id).exists() 
-
-#     @staticmethod
-#     def are_enemies(user1, user2):
-#         return user1.is_blocked(user2) or user2.is_blocked(user1)
-
-# class Friend(models.Model):
-#     STATUS = (
-#         ('None', _('None')),
-#         ('pending', _('pending')),
-#         ('friends', _('friends')),
-#     )
-
-#     user1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="friend_user1")
-#     user2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="friend_user2")
-#     status = models.CharField(max_length=10, choices=STATUS, default='None')
-
-#     class Meta:
-#         db_table = 'Friend'
-#         unique_together = ['user1', 'user2', 'status']
 
 
 

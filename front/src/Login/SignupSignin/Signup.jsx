@@ -12,7 +12,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
   const handleForm = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://127.0.0.1/api/signup/", {
+      const res = await axios.post("http://127.0.0.1:8000/api/signup/", {
         username,
         profile_name: displayname,
         password

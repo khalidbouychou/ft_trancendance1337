@@ -17,7 +17,7 @@ export default function AuthProvider({ children }) {
   const location = useLocation();
 
   async function auth_intra42() {
-    const response = await axios.get("https://127.0.0.1/api/auth_intra/", {
+    const response = await axios.get("http://127.0.0.1:8000/api/auth_intra/", {
       withCredentials: true
     });
     try {
@@ -38,7 +38,7 @@ export default function AuthProvider({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
-        const res = await axios.post(`https://127.0.0.1/api/login/`, params, {
+        const res = await axios.post(`http://127.0.0.1:8000/api/login/`, params, {
           withCredentials: true
         });
         if (res.status === 200) {
@@ -49,7 +49,11 @@ export default function AuthProvider({ children }) {
             closeOnClick: true
           });
           setTimeout(() => {
-            navigate("/");
+            // if (res.data.otp_verified === true && res.data.two_factor === true) {
+            //   navigate("/otp");
+            // } else {
+            navigate("/home");
+            // }
           }, 1200);
         }
       }
@@ -68,12 +72,14 @@ export default function AuthProvider({ children }) {
 
   async function get_auth_user() {
     try {
-      const res = await axios.get(`https://127.0.0.1/api/user/`, {
+      const res = await axios.get(`http://127.0.0.1:8000/api/user/`, {
         withCredentials: true
       });
 
       if (res.status === 200) {
         setUser(res.data);
+        console.log("user", res.data.user);
+        !res.data.user.bool_login && res.data.user.two_factor && res.data.user.otp_verified && navigate("/otp");
         if (window.location.pathname === "/login") {
           navigate("/");
         }
@@ -86,7 +92,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`https://127.0.0.1/api/logout/`, {
+      const res = await axios.get(`http://127.0.0.1:8000/api/logout/`, {
         withCredentials: true
       });
 

@@ -5,7 +5,7 @@ endif
 
 .PHONY: all
 
-all: s up
+all: up
 
 s : 
 	chmod +x ./ssl.sh

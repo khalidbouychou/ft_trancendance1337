@@ -14,6 +14,7 @@ import Desable2fa from "./Login/2fa/Desable2fa.jsx";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
+import Otplogin from "./Login/2fa/otplogin.jsx";
 function App() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
@@ -40,6 +41,7 @@ function App() {
             <Route path="notification" element={<h1>notification</h1>} />
             <Route path="twofa" element={<Twofa />} />
             <Route path="setting" element={<Settings />} />
+            <Route path="otp" element={< Otplogin/>} />
           </Route>
           <Route path="/login" element={<LoginSignup />} />
           <Route
