@@ -8,7 +8,7 @@ const Otplogin = () => {
   const navigate = useNavigate();
   const { get_auth_user } = useContext(AuthContext);
   const location = useLocation();
-  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     get_auth_user();

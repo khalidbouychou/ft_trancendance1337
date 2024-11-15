@@ -1,7 +1,7 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import React, {useState, useEffect, useContext} from 'react'
 import styl from './Sidebar.module.css'
-import pinglogo from './assets/pinglogo.png'
+// import pinglogo from './assets/pinglogo.png'
 import { FaAnglesLeft } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
@@ -13,17 +13,14 @@ import CmpCard from '../CmpCard/CmpCard';
 
 import { MdNotifications, MdNotificationImportant } from "react-icons/md";
 
-import {useNavigate} from 'react-router-dom';
-
-
-import { Navigate } from 'react-router-dom';
+// import {useNavigate} from 'react-router-dom';
 import { AuthContext } from '../../UserContext/Context';
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true)
     const [hasNotification, setHasNotification] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState('300px');
-    const [avatar, setAvatar] = useState('');
-    const navigate = useNavigate();
+    // const [avatar, setAvatar] = useState('');
+    // const navigate = useNavigate();
     const { user , get_auth_user} = useContext(AuthContext);
 
     const {Logout } = useContext(AuthContext);
@@ -33,7 +30,7 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
-        !user && get_auth_user();
+        get_auth_user();
         const handleResize = () => {
             if (window.innerWidth <= 1024)
                 setIsOpen(false)

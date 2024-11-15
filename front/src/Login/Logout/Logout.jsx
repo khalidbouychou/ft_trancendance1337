@@ -12,7 +12,7 @@ const Logout = loading => {
         height: "100vh"
       }}
     >
-      <GridLoader color="#fff" loading={loading} size={20} />
+      <GridLoader color="green" loading={loading} size={20} />
     </div>
   );
 };

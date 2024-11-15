@@ -10,22 +10,45 @@ import { useEffect } from "react";
 import { useContext } from "react";
 import { AuthContext } from "./UserContext/Context";
 import { useNavigate } from "react-router-dom";
+import { GridLoader } from "react-spinners";
+import { useState } from "react";
 
 
 const Layout = () => {
   const navigate = useNavigate();
   const location = useLocation();
  const {user ,get_auth_user} = useContext(AuthContext);
+ const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    console.log("-------------layout user", user)
-    user ? get_auth_user(): navigate("/login")
-  }
-  , [location.pathname])
+ useEffect(() => {
+   console.log("-------------layout user", user)
+   user ? get_auth_user(): navigate("/login")
+ }
+ , [location.pathname])
+
+ useEffect(() => {
+  console.log("path", window.location.pathname);
+  const timer = setTimeout(() => {
+    setLoading(false);
+  }, 900);
+  return () => clearTimeout(timer);
+}, [location.pathname]);
+
   return (
+
+    loading ?   <div 
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh"
+    }}
+  >
+    <GridLoader color="#fff" loading={loading} size={20} />
+  </div> :
     <div className={style.EntirePage}>
           {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> }
-          <Outlet />
+           <Outlet />
     </div>
   );
 };

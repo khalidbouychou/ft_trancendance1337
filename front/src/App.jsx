@@ -1,34 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 import style from "./App.module.css";
 import LoginSignup from "./Login/SignupSignin/SignupSignin.jsx";
-import { useEffect, useState } from "react";
-import { GridLoader } from "react-spinners";
 import Layout from "./Layout.jsx";
 
 import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
-
 import Twofa from "./Login/2fa/twofa.jsx";
 import Settings from "./Setting/Setting.jsx";
-import { useLocation } from "react-router-dom";
-// import Desable2fa from "./Login/2fa/Desable2fa.jsx";
-import Alert from "@mui/material/Alert";
-// import AlertTitle from "@mui/material/AlertTitle";
-import Stack from "@mui/material/Stack";
 import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
 function App() {
-  const [loading, setLoading] = useState(true);
-  const location = useLocation();
-
-  useEffect(() => {
-    console.log("path", window.location.pathname);
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 900);
-
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
-
-  return !loading ? (
+  return (
     <div className={style.EntirePage}>
       <div className={style.MainContent}>
         <Routes>
@@ -44,35 +24,10 @@ function App() {
             <Route path="otp" element={< Otplogin/>} />
           </Route>
           <Route path="/login" element={<LoginSignup />} />
-          <Route
-            path="/alert"
-            element={
-              <>
-                <Stack sx={{ width: "200%" , marginLeft: "600px"}}>
-                  <Alert variant="filled" severity="success">
-                    This is a filled success Alert.
-                  </Alert>
-                </Stack>
-              </>
-            }
-          />
-          {/* <Route path="/desable" element={<Desable2fa/>} /> */}
           <Route path="/*" element={<PageNotFound />} />
         </Routes>
       </div>
-    </div>
-  ) : (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh"
-      }}
-    >
-      <GridLoader color="#fff" loading={loading} size={20} />
-    </div>
-  );
+    </div> );
 }
 
 export default App;

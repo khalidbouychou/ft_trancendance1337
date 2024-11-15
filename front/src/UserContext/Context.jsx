@@ -1,10 +1,8 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { GridLoader } from "react-spinners";
 
 import { toast } from "react-toastify";
-
 
 export const AuthContext = createContext(null);
 
@@ -23,7 +21,9 @@ export default function AuthProvider({ children }) {
       if (response.status === 200) {
         setUrl(response.data.url);
       }
-    } catch (error) {console.error("Error", error);}
+    } catch (error) {
+      console.error("Error", error);
+    }
   }
 
   async function Login() {
@@ -37,14 +37,19 @@ export default function AuthProvider({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
-        const res = await axios.post(`http://127.0.0.1:8000/api/login/`, params, {
-          withCredentials: true
-        });
+        const res = await axios.post(
+          `http://127.0.0.1:8000/api/login/`,
+          params,
+          {
+            withCredentials: true
+          }
+        );
         if (res.status === 200) {
-          // setTimeout(() => {
-          //   <GridLoader color="#fff" loading={loading} size={20} />
-          // }, 1000);
           setUser(res.data);
+          setLoading(true);
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
           if (res.data.otp_login) {
             toast.success("login success", {
               position: "top-right",
@@ -52,18 +57,16 @@ export default function AuthProvider({ children }) {
               closeOnClick: true
             });
           }
-            navigate("/home");
+          navigate("/home");
         }
       }
     } catch (error) {
       console.error("Error", error);
       toast.error("login failed", {
         position: "top-right",
-        autoClose: 1200
+        autoClose: 1000
       });
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      navigate("/");
     } finally {
       setLoading(false);
     }
@@ -78,7 +81,10 @@ export default function AuthProvider({ children }) {
       if (res.status === 200) {
         setUser(res.data);
         console.log("user", res.data.user);
-        !res.data.user.bool_login && res.data.user.two_factor && res.data.user.otp_verified && navigate("/otp");
+        !res.data.user.bool_login &&
+          res.data.user.two_factor &&
+          res.data.user.otp_verified &&
+          navigate("/otp");
         if (window.location.pathname === "/login") {
           navigate("/home");
         }
@@ -109,9 +115,12 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     Login();
   }, []);
-  useEffect(() => {
-    !user && get_auth_user();
-  }, [location.pathname]);
+  useEffect(
+    () => {
+      !user && get_auth_user();
+    },
+    [location.pathname]
+  );
   return (
     <AuthContext.Provider
       value={{
