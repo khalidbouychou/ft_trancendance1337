@@ -22,7 +22,8 @@ const Layout = () => {
 
  useEffect(() => {
    console.log("-------------layout user", user)
-   user ? get_auth_user(): navigate("/login")
+  //  user ? get_auth_user(): navigate("/login")
+   get_auth_user()
  }
  , [location.pathname])
 
@@ -30,7 +31,7 @@ const Layout = () => {
   console.log("path", window.location.pathname);
   const timer = setTimeout(() => {
     setLoading(false);
-  }, 900);
+  }, 1200);
   return () => clearTimeout(timer);
 }, [location.pathname]);
 

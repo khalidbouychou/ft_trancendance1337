@@ -12,3 +12,4 @@ dump.rdb
 front/README.md
 **/README.md
 db
+.env
