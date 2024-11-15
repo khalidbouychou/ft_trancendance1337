@@ -2,36 +2,9 @@ import { useState } from "react";
 import "./SignupSignin.css";
 import Signup from "./Signup";
 import Signin from "./Signin";
-import { SyncLoader } from "react-spinners";
-import { useEffect } from "react";
 
 export default function LoginSignup() {
   const [isLogin, setIsLogin] = useState(true);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }
-  , []);
-
-  if (loading) {
-    return (
-      <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh"
-      }}
-    >
-      <SyncLoader color="#ffff" loading={loading} height={80} width={8} />
-    </div>
-    );
-  }
   return (
       <>
       <div className="container">

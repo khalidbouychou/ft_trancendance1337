@@ -7,7 +7,6 @@ const Signup = ({ isLogin, setIsLogin }) => {
   const [username, setUsername] = useState("");
   const [displayname, setDisplayname] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const handleForm = async (e) => {
     e.preventDefault();
@@ -24,9 +23,10 @@ const Signup = ({ isLogin, setIsLogin }) => {
         });
         setTimeout(() => {
           setIsLogin(true);
-        }, 2000);
+        }, 1000);
       }
     } catch (err) {
+      console.error(err);
       toast.error("Opps something went wrong", {
         position: "top-right",
         autoClose: 1000

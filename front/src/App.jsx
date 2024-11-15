@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import style from "./App.module.css";
 import LoginSignup from "./Login/SignupSignin/SignupSignin.jsx";
 import { useEffect, useState } from "react";
-import { SyncLoader } from "react-spinners";
+import { GridLoader } from "react-spinners";
 import Layout from "./Layout.jsx";
 
 import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
@@ -23,7 +23,7 @@ function App() {
     console.log("path", window.location.pathname);
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 900);
 
     return () => clearTimeout(timer);
   }, [location.pathname]);
@@ -70,7 +70,7 @@ function App() {
         height: "100vh"
       }}
     >
-      <SyncLoader color="#ffff" loading={loading} height={80} width={8} />
+      <GridLoader color="#fff" loading={loading} size={20} />
     </div>
   );
 }

@@ -1,11 +1,10 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { GridLoader } from "react-spinners";
 
 import { toast } from "react-toastify";
 
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
 
 export const AuthContext = createContext(null);
 
@@ -24,7 +23,7 @@ export default function AuthProvider({ children }) {
       if (response.status === 200) {
         setUrl(response.data.url);
       }
-    } catch (error) {}
+    } catch (error) {console.error("Error", error);}
   }
 
   async function Login() {
@@ -42,29 +41,29 @@ export default function AuthProvider({ children }) {
           withCredentials: true
         });
         if (res.status === 200) {
+          // setTimeout(() => {
+          //   <GridLoader color="#fff" loading={loading} size={20} />
+          // }, 1000);
           setUser(res.data);
-          toast.success("login success", {
-            position: "top-right",
-            autoClose: 1200,
-            closeOnClick: true
-          });
-          setTimeout(() => {
-            // if (res.data.otp_verified === true && res.data.two_factor === true) {
-            //   navigate("/otp");
-            // } else {
+          if (res.data.otp_login) {
+            toast.success("login success", {
+              position: "top-right",
+              autoClose: 1000,
+              closeOnClick: true
+            });
+          }
             navigate("/home");
-            // }
-          }, 1200);
         }
       }
     } catch (error) {
+      console.error("Error", error);
       toast.error("login failed", {
         position: "top-right",
-        autoClose: 1000
+        autoClose: 1200
       });
       setTimeout(() => {
         navigate("/");
-      }, 500);
+      }, 1000);
     } finally {
       setLoading(false);
     }
@@ -81,10 +80,11 @@ export default function AuthProvider({ children }) {
         console.log("user", res.data.user);
         !res.data.user.bool_login && res.data.user.two_factor && res.data.user.otp_verified && navigate("/otp");
         if (window.location.pathname === "/login") {
-          navigate("/");
+          navigate("/home");
         }
       }
     } catch (error) {
+      console.error("Error", error);
       setUser(null);
       navigate("/login");
     }
@@ -101,8 +101,8 @@ export default function AuthProvider({ children }) {
         navigate("/login");
       }
     } catch (error) {
+      console.error("Error", error);
       setUser(null);
-      // navigate("/login");
     }
   }
 

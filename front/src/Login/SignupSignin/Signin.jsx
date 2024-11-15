@@ -10,7 +10,7 @@ const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+
 
   const handelogin = async (e) => {
     e.preventDefault();

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SyncLoader } from "react-spinners";
+import { GridLoader } from "react-spinners";
 
 const Logout = loading => {
   return (
@@ -12,7 +12,7 @@ const Logout = loading => {
         height: "100vh"
       }}
     >
-      <SyncLoader color="#ffff" loading={loading} height={80} width={8} />
+      <GridLoader color="#fff" loading={loading} size={20} />
     </div>
   );
 };
