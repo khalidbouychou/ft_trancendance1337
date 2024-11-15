@@ -64,7 +64,7 @@ export default function AuthProvider({ children }) {
       });
       setTimeout(() => {
         navigate("/");
-      }, 100);
+      }, 500);
     } finally {
       setLoading(false);
     }
@@ -79,7 +79,7 @@ export default function AuthProvider({ children }) {
       if (res.status === 200) {
         setUser(res.data);
         console.log("user", res.data.user);
-        // !res.data.user.bool_login && res.data.user.two_factor && res.data.user.otp_verified && navigate("/otp");
+        !res.data.user.bool_login && res.data.user.two_factor && res.data.user.otp_verified && navigate("/otp");
         if (window.location.pathname === "/login") {
           navigate("/");
         }
@@ -110,9 +110,7 @@ export default function AuthProvider({ children }) {
     Login();
   }, []);
   useEffect(() => {
-    // console.log("constext user", user);
     !user && get_auth_user();
-    // get_auth_user();
   }, [location.pathname]);
   return (
     <AuthContext.Provider

@@ -8,18 +8,13 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-const Desable2fa = ({ isEnable, message, setEnable, setVerified }) => {
+const Desable2fa = ({  message, setVerified }) => {
   const { user, get_auth_user } = useContext(AuthContext);
   const [formsg, setFormsg] = useState(false);
 
   useEffect(() => {
-    console.log(".................. formsg", formsg);
     get_auth_user();
-    // if (isEnable) {
-    console.log("..........----------user", user);
     setFormsg(user.user.otp_verified);
-    // }
-    console.log("formsg ------------------------ ", formsg);
   }, []);
 
   const renderInputs = () => {

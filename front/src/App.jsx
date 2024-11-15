@@ -10,11 +10,11 @@ import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
 import Twofa from "./Login/2fa/twofa.jsx";
 import Settings from "./Setting/Setting.jsx";
 import { useLocation } from "react-router-dom";
-import Desable2fa from "./Login/2fa/Desable2fa.jsx";
+// import Desable2fa from "./Login/2fa/Desable2fa.jsx";
 import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
+// import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
-import Otplogin from "./Login/2fa/otplogin.jsx";
+import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
 function App() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
