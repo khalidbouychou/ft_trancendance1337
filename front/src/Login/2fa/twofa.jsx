@@ -56,7 +56,10 @@ const Twofa = () => {
       if (!twofa) {
         try {
           const res = await axios.get("http://127.0.0.1:8000/api/clearqrcode/", { withCredentials: true });
-          if (res.status === 200)setQrcode("");
+          if (res.status === 200){
+          console.log("----------------------------------------- user ------------------", user);
+            setQrcode("")
+          };
         }
         catch (err){setQrcode("");}
       }

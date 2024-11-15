@@ -298,14 +298,16 @@ class DesableTwoFactor(APIView):
         otp = request.data.get('otp')
         if not user.mfa_secret or not otp :
             return Response({'error': 'No secret found Or Otp invalide'}, status=status.HTTP_400_BAD_REQUEST)
+        totp = pyotp.TOTP(user.mfa_secret)
+        is_valid = totp.verify(otp)
+        if not is_valid:
+            return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
         user.two_factor = False
         user.mfa_secret = ""
         user.otp_verified = False
         user.qrcode_path = ""
-        user.bool_login = True
+        user.bool_login = False
         user.save()
-        if not is_valid:
-            return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
         return Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
         
 
@@ -337,10 +339,8 @@ class ClearQrcode (APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request):
         user = request.user
-        if not user.mfa_secret:
-            return Response({'error': 'No secret found'}, status=status.HTTP_400_BAD_REQUEST)
-        if not user.qrcode_path:
-            return Response({'error': 'No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
+        if not user.mfa_secret or not user.qrcode_path:
+            return Response({'error': 'No secret found Or No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
         os.remove(user.qrcode_path)
         user.qrcode_path = ""
         user.save()

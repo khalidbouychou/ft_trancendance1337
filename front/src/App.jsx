@@ -23,7 +23,7 @@ function App() {
     console.log("path", window.location.pathname);
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 199);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [location.pathname]);

@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-from datetime import timedelta
+from datetime import timedelta 
 from django.conf import settings
 from corsheaders.defaults import default_headers
 
@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 # Load the .env file
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent 
+BASE_DIR = Path(__file__).resolve().parent.parent  
 # Add this setting to the end of the file or before the MIDDLEWARE setting
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1', 

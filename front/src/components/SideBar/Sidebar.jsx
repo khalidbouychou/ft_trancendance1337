@@ -24,7 +24,7 @@ const Sidebar = () => {
     const [sidebarWidth, setSidebarWidth] = useState('300px');
     const [avatar, setAvatar] = useState('');
     const navigate = useNavigate();
-    const { user } = useContext(AuthContext);
+    const { user , get_auth_user} = useContext(AuthContext);
 
     const {Logout } = useContext(AuthContext);
 
@@ -33,6 +33,7 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
+        !user && get_auth_user();
         const handleResize = () => {
             if (window.innerWidth <= 1024)
                 setIsOpen(false)
@@ -62,14 +63,7 @@ const Sidebar = () => {
             <p style={{ display: !isOpen && "none" }}>
               {user.user?.profile_name}
             </p>
-
-            {/* <img src={user.avatar}/> */}
           </div>
-          {/* <div
-            className={styl.gameName}
-            style={{ display: isOpen ? "flex" : "none" }}
-          >
-          </div> */}
         </div>
       </Link>
       <div className={styl.cont}>
@@ -97,7 +91,6 @@ const Sidebar = () => {
           name={"Game"}
           link={"/games"}
         />
-        {/* <CmpCard isOpen={isOpen} ICON={IoIosNotifications} name={'Notification'} link={'/notification'}/> */}
         <CmpCard
           isOpen={isOpen}
           ICON={hasNotification ? MdNotificationImportant : MdNotifications}
