@@ -18,8 +18,8 @@ const Twofa = () => {
 
   const numInputs = 6;
 
-  const QR_CODE_URL = "http://127.0.0.1:8000/api/qrcode/";
-  const USER_STATUS_URL = "http://127.0.0.1:8000/api/user_status/";
+  const QR_CODE_URL = "https://127.0.0.1/api/qrcode/";
+  const USER_STATUS_URL = "https://127.0.0.1/api/user_status/";
 
   const renderInputs = () => {
     return Array.from({ length: numInputs }).map((_, i) => (
@@ -55,7 +55,7 @@ const Twofa = () => {
     if (!isOn) {
       if (!twofa) {
         try {
-          const res = await axios.get("http://127.0.0.1:8000/api/clearqrcode/", { withCredentials: true });
+          const res = await axios.get("https://127.0.0.1/api/clearqrcode/", { withCredentials: true });
           if (res.status === 200){
           console.log("----------------------------------------- user ------------------", user);
             setQrcode("")
@@ -94,7 +94,7 @@ const Twofa = () => {
     // console.log("---------------> otp", otp);
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/otpverify/",
+        "https://127.0.0.1/api/otpverify/",
         {
           otp: otp
         },

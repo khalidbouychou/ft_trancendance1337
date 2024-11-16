@@ -2,4 +2,6 @@ FROM node:20
 WORKDIR /app
 COPY ./package*.json ./
 COPY . .
-CMD npm i && npm run build && npm run dev
+# RUN npm run build
+# The production build will be served by Nginx, so no need to run dev server
+CMD ["npm", "run", "build"]

@@ -33,7 +33,7 @@ const Desable2fa = ({  message, setVerified }) => {
     console.log("---------------> otp", otp);
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/d_2fa/",
+        "https://127.0.0.1/api/d_2fa/",
         {
           otp:otp
         },
