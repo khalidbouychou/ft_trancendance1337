@@ -1,4 +1,5 @@
 FROM node:20
+RUN npm install -g vite@latest
 WORKDIR /app
 COPY ./package*.json ./
 COPY . .
