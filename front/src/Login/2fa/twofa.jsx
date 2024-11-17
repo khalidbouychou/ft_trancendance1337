@@ -41,10 +41,15 @@ const Twofa = () => {
           }, 2000);
         }
       }
+     
     };
     fetchTwofaStatus();
   }, [location.pathname]);
 
+
+useEffect(() => {
+  console.log("------------------->" , isEnable);
+}, [isEnable])
   const handleSwitch = async (e) => {
     const isOn = e.target.value === "On";
     setEnable(isOn);
@@ -57,7 +62,7 @@ const Twofa = () => {
           if (res.status === 200){
             await get_auth_user();
             setQrcode(res.data?.qrcode_path);
-            setQrcode("");
+            // setQrcode("");
           };
         }
         catch (err){setQrcode("");}

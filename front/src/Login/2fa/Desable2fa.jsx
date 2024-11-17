@@ -14,8 +14,9 @@ const Desable2fa = ({  message, setVerified }) => {
 
   useEffect(() => {
     get_auth_user();
+    console.log("frm--",user.user.otp_verified)
     setFormsg(user.user.otp_verified);
-  }, []);
+  }, [user.user.otp_verified]);
 
   const renderInputs = () => {
     return Array.from({
