@@ -28,7 +28,6 @@ const Twofa = () => {
   };
 
   useEffect(() => {
-    console.log("enable", isEnable);
     const fetchTwofaStatus = async () => {
       await get_auth_user();
       const res = await axios.get(USER_STATUS_URL, { withCredentials: true });
@@ -36,7 +35,6 @@ const Twofa = () => {
         setVerified(res.data.user.otp_verified);
         setTwofa(res.data.user.two_factor);
         setEnable(res.data.user.two_factor);
-        console.log("enable", res.data.user.two_factor);
         if (res.data.user.qrcode_path) {
           setTimeout(() => {
             setQrcode(`http://127.0.0.1:8000/${res.data.user?.qrcode_path}`);
@@ -57,8 +55,9 @@ const Twofa = () => {
         try {
           const res = await axios.get("https://127.0.0.1/api/clearqrcode/", { withCredentials: true });
           if (res.status === 200){
-          console.log("----------------------------------------- user ------------------", user);
-            setQrcode("")
+            await get_auth_user();
+            setQrcode(res.data?.qrcode_path);
+            setQrcode("");
           };
         }
         catch (err){setQrcode("");}
@@ -66,21 +65,22 @@ const Twofa = () => {
       else {setQrcode("");}
     }
     else if (url == "undefined") {
-      setEnable(!isOn);
       setQrcode("");
-      setTwofa(user.user?.two_factor);
+      setEnable(!isOn);
+      setTwofa(user.user?.two_factor); 
     } else {
       try {
         await get_auth_user();
-        const res = await axios.get(url, { withCredentials: true }); 
-        if (res.status === 200) {
-          console.log("qrcode_path", res.data.user?.qrcode_path);
+        setQrcode("");
+        const res = await axios.get(url, { withCredentials: true });
+        if (res.status === 200) { 
+
           setTimeout(() => {
             setQrcode(`http://127.0.0.1:8000/${res.data.user?.qrcode_path}`);
           }, 2000);
         }
       } catch (error) {
-        console.error("Error toggling 2FA:", error);
+        // setQrcode("");
       }
     }
   };
@@ -91,7 +91,6 @@ const Twofa = () => {
     const otp = Array.from(inputs)
       .map((input) => input.value)
       .join("");
-    // console.log("---------------> otp", otp);
     try {
       const res = await axios.post(
         "https://127.0.0.1/api/otpverify/",
@@ -116,7 +115,6 @@ const Twofa = () => {
           autoClose: 1000,
           closeOnClick: true
         });
-        console.log("2FA verified");
       }
     } catch (error) {
       toast.error("OTP code is not correct", {

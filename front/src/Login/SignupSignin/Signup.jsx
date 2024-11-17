@@ -26,7 +26,6 @@ const Signup = ({ isLogin, setIsLogin }) => {
         }, 1000);
       }
     } catch (err) {
-      console.error(err);
       toast.error("Opps something went wrong", {
         position: "top-right",
         autoClose: 1000

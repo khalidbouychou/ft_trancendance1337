@@ -33,7 +33,6 @@ const Signin = () => {
         }
       );
       if (response.status === 200) {
-        console.log("++++++++++++++++++++");
         setUser(response.data.user);
         toast.success("login success", {
           position: "top-right",

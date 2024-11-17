@@ -32,7 +32,7 @@ services:
       start_period: 30s
 
   back:
-    container_name: backend
+    container_name: back
     build: backend/docker-backend
     env_file:
       - .env
@@ -80,12 +80,12 @@ services:
     image: nginx:latest
     container_name: nginx
     ports:
-      - "80:80"
+      # - "80:80"
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./ssl/:/etc/nginx/ssl/  # Your SSL certificates
-      - ./frontend/build:/usr/share/nginx/html  # Serve React's build files
+      - ./front/dist:/usr/share/nginx/html  # Serve React's build files
     networks:
       - connexion
     depends_on:

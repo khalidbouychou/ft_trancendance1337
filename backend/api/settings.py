@@ -23,10 +23,12 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent  
 # Add this setting to the end of the file or before the MIDDLEWARE setting
 CSRF_TRUSTED_ORIGINS = [
+    'https://127.0.0.1', 
     'http://127.0.0.1', 
     'http://localhost',
+    'https://localhost',
     'http://localhost:8000',
-    'http://127.0.0.1:5173'
+    'https://127.0.0.1:5173'
 ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -211,13 +213,13 @@ SIMPLE_JWT = {
 ACCESS_TOKEN_LIFETIME = SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
 REFRESH_TOKEN_LIFETIME = SIMPLE_JWT['REFRESH_TOKEN_LIFETIME']
 
-JWT_COOKIE_SECURE = False
+JWT_COOKIE_SECURE = False # Set to True in production
 
 
 # These are used for cookie settings
 JWT_AUTH_COOKIE = 'access_token' 
 JWT_AUTH_REFRESH_COOKIE = 'refresh_token'
-JWT_AUTH_SECURE = True  # Set to False in development if not using HTTPS
+JWT_AUTH_SECURE = False  # Set to False in development if not using HTTPS
 JWT_AUTH_SAMESITE = 'Lax'
 JWT_REFRESH_TOKEN_LIFETIME = REFRESH_TOKEN_LIFETIME
 
@@ -228,8 +230,12 @@ ip_frontendl = os.getenv("IP_FRONTEND")
 ip_backend = os.getenv("IP_BACKEND") 
 
 CORS_ALLOWED_ORIGINS = [
+    'https://127.0.0.1:5173',
     'http://127.0.0.1:5173',
-    'http://127.0.0.1:8000',  
+    'https://127.0.0.1',  
+    'http://127.0.0.1',
+    'http://localhost',
+    'https://localhost',
     ]
 
 DATABASES = {
@@ -246,11 +252,15 @@ DATABASES = {
 
 
 
-# Adjust settings only in development
-SESSION_COOKIE_SECURE = False  # Set to True in production
-CSRF_COOKIE_SECURE = False     # Set to True in production
-SESSION_COOKIE_SAMESITE = None # Set to 'Lax' or 'Strict' in production if cross-site access is not needed
-CSRF_COOKIE_SAMESITE = None    # Same here
 
+# Set secure cookies and headers for HTTPS
+SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Tells Django that the request is secure
+CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
+
+# Use the X-Forwarded-For header to get the real client IP address
+USE_X_FORWARDED_HOST = True
+#************
 
 #************  khbouych ************

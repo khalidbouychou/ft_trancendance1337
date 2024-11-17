@@ -46,7 +46,7 @@ const Otplogin = () => {
       , 1000);
       }
     } catch (error) {
-      console.error("Error", error);
+      // console.log(error);
     }
   };
 

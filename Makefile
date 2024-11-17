@@ -3,9 +3,12 @@ ifneq ("$(wildcard .env)","")
     include .env
 endif
 
+uploads_dir:
+	@mkdir -p backend/uploads
+
 .PHONY: all
 
-all: up
+all: uploads_dir s up
 
 s : 
 	chmod +x ./ssl.sh

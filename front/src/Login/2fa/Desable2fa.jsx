@@ -30,7 +30,6 @@ const Desable2fa = ({  message, setVerified }) => {
     const otp = Array.from(inputs)
       .map((input) => input.value)
       .join("");
-    console.log("---------------> otp", otp);
     try {
       const res = await axios.post(
         "https://127.0.0.1/api/d_2fa/",
@@ -48,7 +47,6 @@ const Desable2fa = ({  message, setVerified }) => {
           }
         }
       );
-      console.log("res", res.data);
       if (res.status === 200) {
         setVerified(res.data.otp_verified);
         setFormsg(res.data.otp_verified);
@@ -57,22 +55,18 @@ const Desable2fa = ({  message, setVerified }) => {
           autoClose: 1000,
           closeOnClick: true
         });
-        console.log("2FA verified");
       }
     } catch (error) {
-      // console.log("error", error);
       toast.error("OTP code is not correct", {
         position: "top-right",
         autoClose: 1000,
         closeOnClick: true
       });
-      // console.error("Error verifying 2FA:", error);
     }
   };
 
   return formsg ? (
     <div className="container">
-      {console.log("8989", formsg)}
       <h2>{message} </h2>
       <div className="inputs-container">{renderInputs()}</div>
       <div className="btns">
@@ -83,7 +77,6 @@ const Desable2fa = ({  message, setVerified }) => {
     </div>
   ) : (
     <>
-      {console.log("----------8989--->", formsg)}
       <h1>2fa desabled </h1>
     </>
   );

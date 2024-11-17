@@ -22,7 +22,6 @@ export default function AuthProvider({ children }) {
         setUrl(response.data.url);
       }
     } catch (error) {
-      console.error("Error", error);
     }
   }
 
@@ -61,7 +60,7 @@ export default function AuthProvider({ children }) {
         }
       }
     } catch (error) {
-      console.error("Error", error);
+  
       toast.error("login failed", {
         position: "top-right",
         autoClose: 1000
@@ -80,7 +79,6 @@ export default function AuthProvider({ children }) {
 
       if (res.status === 200) {
         setUser(res.data);
-        console.log("user", res.data.user);
         !res.data.user.bool_login &&
           res.data.user.two_factor &&
           res.data.user.otp_verified &&
@@ -90,7 +88,7 @@ export default function AuthProvider({ children }) {
         }
       }
     } catch (error) {
-      console.error("Error", error);
+
       setUser(null);
       navigate("/login");
     }
@@ -107,7 +105,6 @@ export default function AuthProvider({ children }) {
         navigate("/login");
       }
     } catch (error) {
-      console.error("Error", error);
       setUser(null);
     }
   }

@@ -1,34 +1,26 @@
 import Sidebar from "./components/SideBar/Sidebar";
 import style from "./App.module.css";
 import { Outlet } from "react-router-dom";
-// import { NotificationWebSocketProvider } from "./contexts/NotifWSContext.jsx";
-// import { LocationProvider } from "./contexts/LocationContext.jsx";
-// import AuthProvider from "./UserContext/Context.jsx";
-
 import {useLocation} from 'react-router-dom';
 import { useEffect } from "react";
 import { useContext } from "react";
 import { AuthContext } from "./UserContext/Context";
-import { useNavigate } from "react-router-dom";
+
 import { GridLoader } from "react-spinners";
 import { useState } from "react";
 
 
 const Layout = () => {
-  const navigate = useNavigate();
   const location = useLocation();
- const {user ,get_auth_user} = useContext(AuthContext);
+ const {get_auth_user} = useContext(AuthContext);
  const [loading, setLoading] = useState(true);
 
  useEffect(() => {
-   console.log("-------------layout user", user)
-  //  user ? get_auth_user(): navigate("/login")
    get_auth_user()
  }
  , [location.pathname])
 
  useEffect(() => {
-  console.log("path", window.location.pathname);
   const timer = setTimeout(() => {
     setLoading(false);
   }, 1200);
