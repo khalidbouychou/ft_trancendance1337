@@ -14,7 +14,7 @@ export default function AuthProvider({ children }) {
   const location = useLocation();
 
   async function auth_intra42() {
-    const response = await axios.get("https://127.0.0.1/api/auth_intra/", {
+    const response = await axios.get("http://10.13.10.12:8000/api/auth_intra/", {
       withCredentials: true
     });
     try {
@@ -22,6 +22,7 @@ export default function AuthProvider({ children }) {
         setUrl(response.data.url);
       }
     } catch (error) {
+      console.log("auth_intra42", error);
     }
   }
 
@@ -37,7 +38,7 @@ export default function AuthProvider({ children }) {
         const params = new URLSearchParams();
         params.append("code", code);
         const res = await axios.post(
-          `https://127.0.0.1/api/login/`,
+          `http://10.13.10.12:8000/api/login/`,
           params,
           {
             withCredentials: true
@@ -60,11 +61,11 @@ export default function AuthProvider({ children }) {
         }
       }
     } catch (error) {
-  
       toast.error("login failed", {
         position: "top-right",
         autoClose: 1000
       });
+      console.log("login", error);
       navigate("/");
     } finally {
       setLoading(false);
@@ -73,7 +74,7 @@ export default function AuthProvider({ children }) {
 
   async function get_auth_user() {
     try {
-      const res = await axios.get(`https://127.0.0.1/api/user/`, {
+      const res = await axios.get(`http://10.13.10.12:8000/api/user/`, { 
         withCredentials: true
       });
 
@@ -88,7 +89,7 @@ export default function AuthProvider({ children }) {
         }
       }
     } catch (error) {
-
+      console.log("user", error);
       setUser(null);
       navigate("/login");
     }
@@ -96,7 +97,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`https://127.0.0.1/api/logout/`, {
+      const res = await axios.get(`http://10.13.10.12:8000/api/logout/`, {
         withCredentials: true
       });
 
@@ -105,6 +106,7 @@ export default function AuthProvider({ children }) {
         navigate("/login");
       }
     } catch (error) {
+      console.log("logout", error);
       setUser(null);
     }
   }
