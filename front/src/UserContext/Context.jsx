@@ -14,7 +14,7 @@ export default function AuthProvider({ children }) {
   const location = useLocation();
 
   async function auth_intra42() {
-    const response = await axios.get("http://10.13.10.12:8000/api/auth_intra/", {
+    const response = await axios.get("https://localhost/api/auth_intra/", {
       withCredentials: true
     });
     try {
@@ -38,7 +38,7 @@ export default function AuthProvider({ children }) {
         const params = new URLSearchParams();
         params.append("code", code);
         const res = await axios.post(
-          `http://10.13.10.12:8000/api/login/`,
+          `https://localhost/api/login/`,
           params,
           {
             withCredentials: true
@@ -74,7 +74,7 @@ export default function AuthProvider({ children }) {
 
   async function get_auth_user() {
     try {
-      const res = await axios.get(`http://10.13.10.12:8000/api/user/`, { 
+      const res = await axios.get(`https://localhost/api/user/`, { 
         withCredentials: true
       });
 
@@ -97,7 +97,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`http://10.13.10.12:8000/api/logout/`, {
+      const res = await axios.get(`https://localhost/api/logout/`, {
         withCredentials: true
       });
 

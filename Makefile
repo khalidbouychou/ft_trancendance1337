@@ -9,7 +9,7 @@ uploads_dir:
 .PHONY: all
 
 # all: uploads_dir s up
-all : uploads_dir up
+all : s up
 
 s : 
 	chmod +x ./ssl.sh
