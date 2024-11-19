@@ -4,7 +4,7 @@
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	background-color: bisque;
+	/* background-color: bisque; */
 }
 
 /* .content {
@@ -653,33 +653,33 @@
 .content {
 	display: flex;
 	justify-content: center;
-	width: 100%;
+	width: 98%;
 	height: 100%;
-	background-color: aqua;
+	/* background-color: aqua; */
 	margin-top: 60px;
-	gap: 30px;
+	gap: 10px;
+	padding: 10px;
+	min-height: 1300px;
+	display: flex;
+	align-items: center;
 }
 
 .prf {
 	display: flex;
-	width: 70%;
+	width: 80%;
 	height: 100%;
-	background-color: black;
-	justify-content: center;
-}
-
-.users {
-	background-color: azure;
-	width: 30%;
-	height: 100%;
+	/* background-color: black; */
+	align-items: center;
+	flex-direction: column;
 }
 
 .character {
 	display: flex;
-	width: 100%;
+	width: 98%;
 	height: 30%;
-	background-color: blue;
-	margin: 20px;
+	background-color: #25233cd0;
+
+	/* padding: 2%; */
 	margin-top: 100px;
 	/* justify-content: center; */
 	align-items: center;
@@ -689,7 +689,7 @@
 	display: flex;
 	width: 30%;
 	height: 100%;
-	background-color: aquamarine;
+	/* background-color: aquamarine; */
 	align-items: center;
 	flex-direction: column;
 }
@@ -698,8 +698,8 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 190px;
-	height: 220px;
+	width: 170px;
+	height: 200px;
 	background-color: bisque;
 	clip-path: polygon(
 		50% 0%, 
@@ -717,8 +717,8 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 180px;
-	height: 200px;
+	width: 160px;
+	height: 190px;
 	background-color: green;
 	clip-path: polygon(
 		50% 0%, 
@@ -732,9 +732,9 @@
 }
 
 .namesett {
-	width: 100%;
+	width: 60%;
 	height: 100px;
-	background-color: bisque;
+	/* background-color: bisque; */
 	display: flex;
 	padding: 3%;
 }
@@ -743,7 +743,7 @@
 	display: flex;
 	width: 70%;
 	height: 100%;
-	background-color: green;
+	/* background-color: green; */
 	justify-content: center;
 	align-items: center;
 	p {
@@ -757,14 +757,14 @@
 	display: flex;
 	width: 30%;
 	height: 100%;
-	background-color: aqua;
+	/* background-color: aqua; */
 	justify-content: center;
 	align-items: center;
 }
 
 .change {
-	width: 50px;
-	height: 60px;
+	width: 40px;
+	height: 50px;
 	cursor: pointer;
 	background: linear-gradient(135deg, rgba(0, 128, 0, 0.6), rgba(0, 255, 0, 0.8));
 	border: none;
@@ -790,28 +790,30 @@
 	display: flex;
 	width: 70%;
 	height: 94%;
-	background-color: white;
-	margin: 3%;
-	gap: 5px;
+	/* background-color: white; */
+	margin: 10px 10px 10px 10px;
+	gap: 20px;
 	flex-direction: column;
+	/* box-shadow: 1px 1px 1px 1px rgba(255, 255, 255, 0.2); */
 }
 
 .lvl {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background-color: aqua;
+	/* background-color: aqua; */
 	width: 100%;
 	height: 40%;
 	flex-direction: column;
 	gap: 10px;
+	border-radius: 5px;
 }
 
 .ext {
 	display: flex;
 	width: 70%;
 	height: 30px;
-	background-color: yellow;
+	background-color: #25233C;
 	border-radius: 20px;
 	overflow: hidden;
 }
@@ -819,7 +821,7 @@
 .int {
 	display: flex;
 	height: 100%;
-	background-color: green;
+	background-color: #7667D9;
 	border-radius: 20px;
 }
 
@@ -839,24 +841,431 @@
 	display: flex;
 	width: 100%;
 	height: 20%;
-	background-color: antiquewhite;
+	/* background-color: blue; */
 	justify-content: center;
 	align-items: end;
 	padding: 10px;
-	gap: 10%;
+	gap: 20%;
 	p {
+		font-size: 16px;
+		font-weight: 800;
 		color: rgba(255, 255, 255, 0.5);
+	}
+}
+
+.settChange {
+	display: flex;
+	height: 40px;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	border-bottom: solid 2px red;
+	background: none;
+	cursor: pointer;
+	gap: 5px;
+}
+
+#iconeCh {
+	display: flex;
+	width: 100%;
+	height: 70%;
+}
+
+.menu {
+	display: flex;
+	flex-direction: column;
+	width: 150px;
+	height: 60px;
+	background-color: aqua;
+	position: absolute;
+	top: 110%;
+	left: 50%;
+	border-radius: 0 10px 10px 10px;
+	overflow: hidden;
+	button {
+		display: flex;
+		flex: 1;
+		border: none;
+		color: white;
+		background: none;
+		justify-content: center;
+		align-items: center;
+		font-size: 16px;
+	}
+}
+
+.changeGame {
+	display: flex;
+	width: 25px;
+	height: 25px;
+	background: none;
+	border: none;
+	position: relative;
+	justify-content: center;
+	align-items: center;
+	color: white;
+}
+
+.info {
+	display: flex;
+	justify-content: center;
+	width: 98%;
+	height: 70%;
+	/* background-color: azure; */
+	margin: 20px;
+}
+
+.matchHistory {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	/* background-color: bisque; */
+	flex-direction: column;
+}
+
+.head {
+	display: flex;
+	width: 100%;
+	height: 50px;
+	background-color: aqua;
+	justify-content: center;
+	align-items: center;
+	p {
+		left: 10%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 15px;
+		font-weight: 550;
+		color: white;
+	}
+}
+
+.matches {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	background-color: yellow;
+	overflow: auto;
+	gap: 10px;
+
+	&::-webkit-scrollbar {
+		width: 10px;
+		height: 100%;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: 20px;
+		transition: background-color 0.3s ease;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background-color: #7667D9;
+	}
+}
+
+
+.cardMatch {
+	display: flex;
+	width: 100%;
+	height: 100px;
+	min-height: 100px;
+	background-color: green;
+}
+
+.player {
+	display: flex;
+	width: 30%;
+	height: 100%;
+	background-color: aquamarine;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	gap: 15px;
+}
+
+.Name {
+	display: flex;
+	background-color: blue;
+	width: 40%;
+	height: 30px;
+	justify-content: center;
+	align-items: center;
+	p {
+		color: white;
+		font-size: 14px;
+		letter-spacing: 0.5px;
+	}
+}
+
+.Line {
+	width: 25%;
+	height: 100%;
+	background-color: rebeccapurple;
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.friends {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	background-color: yellow;
+	overflow: auto;
+	gap: 10px;
+	padding: 3%;
+	overflow: auto;
+	align-content: start;
+	flex-wrap: wrap;
+	&::-webkit-scrollbar {
+		width: 10px;
+		height: 100%;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: 20px;
+		transition: background-color 0.3s ease;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background-color: #7667D9;
+	}
+}
+
+
+.statistic {
+	width: 100%;
+    height: 100%;
+    /* background-color: rgba(255, 255, 255, 0.3); */
+	background-color: #25233cd0;
+    display: flex;
+	flex-direction: column;
+}
+
+.chart1 {
+    display: flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+	/* background-color: antiquewhite; */
+}
+
+.chart2 {
+	/* background-color: green; */
+    display: flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.circ {
+    display: flex;
+    width: 40%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.CurveChart {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chartCir {
+    width: 270px;
+    height: 270px;
+    border-radius: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chartText{
+	position: absolute;
+    text-align: center;
+    color: white;
+    p {
+        margin: 0;
+    }
+}
+
+.users {
+	width: 20%;
+	height: 90%;
+	border-radius: 28px;
+	display: flex;
+	flex-direction: column;
+	background-color: #25233cd0;
+	overflow: hidden;
+	margin-top: 70px;
+	min-width: 300px;
+}
+
+.Head {
+	display: flex;
+	width: 100%;
+	height: 60px;
+	/* background-color: #7667D9; */
+	border-radius: 50px;
+	justify-content: center;
+	align-items: center;
+	button {
+		display: flex;
+		width: 50%;
+		height: 100%;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		border: none;
+		background-color: #1b1a2c;
+		p {
+			color: white;
+			font-size: 16px;
+			font-weight: 800px;
+			letter-spacing: 1px;
+		}
+	}
+}
+
+.Friends {
+	display: flex;
+	width: 100%;
+	height: 90%;
+	padding: 10px;
+	flex-direction: column;
+	gap: 10px;
+	overflow: auto;
+	border: 2px solid #25233C;
+	/* background-color: aliceblue; */
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+} 
+
+.cardFriend {
+	display: flex;
+	width: 100%;
+	height: 150px;
+	min-height: 150px;
+	position: relative;
+	justify-content: center;
+	flex-direction: column;
+	border-radius: 10px;
+	overflow: hidden;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.side {
+	display: flex;
+	width: 100%;
+	background-color: #292648;
+	align-items: center;
+}
+
+.Image {
+	display: flex;
+	width: 65px;
+	height: 75px;
+	background-color: green;
+	position: absolute;
+	justify-content: center;
+	align-items: center;
+	clip-path: polygon(
+		50% 0%, 
+		100% 25%, 
+		100% 75%, 
+		50% 100%, 
+		0% 75%, 
+		0% 25%
+	);
+}
+
+.imgCont {
+	display: flex;
+	justify-content: center;
+	width: 60px;
+	height: 70px;
+	background-color: black;
+	clip-path: polygon(
+		50% 0%, 
+		100% 25%, 
+		100% 75%, 
+		50% 100%, 
+		0% 75%, 
+		0% 25%
+	);
+}
+
+.lvll {
+	display: flex;
+	position: absolute;
+	width: 45%;
+	height: 25px;
+	right: 18%;
+	overflow: hidden;
+	border-radius: 50px;
+}
+
+.CName {
+	display: flex;
+	width: 50%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	top: 20%;
+	color: white;
+	font-size: 12px;
+	font-weight: 50;
+	letter-spacing: 1px;
+}
+
+.searchF {
+	display: flex;
+	/* background-color: green; */
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100px;
+	padding: 10px;
+	input {
+		display: flex;
+		width: 100%;
+		height: 100%;
+		background: none;
+		border: none;
+		padding-left: 20px;
+		font-size: 15px;
+		color: white;
+	}
+}
+
+@media (max-witdh: 2000px) {
+	.character {
+		width: 98%;
+		padding: 2%;
 	}
 }
 
 @media (max-width: 1600px) {
 	.image {
-		width: 160px;
+		width: 150px;
 		height: 160px;
-		bottom: 40px;
+		bottom: 55px;
 	}
 	.dupeImage {
-		width: 150px;
+		width: 140px;
 		height: 150px;
 	}
 	.name {
@@ -867,6 +1276,12 @@
 	.change {
 		width: 40px;
 		height: 50px;
+	}
+	.ext {
+		height: 20px;
+	}
+	.tmp {
+		font-size: 11px;
 	}
 }
 

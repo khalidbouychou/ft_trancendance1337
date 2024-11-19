@@ -16,6 +16,8 @@ import { useLocationContext } from '../../contexts/LocationContext.jsx';
 import { AuthContext } from "../../UserContext/Context";
 import { FaSearchengin } from "react-icons/fa";
 import SearchCard from '../Home/components/SearchCard/SearchCard.jsx';
+import { FaList } from "react-icons/fa";
+
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true);
@@ -111,7 +113,7 @@ const Sidebar = () => {
   };
 
     return (
-        <div className={styl.Sidebar} style={{ width: isOpen ? '300px' : sidebarWidth }}>
+        <div className={styl.Sidebar}>
             <div className={styl.search} ref={searchRef}>
                 <div className={styl.iconSearch }>
                     <FaSearchengin style={{width: '50%', height: '50%'}}/>
@@ -139,24 +141,79 @@ const Sidebar = () => {
                     )}
                 </div>
             </div>
-            <Link to='/'><div className={styl.Card} style={{top: '0%'}}>
+            <div className={styl.Head}>
+                <div className={styl.sett}>
+                    <button className={styl.icons}>
+                        <FaList className={styl.icon} style={{width: '50%', height: '50%'}}/>
+                    </button>
+                    <button className={styl.logo}>
+                        <img src={pinglogo}></img>
+                        <p >Ping Pong</p>
+                    </button>
+                </div>
+            </div>
+            <div className={styl.components}>
+                <button className={styl.componentCard}>
+                    <div className={styl.icons} >
+                        <MdOutlineHome className={styl.icon}/>
+                    </div>
+                    <div className={styl.compName}>
+                        <p >Home</p>
+                    </div>
+                </button>
+                <button className={styl.componentCard}>
+                    <div className={styl.icons} >
+                        <CgProfile className={styl.icon}/>
+                    </div>
+                    <div className={styl.compName}>
+                        <p >Profile</p>
+                    </div>
+                </button>
+                <button className={styl.componentCard}>
+                    <div className={styl.icons} >
+                        <MdNotifications className={styl.icon}/>
+                    </div>
+                    <div className={styl.compName}>
+                        <p >Notification</p>
+                    </div>
+                </button>
+                <button className={styl.componentCard}>
+                    <div className={styl.icons} >
+                        <CgProfile className={styl.icon}/>
+                    </div>
+                    <div className={styl.compName}>
+                        <p >Game</p>
+                    </div>
+                </button>
+                <button className={styl.componentCard}>
+                    <div className={styl.icons} >
+                        <IoChatbubbleEllipsesOutline className={styl.icon}/>
+                    </div>
+                    <div className={styl.compName}>
+                        <p >Chat</p>
+                    </div>
+                </button>
+            </div>
+            {/* <Link to='/'>
+                <div className={styl.Card} style={{top: '0%'}}>
                 <div className={styl.icon}>
                     <img src={pinglogo}/>
                 </div>
                 <div className={styl.gameName} style={{display: isOpen ? 'flex' : 'none'}}><p>ping pong</p></div>
-            </div></Link>
+                </div>
+            </Link>
             <div className={styl.cont}>
-                <CmpCard isOpen={isOpen} ICON={MdOutlineHome} name={'Home'} link={'/home'}/>
-                <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={`/profile/${user?.user?.profile_name}`}/>
-                <CmpCard isOpen={isOpen} ICON={IoChatbubbleEllipsesOutline} name={'Chat'} link={'/chat'}/>
+                <CmpCard isOpen={isOpen} ICON={MdOutlineHome} name={'Home'} link={'/home'}/> */}
+                {/* <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={`/profile/${user?.user?.profile_name}`}/> */}
+                {/* <CmpCard isOpen={isOpen} ICON={IoChatbubbleEllipsesOutline} name={'Chat'} link={'/chat'}/>
                 <CmpCard isOpen={isOpen} ICON={IoLogoGameControllerB} name={'Game'} link={'/games'}/>
                 <CmpCard isOpen={isOpen} ICON={hasNotification ? MdNotificationImportant : MdNotifications} name={'Notification'} link={'/notification'}/>
                 <CmpCard isOpen={isOpen} ICON={CiSettings} name={'Setting'} link={'/setting'}/>
-                <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'} top={'43%'}/>
-            </div>
-            <button className={styl.cirButton} onClick={handleClick} style={{left: isOpen ? '96%' : '85%'}}>
+                <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'} top={'20%'}/>
+            </div> */}
+            {/* <button className={styl.cirButton} onClick={handleClick} style={{left: isOpen ? '96%' : '85%'}}>
                 <FaAnglesLeft style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}}/>
-            </button>
+            </button> */}
         </div>
     )
 }

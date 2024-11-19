@@ -1,5 +1,6 @@
 body{
   background:linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.01)),  url('./background.svg') no-repeat center center;
+  /* background-color: #141227; */
   background-size: cover;
 }
 
