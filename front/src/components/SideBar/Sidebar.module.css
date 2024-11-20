@@ -1,7 +1,7 @@
 
 /* * {
     margin: 0;
-    padding: 0;
+    padding: 0px;
     box-sizing: border-box;
 } */
 
@@ -73,14 +73,14 @@
 } */
 
 
-/* a {
+a {
     color: white;
     text-decoration: none;
     display: flex;
-    align-items: center;
     width: 100%;
-    height: 100%;
-} */
+    justify-content: center;
+    align-items: center;
+}
 
 /* ul li:hover {
     background-color: rgba(255, 255, 255, 0.2);
@@ -384,7 +384,7 @@ ul:last-of-type li {
 .Head {
     display: flex;
     width: 250px;
-    height: 60px;
+    height: 70px;
 }
 
 .sett {
@@ -402,12 +402,13 @@ ul:last-of-type li {
     height: 100%;
     border: none;
     cursor: pointer;
+    background: none;
 }
 
 .icon {
     color: white;
-    width: 100%;
-    height: 50%;
+    width: 70%;
+    height: 40%;
 }
 
 .logo {
@@ -423,7 +424,7 @@ ul:last-of-type li {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 80px;
+        width: 65px;
     }
     p {
         color: #660da5;
@@ -450,19 +451,24 @@ ul:last-of-type li {
     width: 100%;
     /* justify-content: center; */
     align-items: center;
+    cursor: pointer;
 }
 
 .compName {
     display: flex;
     width: 70%;
-    justify-content: center;
+    /* justify-content: center; */
+    padding-left: 10%;
     align-items: center;
     /* background-color: aquamarine; */
     p {
         color: white;
-        font-size: 17px;
+        font-size: 18px;
         font-size: 600;
-        letter-spacing: 2px;
+        letter-spacing: 3px;
+        /* text-decoration: underline; */
+        /* text-decoration: line-through; */
+        /* text-decoration: overline; */
     }
 }
 

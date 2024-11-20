@@ -146,53 +146,63 @@ const Sidebar = () => {
                     <button className={styl.icons}>
                         <FaList className={styl.icon} style={{width: '50%', height: '50%'}}/>
                     </button>
+                    <Link to={'/home'}>
                     <button className={styl.logo}>
                         <img src={pinglogo}></img>
                         <p >Ping Pong</p>
                     </button>
+                    </Link>
                 </div>
             </div>
             <div className={styl.components}>
-                <button className={styl.componentCard}>
-                    <div className={styl.icons} >
-                        <MdOutlineHome className={styl.icon}/>
-                    </div>
-                    <div className={styl.compName}>
-                        <p >Home</p>
-                    </div>
-                </button>
-                <button className={styl.componentCard}>
+                <Link to={'/home'}>
+                    <button className={styl.componentCard}>
+                        <div className={styl.icons} >
+                            <MdOutlineHome className={styl.icon}/>
+                        </div>
+                        <div className={styl.compName}>
+                            <p >Home</p>
+                        </div>
+                    </button>
+                </Link>
+                <Link to={`/profile/${user?.user?.profile_name}`}><button className={styl.componentCard}>
                     <div className={styl.icons} >
                         <CgProfile className={styl.icon}/>
                     </div>
                     <div className={styl.compName}>
                         <p >Profile</p>
                     </div>
-                </button>
-                <button className={styl.componentCard}>
-                    <div className={styl.icons} >
-                        <MdNotifications className={styl.icon}/>
-                    </div>
-                    <div className={styl.compName}>
-                        <p >Notification</p>
-                    </div>
-                </button>
-                <button className={styl.componentCard}>
-                    <div className={styl.icons} >
-                        <CgProfile className={styl.icon}/>
-                    </div>
-                    <div className={styl.compName}>
-                        <p >Game</p>
-                    </div>
-                </button>
-                <button className={styl.componentCard}>
-                    <div className={styl.icons} >
-                        <IoChatbubbleEllipsesOutline className={styl.icon}/>
-                    </div>
-                    <div className={styl.compName}>
-                        <p >Chat</p>
-                    </div>
-                </button>
+                </button></Link>
+                <Link to={'notification'}>
+                    <button className={styl.componentCard}>
+                        <div className={styl.icons} >
+                            <MdNotifications className={styl.icon}/>
+                        </div>
+                        <div className={styl.compName}>
+                            <p >Notification</p>
+                        </div>
+                    </button>
+                </Link>
+                <Link to={'games'}>
+                    <button className={styl.componentCard}>
+                        <div className={styl.icons} >
+                            <CgProfile className={styl.icon}/>
+                        </div>
+                        <div className={styl.compName}>
+                            <p >Game</p>
+                        </div>
+                    </button>
+                </Link>
+                <Link to={'chat'}>
+                    <button className={styl.componentCard}>
+                        <div className={styl.icons} >
+                            <IoChatbubbleEllipsesOutline className={styl.icon}/>
+                        </div>
+                        <div className={styl.compName}>
+                            <p >Chat</p>
+                        </div>
+                    </button>
+                </Link>
             </div>
             {/* <Link to='/'>
                 <div className={styl.Card} style={{top: '0%'}}>
