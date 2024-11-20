@@ -20,7 +20,7 @@ export function NotificationWebSocketProvider({ children }) {
 
       let ws;
       try {
-        ws = new WebSocket(`ws://192.168.0.102:8000/ws/notif/?token=${token}`);
+        ws = new WebSocket(`ws://localhost:8000/ws/notif/?token=${token}`);
       } catch (error) {
         handleReconnect();
         return;

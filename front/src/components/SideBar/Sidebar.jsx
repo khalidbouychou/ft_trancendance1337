@@ -69,7 +69,7 @@ const Sidebar = () => {
         const fetchSearchResults = async () => {
           if (searchQuery.trim()) {
             const response = await fetch(
-              `http://192.168.0.102:8000/api/search/?q=${searchQuery}`
+              `http://localhost:8000/api/search/?q=${searchQuery}`
             );
             const data = await response.json();
             console.log(data);

@@ -22,7 +22,7 @@ down: clean
 
 push :
 	git add .
-	git commit -m "if u navigate between components user exist if u refresh will be null so dont refresh .... untill khalid will fix it"
+	git commit -m "$(m)"
 	git push
 
 

@@ -75,7 +75,7 @@ const NotiCard = ({request}) => {
 					var	token = localStorage.getItem("token"), xo_invite_socket,
 						room_id = request.game_room;
 					if (token && room_id && room_id.length) {
-						try { xo_invite_socket = new WebSocket(`ws://192.168.0.102:8000/ws/xo_invite/?token=${token}`); }
+						try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`); }
 						catch (err) {}
 						xo_invite_socket.onopen = () => {
 							xo_invite_socket.send(JSON.stringify({
@@ -113,7 +113,7 @@ const NotiCard = ({request}) => {
 				var	token = localStorage.getItem("token"),
 					xo_invite_socket;
 				if (token) {
-					try { xo_invite_socket = new WebSocket(`ws://192.168.0.102:8000/ws/xo_invite/?token=${token}`); }
+					try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`); }
 					catch (err) {}
 					console.log("handling decline");
 					xo_invite_socket.onopen = () => {
@@ -130,7 +130,7 @@ const NotiCard = ({request}) => {
 			}
 			else if (request.notif_type === 'GR' && request.game_type == "PONG") {
 				var	token = localStorage.getItem("token")
-				const pong_socket = new WebSocket(`ws://192.168.0.102:8000/ws/play-friend/?token=${token}`);
+				const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
 				if (pong_socket){
 					pong_socket.onopen = () => {
 						const game_key = `${request.from_user.username}vs${request.to_user.username}`;

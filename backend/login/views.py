@@ -12,10 +12,8 @@ from django.contrib.auth import get_user_model
 from django.db.models import Sum
 import os
 
-C_ID = os.getenv('C_ID')
-SCID = os.getenv('SCID')
-REDIRECT_URI = os.getenv('REDIRECT_URI')
-
+C_ID = os.environ.get('C_ID')
+REDIRECT_URI = os.environ.get('REDIRECT_URI')
 
 def search_user(username):
 	try:
@@ -91,6 +89,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
 		return user
 
 	def auth_intra(self, request):
+	     
 		try:
 			response = Response(
 				{'url': f'https://api.intra.42.fr/oauth/authorize?client_id={C_ID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
@@ -112,10 +111,10 @@ class PlayerViewSet(viewsets.ModelViewSet):
 				'https://api.intra.42.fr/oauth/token/',
 				data={
 					'grant_type': 'authorization_code',
-					'client_id': C_ID,
-					'client_secret': SCID,
-					'code': request.data.get('code'),
-					'redirect_uri': REDIRECT_URI
+                    'client_id': os.environ.get('C_ID'),
+                    'client_secret': os.environ.get('SCID'),
+                    'code': request.data.get('code'),
+                    'redirect_uri': os.environ.get('REDIRECT_URI')
 				}
 			)
 			response.raise_for_status()

@@ -71,7 +71,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             });
             //testing
             const token = localStorage.getItem('token');
-            const pong_socket = new WebSocket(`ws://192.168.0.102:8000/ws/play-friend/?token=${token}`);
+            const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
             pong_socket.onopen = () => {
                 const message_data = {
                     action: 'friend_game',
@@ -105,7 +105,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 			var xo_invite_socket, token = localStorage.getItem("token"),
 				room_id = data.user.username + "_VS_" + otherUser.username + "_" + rand_str() + rand_str() + rand_str();
 			if (!token)	return;
-			try { xo_invite_socket = new WebSocket(`ws://192.168.0.102:8000/ws/xo_invite/?token=${token}`) }
+			try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`) }
 			catch (err) { return }
 			xo_invite_socket.onopen = () => {
 				xo_invite_socket.send(JSON.stringify({
