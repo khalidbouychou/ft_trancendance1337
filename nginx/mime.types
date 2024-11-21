@@ -1,0 +1,19 @@
+# MIME types for Nginx
+
+# application types
+application/octet-stream    bin exe dll;
+application/pdf             pdf;
+application/json            json;
+application/xml             xml;
+application/xhtml+xml       xhtml;
+application/x-javascript    js;
+
+# text types
+text/plain                  txt;
+text/css                    css;
+text/html                   html htm;
+
+# image types
+image/jpeg                  jpeg jpg;
+image/png                   png;
+image/gif                   gif;

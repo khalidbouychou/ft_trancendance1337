@@ -14,14 +14,12 @@ class Player(AbstractUser):
         ('playing', _('playing')),
         ('offline', _('offline')),
     )
-    username = models.CharField(max_length=255, default='default_username', unique=True, blank=False)
-    profile_name = models.CharField(max_length=200, default='default_username')
-    avatar = models.URLField(max_length=200, default='default_avatar')
-    email = models.EmailField(max_length=200, default='default')
+    avatar = models.URLField(max_length=200 , default='https://www.gravatar.com/avatar/')
+    profile_name = models.CharField(max_length=50, default='Player')
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
     status_game = models.CharField(max_length=10, choices=GAME_STATUS, default='offline')
     two_factor = models.BooleanField(default=False)
-    otp = models.CharField(max_length=6, default='000000')
+    mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False) 
     otp_verified = models.BooleanField(default=False)
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
     friends = models.ManyToManyField('self', symmetrical=True, through='Friend', blank=True)
