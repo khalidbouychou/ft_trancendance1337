@@ -23,7 +23,7 @@ const Profile = () => {
 
       try {
         console.log('username ==>', username)
-        const response = await fetch(`http://localhost:8000/api/getuser/${username}/`);
+        const response = await fetch(`https://localhost/api/getuser/${username}/`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

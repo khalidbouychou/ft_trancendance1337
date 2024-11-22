@@ -21,14 +21,16 @@ class Player(AbstractUser):
     two_factor = models.BooleanField(default=False)
     mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False) 
     otp_verified = models.BooleanField(default=False)
+    qrcode_path = models.CharField(max_length=255, default='none' ,blank=False , null=False)
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
     friends = models.ManyToManyField('self', symmetrical=True, through='Friend', blank=True)
-
+    qrcode_path = models.CharField(max_length=255, default='', blank=False, null=False) 
+    bool_login = models.BooleanField(default=False)
     class Meta:
         db_table = 'player'
 
     def save(self, *args, **kwargs):
-        if self.status_network == 'offline':
+        if self.status_network == 'offline': 
             self.status_game = 'offline'
         super().save(*args, **kwargs)
 

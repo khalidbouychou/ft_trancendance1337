@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import api from '../ponggame/auth/api';
+import api from '../../auth/api';
 import './styles.css';
 
 var	XO = props => {

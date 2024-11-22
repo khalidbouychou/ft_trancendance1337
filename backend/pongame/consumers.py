@@ -66,7 +66,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 }
             )
             self.admin.game_loop = False
-            # self.close()  //doesn't make sense to close the connection here
+            # self.close() //doesn't make sense to close the connection here
             self.channel_layer.group_discard(
                 self.room_group_name,
                 self.channel_name

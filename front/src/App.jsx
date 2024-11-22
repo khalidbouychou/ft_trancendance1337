@@ -23,25 +23,24 @@ import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
 function App() {
   return (
       <div className={style.EntirePage}>
-        <div className={style.MainContent}>
+        <div className={style.MainContent}> 
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route path="home" element={<Home />} />
                 <Route path="games" element={<Games />} />
                 <Route path="pingpong-games" element={<PingPongGames />} />
-                <Route path="xo" element={<XO invite={false} />} />
-	              <Route path="xo_with_invitation" element={<XO invite={true} />} />
                 <Route path="games/localpong" element={<LocalGame />} />
                 <Route path="games/tournament" element={<TournamentGame />} />
-                <Route path="/friend-game" element={<FriendGame />} />
                 <Route path="games/localteampong" element={<LocalTeamGame />} />
                 <Route path="games/onlinepong" element={<OnlineGame />} /> 
+                <Route path="xo" element={<XO invite={false} />} />
+	              <Route path="xo_with_invitation" element={<XO invite={true} />} />
+                <Route path="friend-game" element={<FriendGame />} />
                 <Route path="chat" element={<Chat />} />
                 <Route path="profile/:username" element={<Profile />} />
-                <Route path="setting" element={<Setting />} />
                 <Route path="notification" element={<Notificationz />} />
-                <Route path="twofa" element={<Twofa />} />
                 <Route path="setting" element={<Settings />} />
+                <Route path="twofa" element={<Twofa />} />
                 <Route path="otp" element={< Otplogin/>} />
               </Route>
               <Route path="/*" element={<PageNotFound />} />

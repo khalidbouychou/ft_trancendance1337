@@ -11,7 +11,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Player
-        fields = ['id', 'username', 'profile_name', 'avatar', 'email', 'status_network', 'two_factor', 'otp_verified', 'blocked_users', 'friends', 'ping_data']
+        fields = ['id', 'username', 'profile_name', 'avatar','email', 'status_network', 'two_factor', 'otp_verified', 'blocked_users', 'friends', 'ping_data' , 'tic_data' , 'bool_login', 'qrcode_path']
 
     def get_blocked_users(self, obj):
         return [{'profile_name': user.profile_name, 'avatar': user.avatar} for user in obj.blocked_users.all()]
@@ -44,7 +44,7 @@ class TicDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = TicData
         fields = ['wins', 'losses', 'exp_game', 'timestamp']
-        fields = ['username', 'profile_name','avatar' ,'status_network', 'status_game', 'two_factor', 'otp_verified', 'qrcode_path','bool_login']
+        # fields = ['username', 'profile_name','avatar' ,'status_network', 'status_game', 'two_factor', 'otp_verified', 'qrcode_path','bool_login']
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
@@ -74,8 +74,8 @@ class SignupSerializer(serializers.ModelSerializer):
 class SigninSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        # fields = ['username', 'password']
-        fields = '__all__'
+        fields = ['username', 'password']
+        # fields = '__all__'
         extra_kwargs = {
             'password': {'write_only': True, 'required': True, 'min_length': 8, 'max_length': 16},
             'username': {'required': True, 'min_length': 9, 'max_length': 16}

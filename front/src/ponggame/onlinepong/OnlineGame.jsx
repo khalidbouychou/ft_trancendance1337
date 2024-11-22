@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './OnlineGame.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../UserContext/Context';
-import api from '../auth/api';
+import api from '../../../auth/api';
 
 export default function OnlineGame() {
 
