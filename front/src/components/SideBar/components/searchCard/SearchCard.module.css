@@ -4,6 +4,8 @@
     /* height: 75px; */
     align-items: center;
     transition: 0.5s;
+    background: none;
+    border: none;
     &:hover {
         transition: 0.5s;
         background-color: rgba(255, 255, 255, 0.1);
@@ -36,9 +38,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 60px;
-    height: 65px;
-    background-color: #660da5;
+    width: 55px;
+    height: 60px;
+    background-color: #d3b90d;
     clip-path: polygon(
 		50% 0%, 
 		100% 25%, 

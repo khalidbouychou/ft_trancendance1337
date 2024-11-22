@@ -15,14 +15,14 @@ import { MdNotifications, MdNotificationImportant } from "react-icons/md";
 import { useLocationContext } from "../../contexts/LocationContext.jsx";
 import { AuthContext } from "../../UserContext/Context";
 import { FaSearchengin } from "react-icons/fa";
-import SearchCard from "../Home/components/SearchCard/SearchCard.jsx";
+import SearchCard from "./components/searchCard/SearchCard.jsx";
 import { FaList } from "react-icons/fa";
 import userImage from "./assets/nouahidi.jpeg";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [hasNotification, setHasNotification] = useState(false);
-  const [sidebarWidth, setSidebarWidth] = useState("300px");
+  const [sidebarWidth, setSidebarWidth] = useState("250px");
   const { notif } = useNotificationWS();
   const { currentLocation } = useLocationContext();
   const { user } = useContext(AuthContext);
@@ -31,7 +31,8 @@ const Sidebar = () => {
 
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [open, setOpen] = useState("none");
+  const [open, setOpen] = useState("flex");
+  const[openCard, setOpenCrad] = useState('flex');
 
   useEffect(() => {
     if (
@@ -54,15 +55,26 @@ const Sidebar = () => {
   };
 
   const handelSetopen = () => {
-    setOpen(open === "none" ? "flex" : "none");
+    setOpenCrad((prevOpenCard) => {
+      const newState = prevOpenCard === "flex" ? "none" : "flex";
+      setSidebarWidth(newState === "none" ? "70px" : "250px");
+      return newState;
+    });
   };
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 1024) setIsOpen(false);
-      else setIsOpen(true);
-      if (window.innerWidth <= 768) setSidebarWidth("50px");
-      else setSidebarWidth("80px");
+      if (window.innerWidth <= 900) {
+        setSidebarWidth('70px')
+        setOpenCrad('none')
+      }
+      else
+      {
+        setOpenCrad('flex')
+        setSidebarWidth('250px')
+      }
+      if (window.innerWidth <= 768)
+        setSidebarWidth("50px");
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -113,11 +125,11 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={styl.Sidebar}>
+    <div className={styl.Sidebar} style={{width: sidebarWidth, minWidth: sidebarWidth}}>
       <div className={styl.Head} ref={searchRef}>
         <div className={styl.begin}>
-          <button className={styl.listIcon}>
-            <FaList style={{ width: "50%", height: "50%" }} />
+          <button className={styl.listIcon} onClick={handelSetopen}>
+            <FaList style={{ width: "45%", height: "45%" }} />
           </button>
           <Link to={"/home"}>
             <button className={styl.logo}>
@@ -138,70 +150,27 @@ const Sidebar = () => {
               onKeyPress={handleKeyPress}
             />
             <div className={styl.searchResult}>
-              {/* <div className={styl.searchCard}>
-                                <div className={styl.userImage}>
-                                    <div className={styl.intImg}>
-                                        <div className={styl.intImg} style={{width: '55px', height: '60px', backgroundColor: 'white'}}>
-                                            <img src={userImage}></img>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className={styl.userName}>NOUAHIDI</p>
-                            </div> */}
                 {searchResults.slice(0, 5).map((user) => (
                   <SearchCard key={user.id} user={user} />
                 ))}
             </div>
           </div>
+          {/* <div className={styl.namee}>
+            <p >HOME</p>
+          </div> */}
         </div>
-        <div className={styl.end}></div>
-        {/* <div className={styl.Head}> */}
-        {/* <button className={styl.set}>
-                        <FaList className={styl.icon} style={{width: '45%', height: '45%'}}/>
-                    </button>
-                    <Link to={'/home'}>
-                        <button className={styl.logo}>
-                            <img src={pinglogo}></img>
-                            <p >Ping Pong</p>
-                        </button>
-                    </Link> */}
-        {/* <div className={styl.sett}>
-                        <button className={styl.icons}>
-                            <FaList className={styl.icon} style={{width: '50%', height: '50%'}}/>
-                        </button>
-                        <Link to={'/home'}>
-                        <button className={styl.logo}>
-                            <img src={pinglogo}></img>
-                            <p >Ping Pong</p>
-                        </button>
-                        </Link>
-                    </div> */}
-        {/* </div> */}
-        {/* <div className={styl.iconSearch }>
-                    <FaSearchengin style={{width: '50%', height: '50%'}}/>
-                </div> */}
-        {/* <div className={styl.inputSearch}>
-                    <input 
-                        type="text"
-                        placeholder="Search..."
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                    />
-                </div> */}
-        {/* <div className={styl.searchResult}>
-                    {searchResults.length > 0 && (
-                        <div className={styl.searchResult}>
-                            {searchResults.slice(0, 5).map((user) => (
-                                <SearchCard key={user.id} user={user} />
-                            ))}
-                        </div>
-                    )}
-                    {searchResults.length === 0 && searchQuery.trim() !== "" && (
-                        <div className={styl.searchResult} style={{height: '40px', width: '200px', display: open, alignItems: 'center'}}>
-                            <p >No results found</p>
-                        </div>
-                    )}
-                </div> */}
+        <div className={styl.end}>
+          <button className={styl.notifIcon}>
+            <MdNotifications style={{ width: "65%", height: "65%" }}/>
+          </button>
+          <div className={styl.param}>
+            <button className={styl.intImg}>
+                <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+                  <img src={userImage}/>
+                </div>
+            </button>
+          </div>
+        </div>
       </div>
       <div className={styl.components}>
         <Link to={"/home"}>
@@ -209,7 +178,7 @@ const Sidebar = () => {
             <div className={styl.icons}>
               <MdOutlineHome className={styl.icon} />
             </div>
-            <div className={styl.compName}>
+            <div className={styl.compName} style={{display: openCard}}>
               <p>Home</p>
             </div>
           </button>
@@ -219,27 +188,17 @@ const Sidebar = () => {
             <div className={styl.icons}>
               <CgProfile className={styl.icon} />
             </div>
-            <div className={styl.compName}>
+            <div className={styl.compName} style={{display: openCard}}>
               <p>Profile</p>
-            </div>
-          </button>
-        </Link>
-        <Link to={"notification"}>
-          <button className={styl.componentCard}>
-            <div className={styl.icons}>
-              <MdNotifications className={styl.icon} />
-            </div>
-            <div className={styl.compName}>
-              <p>Notification</p>
             </div>
           </button>
         </Link>
         <Link to={"games"}>
           <button className={styl.componentCard}>
             <div className={styl.icons}>
-              <CgProfile className={styl.icon} />
+              <IoLogoGameControllerB className={styl.icon} />
             </div>
-            <div className={styl.compName}>
+            <div className={styl.compName} style={{display: openCard}}>
               <p>Game</p>
             </div>
           </button>
@@ -249,32 +208,12 @@ const Sidebar = () => {
             <div className={styl.icons}>
               <IoChatbubbleEllipsesOutline className={styl.icon} />
             </div>
-            <div className={styl.compName}>
+            <div className={styl.compName} style={{display: openCard}}>
               <p>Chat</p>
             </div>
           </button>
         </Link>
       </div>
-      {/* <Link to='/'>
-                <div className={styl.Card} style={{top: '0%'}}>
-                <div className={styl.icon}>
-                    <img src={pinglogo}/>
-                </div>
-                <div className={styl.gameName} style={{display: isOpen ? 'flex' : 'none'}}><p>ping pong</p></div>
-                </div>
-            </Link>
-            <div className={styl.cont}>
-                <CmpCard isOpen={isOpen} ICON={MdOutlineHome} name={'Home'} link={'/home'}/> */}
-      {/* <CmpCard isOpen={isOpen} ICON={CgProfile} name={'Profile'} link={`/profile/${user?.user?.profile_name}`}/> */}
-      {/* <CmpCard isOpen={isOpen} ICON={IoChatbubbleEllipsesOutline} name={'Chat'} link={'/chat'}/>
-                <CmpCard isOpen={isOpen} ICON={IoLogoGameControllerB} name={'Game'} link={'/games'}/>
-                <CmpCard isOpen={isOpen} ICON={hasNotification ? MdNotificationImportant : MdNotifications} name={'Notification'} link={'/notification'}/>
-                <CmpCard isOpen={isOpen} ICON={CiSettings} name={'Setting'} link={'/setting'}/>
-                <CmpCard isOpen={isOpen} ICON={AiOutlineLogout} name={'Log Out'} top={'20%'}/>
-            </div> */}
-      {/* <button className={styl.cirButton} onClick={handleClick} style={{left: isOpen ? '96%' : '85%'}}>
-                <FaAnglesLeft style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}}/>
-            </button> */}
     </div>
   );
 };

@@ -9,7 +9,7 @@ const SearchCard = ({ user }) => {
         <div className={styl.intImg}>
           <div
             className={styl.intImg}
-            style={{ width: "55px", height: "60px", backgroundColor: "white" }}
+            style={{ width: "50px", height: "55px", backgroundColor: "white" }}
           >
             <img src={user.avatar}></img>
           </div>
