@@ -18,6 +18,8 @@ import { FaSearchengin } from "react-icons/fa";
 import SearchCard from "./components/searchCard/SearchCard.jsx";
 import { FaList } from "react-icons/fa";
 import userImage from "./assets/nouahidi.jpeg";
+import { CgCheck } from "react-icons/cg";
+import { RxCross2 } from "react-icons/rx";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -32,30 +34,31 @@ const Sidebar = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [open, setOpen] = useState("flex");
-  const[openCard, setOpenCrad] = useState('flex');
+  const[openCard, setOpenCard] = useState('flex');
+  const[openNotf, setOpenNotf] = useState('none');
 
-  useEffect(() => {
-    if (
-      notif &&
-      notif.status === "pending" &&
-      currentLocation !== "/notification"
-    ) {
-      setHasNotification(true);
-    }
-  }, [notif]);
+  // useEffect(() => {
+  //   if (
+  //     notif &&
+  //     notif.status === "pending" &&
+  //     currentLocation !== "/notification"
+  //   ) {
+  //     setHasNotification(true);
+  //   }
+  // }, [notif]);
 
-  useEffect(() => {
-    if (currentLocation === "/notification") {
-      setHasNotification(false);
-    }
-  }, [currentLocation]);
-
-  const handleClick = () => {
-    setIsOpen(!isOpen);
-  };
+  // useEffect(() => {
+  //   if (currentLocation === "/notification") {
+  //     setHasNotification(false);
+  //   }
+  // }, [currentLocation]);
+  
+  const handelNotifOpen = () => {
+    setOpenNotf(openNotf === "none" ? "flex" : "none");
+  }
 
   const handelSetopen = () => {
-    setOpenCrad((prevOpenCard) => {
+    setOpenCard((prevOpenCard) => {
       const newState = prevOpenCard === "flex" ? "none" : "flex";
       setSidebarWidth(newState === "none" ? "70px" : "250px");
       if (window.innerWidth <= 900)
@@ -68,11 +71,11 @@ const Sidebar = () => {
     const handleResize = () => {
       if (window.innerWidth <= 900) {
         setSidebarWidth('70px')
-        setOpenCrad('none')
+        setOpenCard('none')
       }
       else
       {
-        setOpenCrad('flex')
+        setOpenCard('flex')
         setSidebarWidth('250px')
       }
       if (window.innerWidth <= 768)
@@ -108,6 +111,7 @@ const Sidebar = () => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setSearchResults([]);
         setOpen("none");
+        setOpenNotf('none')
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -159,17 +163,140 @@ const Sidebar = () => {
           </div>
         </div>
         <div className={styl.end}>
-          <button className={styl.notifIcon}>
+          <button className={styl.notifIcon} onClick={handelNotifOpen} ref={searchRef}>
             <MdNotifications id={styl.listicon}/>
-            <div className={styl.notification}>
+            <div className={styl.notification} style={{display: openNotf}}>
               <div className={styl.inviteCard}>
-                <div className={styl.userInv}>
-                  <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
-                    <div className={styl.intImg} style={{ width: "40px", height: "45px" }}>
+                <button className={styl.userImg}>
+                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
+                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
                       <img src={userImage}/>
                     </div>
                   </div>
-                  <p className={styl.userName}>NOUAHIDI</p>
+                </button>
+                <div className={styl.choose}>
+                  <div className={styl.Sender}>
+                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
+                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
+                  </div>
+                  <div className={styl.butChoose}>
+                    <button >accept</button>
+                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
+                  </div>
+                </div>
+              </div>
+              <div className={styl.inviteCard}>
+                <button className={styl.userImg}>
+                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
+                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+                      <img src={userImage}/>
+                    </div>
+                  </div>
+                </button>
+                <div className={styl.choose}>
+                  <div className={styl.Sender}>
+                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
+                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
+                  </div>
+                  <div className={styl.butChoose}>
+                    <button >accept</button>
+                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
+                  </div>
+                </div>
+              </div>
+              <div className={styl.inviteCard}>
+                <button className={styl.userImg}>
+                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
+                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+                      <img src={userImage}/>
+                    </div>
+                  </div>
+                </button>
+                <div className={styl.choose}>
+                  <div className={styl.Sender}>
+                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
+                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
+                  </div>
+                  <div className={styl.butChoose}>
+                    <button >accept</button>
+                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
+                  </div>
+                </div>
+              </div>
+              <div className={styl.inviteCard}>
+                <button className={styl.userImg}>
+                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
+                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+                      <img src={userImage}/>
+                    </div>
+                  </div>
+                </button>
+                <div className={styl.choose}>
+                  <div className={styl.Sender}>
+                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
+                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
+                  </div>
+                  <div className={styl.butChoose}>
+                    <button >accept</button>
+                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
+                  </div>
+                </div>
+              </div>
+              <div className={styl.inviteCard}>
+                <button className={styl.userImg}>
+                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
+                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+                      <img src={userImage}/>
+                    </div>
+                  </div>
+                </button>
+                <div className={styl.choose}>
+                  <div className={styl.Sender}>
+                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
+                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
+                  </div>
+                  <div className={styl.butChoose}>
+                    <button >accept</button>
+                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
+                  </div>
+                </div>
+              </div>
+              <div className={styl.inviteCard}>
+                <button className={styl.userImg}>
+                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
+                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+                      <img src={userImage}/>
+                    </div>
+                  </div>
+                </button>
+                <div className={styl.choose}>
+                  <div className={styl.Sender}>
+                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
+                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
+                  </div>
+                  <div className={styl.butChoose}>
+                    <button >accept</button>
+                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
+                  </div>
+                </div>
+              </div>
+              <div className={styl.inviteCard}>
+                <button className={styl.userImg}>
+                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
+                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+                      <img src={userImage}/>
+                    </div>
+                  </div>
+                </button>
+                <div className={styl.choose}>
+                  <div className={styl.Sender}>
+                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
+                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
+                  </div>
+                  <div className={styl.butChoose}>
+                    <button >accept</button>
+                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
+                  </div>
                 </div>
               </div>
             </div>
