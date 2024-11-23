@@ -58,6 +58,8 @@ const Sidebar = () => {
     setOpenCrad((prevOpenCard) => {
       const newState = prevOpenCard === "flex" ? "none" : "flex";
       setSidebarWidth(newState === "none" ? "70px" : "250px");
+      if (window.innerWidth <= 900)
+        setSidebarWidth(newState === "none" ? "50px" : "150px");
       return newState;
     });
   };
@@ -129,7 +131,7 @@ const Sidebar = () => {
       <div className={styl.Head} ref={searchRef}>
         <div className={styl.begin}>
           <button className={styl.listIcon} onClick={handelSetopen}>
-            <FaList style={{ width: "45%", height: "45%" }} />
+            <FaList id={styl.listicon}/>
           </button>
           <Link to={"/home"}>
             <button className={styl.logo}>
@@ -155,17 +157,26 @@ const Sidebar = () => {
                 ))}
             </div>
           </div>
-          {/* <div className={styl.namee}>
-            <p >HOME</p>
-          </div> */}
         </div>
         <div className={styl.end}>
           <button className={styl.notifIcon}>
-            <MdNotifications style={{ width: "65%", height: "65%" }}/>
+            <MdNotifications id={styl.listicon}/>
+            <div className={styl.notification}>
+              <div className={styl.inviteCard}>
+                <div className={styl.userInv}>
+                  <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+                    <div className={styl.intImg} style={{ width: "40px", height: "45px" }}>
+                      <img src={userImage}/>
+                    </div>
+                  </div>
+                  <p className={styl.userName}>NOUAHIDI</p>
+                </div>
+              </div>
+            </div>
           </button>
           <div className={styl.param}>
-            <button className={styl.intImg}>
-                <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+            <button className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+                <div className={styl.intImg} style={{ width: "40px", height: "45px" }}>
                   <img src={userImage}/>
                 </div>
             </button>
