@@ -46,8 +46,14 @@ const CardRank = ({data, index}) => {
         </div>
         <hr />
         <div className={styl.user}>
-            <img src={avatar}/>
-            <p >{name}</p>
+            {/* <img src={avatar}/>
+            <p >{name}</p> */}
+            <div className={styl.intImg}>
+                <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
+                  <img src={avatar}/>
+                </div>
+            </div>
+            <p >{name.toUpperCase()}</p>
         </div>
         <div className={styl.wins}>
             <p >{wins}</p>

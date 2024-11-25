@@ -1,6 +1,8 @@
 body{
-  background:linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.01)),  url('./background.svg') no-repeat center center;
-  /* background-color: #141227; */
+  /* background:linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.01)),  url('./background.svg') no-repeat center center; */
+  /* background-color: rgb(34, 7, 93); */
+  /* background-color: #524895; */
+  background-color: black;
   background-size: cover;
 }
 

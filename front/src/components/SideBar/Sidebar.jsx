@@ -30,12 +30,15 @@ const Sidebar = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const searchRef = useRef(null);
+  const notifRef = useRef(null);
+  const settRef = useRef(null);
 
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [open, setOpen] = useState("flex");
   const[openCard, setOpenCard] = useState('flex');
   const[openNotf, setOpenNotf] = useState('none');
+  const[openSet, setOpenSet] = useState('none');
 
   // useEffect(() => {
   //   if (
@@ -57,7 +60,11 @@ const Sidebar = () => {
     setOpenNotf(openNotf === "none" ? "flex" : "none");
   }
 
-  const handelSetopen = () => {
+  const handelSetOpen = () => {
+    setOpenSet(openSet === "none" ? "flex" : "none");
+  }
+
+  const handelListOpen = () => {
     setOpenCard((prevOpenCard) => {
       const newState = prevOpenCard === "flex" ? "none" : "flex";
       setSidebarWidth(newState === "none" ? "70px" : "250px");
@@ -111,8 +118,11 @@ const Sidebar = () => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setSearchResults([]);
         setOpen("none");
-        setOpenNotf('none')
       }
+      if (notifRef.current && !notifRef.current.contains(event.target))
+        setOpenNotf('none')
+      if (settRef.current && !settRef.current.contains(event.target))
+        setOpenSet('none')
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -134,7 +144,7 @@ const Sidebar = () => {
     <div className={styl.Sidebar} style={{width: sidebarWidth, minWidth: sidebarWidth}}>
       <div className={styl.Head} ref={searchRef}>
         <div className={styl.begin}>
-          <button className={styl.listIcon} onClick={handelSetopen}>
+          <button className={styl.listIcon} onClick={handelListOpen}>
             <FaList id={styl.listicon}/>
           </button>
           <Link to={"/home"}>
@@ -163,7 +173,7 @@ const Sidebar = () => {
           </div>
         </div>
         <div className={styl.end}>
-          <button className={styl.notifIcon} onClick={handelNotifOpen} ref={searchRef}>
+          <button className={styl.notifIcon} onClick={handelNotifOpen} ref={notifRef}>
             <MdNotifications id={styl.listicon}/>
             <div className={styl.notification} style={{display: openNotf}}>
               <div className={styl.inviteCard}>
@@ -185,128 +195,18 @@ const Sidebar = () => {
                   </div>
                 </div>
               </div>
-              <div className={styl.inviteCard}>
-                <button className={styl.userImg}>
-                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
-                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
-                      <img src={userImage}/>
-                    </div>
-                  </div>
-                </button>
-                <div className={styl.choose}>
-                  <div className={styl.Sender}>
-                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
-                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
-                  </div>
-                  <div className={styl.butChoose}>
-                    <button >accept</button>
-                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
-                  </div>
-                </div>
-              </div>
-              <div className={styl.inviteCard}>
-                <button className={styl.userImg}>
-                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
-                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
-                      <img src={userImage}/>
-                    </div>
-                  </div>
-                </button>
-                <div className={styl.choose}>
-                  <div className={styl.Sender}>
-                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
-                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
-                  </div>
-                  <div className={styl.butChoose}>
-                    <button >accept</button>
-                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
-                  </div>
-                </div>
-              </div>
-              <div className={styl.inviteCard}>
-                <button className={styl.userImg}>
-                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
-                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
-                      <img src={userImage}/>
-                    </div>
-                  </div>
-                </button>
-                <div className={styl.choose}>
-                  <div className={styl.Sender}>
-                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
-                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
-                  </div>
-                  <div className={styl.butChoose}>
-                    <button >accept</button>
-                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
-                  </div>
-                </div>
-              </div>
-              <div className={styl.inviteCard}>
-                <button className={styl.userImg}>
-                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
-                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
-                      <img src={userImage}/>
-                    </div>
-                  </div>
-                </button>
-                <div className={styl.choose}>
-                  <div className={styl.Sender}>
-                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
-                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
-                  </div>
-                  <div className={styl.butChoose}>
-                    <button >accept</button>
-                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
-                  </div>
-                </div>
-              </div>
-              <div className={styl.inviteCard}>
-                <button className={styl.userImg}>
-                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
-                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
-                      <img src={userImage}/>
-                    </div>
-                  </div>
-                </button>
-                <div className={styl.choose}>
-                  <div className={styl.Sender}>
-                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
-                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
-                  </div>
-                  <div className={styl.butChoose}>
-                    <button >accept</button>
-                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
-                  </div>
-                </div>
-              </div>
-              <div className={styl.inviteCard}>
-                <button className={styl.userImg}>
-                  <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
-                    <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
-                      <img src={userImage}/>
-                    </div>
-                  </div>
-                </button>
-                <div className={styl.choose}>
-                  <div className={styl.Sender}>
-                    <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
-                    <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
-                  </div>
-                  <div className={styl.butChoose}>
-                    <button >accept</button>
-                    <button style={{backgroundColor: '#660da56a'}}>remove</button>
-                  </div>
-                </div>
-              </div>
             </div>
           </button>
-          <div className={styl.param}>
-            <button className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+          <div className={styl.sett}>
+            <button className={styl.intImg} style={{ width: "45px", height: "50px", cursor: 'pointer' }}
+            onClick={handelSetOpen}
+            ref={settRef}
+            >
                 <div className={styl.intImg} style={{ width: "40px", height: "45px" }}>
                   <img src={userImage}/>
                 </div>
             </button>
+            <div className={styl.settings} style={{display: openSet}}></div>
           </div>
         </div>
       </div>
