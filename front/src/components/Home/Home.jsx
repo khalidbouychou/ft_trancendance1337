@@ -126,7 +126,7 @@ const Home = () => {
     <div className={styl.Home}>
       <div className={styl.cont}>
         <div className={styl.head}>
-          <h1>HOME</h1>
+          <h2>HOME</h2>
         </div>
         {/* <div className={styl.search}>
           <div className={styl.extFrame}>

@@ -84,174 +84,67 @@ const Profile = () => {
         <History username={username} ismyprofil={ismyprofil} />
       </div> */}
       <div className={styl.content}>
-        <div className={styl.prf}>
-          <div className={styl.character}>
-            <div className={styl.avatar}>
-              <div className={styl.image}>
-                <div className={styl.dupeImage}></div>
-              </div>
-              <div className={styl.namesett}>
-                <div className={styl.name}>
-                  <p >{username.toUpperCase()}</p>
-                </div>
-                <div className={styl.sett}>
-                  <button className={styl.change}>
-                    <FiPlus className={styl.plusIcon}/>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <hr style={{width: '0%', height: '40%', border: '1px solid #7667D9', bottom: '15%', position: 'relative'}}/>
-            <div className={styl.level}>
-              <div className={styl.lvl}>
-                <div className={styl.tmp}>
-                  <p >Level 29</p>
-                  <p >Ping Pong</p>
-                  <p style={{display: 'flex'}}>
-                    1000 /
-                    <p style={{color: 'rgba(255, 255, 255, 0.4)', marginLeft: '5px'}}>3000</p>
-                  </p>
-                </div>
-                <div className={styl.ext}>
-                  <div className={styl.int} style={{width: '50%'}}></div>
-                </div>
-                <div className={styl.tmp}>
-                <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>Next Level</p>
-                  <p >Level 30</p>
-                </div>
-              </div>
-              <div className={styl.lvl}>
-                <div className={styl.tmp}>
-                  <p >Level 29</p>
-                  <p >Tic Tac Toe</p>
-                  <p style={{display: 'flex'}}>
-                    1000 /
-                    <p style={{color: 'rgba(255, 255, 255, 0.4)', marginLeft: '5px'}}>3000</p>
-                  </p>
-                </div>
-                <div className={styl.ext}>
-                  <div className={styl.int} style={{width: '50%'}}></div>
-                </div>
-                <div className={styl.tmp}>
-                  <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>Next Level</p>
-                  <p >Level 30</p>
-                </div>
-              </div>
-              <div className={styl.option}>
-                <button className={styl.settChange}>
-                  <button className={styl.changeGame}>
-                    <RiListSettingsFill id={styl.iconeCh}/>
-                    <div className={styl.menu} style={{display: 'none'}}>
-                      <button >Ping Pong</button>
-                      <button >Tic Tac Toe</button>
-                    </div>
-                  </button>
-                  <p >Match History</p>
-                </button>
-                <button className={styl.settChange}><p >Friends</p></button>
-                <button className={styl.settChange}><p >Statistic</p></button>
-              </div>
-            </div>
-          </div>
-          <div className={styl.info}>
-            {/* <div className={styl.matchHistory}>
-              <div className={styl.head}>
-                <p style={{width: '30%'}}>Opponent</p>
-                <p style={{width: '20%'}}>Score</p>
-                <p style={{width: '25%'}}>Date & Time</p>
-                <p style={{width: '25%'}}>Status</p>
-              </div>
-              <div className={styl.matches}>
-                <div className={styl.cardMatch}>
-                  <div className={styl.player}>
-                    <div className={styl.image} style={{width: '60px', height: '80px', bottom: '0'}}>
-                      <div className={styl.dupeImage} style={{width: '55px', height: '75px'}}></div>
-                    </div>
-                    <div className={styl.Name}>
-                      <p >NOUREDDINE</p>
-                    </div>
-                  </div>
-                  <p className={styl.Line}  style={{width: '20%'}}>3 - 2</p>
-                  <p className={styl.Line}>2024 - 11 - 09</p>
-                  <p className={styl.Line}>you win</p>
-                </div>
-              </div>
-            </div> */}
-            {/* <div className={styl.friends}>
-              <div className={styl.cardFriend}>
-                <div className={styl.side}style={{height: '40%', backgroundColor: 'white'}}></div>
-                <div className={styl.side}style={{height: '60%'}}>
-                  <p >NOUAHIDI</p>
-                  <p style={{left: '50%'}}>Level : 1 - 50%</p>
-                </div>
-                <div className={styl.Image}>
-                  <div className={styl.imgCont}></div>
-                </div>
-              </div>
-              <div className={styl.cardFriend}></div>
-              <div className={styl.cardFriend}></div>
-              <div className={styl.cardFriend}></div>
-              <div className={styl.cardFriend}></div>
-              <div className={styl.cardFriend}></div>
-              <div className={styl.cardFriend}></div>
-              <div className={styl.cardFriend}></div>
-              <div className={styl.cardFriend}></div>
-            </div> */}
-            <div className={styl.statistic}>
-                <div className={styl.chart1}>
-                    <div className={styl.circ}>
-                        <div className={styl.chartCir} style={{
-                            background: `conic-gradient(
-                            #25233C 3%,  
-                            #7667D9 0 5%
-                            )`,
-                        }}>
-                        </div>
-                        <div className={styl.chartText}>
-                            <p>Wins: 3</p>
-                            <p>Losses: 5</p>
-                        </div>
-                    </div>
-                    <div className={styl.CurveChart}>
-                        <CurveChart data={data} />
-                    </div>
-                </div>
-                <div className={styl.chart2}>
-                    <CurveLevel data={levelData}/>
-                </div>
-            </div>
-          </div>
+        <div className={styl.head}>
+          <h2 >PROFILE</h2>
         </div>
-        <div className={styl.users}>
-            <div className={styl.Head}>
-                <button style={{borderRadius: '25px 5px 25px 0'}}><p >Friends</p></button>
-                <button style={{borderRadius: '5px 25px 0 25px', background: 'none'}}><p >Blocked</p></button>
-            </div>
-            <div className={styl.Friends}>
-              <div className={styl.cardFriend}>
-                <div className={styl.side}style={{height: '30%', backgroundColor: 'rgba(255, 255, 255, 0.05)'}}>
-                  <p style={{color: "green", letterSpacing: '1px', left: '80%', position: 'relative'}}>Friend</p>
-                </div>
-                <div className={styl.side}style={{height: '70%'}}>
-                  <p className={styl.CName}>NOUAHIDI</p>
-                  <p className={styl.CName}>Level : 1 - 50%</p>
-                </div>
-                <div className={styl.Image} style={{width: '75px', height: '85px', left: '7%', top: '15%', backgroundColor: 'rgba(255, 255, 255, 0.05)'}} >
-                  <div className={styl.Image}>
-                    <div className={styl.imgCont}></div>
+        <div className={styl.userPrf}>
+          <div className={styl.side1}>
+            <div className={styl.userInfo}>
+              <div className={styl.userDis}>
+                <div className={styl.intImg}>
+                  <div className={styl.extImg}>
+                    <img src={userData.avatar}></img>
                   </div>
                 </div>
-                <div className={styl.lvll}>
-                    <div className={styl.ext} style={{width: '100%', height: '20px'}}>
-                      <div className={styl.int} style={{width: '50%'}}></div>
+                <p className={styl.userName}>
+                  {userData.profile_name.toUpperCase()}
+                  <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>
+                    <div className={styl.ongline}>
+                      <div className={styl.ongline} style={{width: '11px', height: '11px', backgroundColor: 'rgb(7, 118, 174)'}}></div>
                     </div>
+                    ongline
+                  </p>
+                </p>
+                <div className={styl.chooseData}>
+                  <button >MH ping Pong</button>
+                  <button >MH.Tic Tac Toe</button>
+                  <button >Statistic</button>
                 </div>
               </div>
-              <div className={styl.cardFriend}></div>
+              <div className={styl.levels}>
+                <div className={styl.level}>
+                  <div className={styl.tmp}>
+                    <p >Level 29</p>
+                    <div className={styl.gameName}>Ping Pong</div>
+                    <p >2999 / <p style={{color: 'rgba(255, 255, 255, 0.4)', left: '2px'}}>3000</p></p>
+                  </div>
+                  <div className={styl.intLvl}>
+                    <div className={styl.extLvl} style={{width: '80%'}}></div>
+                  </div>
+                  <div className={styl.tmp} style={{alignItems: 'start'}}>
+                    <p style={{color: 'rgba(255, 255, 255, 0.4)', left: '2px'}}>Next Level</p>
+                    <p >Level 30</p>
+                  </div>
+                </div>
+                <div className={styl.level}>
+                  <div className={styl.tmp}>
+                    <p >Level 29</p>
+                    <div className={styl.gameName}>Tic Tac Toe</div>
+                    <p >2999 / <p style={{color: 'rgba(255, 255, 255, 0.4)', left: '2px'}}>3000</p></p>
+                  </div>
+                  <div className={styl.intLvl}>
+                    <div className={styl.extLvl} style={{width: '80%'}}></div>
+                  </div>
+                  <div className={styl.tmp} style={{alignItems: 'start'}}>
+                    <p style={{color: 'rgba(255, 255, 255, 0.4)', left: '2px'}}>Next Level</p>
+                    <p >Level 30</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className={styl.searchF}>
-              <input type="text" placeholder="Search Friend ..." />
-            </div>
+            <div className={styl.userData}></div>
+          </div>
+          <div className={styl.side2}></div>
         </div>
       </div>
     </div>
