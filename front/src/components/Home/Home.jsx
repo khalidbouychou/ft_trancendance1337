@@ -52,7 +52,7 @@ const Home = () => {
     const fetchSearchResults = async () => {
       if (searchQuery.trim()) {
         const response = await fetch(
-          `https://localhost/api/search/?q=${searchQuery}`
+          `https://10.11.9.12/api/search/?q=${searchQuery}`
         );
         const data = await response.json();
         // console.log(data);
@@ -93,7 +93,7 @@ const Home = () => {
   useEffect(() => {
     const fetchDataResults = async () => {
       try {
-        const response = await fetch(`https://localhost/api/pingdata/`);
+        const response = await fetch(`https://10.11.9.12/api/pingdata/`);
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -105,7 +105,7 @@ const Home = () => {
         const userData = data.find((item) => item.username === username);
         // console.log('username***>', item)
         setFilteredPingData(userData);
-        const ticData = await fetch(`https://localhost/api/ticdata/`);
+        const ticData = await fetch(`https://10.11.9.12/api/ticdata/`);
         const ticDataJson = await ticData.json();
         setTicData(ticDataJson);
         const ticUserData = ticDataJson.find((item) => item.username === username);

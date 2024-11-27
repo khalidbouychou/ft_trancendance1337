@@ -48,7 +48,7 @@ export default function LocalGame() {
         };
 
         const drawLeftRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -56,7 +56,7 @@ export default function LocalGame() {
         }
 
         const drawbottomleftRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -64,7 +64,7 @@ export default function LocalGame() {
         }
 
         const drawRightRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -72,7 +72,7 @@ export default function LocalGame() {
         }
 
         const drawbottomrightRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -252,10 +252,10 @@ export default function LocalGame() {
                 <div className={styles.topgame}>
                     <div className={styles.side}>
                         <img src="/assets/superior.png" className={styles.Img} />
-                        <p >Left Player</p>
+                        <p >Left Team</p>
                     </div>
                     <div className={styles.side} style={{ justifyContent: 'end' }}>
-                        <p >Right Player</p>
+                        <p >Right Team</p>
                         <img src="/assets/battlebeast.png" className={styles.Img} />
                     </div>
                     <div className={styles.score}>

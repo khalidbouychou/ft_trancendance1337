@@ -11,7 +11,7 @@ from login.models import Friend
 from .serializers import ChatRoomSerializer, MessageSerializer
 from login.serializers import PlayerSerializer, FriendSerializer
 from django.db import models
-
+ 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_chat(request):

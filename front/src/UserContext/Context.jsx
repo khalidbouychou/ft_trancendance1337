@@ -14,7 +14,7 @@ export default function AuthProvider({ children }) {
   const location = useLocation();
 
   async function auth_intra42() {
-    const response = await axios.get("https://localhost/api/auth_intra/", {
+    const response = await axios.get("https://10.11.9.12/api/auth_intra/", {
       withCredentials: true
     });
     try {
@@ -38,7 +38,7 @@ export default function AuthProvider({ children }) {
         const params = new URLSearchParams();
         params.append("code", code);
         const res = await axios.post(
-          `https://localhost/api/login/`,
+          `https://10.11.9.12/api/login/`,
           params,
           {
             withCredentials: true
@@ -74,7 +74,7 @@ export default function AuthProvider({ children }) {
 
   async function get_auth_user() {
     try {
-      const res = await axios.get(`https://localhost/api/user/`, { 
+      const res = await axios.get(`https://10.11.9.12/api/user/`, { 
         withCredentials: true
       });
 
@@ -97,7 +97,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`https://localhost/api/logout/`, {
+      const res = await axios.get(`https://10.11.9.12/api/logout/`, {
         withCredentials: true
       });
 

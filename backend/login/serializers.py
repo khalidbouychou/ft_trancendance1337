@@ -34,17 +34,19 @@ class FriendSerializer(serializers.ModelSerializer):
 
     def get_user2(self, obj):
         return obj.user2.username
-
+ 
 class PingDataSerializer(serializers.ModelSerializer):
+    player_username = serializers.CharField(source='player.username', read_only=True)
     class Meta:
         model = PingData
-        fields = ['wins', 'losses', 'exp_game', 'timestamp']
+        fields = ['wins', 'losses', 'exp_game', 'timestamp', 'player_username']
 
 class TicDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = TicData
         fields = ['wins', 'losses', 'exp_game', 'timestamp']
         # fields = ['username', 'profile_name','avatar' ,'status_network', 'status_game', 'two_factor', 'otp_verified', 'qrcode_path','bool_login']
+
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player

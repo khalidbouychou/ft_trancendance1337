@@ -27,7 +27,7 @@ const Notification = () => {
     const fetchNotifications = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('https://localhost/api/notif/', {
+        const response = await axios.get('https://10.11.9.12/api/notif/', {
           headers: {
             'Authorization': `Bearer ${token}`
           }

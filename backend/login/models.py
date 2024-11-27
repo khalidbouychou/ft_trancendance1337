@@ -60,7 +60,7 @@ class Friend(models.Model):
 
     class Meta:
         unique_together = ['user1', 'user2', 'status']
-
+ 
 class PingData(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='ping_data')
     wins = models.IntegerField(default=0)

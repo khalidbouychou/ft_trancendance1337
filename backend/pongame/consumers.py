@@ -8,6 +8,8 @@ from channels.layers import get_channel_layer
 from login.models import Player, PingData
 from matches.models import Matches
 from django.utils import timezone
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 
 class GameStateManager:
     _game_states = {}
@@ -26,6 +28,8 @@ class GameStateManager:
             del cls._game_states[room_name]
 
 class GameConsumer(AsyncWebsocketConsumer):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     name = ''
     avatar = ''
     room_group_name = ''
@@ -66,14 +70,11 @@ class GameConsumer(AsyncWebsocketConsumer):
                 }
             )
             self.admin.game_loop = False
-            # self.close() //doesn't make sense to close the connection here
             self.channel_layer.group_discard(
                 self.room_group_name,
                 self.channel_name
             )
             GameStateManager.remove_state(self.room_group_name)
-        # else:
-        #     self.close() //doesn't make sense to close the connection here
         if self.name in GameConsumer.queue:
             del GameConsumer.queue[self.name]
 
@@ -94,7 +95,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         value = data.get('value', 0)
 
         if action == 'connect':
-            print('...........................a user has connected', data.get('username'))
+            # print('...........................a user has connected', data.get('username'))
             if (data.get('username') in GameConsumer.queue):
                 self.close()
             GameConsumer.queue[data.get('username')] = {
@@ -108,6 +109,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.avatar = data.get('avatar')
             GameConsumer.instances[self.name] = self
 
+            print("len:", len(GameConsumer.queue)), "username:", data.get('username'), "avatar:", data.get('avatar'); 
             if len(GameConsumer.queue) >= 2:
                 match_found = False
                 matched_players = []
@@ -274,6 +276,10 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.right_paddleY + self.racketHeight >= (self.bally - 15)):
 
             offset = (self.bally - (self.right_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
+            if (offset > 0 and offset > 10):
+                offset = 10
+            elif (offset < 0 and offset < -10):
+                offset = -10
             self.ballx = self.game_width - self.racketWidth - 16
             self.balldirectionX *= -1
             self.balldirectionY = offset
@@ -284,6 +290,10 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.left_paddleY + self.racketHeight >= (self.bally - 15)):
 
             offset = (self.bally - (self.left_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
+            if (offset > 0 and offset > 10):
+                offset = 10
+            elif (offset < 0 and offset < -10):
+                offset = -10
             self.ballx = self.racketWidth + 16
             self.balldirectionX *= -1
             self.balldirectionY = offset
@@ -304,7 +314,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.right_score += 1
             self.bonus = 0
-            if (self.right_score >= 5000):
+            if (self.right_score >= 5):
                 self.game_loop = False
                 data = {
                     'winner': '2',
@@ -363,7 +373,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.left_score += 1
             self.bonus = 0
-            if (self.left_score >= 5000):
+            if (self.left_score >= 5):
                 self.game_loop = False
                 data = {
                     'winner': '1',
@@ -459,7 +469,7 @@ class inviteConsumer(AsyncWebsocketConsumer):
                     self.room_group_name,
                     self.channel_name
                 )
-        print('game_id:', self.room_group_name, 'in_queue:', self.inqueue)
+        # print('game_id:', self.room_group_name, 'in_queue:', self.inqueue)
         if self.inqueue:
             if inviteConsumer.game_queue.get(self.room_group_name) is not None:
                 print('kherj fi 7alatek')
@@ -511,7 +521,7 @@ class inviteConsumer(AsyncWebsocketConsumer):
             if len(inviteConsumer.game_queue) > 0:
                 print('game queue is not empty')
                 game_id = data.get('game_id')
-                print('game_id:', game_id)
+                # print('game_id:', game_id)
                 game = inviteConsumer.game_queue[game_id]
                 if game is not None:
                     game['connected'] += 1
@@ -694,6 +704,10 @@ class inviteConsumer(AsyncWebsocketConsumer):
             self.right_paddleY + self.racketHeight >= (self.bally - 15)):
 
             offset = (self.bally - (self.right_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
+            if (offset > 0 and offset > 10):
+                offset = 10
+            elif (offset < 0 and offset < -10):
+                offset = -10
             self.ballx = self.game_width - self.racketWidth - 16
             self.balldirectionX *= -1
             self.balldirectionY = offset
@@ -704,6 +718,10 @@ class inviteConsumer(AsyncWebsocketConsumer):
             self.left_paddleY + self.racketHeight >= (self.bally - 15)):
 
             offset = (self.bally - (self.left_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
+            if (offset > 0 and offset > 10):
+                offset = 10
+            elif (offset < 0 and offset < -10):
+                offset = -10
             self.ballx = self.racketWidth + 16
             self.balldirectionX *= -1
             self.balldirectionY = offset

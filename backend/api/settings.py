@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 CSRF_TRUSTED_ORIGINS = [
     'https://127.0.0.1', 
     'http://127.0.0.1', 
-    'http://localhost',
-    'https://localhost',
-    'http://localhost:8000',
+    'http://10.11.9.12',
+    'https://10.11.9.12',
+    'http://10.11.9.12:8000',
     'https://127.0.0.1:5173'
 ]
 # Quick-start development settings - unsuitable for production
@@ -39,7 +39,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # Set to False in production
  
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
+ALLOWED_HOSTS = ['127.0.0.1','10.11.9.12']
 
 # Application definition
 INSTALLED_APPS = [
@@ -216,8 +216,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'https://127.0.0.1',  
     'http://127.0.0.1',
-    'http://localhost',
-    'https://localhost',
+    'http://10.11.9.12',
+    'https://10.11.9.12',
     ]
 
 DATABASES = {

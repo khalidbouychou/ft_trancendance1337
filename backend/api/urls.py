@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView
 import os
 from django.conf import settings
 from django.conf.urls.static import static
-
+ 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('api/matches/', views.Matches_list),
@@ -15,7 +15,7 @@ urlpatterns = [
     path('matches/', include('matches.urls')),
     path('api/chat/', include('chat.urls')),
     path('api/notif/', include('notification.urls')),
-    path('api/pingpong/', include('pongame.urls')),
+    path('api/', include('pongame.urls')),
     path('api/', include('login.urls')),
     path ('api-auth/', include('rest_framework.urls')),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),

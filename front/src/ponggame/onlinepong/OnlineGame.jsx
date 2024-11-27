@@ -2,7 +2,8 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './OnlineGame.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../UserContext/Context';
-import api from '../../../auth/api';
+import axios from "axios";
+import Cookies from 'js-cookie';
 
 export default function OnlineGame() {
 
@@ -76,26 +77,33 @@ export default function OnlineGame() {
     };
 
     useEffect(() => {
+        
         const fetchData = async () => {
-            const response = await api.get('/pingpong/');
-            // console.log('response: ',response.data);
-            // console.log('username:', response.data.user);
-            // console.log('avatar:', response.data.avatar);
-            // console.log('exp_game:', response.data.exp_game);
+            const token = Cookies.get('token');
+            console.log('token:', token);
+            const response = await axios.get('https://10.11.9.12/api/game_xp/', {
+              withCredentials: true,
+            //   headers: {
+            //     Authorization: `Bearer ${token}`,
+            //   },
+            });
+            console.log('response: ', user.user);
+            console.log('username:', user.user.profile_name);
+            console.log('avatar:', user.user.avatar);
+            console.log('exp_game:', response.data.exp_game);
             if (response.status === 200) {
-                // setUser(response.data);
-                setUsername(response.data.user);
-                setLeftPlayerAvatar(response.data.avatar);
-                setAvatar(response.data.avatar);
+                setUsername(user.user.profile_name);
+                setLeftPlayerAvatar(user.user.avatar);
+                setAvatar(user.user.avatar);
                 setLevel(response.data.exp_game);
-            } else {
+            }
+            else {
                 console.log("error:", response.status);
             }
         };
 
         if (!hasFetchedData.current) {
             fetchData();
-            // hasFetchedData.current = true;
             setFetchedData(true);
         }
     }, []);
@@ -114,9 +122,10 @@ export default function OnlineGame() {
         let rightRacketY = 0;
         let player_id = 0;
         let myReq;
-        const token = localStorage.getItem('token');
-        if (FetchedData)
-            socket = new WebSocket(`ws://localhost:8000/ws/remote-game/?token=${token}`);
+        if (FetchedData){
+            const token = Cookies.get('token');
+            socket = new WebSocket(`ws://10.11.10.11:8000/ws/remote-game/?token=${token}`);
+        }
 
         if (socket) {
             socket.onopen = () => {
@@ -217,14 +226,14 @@ export default function OnlineGame() {
         };
 
         const drawLeftRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             racketHeight = (canvas.height * 20 / 100);
             ctx.fillRect(0, leftRacketY, racketWidth, racketHeight);
         }
 
         const drawRightRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             racketHeight = (canvas.height * 20 / 100);
             ctx.fillRect(canvas.width - racketWidth, rightRacketY, racketWidth, racketHeight);

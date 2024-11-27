@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState } from 'react';
 import * as styles from './Match.module.css';
-import { useGlobalContext } from '../context/TournamentContext.jsx';
+import { useGlobalContext } from '../context/RemoteTournamentContext.jsx';
 
 export default function GameComponent({ type }) {
 

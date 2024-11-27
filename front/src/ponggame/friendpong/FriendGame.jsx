@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './FriendGame.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../UserContext/Context';
-import api from '../../../auth/api';
 
 export default function FriendGame() {
 
@@ -27,7 +26,7 @@ export default function FriendGame() {
     const [level, setLevel] = useState(0);
     const [player_idx, setPlayerId] = useState(0);
     const hasFetchedData = useRef(false);
-    const [FetchedData, setFetchedData] = useState(false); 
+    const [FetchedData, setFetchedData] = useState(false);
     let socket = null;
 
     const leftup = () => {
@@ -79,14 +78,17 @@ export default function FriendGame() {
     };
 
     useEffect(() => {
-        // console.log("im here");
         const fetchData = async () => {
-            const response = await api.get('/pingpong/');
-            // console.log('response:', response);
-            if (response.status === 200) {
-                setUsername(response.data.user);
-                setLeftPlayerAvatar(response.data.avatar);
-                setAvatar(response.data.avatar);
+            const response = await axios.get(
+                "https://10.11.9.12/api/game_xp/",
+                {
+                  withCredentials: true
+                }
+              );
+              if (response.status === 200) {
+                setUsername(user.user.profile_name);
+                setLeftPlayerAvatar(user.user.avatar);
+                setAvatar(user.user.avatar);
                 setLevel(response.data.exp_game);
             } else {
                 console.log("error:", response.status);
@@ -115,7 +117,7 @@ export default function FriendGame() {
         let myReq;
         const token = localStorage.getItem('token');
         if (FetchedData)
-            socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
+            socket = new WebSocket(`ws://10.11.10.11:8000/ws/play-friend/?token=${token}`);
 
         if (socket) {
             socket.onopen = () => {
@@ -221,14 +223,14 @@ export default function FriendGame() {
         };
 
         const drawLeftRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             racketHeight = (canvas.height * 20 / 100);
             ctx.fillRect(0, leftRacketY, racketWidth, racketHeight);
         }
 
         const drawRightRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             racketHeight = (canvas.height * 20 / 100);
             ctx.fillRect(canvas.width - racketWidth, rightRacketY, racketWidth, racketHeight);

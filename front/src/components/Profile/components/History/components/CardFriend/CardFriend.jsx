@@ -13,7 +13,7 @@ const CardFriend = ({ friend, onClick }) => {
         </div>
         <div className={styl.User}>
           <div className={styl.image}>
-            <img src={'https://localhost'+friend.friend.image} alt={friend.friend.name} />
+            <img src={'https://10.11.9.12'+friend.friend.image} alt={friend.friend.name} />
             <div className={styl.online}></div>
           </div>
           <button onClick={() => onClick(friend.friend)}>
