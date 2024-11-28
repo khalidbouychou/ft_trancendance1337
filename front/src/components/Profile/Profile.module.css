@@ -9,16 +9,12 @@
 .content {
 	display: flex;
 	width: 95%;
-	/* min-width: 2000px; */
 	height: 90%;
-	/* background-color: #7667D9; */
 	min-height: 1250px;
 	justify-content: center;
 	align-items: center;
-	/* margin-top: 100px; */
-	/* align-items: center; */
+	margin-top: 80px;
 	flex-direction: column;
-	/* align-items: center; */
 }
 
 .head h2
@@ -31,11 +27,6 @@
     display: grid;
     align-items: center;
     color: white;
-    @media (max-width: 768px) {
-		font-size:25px;
-        font-weight:100;
-        letter-spacing:4px;
-    }
 }
 
 .userPrf {
@@ -43,6 +34,7 @@
 	justify-content: center;
 	width: 93%;
 	height: 100%;
+	min-height: 100%;
 	gap: 3%;
 	min-width: 1800px;
 }
@@ -53,6 +45,7 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	gap: 30px;
 	@media (max-width: 1730px) {
 		width: 60%;
 	}
@@ -69,24 +62,15 @@
 	}
 }
 
-@media (max-width: 1540px) {
-	.side1 {
-		width: 100%;
-	}
-	.userPrf {
-		min-width: 0px;
-	}
-	.side2 {
-		display: none;
-	}
-}
 
 .userInfo {
 	display: flex;
 	width: 98%;
-	height: 25%;
+	height: 30%;
 	background-color: rgba(80, 79, 79, 0.406);
-	margin: 1%;
+	margin: 2%;
+	position: relative;
+	justify-content: center;
 }
 
 .userDis {
@@ -95,20 +79,21 @@
 	padding-left: 5%;
 	position: relative;
 	gap: 10%;
+	/* background-color: blue; */
 }
 
 
-.intImg {
+.extImg {
 	display: flex;
     justify-content: center;
     align-items: center;
-    width: 155px;
-    height: 205px;
-    /* background-color: rgb(130, 130, 5); */
-	background-color: rgb(68, 68, 68);
+    width: 150px;
+    height: 200px;
+    background-color: rgb(130, 130, 5);
+	/* background-color: rgb(68, 68, 68); */
     border: none;
-	bottom: 40px;
 	position: relative;
+	bottom: 30px;
     clip-path: polygon(
 		50% 0%, 
 		100% 25%, 
@@ -119,29 +104,30 @@
 	);
 }
 	
-.extImg {
+.intImg {
 	display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 140px;
-    height: 190px;
-    background-color: green;
-    border: none;
+	justify-content: center;
+	align-items: center;
+	width: 140px;
+	height: 190px;
+	background-color: green;
+	border: none;
 	position: relative;
-    clip-path: polygon(
-		50% 0%, 
-		100% 25%, 
-		100% 75%, 
-		50% 100%, 
-		0% 75%, 
-		0% 25%
+	clip-path: polygon(
+	50% 0%, 
+	100% 25%, 
+	100% 75%, 
+	50% 100%, 
+	0% 75%, 
+	0% 25%
 	);
 	img {
 		display: flex;
 		width: 190px;
+		
 	}
 }
-
+	
 .userName {
 	display: flex;
 	font-size: 19px;
@@ -173,28 +159,41 @@
 .chooseData {
 	display: flex;
 	position: absolute;
-	width: 80%;
+	width: 50%;
 	height: 40px;
 	background-color: black;
-	bottom: -1px;
+	bottom: -15px;
+	border-radius: 10px 10px 0px 0px;
 	button {
 		color: rgba(255, 255, 255, 0.6);
-		font-size: 14px;
+		font-size: 13px;
 		flex: 1;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		background: none;
 		border: none;
-		border-bottom: 2px solid red;
 		cursor: pointer;
+		/* padding-top: 3%; */
+		p {
+			letter-spacing: 1px;
+			text-decoration: underline;
+			text-decoration-thickness: 1.5px;
+			text-underline-offset: 7px;
+			text-decoration-color: #ff0000;
+			transition: 0.3s;
+			&:hover {
+				transition: 0.3s;
+				color: white;
+			}
+		}
 	}
 }
 
 .levels {
 	display: flex;
 	width: 70%;
-	height: 100%;
+	height: 95%;
 	/* background-color: antiquewhite; */
 	gap: 10px;
 	flex-direction: column;
@@ -211,7 +210,7 @@
 	gap: 5px;
 }
 
-.intLvl {
+.extLvl {
 	display: flex;
 	width: 50%;
 	height: 30px;
@@ -219,10 +218,10 @@
 	border-radius: 30px;
 	overflow: hidden;
 	align-items: center;
-	border: 1.5px gray solid;
+	border: 1px gray solid;
 }
 
-.extLvl {
+.intLvl {
 	display: flex;
 	width: 100%;
 	height: 100%;
@@ -259,7 +258,398 @@
 .userData {
 	display: flex;
 	width: 98%;
-	height: 75%;
+	height: 70%;
 	margin: 1%;
-	background-color: aquamarine;
+	/* background-color: aquamarine; */
+}
+
+.mthistory {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
+	align-items: center;
+	gap: 7px;
+}
+
+.mHead {
+	display: flex;
+	width: 90%;
+	height: 30px;
+	min-height: 30px;
+	align-items: center;
+	justify-content: center;
+	p {
+		display: flex;
+		color: rgba(255, 255, 255, 0.279);
+		font-size: 13px;
+		letter-spacing: 0.5px;
+		width: 25%;
+		justify-content: center;
+	}
+}
+
+.matches {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	/* background-color: antiquewhite; */
+	align-items: center;
+	flex-direction: column;
+	gap: 10px;
+	overflow: auto;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+.cardMatch {
+	display: flex;
+	/* justify-content: center; */
+	width: 90%;
+	height: 80px;
+	min-height: 80px;
+	background-color: rgb(59, 58, 58);
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.opponent {
+	display: flex;
+	width: 30%;
+	height: 100%;
+	/* background-color: blue; */
+	justify-content: center;
+	align-items: center;
+	gap: 30%;
+	p {
+		display: flex;
+		font-size: 14px;
+		color: white;
+		font-weight: 550;
+		letter-spacing: 1px;
+	}
+	@media (max-width: 1024px) {
+		gap: 10%;
+	}
+}
+
+.extImgOpp {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 70px;
+    background-color: rgb(130, 130, 5);
+	/* background-color: rgb(68, 68, 68); */
+    border: none;
+	position: relative;
+    clip-path: polygon(
+		50% 0%, 
+		100% 25%, 
+		100% 75%, 
+		50% 100%, 
+		0% 75%, 
+		0% 25%
+	);
+}
+
+
+.intImgOpp {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 55px;
+	height: 65px;
+	background-color: green;
+	border: none;
+	position: relative;
+	clip-path: polygon(
+	50% 0%, 
+	100% 25%, 
+	100% 75%, 
+	50% 100%, 
+	0% 75%, 
+	0% 25%
+	);
+	img {
+		display: flex;
+		width: 65px;
+		height: 65px;
+	}
+}
+
+.res {
+	display: flex;
+	width: 20%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+	p {
+		color: rgb(190, 190, 7);
+		font-size: 16px;
+	}
+}
+
+.status_date {
+	display: flex;
+	width: 25%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+	p{
+		color: white;
+		font-size: 14px;
+		letter-spacing: 1.5px;
+	}
+}
+
+.date {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 7px;
+	margin-top: 30px;
+	p {
+		padding: 0;
+		margin: 0;
+	}
+}
+
+@media (max-width: 768px) {
+	.opponent {
+		width: 35%;
+		p {
+			font-size: 12px;
+			font-weight: 400;
+			letter-spacing: 0.5px;
+		}
+	}
+	.extImgOpp {
+		width: 50px;
+		height: 60px;
+	}
+	.intImgOpp {
+		width: 47px;
+		height: 57px;
+		img {
+			width: 57px;
+			height: 57px;
+		}
+	}
+	.res {
+		p {
+			font-size: 14px;
+		}
+	}
+	.status_date {
+		p {
+			font-size: 12px;
+		}
+	}
+}
+
+@media (max-width: 640px) {
+	.userPrf {
+		width: 100%;
+	}
+	.cardMatch {
+		height: 60px;
+		min-height: 60px;
+	}
+	.extImgOpp {
+		width: 40px;
+		height: 50px;
+	}
+	.intImgOpp {
+		width: 38px;
+		height: 48px;
+		img {
+			height: 48px;
+		}
+	}
+	.opponent {
+		p {
+			font-size: 10px;
+			font-weight: 100;
+		}
+	}
+}
+
+@media (max-width: 1540px) {
+	.extLvl {
+		width: 80%;
+	}
+
+	.tmp {
+		width: 78%;
+	}
+
+	.extImg {
+		width: 130px;
+		height: 180px;
+		min-height: 180px;
+	}
+	.intImg {
+		width: 120px;
+		height: 170px;
+		img {
+			width: 170px;
+		}
+	}
+	.side1 {
+		width: 100%;
+	}
+	.userPrf {
+		min-width: 0px;
+	}
+	.side2 {
+		display: none;
+	}
+	.userName {
+		font-size: 17px;
+		font-weight: 500;
+		letter-spacing: 3.5px;
+		p {
+			font-size: 12px;
+		}
+	}
+}
+
+@media (max-width: 1024px) {
+	.chooseData {
+		width: 90%;
+		/* right: 0px;
+		border-radius: 0px 10px 0px 0px; */
+	}
+	.userDis {
+		width: 30%;
+		flex-direction: column;
+		gap: 0;
+	}
+	.userName {
+		top: 0;
+		padding-bottom: 50px;
+	}
+}
+
+@media (max-width: 768px) {
+	.mHead {
+		width: 100%;
+		p {
+			font-size: 10px;
+			letter-spacing: 0.8px;
+		}
+	}
+	.matches {
+		width: 100%;
+	}
+	.cardMatch {
+		width: 100%;
+	}
+	.head h2 {
+		font-size:25px;
+        font-weight:100;
+        letter-spacing:4px;
+	}
+	.content {
+		margin-top: 50px;
+	}
+	.userInfo {
+		height: 22%;
+	}
+	.extImg {
+		width: 100px;
+		height: 130px;
+		min-height: 130px;
+		bottom: 20px;
+	}
+	.intImg {
+		width: 90px;
+		height: 120px;
+		img {
+			height: 120px;
+		}
+	}
+	.userName {
+		font-size: 15px;
+		font-weight: 400;
+		letter-spacing: 2px;
+		top: 30px;
+	}
+	.extLvl {
+		width: 90%;
+		height: 25px;
+	}
+	.tmp {
+		width: 87%;
+		p {
+			font-size: 11px;
+		}
+	}
+	.gameName {
+		font-size: 15px;
+		font-weight: 500;
+	}
+	.chooseData {
+		width: 100%;
+		border-radius: 0px;
+		p {
+			font-size: 11px;
+		}
+	}
+}
+
+@media (max-width: 425px) {
+	.head h2 {
+		font-size:20px;
+        font-weight:100;
+        letter-spacing:3px;
+	}
+	.userDis {
+		left: 0;
+	}
+	.extImg {
+		width: 70px;
+		height: 100px;
+		min-height: 100px;
+		bottom: 13px;
+	}
+	.intImg {
+		width: 65px;
+		height: 95px;
+		min-height: 95px;
+		img {
+			height: 95px;
+		}
+	}
+	.userName {
+		font-size: 12px;
+		font-weight: 300;
+		letter-spacing: 1px;
+		top: 20px;
+		p{ 
+			font-size: 10px;
+		}
+	}
+	.extLvl {
+		width: 100%;
+		height: 15px;
+	}
+	.tmp {
+		width: 95%;
+		p {
+			font-size: 9px;
+		}
+	}
+	.gameName {
+		font-size: 12px;
+	}
+	.chooseData {
+		p {
+			font-size: 10px;
+			letter-spacing: 0.5px;
+		}
+	}
 }

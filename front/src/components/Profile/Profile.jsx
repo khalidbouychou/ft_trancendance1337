@@ -8,6 +8,7 @@ import { FiPlus } from "react-icons/fi";
 import { RiListSettingsFill } from "react-icons/ri";
 import CurveChart from "../Home/components/CurveChart/CurveChart";
 import CurveLevel from "../Home/components/CurveLevel/CurveLevel";
+import MatchHistory from "./components/matchHistory/MatchHistory";
 
 
 
@@ -18,6 +19,9 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [ismyprofil, setIsMyProfil] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [mhistory, setMhistory] = useState('white')
+  const [statistic, setStatistic] = useState('white')
+  const [leaderboard, setLeaderboard] = useState('red')
 
   const data = [
     { time: 'Jan', wins: 5, losses: 3 },
@@ -31,6 +35,24 @@ const Profile = () => {
     { level: 3, time: 20 },
     { level: 4, time: 25 },
   ];
+
+  const handelColor_Mh = () => {
+    setMhistory('red')
+    setLeaderboard('white')
+    setStatistic('white')
+  }
+
+  const handelColor_St = () => {
+    setMhistory('white')
+    setLeaderboard('white')
+    setStatistic('red')
+  }
+
+  const handelColor_Ld = () => {
+    setMhistory('white')
+    setLeaderboard('red')
+    setStatistic('white')
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,8 +113,8 @@ const Profile = () => {
           <div className={styl.side1}>
             <div className={styl.userInfo}>
               <div className={styl.userDis}>
-                <div className={styl.intImg}>
-                  <div className={styl.extImg}>
+                <div className={styl.extImg}>
+                  <div className={styl.intImg}>
                     <img src={userData.avatar}></img>
                   </div>
                 </div>
@@ -105,11 +127,6 @@ const Profile = () => {
                     ongline
                   </p>
                 </p>
-                <div className={styl.chooseData}>
-                  <button >MH ping Pong</button>
-                  <button >MH.Tic Tac Toe</button>
-                  <button >Statistic</button>
-                </div>
               </div>
               <div className={styl.levels}>
                 <div className={styl.level}>
@@ -118,8 +135,8 @@ const Profile = () => {
                     <div className={styl.gameName}>Ping Pong</div>
                     <p >2999 / <p style={{color: 'rgba(255, 255, 255, 0.4)', left: '2px'}}>3000</p></p>
                   </div>
-                  <div className={styl.intLvl}>
-                    <div className={styl.extLvl} style={{width: '80%'}}></div>
+                  <div className={styl.extLvl}>
+                    <div className={styl.intLvl} style={{width: '80%'}}></div>
                   </div>
                   <div className={styl.tmp} style={{alignItems: 'start'}}>
                     <p style={{color: 'rgba(255, 255, 255, 0.4)', left: '2px'}}>Next Level</p>
@@ -132,8 +149,8 @@ const Profile = () => {
                     <div className={styl.gameName}>Tic Tac Toe</div>
                     <p >2999 / <p style={{color: 'rgba(255, 255, 255, 0.4)', left: '2px'}}>3000</p></p>
                   </div>
-                  <div className={styl.intLvl}>
-                    <div className={styl.extLvl} style={{width: '80%'}}></div>
+                  <div className={styl.extLvl}>
+                    <div className={styl.intLvl} style={{width: '80%'}}></div>
                   </div>
                   <div className={styl.tmp} style={{alignItems: 'start'}}>
                     <p style={{color: 'rgba(255, 255, 255, 0.4)', left: '2px'}}>Next Level</p>
@@ -141,8 +158,15 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
+              <div className={styl.chooseData}>
+                  <button onClick={handelColor_Mh}><p style={{textDecorationColor: mhistory}}>Match History</p></button>
+                  <button onClick={handelColor_Ld}><p style={{textDecorationColor: leaderboard}}>Leaderboard</p></button>
+                  <button onClick={handelColor_St}><p style={{textDecorationColor: statistic}}>Statistic</p></button>
+              </div>
             </div>
-            <div className={styl.userData}></div>
+            <div className={styl.userData}>
+              <MatchHistory userData={{userData}}/>
+            </div>
           </div>
           <div className={styl.side2}></div>
         </div>
