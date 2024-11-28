@@ -71,6 +71,7 @@
 	margin: 2%;
 	position: relative;
 	justify-content: center;
+	min-height: 300px;
 }
 
 .userDis {
@@ -263,85 +264,63 @@
 	/* background-color: aquamarine; */
 }
 
-.mthistory {
+.leaderboard {
 	display: flex;
 	width: 100%;
 	height: 100%;
 	flex-direction: column;
 	align-items: center;
-	gap: 7px;
+	gap: 10px;
 }
 
-.mHead {
+.leaderHead {
 	display: flex;
-	width: 90%;
+	width: 80%;
 	height: 30px;
-	min-height: 30px;
-	align-items: center;
-	justify-content: center;
+	/* background-color: aquamarine; */
 	p {
 		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 20%;
+		height: 100%;
+		margin: 0;
 		color: rgba(255, 255, 255, 0.279);
 		font-size: 13px;
 		letter-spacing: 0.5px;
-		width: 25%;
-		justify-content: center;
 	}
 }
 
-.matches {
+.ranking {
 	display: flex;
-	width: 100%;
+	width: 80%;
 	height: 100%;
-	/* background-color: antiquewhite; */
-	align-items: center;
 	flex-direction: column;
-	gap: 10px;
+	gap: 25px;
 	overflow: auto;
+	padding-top: 15px;
 	&::-webkit-scrollbar {
 		display: none;
 	}
+	
 }
 
-.cardMatch {
+.cardRank {
 	display: flex;
-	/* justify-content: center; */
-	width: 90%;
-	height: 80px;
-	min-height: 80px;
+	width: 100%;
+	height: 60px;
 	background-color: rgb(59, 58, 58);
-	border-radius: 10px;
-	overflow: hidden;
+	border: none;
+	cursor: pointer;
 }
 
-.opponent {
-	display: flex;
-	width: 30%;
-	height: 100%;
-	/* background-color: blue; */
-	justify-content: center;
-	align-items: center;
-	gap: 30%;
-	p {
-		display: flex;
-		font-size: 14px;
-		color: white;
-		font-weight: 550;
-		letter-spacing: 1px;
-	}
-	@media (max-width: 1024px) {
-		gap: 10%;
-	}
-}
-
-.extImgOpp {
+.extImgLead {
 	display: flex;
     justify-content: center;
     align-items: center;
-    width: 60px;
-    height: 70px;
+    width: 75px;
+    height: 80px;
     background-color: rgb(130, 130, 5);
-	/* background-color: rgb(68, 68, 68); */
     border: none;
 	position: relative;
     clip-path: polygon(
@@ -353,14 +332,13 @@
 		0% 25%
 	);
 }
-
-
-.intImgOpp {
+	
+.intImgLead {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 55px;
-	height: 65px;
+	width: 72px;
+	height: 77px;
 	background-color: green;
 	border: none;
 	position: relative;
@@ -374,46 +352,68 @@
 	);
 	img {
 		display: flex;
-		width: 65px;
-		height: 65px;
+		height: 77px;
 	}
 }
 
-.res {
+.rank, .playerName, .wins, .loses, .lvl {
 	display: flex;
 	width: 20%;
 	height: 100%;
-	justify-content: center;
 	align-items: center;
+	gap: 30%;
 	p {
-		color: rgb(190, 190, 7);
-		font-size: 16px;
-	}
-}
-
-.status_date {
-	display: flex;
-	width: 25%;
-	height: 100%;
-	justify-content: center;
-	align-items: center;
-	p{
+		padding-left: 15px;
+		font-size: 20px;
+		font-weight: 800;
 		color: white;
-		font-size: 14px;
-		letter-spacing: 1.5px;
 	}
 }
 
-.date {
-	display: flex;
-	flex-direction: column;
+.playerName {
 	justify-content: center;
-	align-items: center;
-	gap: 7px;
-	margin-top: 30px;
 	p {
-		padding: 0;
-		margin: 0;
+		font-size: 16px;
+		font-weight: 500;
+		letter-spacing: 1px;
+	}
+}
+
+.wins {
+	justify-content: center;
+	p {
+		font-size: 18px;
+		font-weight: 600;
+	}
+}
+
+.loses {
+	justify-content: center;
+	p {
+		font-size: 18px;
+		font-weight: 600;
+	}
+}
+
+.lvl {
+	justify-content: center;
+	p {
+		font-size: 18px;
+		font-weight: 600;
+	}
+}
+
+@media (max-width: 1280px) {
+	.rank {
+		width: 25%;
+	}
+	.playerName {
+		p {
+			font-size: 14px;
+		}
+	}
+	.wins {
+		font-size: ;
 	}
 }
 
