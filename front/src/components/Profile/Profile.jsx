@@ -9,10 +9,14 @@ import { RiListSettingsFill } from "react-icons/ri";
 import CurveChart from "../Home/components/CurveChart/CurveChart";
 import CurveLevel from "../Home/components/CurveLevel/CurveLevel";
 import MatchHistory from "./components/matchHistory/MatchHistory";
+import Leaderboard from "./components/leaderboard/Leaderboard";
 
 
 
 const Profile = () => {
+  const total = 15 + 10;
+  const winPercentage = (15 / total) * 100;
+  const lossPercentage = (10 / total) * 100;
   const { username } = useParams();
   const { user } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
@@ -166,39 +170,30 @@ const Profile = () => {
             </div>
             <div className={styl.userData}>
               {/* <MatchHistory userData={{userData}}/> */}
-              <div className={styl.leaderboard}>
-                <div className={styl.leaderHead}>
-                  <p >Rank</p>
-                  <p >Name</p>
-                  <p >Wins</p>
-                  <p >Loses</p>
-                  <p >Level</p>
-                </div>
-                <div className={styl.ranking}>
-                  <button className={styl.cardRank}>
-                    <div className={styl.rank}>
-                      <p >#1</p>
-                      <div className={styl.extImgLead}>
-                        <div className={styl.intImgLead}>
-                          <img src={userData.avatar}/>
+              {/* <Leaderboard /> */}
+              <div className={styl.statistic}>
+                <div className={styl.upperPart}>
+                    <div className={styl.circ}>
+                        <div className={styl.chartCir} style={{
+                            background: `conic-gradient(
+                            #25233C ${winPercentage}%,  
+                            #7667D9 0 ${lossPercentage + winPercentage}%
+                            )`,
+                        }}>
                         </div>
-                      </div>
+                        <div className={styl.chartText}>
+                            <p>Wins: 5</p>
+                            <p>Losses: 4</p>
+                        </div>
                     </div>
-                    <div className={styl.playerName}>
-                      <p >NOUAHIDI</p>
+                    <div className={styl.CurveChart}>
+                        <CurveChart data={data} />
                     </div>
-                    <div className={styl.wins}>
-                      <p >15</p>
-                    </div>
-                    <div className={styl.loses}>
-                      <p >5</p>
-                    </div>
-                    <div className={styl.lvl}>
-                      <p >9</p>
-                    </div>
-                  </button>
                 </div>
-              </div>
+                <div className={styl.bottom}>
+                    <CurveLevel data={levelData}/>
+                </div>
+                </div>
             </div>
           </div>
           <div className={styl.side2}></div>
