@@ -1,3 +1,4 @@
+all : up
 # Load environment variables from .env file
 ifneq ("$(wildcard .env)","")
     include .env
@@ -9,7 +10,6 @@ uploads_dir:
 .PHONY: all
 
 # all: uploads_dir s up
-all : s up
 
 s : 
 	chmod +x ./ssl.sh
