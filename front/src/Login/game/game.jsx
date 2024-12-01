@@ -22,7 +22,7 @@ const PongGame = () => {
   const [playerBPaddle, setPlayerBPaddle] = useState(180); // Initial paddle position (default 150) 
   const playerATargetRef = useRef(180); // Refs for smooth paddle movement
   const playerBTargetRef = useRef(180); // Refs for smooth paddle movement
-
+ 
   // Pressed keys tracking
   const keysPressed = useRef({
     w: false,

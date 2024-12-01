@@ -9,7 +9,7 @@ const ScoreBoard = ({ Aa,Ba,playerAScore, playerBScore }) => {
        </div>
        <div className='img-score-board'>
           <img className="bavatar" src={Ba} />
-          <span className="player-b-score"> {playerBScore}</span>
+          <span className="player-b-score"> {playerBScore}</span> 
       </div>
     </div>
   );
