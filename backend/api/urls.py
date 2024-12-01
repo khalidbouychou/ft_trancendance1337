@@ -11,4 +11,7 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('verify/', TokenVerifyView.as_view(), name='token_verify'),
+    #---------------game urls------------------
+    path('game/', include('game.urls')),
+    
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) 

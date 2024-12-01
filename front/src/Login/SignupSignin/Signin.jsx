@@ -23,7 +23,7 @@ const Signin = () => {
         return;
       }
       const response = await axios.post(
-        "https://localhost/api/singin/",
+        "http://localhost:8000/api/singin/",
         {
           username,
           password

@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
+from pathlib import Path 
 import os
 from datetime import timedelta 
 from django.conf import settings
@@ -36,7 +36,7 @@ CSRF_TRUSTED_ORIGINS = [
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECURITY WARNING: don't run with debug turned on in production! 
 DEBUG = True # Set to False in production
  
 ALLOWED_HOSTS = ['127.0.0.1','localhost']
@@ -70,18 +70,18 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+ 
 ASGI_APPLICATION = 'api.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
-        # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("redis", 6379)],  # Use the service name from docker-compose
-        },
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [("redis", 6379)],  # Use the service name from docker-compose
+        # },
     },
-}
+} 
 
 
 ROOT_URLCONF = 'api.urls'

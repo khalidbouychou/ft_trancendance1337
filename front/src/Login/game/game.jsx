@@ -1,6 +1,21 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import './style.css'
-const game = () => {
+const Game = () => {
+  const [isClicked, setIsClicked] = useState(false);
+  let socket = new WebSocket('ws://localhost:8000/ws/game/');
+  useEffect(() => {
+    // socket = new WebSocket('ws://localhost:8000/ws/game/');
+    socket.onopen = () => {
+      console.log('WebSocket Client Connected');
+      socket.send("Hi From Client");
+    };
+    socket.onmessage = (message) => {
+      console.log("MESSAGE --------- ",message);
+    }
+    socket.onclose = () => {
+      console.log('WebSocket Client Disconnected');
+    };
+  }, [isClicked]);
  // Game state
  const [playerAScore, setPlayerAScore] = useState(0);
  const [playerBScore, setPlayerBScore] = useState(0);
@@ -28,6 +43,9 @@ const game = () => {
    ArrowUp: false,
    ArrowDown: false
  });
+
+
+
 
  // Reset game function
  const resetGame = useCallback(() => {
@@ -309,10 +327,37 @@ const game = () => {
            <span className="player-a-controls">Player A (Left): W/S</span>
            <span className="player-b-controls">Player B (Right): Up/Down Arrows</span>
          </div>
+         <div style={
+            {
+              position: 'absolute',
+              width: 10,
+              height: 10,
+              backgroundColor: 'red'
+            }
+         }>
+          <button style={
+            {
+              position: 'absolute',
+              width: 100,
+              height: 30,
+              backgroundColor: 'green',
+              color: 'white'
+            }
+          }
+          onClick={() => {
+            console.log(socket);
+            setIsClicked(true);
+            // socket.close();
+          }
+          }
+          >
+            Logout
+          </button>
+         </div>
        </>
      )}
    </div>
  );
 };
 
-export default game 
+export default Game 

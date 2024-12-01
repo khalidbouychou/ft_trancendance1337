@@ -163,7 +163,7 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
-            user = request.user
+            user = request.user 
             if not user.is_authenticated:
                 return Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
             user.bool_login = False
