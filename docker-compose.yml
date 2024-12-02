@@ -1,8 +1,8 @@
 version: "3.8"
 
-# networks:
-#   connexion:
-#     driver: bridge
+networks:
+  connexion:
+    driver: bridge
 
 volumes:
   db:

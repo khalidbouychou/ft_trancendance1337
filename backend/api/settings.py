@@ -43,7 +43,7 @@ ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 # Application definition
 
-INSTALLED_APPS = [
+INSTALLED_APPS = [ 
     'daphne',
     'channels',
     'corsheaders',
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist', 
     'rest_framework',
     'login',
+    'game',
 ]
 
 MIDDLEWARE = [

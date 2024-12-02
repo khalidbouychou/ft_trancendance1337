@@ -6,21 +6,6 @@ import PongCanvas from './canvaspong/canvaspong';
 import './style.css';
 
 const PongGame = () => {
-  const [isClicked, setIsClicked] = useState(false);
-  let socket = new WebSocket('ws://localhost:8000/ws/game/');
-  useEffect(() => {
-    // socket = new WebSocket('ws://localhost:8000/ws/game/');
-    socket.onopen = () => {
-      console.log('WebSocket Client Connected');
-      socket.send("Hi From Client");
-    };
-    socket.onmessage = (message) => {
-      console.log("MESSAGE --------- ",message);
-    }
-    socket.onclose = () => {
-      console.log('WebSocket Client Disconnected');
-    };
-  }, [isClicked]);
   // Game state
   const [playerAScore, setPlayerAScore] = useState(0);
   const [playerBScore, setPlayerBScore] = useState(0);
@@ -38,7 +23,7 @@ const PongGame = () => {
   const playerATargetRef = useRef(180); // Refs for smooth paddle movement
   const playerBTargetRef = useRef(180); // Refs for smooth paddle movement
  
-  // Pressed keys tracking
+  // Pressed keys tracking ? useReF for mutable object
   const keysPressed = useRef({
     w: false,
     s: false,
@@ -71,10 +56,8 @@ const PongGame = () => {
     // Player A paddle movement
     if (keysPressed.current.w && !keysPressed.current.s) {
       playerATargetRef.current = Math.max(0, playerATargetRef.current - PADDLE_SPEED); // Move up by PADDLE_SPEED pixels (or less if at the top)
-      console.log('------ W PAT', playerATargetRef.current);
     } else if (keysPressed.current.s && !keysPressed.current.w) {
       playerATargetRef.current = Math.min(height - PADDLE_HEIGHT, playerATargetRef.current + PADDLE_SPEED); // Move down by PADDLE_SPEED pixels (or less if at the bottom)
-      console.log('------ S PAT', playerATargetRef.current);
     }
     // Smooth interpolation for Player A
     setPlayerAPaddle(prev => {
@@ -267,33 +250,6 @@ const PongGame = () => {
           />
 
           <GameControls />
-          <div style={
-            {
-              position: 'absolute',
-              width: 10,
-              height: 10,
-              backgroundColor: 'red'
-            }
-         }>
-          <button style={
-            {
-              position: 'absolute',
-              width: 100,
-              height: 30,
-              backgroundColor: 'green',
-              color: 'white'
-            }
-          }
-          onClick={() => {
-            console.log(socket);
-            setIsClicked(true);
-            // socket.close();
-          }
-          }
-          >
-            Logout
-          </button>
-         </div>
         </>
       )}
     </div>

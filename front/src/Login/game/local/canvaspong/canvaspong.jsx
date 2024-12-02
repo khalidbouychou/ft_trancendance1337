@@ -32,14 +32,12 @@ const PongCanvas = ({
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const { width, height } = canvasSize;
-    const backgroundGradient = ctx.createLinearGradient(0, 0, width, height);
-    backgroundGradient.addColorStop(0, 'red'); // Start color (yellow)
-    backgroundGradient.addColorStop(1, 'yellow'); // End color (lighter yellow)
+
 
 
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = backgroundGradient;
+    ctx.fillStyle = '#000'; // Black background
     ctx.fillRect(0, 0, width, height);
 
     // Paddle dimensions
@@ -56,7 +54,7 @@ const PongCanvas = ({
     // Draw ball
     const BALL_RADIUS = width * 0.012;
     ctx.beginPath();
-    ctx.fillStyle =  '#000' // white ball
+    ctx.fillStyle =  '#fff' // white ball
     ctx.arc(ballPosition.x, ballPosition.y, BALL_RADIUS, 0, Math.PI * 2);
     ctx.fill();
   }, [canvasSize, ballPosition, playerAPaddle, playerBPaddle]);

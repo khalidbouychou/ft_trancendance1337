@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import style from "./App.module.css";
 // import LoginSignup from "./Login/SignupSignin/SignupSignin.jsx";
 // import Layout from "./Layout.jsx";
@@ -7,7 +7,9 @@ import style from "./App.module.css";
 // import Twofa from "./Login/2fa/twofa.jsx";
 // import Settings from "./Setting/Setting.jsx";
 // import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
-import Game from "./Login/game/game.jsx";
+import Game from "./Login/game/local/game.jsx";
+// import Turnoi from "./Login/game/turnoi/game.jsx"; 
+import Remote from "./Login/game/remote/game.jsx";
 function App() {
   return (
     <div className={style.EntirePage}>
@@ -26,7 +28,26 @@ function App() {
           {/* </Route> */}
           {/* <Route path="/login" element={<LoginSignup />} />
           <Route path="/*" element={<PageNotFound />} /> */}
-          <Route path="/" element={<Game />} />
+          <Route path="/game" element={
+            <>
+              <div className={style.link_container}>
+
+                <Link to="local">Local</Link>
+                <Link to="turnoi">Turnoi</Link>
+                <Link to="remote">Remote</Link>
+
+              </div>
+            </>
+          } />
+          <Route path="/game/remote" element={<Remote />} />
+          <Route path="/game/turnoi" element={<Game />} />
+          <Route path="/game/local" element={<Game />} />
+          <Route path="/" element={
+            <>
+            <h1>home</h1>
+            <Link to="/game">Game</Link> 
+            </>
+        } />
         </Routes>
       </div>
     </div> );
