@@ -13,4 +13,4 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         print('received')
         text_data = "siir t3acha" 
-        await self.send(text_data)  
+        await self.send(text_data)   
