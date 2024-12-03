@@ -12,6 +12,7 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const [loggedIntra, setLoggedIntra] = useState(false);
 
   async function auth_intra42() {
     const response = await axios.get("http://localhost:8000/api/auth_intra/", {
@@ -65,7 +66,6 @@ export default function AuthProvider({ children }) {
         position: "top-right",
         autoClose: 1000
       });
-      console.log("login", error);
       navigate("/");
     } finally {
       setLoading(false);
@@ -112,7 +112,8 @@ export default function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    Login();
+    Login()
+    
   }, []);
   useEffect(
     () => {
@@ -130,7 +131,9 @@ export default function AuthProvider({ children }) {
         setUser,
         Login,
         auth_intra42,
-        get_auth_user
+        get_auth_user,
+        setLoggedIntra,
+        loggedIntra
       }}
     >
       {children}

@@ -7,6 +7,8 @@ export default function LoginSignup() {
   const [isLogin, setIsLogin] = useState(true);
   return (
       <>
+      <div className="xx">
+
       <div className="container">
       <div className="form-wrapper">
         <div className="switch-button">
@@ -29,6 +31,7 @@ export default function LoginSignup() {
         }
       </div>
       </div>
+        </div>
     </>
   );
 }

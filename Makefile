@@ -18,7 +18,9 @@ s :
 up:
 	@docker-compose up
 
-down :
+stop :
+	@docker-compose stop
+down : stop
 	@docker-compose down
 
 build:

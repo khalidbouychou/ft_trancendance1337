@@ -240,8 +240,8 @@ const PongGame = () => {
 
   return (
     <>
-    {/* <Matching/> */}
-    <Remote {...{
+    <Matching/>
+    {/* <Remote {...{
       socket,
       winner,
       playerAScore,
@@ -255,7 +255,7 @@ const PongGame = () => {
       setCanvasSize,
       resetGame
     }}
-    />
+    /> */}
     </>
   );
 };

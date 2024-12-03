@@ -67,7 +67,7 @@ const Remote = ({
                 }
             }
             onClick={() => {
-                navigate('/game');
+                navigate('/games');
                 console.log(socket);
                 socket.current.close();
             }
