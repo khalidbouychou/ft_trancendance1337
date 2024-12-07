@@ -23,9 +23,7 @@ class TokenAuthMiddleware:
         self.inner = inner
 
     async def __call__(self, scope, receive, send):
-        query_string = scope['query_string'].decode()
-        query_params = parse_qs(query_string)
-        token = query_params.get('token', [None])[0]
+        self.token = scope['session'].get('token')
         if token:
             scope['user'] = await get_user(token)
         else:

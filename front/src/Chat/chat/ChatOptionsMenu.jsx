@@ -16,14 +16,15 @@ function ChatOptionsMenu({ onPlayPong, onPlayTicTacToe, otherUser, currentUser, 
     //   }
     // };
     // checkBlockStatus();
-    const areFriends = currentUser.friends.find(friend => 
-      friend.profile_name === otherUser.profile_name
-    );
-    if (areFriends) {
-      setIsFriend('Friend');
-    } else {
-      setIsFriend('None');
-    }
+      const areFriends = currentUser.friends.find(friend => 
+        (friend.user1 === otherUser.username || friend.user2 === otherUser.username)
+      );
+      if (areFriends) {
+        console.log('areFriends:', areFriends.status);
+        setIsFriend(areFriends.status);
+      } else {
+        setIsFriend('None');
+      }
   }, [otherUser, currentUser])
 
   const handleMouseEnter = () => setIsOpen(true);

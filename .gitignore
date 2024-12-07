@@ -34,5 +34,11 @@ backend/env
 backend/strong_backend
 backend/db.sqlite3
 backend/*/__pycache__
-backend/*/migrations
+deployment
+dump.rdb
+front/README.md
+**/README.md
 db
+.env
+node_modules
+

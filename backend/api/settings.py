@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
+from pathlib import Path 
 import os
 from datetime import timedelta 
 from django.conf import settings
@@ -25,10 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 CSRF_TRUSTED_ORIGINS = [
     'https://127.0.0.1', 
     'http://127.0.0.1', 
-    'http://10.11.9.12',
-    'https://10.11.9.12',
-    'http://10.11.9.12:8000',
-    'https://127.0.0.1:5173'
+    'http://localhost',
+    'https://localhost',
+    'http://localhost:8000',
+    'https://127.0.0.1:5173',
+    "http://localhost:5173",
 ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -36,13 +37,14 @@ CSRF_TRUSTED_ORIGINS = [
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECURITY WARNING: don't run with debug turned on in production! 
 DEBUG = True # Set to False in production
  
-ALLOWED_HOSTS = ['127.0.0.1','10.11.9.12']
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 # Application definition
-INSTALLED_APPS = [
+
+INSTALLED_APPS = [ 
     'daphne',
     'channels',
     'corsheaders',
@@ -52,7 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework_simplejwt.token_blacklist', 
+    'rest_framework_simplejwt.token_blacklist',
     'rest_framework',
     'login',
     'pongame',
@@ -71,21 +73,23 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+ 
 ASGI_APPLICATION = 'api.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
-        # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("redis", 6379)],  # Use the service name from docker-compose
-        },
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [("redis", 6379)],  # Use the service name from docker-compose
+        # },
     },
-}
+} 
 
 
 ROOT_URLCONF = 'api.urls'
@@ -216,8 +220,9 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'https://127.0.0.1',  
     'http://127.0.0.1',
-    'http://10.11.9.12',
-    'https://10.11.9.12',
+    'http://localhost',
+    'https://localhost',
+    "http://localhost:5173", 
     ]
 
 DATABASES = {
@@ -232,17 +237,13 @@ DATABASES = {
 }
 
 # Set secure cookies and headers for HTTPS
-SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Tells Django that the request is secure
-CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
-SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
+# SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Tells Django that the request is secure
+# CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
+# SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
 
-# Use the X-Forwarded-For header to get the real client IP address
-USE_X_FORWARDED_HOST = True
+# # Use the X-Forwarded-For header to get the real client IP address
+# USE_X_FORWARDED_HOST = True
 #************
 
-# Security settings for production
-if not DEBUG:
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_SECONDS = 3600  # Enable HTTP Strict Transport Security
+#************  khbouych ************ 

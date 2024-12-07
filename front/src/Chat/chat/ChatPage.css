@@ -294,7 +294,6 @@ body, html {
     word-break: break-word;
     position: relative;
     padding-bottom: 20px;
-    white-space: pre-wrap;
 	/* min-width: 50px; */
 }
 

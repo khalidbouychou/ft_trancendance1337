@@ -60,22 +60,21 @@ const NotiCard = ({request}) => {
 
 	const handleAccept = () => {
 		if (isConnected) {
-			// console.log('Connected');
+			console.log('Connected');
 			sendNotifMessage({
 				type: request.notif_type === 'FR' ? 'ACCEPT_FR' : 'ACCEPT_GR',
 				from_user_id: request.from_user.id,
 				game_type: request.game_type
 			});
 			if (request.notif_type === 'GR') {
-				if (request.game_type == "PONG"){
-					const game_key = `${request.from_user.username}vs${request.to_user.username}`;
-      				navigate('/friend-game', { state: { game_key } });
-				}
+				if (request.game_type == "PONG" || request.game_type == "Pong"
+					|| request.game_type == "pong")
+					navigate('/friend-game');
 				else if (request.game_type.length) {
 					var	token = localStorage.getItem("token"), xo_invite_socket,
 						room_id = request.game_room;
 					if (token && room_id && room_id.length) {
-						try { xo_invite_socket = new WebSocket(`ws://10.11.9.12:8000/ws/xo_invite/?token=${token}`); }
+						try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`); }
 						catch (err) {}
 						xo_invite_socket.onopen = () => {
 							xo_invite_socket.send(JSON.stringify({
@@ -113,7 +112,7 @@ const NotiCard = ({request}) => {
 				var	token = localStorage.getItem("token"),
 					xo_invite_socket;
 				if (token) {
-					try { xo_invite_socket = new WebSocket(`ws://10.11.9.12:8000/ws/xo_invite/?token=${token}`); }
+					try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`); }
 					catch (err) {}
 					console.log("handling decline");
 					xo_invite_socket.onopen = () => {
@@ -125,20 +124,6 @@ const NotiCard = ({request}) => {
 							role: "guest",
 						}));
 						xo_invite_socket.close();
-					}
-				}
-			}
-			else if (request.notif_type === 'GR' && request.game_type == "PONG") {
-				var	token = localStorage.getItem("token")
-				const pong_socket = new WebSocket(`ws://10.11.9.12:8000/ws/play-friend/?token=${token}`);
-				if (pong_socket){
-					pong_socket.onopen = () => {
-						const game_key = `${request.from_user.username}vs${request.to_user.username}`;
-						pong_socket.send(JSON.stringify({
-							"action": "decline",
-							"game_id": game_key,
-						}));
-						pong_socket.close();
 					}
 				}
 			}

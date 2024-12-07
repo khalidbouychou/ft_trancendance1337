@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 import requests
 from django.contrib.auth.models import User
-from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer
-from .models import Player as Player
+from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer , PingDataSerializer , TicDataSerializer
+from .models import Player as Player , PingData , TicData
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken ,TokenError
-
+from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.contrib.auth import login , logout as django_logout
@@ -24,10 +24,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 import random
 from django.db.models import Sum
-from .models import PingData , TicData
-from .serializers import PingDataSerializer , TicDataSerializer
-from django.contrib.auth import get_user_model
-
 #---------------------------------CHECK HEALTH OF THE BACKEND-----------------------------------------------------------
 
 def health_check(request):
@@ -165,7 +161,7 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
-            user = request.user
+            user = request.user 
             if not user.is_authenticated:
                 return Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
             user.bool_login = False
@@ -204,7 +200,7 @@ class AuthUser(APIView):
             except TokenError as e:
                 refresh = request.COOKIES.get('refresh')
                 crstf = request.COOKIES.get('csrftoken')
-                res = requests.post('https://10.11.9.12/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
+                res = requests.post('https://localhost/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
                 res.raise_for_status() # Raise an exception if the status code is not 2xx
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')
@@ -334,7 +330,7 @@ class VerifyOtp(APIView):
             response.data = {'user': PlayerSerializer(user).data} 
             return response
 
-        return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST) 
 
 class ClearQrcode (APIView):
     authentication_classes = [SessionAuthentication]
@@ -356,59 +352,64 @@ class ClearQrcode (APIView):
         return response
 #-----------------------------------2FA-------------------------------------------------------------
 
-
-#-----------------------------------Ping Data-------------------------------------------------------------
 def get_ping_data_by_username(request, username):
-	Player = get_user_model()  # Get the custom user model (Player in your case)
-	
-	# First, find the player by username
-	try:
-		player = Player.objects.get(username=username)  # Get the player by username
-	except Player.DoesNotExist:
-		return JsonResponse({'error': 'Player not found'}, status=404)
-	
-	# Then filter PingData by the found player
-	pingdata = PingData.objects.filter(player=player)
-	serializer = PingDataSerializer(pingdata, many=True)
-	data = serializer.data
-	print("--------->", data)
-	
-	return JsonResponse(data, safe=False)
+    Player = get_user_model()
+    try:
+        player = Player.objects.get(username=username)
+    except Player.DoesNotExist:
+        return JsonResponse({'error': 'Player not found'}, status=404)
+    pingdata = PingData.objects.filter(player=player)
+    serializer = PingDataSerializer(pingdata, many=True)
+    data = serializer.data
+    print("--------->", data)
+    return JsonResponse(data, safe=False)
 
 def get_all_ping_data(request):
-	# Get all players, and annotate their exp_game by summing the related PingData exp_game
-	players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game')
-	
-	all_ping_data = []
+    players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game') 
+    
+    all_ping_data = [] 
 
-	for player in players:
-		pingdata = PingData.objects.filter(player=player)
-		serializer = PingDataSerializer(pingdata, many=True)
-		
-		all_ping_data.append({
-			'username': player.username,
-			'profile_name': player.profile_name,
-			'avatar': player.avatar,
-			'ping_data': serializer.data,
-		})
+    for player in players:
+        pingdata = PingData.objects.filter(player=player).order_by('-exp_game', '-wins')
+        serializer = PingDataSerializer(pingdata, many=True)
+        
+        all_ping_data.append({
+            'username': player.username,
+            'profile_name': player.profile_name,
+            'avatar': player.avatar,
+            'data': serializer.data,
+        })
 
-	return JsonResponse(all_ping_data, safe=False)
-#-----------------------------------Tic Data-------------------------------------------------------------
+    return JsonResponse(all_ping_data, safe=False)
+
 def get_all_tic_data(request):
-	# Get all players, and annotate their exp_game by summing the related PingData exp_game
-	players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game')
-	
-	all_tic_data = []
+    players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game')
 
-	for player in players:
-		ticdata = TicData.objects.filter(player=player)
-		serializer = TicDataSerializer(ticdata, many=True)
-		
-		all_tic_data.append({
-			'username': player.username,
-			'profile_name': player.profile_name,
-			'avatar': player.avatar,
-			'ping_data': serializer.data,
-		})
+    all_tic_data = []
 
-	return JsonResponse(all_tic_data, safe=False)
+    for player in players:
+        ticdata = TicData.objects.filter(player=player)
+        serializer = TicDataSerializer(ticdata, many=True)
+        
+        sorted_data = sorted(serializer.data, key=lambda x: (-x['exp_game'], -x['wins']))
+
+        all_tic_data.append({
+            'username': player.username,
+            'profile_name': player.profile_name,
+            'avatar': player.avatar,
+            'data': sorted_data,
+        })
+
+    return JsonResponse(all_tic_data, safe=False)
+
+def get_tic_data_by_username(request, username):
+    Player = get_user_model()
+    try:
+        player = Player.objects.get(username=username)
+    except Player.DoesNotExist:
+        return JsonResponse({'error': 'Player not found'}, status=404)	
+    ticdata = TicData.objects.filter(player=player)
+    serializer = TicDataSerializer(ticdata, many=True)
+    data = serializer.data
+    print("--------->", data)
+    return JsonResponse(data, safe=False)

@@ -18,8 +18,8 @@ const Twofa = () => {
 
   const numInputs = 6;
 
-  const QR_CODE_URL = "https://10.11.9.12/api/qrcode/";
-  const USER_STATUS_URL = "https://10.11.9.12/api/user_status/";
+  const QR_CODE_URL = "http://localhost:8000/api/qrcode/";
+  const USER_STATUS_URL = "http://localhost:8000/api/user_status/";
 
   const renderInputs = () => {
     return Array.from({ length: numInputs }).map((_, i) => (
@@ -38,7 +38,7 @@ const Twofa = () => {
         if (res.data.user.qrcode_path) {
           console.log("useeffect --- > ", res);
           setTimeout(() => {
-            setQrcode(`http://10.11.9.12:8000/${res.data.user?.qrcode_path}`);
+            setQrcode(`http://localhost:8000/${res.data.user?.qrcode_path}`);
           }, 2000);
         }
       }
@@ -59,7 +59,7 @@ useEffect(() => {
     if (!isOn) {
       if (!twofa) {
         try {
-          const res = await axios.get("https://10.11.9.12/api/clearqrcode/", { withCredentials: true });
+          const res = await axios.get("http://localhost:8000/api/clearqrcode/", { withCredentials: true });
           if (res.status === 200){
           console.log("useeffect 2 --- > ", res);
             await get_auth_user();
@@ -83,7 +83,7 @@ useEffect(() => {
         if (res.status === 200) { 
           console.log("useeffect 22 --- > ", res);
           setTimeout(() => {
-            setQrcode(`http://10.11.9.12:8000/${res.data.user?.qrcode_path}`);
+            setQrcode(`http://localhost:8000/${res.data.user?.qrcode_path}`);
           }, 2000);
         }
       } catch (error) {
@@ -100,7 +100,7 @@ useEffect(() => {
       .join("");
     try {
       const res = await axios.post(
-        "https://10.11.9.12/api/otpverify/",
+        "http://localhost:8000/api/otpverify/",
         {
           otp: otp
         },

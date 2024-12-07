@@ -1,0 +1,115 @@
+.statistic {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
+	animation: slideFrame 0.5s ease-in-out forwards, fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes slideFrame {
+	0% {
+		transform: translateX(-20px);
+	}
+
+	100% {
+		transform: translateX(0);
+	}
+}
+
+.upperPart {
+	display: flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+	gap: 2%;
+	animation: slideFrame 0.5s ease-in-out forwards, fadeIn 0.5s ease-in-out forwards;
+}
+
+.circ {
+    display: flex;
+    width: 50%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.chartCir {
+    width: 270px;
+    height: 270px;
+    border-radius: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chartText{
+    position: absolute;
+    text-align: center;
+    color: white;
+    p {
+        margin: 0;
+    }
+}
+
+.CurveChart {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bottom {
+	display: flex;
+	width: 100%;
+	height: 50%;
+	animation: slideFrame 0.5s ease-in-out forwards, fadeIn 0.5s ease-in-out forwards;
+}
+
+@media (max-width: 768px) {
+	.circ {
+		width: 40%;
+	}
+
+	.CurveChart {
+		width: 60%;
+	}
+
+	.chartCir {
+		width: 170px;
+		height: 170px;
+	}
+	.chartText {
+		p{
+			font-size: 13px;
+		}
+	}
+}
+
+@media (max-width: 640px) {
+	.upperPart {
+		flex-direction: column;
+		gap: 0;
+	}
+	.circ {
+		width: 100%;
+		height: 40%;
+	}
+
+	.CurveChart {
+		width: 100%;
+		height: 60%;
+	}
+}

@@ -1,3 +1,4 @@
+all : uploads_dir up
 # Load environment variables from .env file
 ifneq ("$(wildcard .env)","")
     include .env
@@ -8,8 +9,7 @@ uploads_dir:
 
 .PHONY: all
 
-all: uploads_dir s up
-# all : s up
+# all: uploads_dir s up
 
 s : 
 	chmod +x ./ssl.sh
@@ -18,7 +18,9 @@ s :
 up:
 	@docker-compose up
 
-down :
+stop :
+	@docker-compose stop
+down : stop
 	@docker-compose down
 
 build:

@@ -1,17 +1,13 @@
-# import os
-# from django.core.asgi import get_asgi_application
-
-# """
-# ASGI config for api project.
+"""
+ASGI config for api project.
 
 # It exposes the ASGI callable as a module-level variable named ``application``.
 
-# For more information on this file, see
-# https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
-# """
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'api.settings')
+For more information on this file, see
+https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
+"""
 
-# application = get_asgi_application()
+import os
 
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
@@ -22,13 +18,22 @@ from chat.middleware import TokenAuthMiddlewareStack, TokenAuthMiddleware
 from notification.routing import websocket_urlpatterns as notif_urlpatterns
 from xo_game.routing import websocket_urlpatterns as xo_urlpatterns
 
-# asgi.py
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'api.settings')
+
+# application = ProtocolTypeRouter({
+#     'http':get_asgi_application(),
+#     'websocket':TokenAuthMiddlewareStack(
+#         URLRouter(
+#             pong_urlpatterns + chat_urlpatterns + notif_urlpatterns
+#         )
+#     )
+# })
 
 application = ProtocolTypeRouter({
-    'http':get_asgi_application(),
-    'websocket':TokenAuthMiddlewareStack(
+    'http': get_asgi_application(),
+    'websocket': AuthMiddlewareStack(
         URLRouter(
-            pong_urlpatterns + chat_urlpatterns + notif_urlpatterns
+            pong_urlpatterns + chat_urlpatterns + notif_urlpatterns + xo_urlpatterns
         )
     )
 })

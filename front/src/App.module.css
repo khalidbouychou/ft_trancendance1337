@@ -1,5 +1,9 @@
 body{
-  background:linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.01)),  url('./background.svg') no-repeat center center;
+  /* background:linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.01)),  url('./background.svg') no-repeat center center; */
+  /* background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.9)),  url('./bla.png') no-repeat center center; */
+  /* background-color: rgb(34, 7, 93); */
+  /* background-color: #524895; */
+  background-color: black;
   background-size: cover;
 }
 
@@ -8,6 +12,7 @@ body{
   height: 100vh; /* Full viewport height */
   width: 100vw; /* Full viewport width */
   overflow: hidden; /* Hide overflow if necessary */
+  flex-direction: column;
 }
 
 /* Main content styles */

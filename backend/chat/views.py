@@ -11,7 +11,7 @@ from login.models import Friend
 from .serializers import ChatRoomSerializer, MessageSerializer
 from login.serializers import PlayerSerializer, FriendSerializer
 from django.db import models
- 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_chat(request):
@@ -25,10 +25,10 @@ def list_chat(request):
         else:
             contacts.append(PlayerSerializer(room.user2).data)
     user = PlayerSerializer(request.user).data
-    # friends = Friend.objects.filter(
-    #     (models.Q(user1=request.user) | models.Q(user2=request.user))
-    # )
-    # user['friends'] = FriendSerializer(friends, many=True).data
+    friends = Friend.objects.filter(
+        (models.Q(user1=request.user) | models.Q(user2=request.user))
+    )
+    user['friends'] = FriendSerializer(friends, many=True).data
     context = {
         'chat_rooms': ChatRoomSerializer(chat_rooms, many=True).data,
         'user': user,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import api from '../../../auth/api';
+import api from '../auth/api';
 import './ChatPage.css';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
@@ -44,7 +44,7 @@ function ChatPage() {
 				setupSocket(1);
 				setupNotificationSocket();
 				initUnreadMessages(response.data);
-				// console.log('Current User:', response.data.user);
+				console.log('Current User:', response.data.user);
 			} catch (error) {
 				console.warn('Chat page inaccessible:', error);
 				navigate('/login');
@@ -84,7 +84,7 @@ function ChatPage() {
 
 	const setupNotificationSocket = () => {
 		const token = localStorage.getItem('token');
-		const socket = new WebSocket(`ws://10.11.9.12:8000/ws/notification/?token=${token}`);
+		const socket = new WebSocket(`ws://localhost:8000/ws/notification/?token=${token}`);
 	
 		socket.onopen = () => {
 			console.log('Connected to notification socket');
@@ -215,7 +215,7 @@ function ChatPage() {
 			}
 		
 			const token = localStorage.getItem('token');
-			const newSocket = new WebSocket(`ws://10.11.9.12:8000/ws/chat/${room_id}/?token=${token}`)
+			const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room_id}/?token=${token}`)
 
 			newSocket.onopen = () => {
 				setSockets(prev => ({
@@ -242,6 +242,7 @@ function ChatPage() {
 							// console.log('Received empty message, ignoring');
 							break;
 						}
+						console.log('Received message:', data_re.message)
 						setData(prevData => updateChatRooms(prevData, data_re.message))
 
 						setReceivedMessage(data_re.message)
@@ -301,13 +302,14 @@ function ChatPage() {
 
 	const sendMessage = (e) => {
 		e.preventDefault()
-		const trimmedMessage = message.trimStart();
-		if (trimmedMessage) {
+		console.log('roomId:', roomId)
+		console.log('Current contact id:', currentContact.id)
+		if (message) {
 			sockets[roomId].send(JSON.stringify({
 				type: 'MESSAGE',
 				room_id: roomId,
 				sender: data.user.id,
-				content: trimmedMessage,
+				content: message,
 			}))
 			setMessage('')
 		}

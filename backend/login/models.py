@@ -14,23 +14,29 @@ class Player(AbstractUser):
         ('playing', _('playing')),
         ('offline', _('offline')),
     )
-    avatar = models.URLField(max_length=200 , default='https://www.gravatar.com/avatar/')
-    profile_name = models.CharField(max_length=50, default='Player')
+    username = models.CharField(max_length=255, default='default_username', unique=True, blank=False)
+    profile_name = models.CharField(max_length=200, default='default_username')
+    avatar = models.URLField(max_length=200, default='default_avatar')
+    email = models.EmailField(max_length=200, default='default')
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
     status_game = models.CharField(max_length=10, choices=GAME_STATUS, default='offline')
     two_factor = models.BooleanField(default=False)
-    mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False) 
+    otp = models.CharField(max_length=6, default='000000')
     otp_verified = models.BooleanField(default=False)
-    qrcode_path = models.CharField(max_length=255, default='none' ,blank=False , null=False)
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
     friends = models.ManyToManyField('self', symmetrical=True, through='Friend', blank=True)
     qrcode_path = models.CharField(max_length=255, default='', blank=False, null=False) 
     bool_login = models.BooleanField(default=False)
+    mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False) 
+    
+    class Meta: 
+        db_table = 'player' 
+
     class Meta:
         db_table = 'player'
 
     def save(self, *args, **kwargs):
-        if self.status_network == 'offline': 
+        if self.status_network == 'offline':
             self.status_game = 'offline'
         super().save(*args, **kwargs)
 
@@ -60,7 +66,7 @@ class Friend(models.Model):
 
     class Meta:
         unique_together = ['user1', 'user2', 'status']
- 
+
 class PingData(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='ping_data')
     wins = models.IntegerField(default=0)

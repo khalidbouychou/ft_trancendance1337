@@ -1,32 +1,32 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
+import React, {useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './FriendGame.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../UserContext/Context';
+import api from '../auth/api';
 
-export default function FriendGame() {
+export default function  FriendGame() {
 
-    // const {user, setUser} = useContext(AuthContext);
+    const {user, setUser} = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
     const { game_key } = location.state || {};
-    // console.log('from friendgame game_key:', game_key);
 
     const pressedKeys = useRef(new Set());
-    const [rightScore, setRightScore] = useState(0);
-    const [leftplayername, setLeftPlayerName] = useState("left player");
-    const [rightplayername, setRightPlayerName] = useState("right player");
-    const [leftplayeravatar, setLeftPlayerAvatar] = useState('');
-    const [rightplayeravatar, setRightPlayerAvatar] = useState("/assets/unknown0.png");
-    const [leftScore, setLeftScore] = useState(0);
-    const [gamestarted, setGameStarted] = useState(false);
-    const [condition, setCondition] = useState('N');
-    const [MESSAGE, setMessage] = useState("message");
-    const [username, setUsername] = useState('');
-    const [avatar, setAvatar] = useState('');
-    const [level, setLevel] = useState(0);
-    const [player_idx, setPlayerId] = useState(0);
+    const [ rightScore, setRightScore ] = useState(0);
+    const [ leftplayername, setLeftPlayerName ] = useState("left player");
+    const [ rightplayername, setRightPlayerName ] = useState("right player");
+    const [ leftplayeravatar, setLeftPlayerAvatar ] = useState('');
+    const [ rightplayeravatar, setRightPlayerAvatar ] = useState("/assets/unknown0.png");
+    const [ leftScore, setLeftScore ] = useState(0);
+    const [ gamestarted, setGameStarted ] = useState(false);
+    const [ condition, setCondition ] = useState('N');
+    const [ MESSAGE, setMessage ] = useState("message");
+    const [ username, setUsername ] = useState('');
+    const [ avatar, setAvatar ] = useState('');
+    const [ level, setLevel ] = useState(0);
+    const [ player_idx, setPlayerId ] = useState(0);
     const hasFetchedData = useRef(false);
-    const [FetchedData, setFetchedData] = useState(false);
+    const [ FetchedData, setFetchedData] = useState(false);
     let socket = null;
 
     const leftup = () => {
@@ -40,7 +40,7 @@ export default function FriendGame() {
             console.log("Only the left player can move the left paddle.");
         }
     };
-
+    
     const leftdown = () => {
         if (player_idx === 1 && socket && socket.readyState === WebSocket.OPEN) {
             const message = {
@@ -52,7 +52,7 @@ export default function FriendGame() {
             console.log("Only the left player can move the left paddle.");
         }
     };
-
+    
     const rightup = () => {
         if (player_idx === 2 && socket && socket.readyState === WebSocket.OPEN) {
             const message = {
@@ -64,7 +64,7 @@ export default function FriendGame() {
             console.log("Only the right player can move the right paddle.");
         }
     };
-
+    
     const rightdown = () => {
         if (player_idx === 2 && socket && socket.readyState === WebSocket.OPEN) {
             const message = {
@@ -78,23 +78,29 @@ export default function FriendGame() {
     };
 
     useEffect(() => {
+        console.log("im here");
         const fetchData = async () => {
-            const response = await axios.get(
-                "https://10.11.9.12/api/game_xp/",
-                {
-                  withCredentials: true
-                }
-              );
-              if (response.status === 200) {
-                setUsername(user.user.profile_name);
-                setLeftPlayerAvatar(user.user.avatar);
-                setAvatar(user.user.avatar);
-                setLevel(response.data.exp_game);
-            } else {
-                console.log("error:", response.status);
-            }
-        };
+            const response = await api.get('/pingpong/');
+            console.log('response:', response);
+            // if (response.status === 200)
+            // {
+                // setUser(response.data.user);
+                // setUsername(response.data.user.username);
+                // setLeftPlayerAvatar(response.data.user.avatar);
+                // setAvatar(response.data.user.avatar);
+                // setLevel(response.data.user.exp_game);
 
+                //khedma ta3 bohali
+                console.log('user', user);
+                setUsername(response.data.user);
+                setLeftPlayerAvatar(response.data.avatar);
+                setAvatar(response.data.avatar);
+                setLevel(response.data.exp_game);
+            // }else {
+            //     console.log("error:", response.status);
+            // }
+        };
+        
         if (!hasFetchedData.current) {
             fetchData();
             setFetchedData(true);
@@ -117,11 +123,10 @@ export default function FriendGame() {
         let myReq;
         const token = localStorage.getItem('token');
         if (FetchedData)
-            socket = new WebSocket(`ws://10.11.10.11:8000/ws/play-friend/?token=${token}`);
+            socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
 
         if (socket) {
             socket.onopen = () => {
-                console.log('onopen game_key:', game_key);
                 if (socket.readyState === WebSocket.OPEN) {
                     console.log('WebSocket is open now and the game_id is:', game_key);
                     const message = {
@@ -137,68 +142,68 @@ export default function FriendGame() {
                     console.error('WebSocket is not open. readyState:', socket.readyState);
                 }
             };
-
+    
             window.leftup = leftup;
             window.leftdown = leftdown;
             window.rightup = rightup;
             window.rightdown = rightdown;
             socket.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                console.log('Received:', data)
-                if (data.message) {
-                    if (data.message === 'game_data') {
-                        ballx = (data.ballx / game_width) * canvas.width
-                        bally = (data.bally / game_height) * canvas.height
-                        rightRacketY = (data.right_paddleY / game_height) * canvas.height
-                        leftRacketY = (data.left_paddleY / game_height) * canvas.height
-                        setRightScore(data.right_score)
-                        setLeftScore(data.left_score)
-                        racketHeight = data.racketHeight
-                        racketWidth = data.racketWidth
-                        ball_radius = ((canvas.height / game_width + canvas.width / game_height) / 2) * 15
-                    }
-                }
-                if (data.message) {
-                    if (data.message === 'game_started') {
-                        if (data.player_id1 === username) {
-                            player_id = 1;
-                            setPlayerId(1);
-                            setLeftPlayerName(data.player_id1);
-                            setRightPlayerName(data.player_id2);
-                            setLeftPlayerAvatar(data.player_1_avatar);
-                            setRightPlayerAvatar(data.player_2_avatar);
+                    const data = JSON.parse(event.data);
+                    console.log('Received:', data)
+                    if (data.message){
+                        if (data.message === 'game_data'){
+                            ballx = (data.ballx / game_width) * canvas.width
+                            bally = (data.bally / game_height) * canvas.height
+                            rightRacketY = (data.right_paddleY / game_height) * canvas.height
+                            leftRacketY = (data.left_paddleY / game_height) * canvas.height
+                            setRightScore(data.right_score)
+                            setLeftScore(data.left_score)
+                            racketHeight =  data.racketHeight
+                            racketWidth = data.racketWidth
+                            ball_radius = ((canvas.height / game_width + canvas.width / game_height) / 2) * 15
                         }
-                        else if (data.player_id2 === username) {
-                            player_id = 2;
-                            setPlayerId(2);
-                            setLeftPlayerName(data.player_id1);
-                            setRightPlayerName(data.player_id2);
-                            setLeftPlayerAvatar(data.player_1_avatar);
-                            setRightPlayerAvatar(data.player_2_avatar);
+                    }
+                    if (data.message){
+                        if (data.message === 'game_started'){
+                            if (data.player_id1 === username){
+                                player_id = 1;
+                                setPlayerId(1);
+                                setLeftPlayerName(data.player_id1);
+                                setRightPlayerName(data.player_id2);
+                                setLeftPlayerAvatar(data.player_1_avatar);
+                                setRightPlayerAvatar(data.player_2_avatar);
+                            }
+                            else if (data.player_id2 === username){
+                                player_id = 2;
+                                setPlayerId(2);
+                                setLeftPlayerName(data.player_id1);
+                                setRightPlayerName(data.player_id2);
+                                setLeftPlayerAvatar(data.player_1_avatar);
+                                setRightPlayerAvatar(data.player_2_avatar);
+                            }
+                            setGameStarted(true);
                         }
-                        setGameStarted(true);
+                        else if (data.message === 'disconnected'){
+                            setCondition('D');
+                            socket.close();
+                            setMessage("Opponent left the game");
+                        }
+                        else if (data.message === 'Leave'){
+                            navigate('/');
+                        }
                     }
-                    else if (data.message === 'disconnected') {
-                        setCondition('D');
-                        socket.close();
-                        setMessage("Opponent left the game");
+                    if (data.hasOwnProperty('winner')) {
+                        if (data.winner == player_id){
+                            setCondition('W');
+                            setMessage("You won the game");
+                        }
                     }
-                    else if (data.message === 'Leave') {
-                        navigate('/home');
+                    if (data.hasOwnProperty('loser')) {
+                        if (data.loser == player_id){
+                            setCondition('L');
+                            setMessage("You lost the game");
+                        }
                     }
-                }
-                if (data.hasOwnProperty('winner')) {
-                    if (data.winner == player_id) {
-                        setCondition('W');
-                        setMessage("You won the game");
-                    }
-                }
-                if (data.hasOwnProperty('loser')) {
-                    if (data.loser == player_id) {
-                        setCondition('L');
-                        setMessage("You lost the game");
-                    }
-                }
             };
 
             socket.onclose = () => {
@@ -218,22 +223,22 @@ export default function FriendGame() {
             ctx.fillStyle = 'white';
 
             ctx.arc(ballx, bally, ball_radius, 0, Math.PI * 2);
-            ctx.fillRect(canvas.clientWidth / 2 - 3, 0, 6, canvas.height);
+            ctx.fillRect(canvas.clientWidth / 2-3,0, 6, canvas.height);
             ctx.fill();
         };
 
         const drawLeftRacket = () => {
-            ctx.fillStyle = '#7667D9';
+            ctx.fillStyle = '#00FF00';
             racketWidth = (canvas.width * 2.5 / 100);
             racketHeight = (canvas.height * 20 / 100);
             ctx.fillRect(0, leftRacketY, racketWidth, racketHeight);
         }
 
         const drawRightRacket = () => {
-            ctx.fillStyle = '#7667D9';
+            ctx.fillStyle = '#00FF00';
             racketWidth = (canvas.width * 2.5 / 100);
             racketHeight = (canvas.height * 20 / 100);
-            ctx.fillRect(canvas.width - racketWidth, rightRacketY, racketWidth, racketHeight);
+            ctx.fillRect(canvas.width-racketWidth, rightRacketY, racketWidth, racketHeight);
         }
 
         const draw = () => {
@@ -310,13 +315,11 @@ export default function FriendGame() {
 
     useEffect(() => {
         console.log("gamestarted", gamestarted);
-        console.log("condition", condition);
-        if (gamestarted) {
+        if (gamestarted){
             document.getElementById('matchmaking').style.display = "none";
             document.getElementById('result').style.display = "none";
         }
-        if (condition != 'N') {
-            console.log("condition", condition);
+        if (condition != 'N'){
             document.getElementById('result').style.display = "block";
         }
     }, [gamestarted, condition]);
@@ -331,15 +334,15 @@ export default function FriendGame() {
                 <div className={styles.centered}>
                     <div className={styles.holderx}>
                         <div className={styles.leftplayer}>
-                            <img src={leftplayeravatar} className={styles.userImg} />
+                            <img src={leftplayeravatar} className={styles.userImg}/>
                             <h4>{leftplayername}</h4>
                         </div>
                         <div className={styles.vs}>
-                            <img src="/assets/loading.gif" className={styles.loadingGif} />
+                            <img src="/assets/loading.gif" className={styles.loadingGif}/>
                             <p>VS</p>
                         </div>
                         <div className={styles.leftplayer}>
-                            <img src={rightplayeravatar} className={styles.userImg} />
+                            <img src={rightplayeravatar} className={styles.userImg}/>
                             <h4>Unknown</h4>
                         </div>
                     </div>
@@ -353,39 +356,40 @@ export default function FriendGame() {
 
             <div id="result" className={styles.result}>
                 <div className={styles.centered}>
-                    <div className={styles.holderx} style={{ height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <div className={styles.holderx} style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                         <div className={styles.message}>
                             <h4>{MESSAGE}</h4>
                             {condition !== 'D' && (
                                 <>
-                                    <img src={avatar} />
+                                    <img src={avatar}/>
                                     <h3>{username}</h3>
                                 </>
                             )}
                         </div>
                         <div className={styles.buttoncontainer}>
-                            <div className={styles.Button}>
-                                <button onClick={handleExitClick}>Exit</button>
-                            </div>
+                        <div className={styles.Button}>
+                            <button onClick={handleExitClick}>Exit</button>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
 
             <div className={styles.gameContainer}>
                 <div className={styles.topgame}>
-                    <div className={styles.side}>
-                        <img src={leftplayeravatar} className={styles.Img} />
-                        <p >{leftplayername}</p>
+                    <div className={styles.player}>
+                        <img src={leftplayeravatar} className={styles.userImg}/>
+                        <div className={styles.playerInfo}>
+                            <h2>{leftplayername}</h2>
+                            <h3>score: {leftScore}</h3>
+                        </div>
                     </div>
-                    <div className={styles.side} style={{ justifyContent: 'end' }}>
-                        <p >{rightplayername}</p>
-                        <img src={rightplayeravatar} className={styles.Img} />
-                    </div>
-                    <div className={styles.score}>
-                        <p >{leftScore}</p>
-                        <p >:</p>
-                        <p >{rightScore}</p>
+                    <div className={styles.player}>
+                        <img src={rightplayeravatar} className={styles.userImg}/>
+                        <div className={styles.playerInfo}>
+                            <h2>{rightplayername}</h2>
+                            <h3>score: {rightScore}</h3>
+                        </div>
                     </div>
                 </div>
                 <canvas id="canvas" className={styles.canvass}></canvas>

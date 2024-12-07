@@ -8,8 +8,6 @@ from channels.layers import get_channel_layer
 from login.models import Player, PingData
 from matches.models import Matches
 from django.utils import timezone
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication
 
 class GameStateManager:
     _game_states = {}
@@ -28,8 +26,6 @@ class GameStateManager:
             del cls._game_states[room_name]
 
 class GameConsumer(AsyncWebsocketConsumer):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
     name = ''
     avatar = ''
     room_group_name = ''
@@ -70,11 +66,14 @@ class GameConsumer(AsyncWebsocketConsumer):
                 }
             )
             self.admin.game_loop = False
+            # self.close()  //doesn't make sense to close the connection here
             self.channel_layer.group_discard(
                 self.room_group_name,
                 self.channel_name
             )
             GameStateManager.remove_state(self.room_group_name)
+        # else:
+        #     self.close() //doesn't make sense to close the connection here
         if self.name in GameConsumer.queue:
             del GameConsumer.queue[self.name]
 
@@ -95,7 +94,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         value = data.get('value', 0)
 
         if action == 'connect':
-            # print('...........................a user has connected', data.get('username'))
+            print('...........................a user has connected', data.get('username'))
             if (data.get('username') in GameConsumer.queue):
                 self.close()
             GameConsumer.queue[data.get('username')] = {
@@ -109,7 +108,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.avatar = data.get('avatar')
             GameConsumer.instances[self.name] = self
 
-            print("len:", len(GameConsumer.queue)), "username:", data.get('username'), "avatar:", data.get('avatar'); 
             if len(GameConsumer.queue) >= 2:
                 match_found = False
                 matched_players = []
@@ -276,10 +274,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.right_paddleY + self.racketHeight >= (self.bally - 15)):
 
             offset = (self.bally - (self.right_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
-            if (offset > 0 and offset > 10):
-                offset = 10
-            elif (offset < 0 and offset < -10):
-                offset = -10
             self.ballx = self.game_width - self.racketWidth - 16
             self.balldirectionX *= -1
             self.balldirectionY = offset
@@ -290,10 +284,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.left_paddleY + self.racketHeight >= (self.bally - 15)):
 
             offset = (self.bally - (self.left_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
-            if (offset > 0 and offset > 10):
-                offset = 10
-            elif (offset < 0 and offset < -10):
-                offset = -10
             self.ballx = self.racketWidth + 16
             self.balldirectionX *= -1
             self.balldirectionY = offset
@@ -314,7 +304,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.right_score += 1
             self.bonus = 0
-            if (self.right_score >= 5):
+            if (self.right_score >= 5000):
                 self.game_loop = False
                 data = {
                     'winner': '2',
@@ -373,7 +363,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.left_score += 1
             self.bonus = 0
-            if (self.left_score >= 5):
+            if (self.left_score >= 5000):
                 self.game_loop = False
                 data = {
                     'winner': '1',
@@ -414,10 +404,12 @@ class GameConsumer(AsyncWebsocketConsumer):
                     opponent=second_player,
                     winner=first_player.username,
                     loser=second_player.username,
+                    
                     winner_profile_name=first_player.profile_name,
                     loser_profile_name=second_player.profile_name,
                     winner_avatar=first_player.avatar,
                     loser_avatar=second_player.avatar,
+                    
                     left_score=self.left_score,
                     right_score=self.right_score
                 )
@@ -427,11 +419,13 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 class inviteConsumer(AsyncWebsocketConsumer):
     game_queue = {}
+    started_games = {}
     room_group_name = ''
     name = ''
     admin = None
     ingame = False
     inqueue = False
+    instances = {}
     game_loop = False
     game_width = 800
     game_height = 500
@@ -456,7 +450,7 @@ class inviteConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         print('Disconnected')
-        if self.ingame: 
+        if self.ingame:
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -469,11 +463,8 @@ class inviteConsumer(AsyncWebsocketConsumer):
                     self.room_group_name,
                     self.channel_name
                 )
-        # print('game_id:', self.room_group_name, 'in_queue:', self.inqueue)
         if self.inqueue:
-            if inviteConsumer.game_queue.get(self.room_group_name) is not None:
-                print('kherj fi 7alatek')
-                del inviteConsumer.game_queue[self.room_group_name]
+            del inviteConsumer.game_queue[self.name]
 
     async def receive(self, text_data):
         if not text_data.strip():
@@ -515,13 +506,13 @@ class inviteConsumer(AsyncWebsocketConsumer):
             return
 
         #this case if a player join the (invite friend game)
-        elif action == 'connect':
+        if action == 'connect':
             print('a user has connected')
             username = data.get('username')
             if len(inviteConsumer.game_queue) > 0:
                 print('game queue is not empty')
                 game_id = data.get('game_id')
-                # print('game_id:', game_id)
+                print('game_id:', game_id)
                 game = inviteConsumer.game_queue[game_id]
                 if game is not None:
                     game['connected'] += 1
@@ -531,16 +522,15 @@ class inviteConsumer(AsyncWebsocketConsumer):
                     elif game['player2']['username'] == username:
                         game['player2']['channel_name'] = self.channel_name
                         game['player2']['instance'] = self
-                    self.inqueue = True
-                    self.room_group_name = game_id
                     print(f"Player {username} joined game")
                     if (game['connected'] == 2):
                         game['player1']['instance'].ingame = True
                         game['player2']['instance'].ingame = True
                         game['player1']['instance'].admin = self
                         game['player2']['instance'].admin = self
-                        game['player1']['instance'].inqueue = False
-                        game['player2']['instance'].inqueue = False
+                        group_name = f"{game['player1']['username']}vs{game['player2']['username']}"
+                        game['player1']['instance'].room_group_name = group_name
+                        game['player2']['instance'].room_group_name = group_name
                         game_state = {
                             'ballx': 400,
                             'bally': 250,
@@ -551,7 +541,7 @@ class inviteConsumer(AsyncWebsocketConsumer):
                             'left_player': game['player1']['username'],
                             'right_player': game['player2']['username']
                         }
-                        GameStateManager.set_state(game_id, game_state)
+                        GameStateManager.set_state(group_name, game_state)
 
                         await self.channel_layer.group_add(
                             self.room_group_name,
@@ -576,29 +566,22 @@ class inviteConsumer(AsyncWebsocketConsumer):
                             }
                         )
                         self.game_loop = True
-                        del inviteConsumer.game_queue[game_id]
+                        # print(f"game key = {data.get('player1')}vs{data.get('player2')}")
+                        game_key = game['player1']['username'] + 'vs' + game['player2']['username']
+                        del inviteConsumer.game_queue[game_key]
                         asyncio.create_task(self.run_60_times_per_second())
                 else:
-                    print('the user who join is not in any of the friend games')
-
+                    # he is not in any of the friend games
                     message = "Leave"
                     await self.send(text_data=json.dumps({'message': message}))
             else:
-                print('game queue is empty')
+                # there are no friends games
                 message = "Leave"
                 await self.send(text_data=json.dumps({'message': message}))
-        elif action == 'decline':
-            game_id = data.get('game_id')
-            game = inviteConsumer.game_queue[game_id]
-            if game is not None:
-                if game['player1']['instance'] is not None:
-                    print('player1 instance is not none')
-                    player1 = game['player1']['instance']
-                    print('user in queue:', player1.inqueue)
-                    await player1.send(text_data=json.dumps({'message': 'Leave'}))
-                    # del inviteConsumer.game_queue[game_id]
 
+        print("maybe it was me")
         if self.ingame:
+            print("yes it could be me")
             if action == 'ArrowDown':
                 if self.admin.right_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
                     self.admin.right_paddleY += 10
@@ -612,14 +595,15 @@ class inviteConsumer(AsyncWebsocketConsumer):
             elif action == 'w':
                 if self.admin.left_paddleY >= 10:
                     self.admin.left_paddleY -= 10
+            print("it not me")
 
     async def run_60_times_per_second(self):
         while self.game_loop:
-            # start_time = time.time()
+            start_time = time.time()
             await self.gamelogic()
-            # end_time = time.time()
-            # execution_time = end_time - start_time
-            # print(f"gamelogic() execution time: {execution_time:.6f} seconds")
+            end_time = time.time()
+            execution_time = end_time - start_time
+            print(f"gamelogic() execution time: {execution_time:.6f} seconds")
             await asyncio.sleep(1/60)
 
     async def pack_data_to_send(self):
@@ -668,23 +652,18 @@ class inviteConsumer(AsyncWebsocketConsumer):
         }))
 
     async def start_countdown(self, game_id):
-        print(f"Starting countdown for game {game_id}")
         while game_id in inviteConsumer.game_queue:
             game = inviteConsumer.game_queue.get(game_id)
             if game is None or game['counter'] <= 0:
                 print(f"Game {game_id} expired, removing from the queue.")
-                player1 = inviteConsumer.game_queue[game_id]['player1']['instance']
-                await player1.send(text_data=json.dumps({'message': 'Leave'}))
                 inviteConsumer.game_queue.pop(game_id, None)
                 break
 
             # Sleep for 1 second and decrease the counter
-            print(f"Game {game_id} counter: {game['counter']}")
             await asyncio.sleep(1)
             if game_id in inviteConsumer.game_queue:
                 inviteConsumer.game_queue[game_id]['counter'] -= 1
-        if game_id not in inviteConsumer.game_queue:
-            print("game has started")
+        print("game started or expired")
     
     async def run_60_times_per_second(self):
         while self.game_loop:
@@ -704,10 +683,6 @@ class inviteConsumer(AsyncWebsocketConsumer):
             self.right_paddleY + self.racketHeight >= (self.bally - 15)):
 
             offset = (self.bally - (self.right_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
-            if (offset > 0 and offset > 10):
-                offset = 10
-            elif (offset < 0 and offset < -10):
-                offset = -10
             self.ballx = self.game_width - self.racketWidth - 16
             self.balldirectionX *= -1
             self.balldirectionY = offset
@@ -718,10 +693,6 @@ class inviteConsumer(AsyncWebsocketConsumer):
             self.left_paddleY + self.racketHeight >= (self.bally - 15)):
 
             offset = (self.bally - (self.left_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
-            if (offset > 0 and offset > 10):
-                offset = 10
-            elif (offset < 0 and offset < -10):
-                offset = -10
             self.ballx = self.racketWidth + 16
             self.balldirectionX *= -1
             self.balldirectionY = offset

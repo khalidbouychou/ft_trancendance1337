@@ -3,7 +3,10 @@ from rest_framework import serializers
 from django.db.models import Q
 from .models import Player, Friend, PingData, TicData
 
-from django.contrib.auth import authenticate
+from .models import Player, Friend, PingData, TicData
+from .models import Player
+from django.contrib.auth.hashers import make_password
+
 
 class PlayerSerializer(serializers.ModelSerializer):
     blocked_users = serializers.SerializerMethodField()
@@ -105,20 +108,30 @@ class SigninSerializer(serializers.ModelSerializer):
 
 
 
-# class FriendSerializer(serializers.ModelSerializer):
-#     user1 = serializers.SerializerMethodField()
-#     user2 = serializers.SerializerMethodField()
+class FriendSerializer(serializers.ModelSerializer):
+    user1 = serializers.SerializerMethodField()
+    user2 = serializers.SerializerMethodField()
 
-#     class Meta:
-#         model = Friend
-#         fields = ['user1', 'user2', 'status']
+    class Meta:
+        model = Friend
+        fields = ['user1', 'user2', 'status']
 
-#     def get_user1(self, obj):
-#         return obj.user1.username
+    def get_user1(self, obj):
+        return obj.user1.username
 
-#     def get_user2(self, obj):
-#         return obj.user2.username
+    def get_user2(self, obj):
+        return obj.user2.username
 
+
+class PingDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PingData
+        fields = ['wins', 'losses', 'exp_game', 'timestamp']
+
+class TicDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TicData
+        fields = ['wins', 'losses', 'exp_game', 'timestamp']
 
 # class TwoFASerializer(serializers.ModelSerializer):
 #     class Meta:

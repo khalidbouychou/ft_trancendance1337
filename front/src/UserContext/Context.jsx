@@ -12,9 +12,10 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const [loggedIntra, setLoggedIntra] = useState(false);
 
   async function auth_intra42() {
-    const response = await axios.get("https://10.11.9.12/api/auth_intra/", {
+    const response = await axios.get("http://localhost:8000/api/auth_intra/", {
       withCredentials: true
     });
     try {
@@ -38,7 +39,7 @@ export default function AuthProvider({ children }) {
         const params = new URLSearchParams();
         params.append("code", code);
         const res = await axios.post(
-          `https://10.11.9.12/api/login/`,
+          `http://localhost:8000/api/login/`,
           params,
           {
             withCredentials: true
@@ -65,7 +66,6 @@ export default function AuthProvider({ children }) {
         position: "top-right",
         autoClose: 1000
       });
-      console.log("login", error);
       navigate("/");
     } finally {
       setLoading(false);
@@ -74,7 +74,7 @@ export default function AuthProvider({ children }) {
 
   async function get_auth_user() {
     try {
-      const res = await axios.get(`https://10.11.9.12/api/user/`, { 
+      const res = await axios.get(`http://localhost:8000/api/user/`, {
         withCredentials: true
       });
 
@@ -97,7 +97,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`https://10.11.9.12/api/logout/`, {
+      const res = await axios.get(`http://localhost:8000/api/logout/`, {
         withCredentials: true
       });
 
@@ -112,7 +112,8 @@ export default function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    Login();
+    Login()
+    
   }, []);
   useEffect(
     () => {
@@ -130,7 +131,9 @@ export default function AuthProvider({ children }) {
         setUser,
         Login,
         auth_intra42,
-        get_auth_user
+        get_auth_user,
+        setLoggedIntra,
+        loggedIntra
       }}
     >
       {children}

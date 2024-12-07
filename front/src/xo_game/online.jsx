@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import api from '../../auth/api';
+import api from '../ponggame/auth/api';
 import './styles.css';
 
 var	XO = props => {
@@ -49,7 +49,7 @@ var	XO = props => {
 
 	var connect = n => {
 		var token = localStorage.getItem('token');
-		const ws = new WebSocket(`ws://10.11.9.12:8000/ws/${ props.invite ? "xo_invite" : "game" }/?token=${token}`);
+		const ws = new WebSocket(`ws://localhost:8000/ws/${ props.invite ? "xo_invite" : "game" }/?token=${token}`);
 		ws.onopen = () => {
 			if (props.invite) {
 				ws.send(JSON.stringify({
@@ -95,9 +95,7 @@ var	XO = props => {
 		setPlayers(1);
 		if (socket && socket !== undefined 
 			&& socket.readyState === WebSocket.OPEN) socket.close();
-		if (props.invite)
-			navigate("/games");
-		else	connect(0);
+		connect(0);
 	}
 
 	var	send_update = (msg, object, target, socket) => {
@@ -142,10 +140,8 @@ var	XO = props => {
 
 	useEffect(() => {
 		if (!socket || socket === undefined) return;
-		if (message === 'pair disconnected') { 
-			alert(message);
+		if (message === 'pair disconnected') 
 			reconnect();
-		}
 		else if (message === 'you just got a pair') {
 			setState(1);
 			setPlayers(2);
@@ -444,7 +440,7 @@ var	XO = props => {
 				<p>player1-score: {player1Score}</p>
 				<p>player2-score: {player2Score}</p>
 				<p>server-message: {message}</p>
-				<p id="console_obj">server-object: {obj}</p>
+				{props.invite ? <p id="console_obj">server-object: {obj}</p> : []}
 			</div>
 			<Log log={log} />
 		</div>

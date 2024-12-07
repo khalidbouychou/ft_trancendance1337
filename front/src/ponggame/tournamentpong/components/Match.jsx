@@ -72,7 +72,7 @@ export default function GameComponent({ type }) {
         };
 
         const drawLeftRacket = () => {
-            ctx.fillStyle = '#7667D9';
+            ctx.fillStyle = '#00FF00';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -80,7 +80,7 @@ export default function GameComponent({ type }) {
         }
 
         const drawRightRacket = () => {
-            ctx.fillStyle = '#7667D9';
+            ctx.fillStyle = '#00FF00';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -125,7 +125,7 @@ export default function GameComponent({ type }) {
                 balldirectionY = Math.random() * 2 - 1;
                 setLeftScore(prevScore => prevScore + 1);
                 left_score++;
-                if (left_score >= 5000){
+                if (left_score >= 3){
                     setCondition('S');
                     mycondition = 'S';
                     if (type === "left"){
@@ -149,7 +149,7 @@ export default function GameComponent({ type }) {
                 balldirectionY = Math.random() * 2 - 1;
                 setRightScore(prevScore => prevScore + 1);
                 right_score++;
-                if (right_score >= 5000){
+                if (right_score >= 3){
                     setCondition('S');
                     mycondition = 'S';
                     if (type === "left"){
@@ -227,25 +227,27 @@ export default function GameComponent({ type }) {
                 <div className={styles.centered}>
                     <div className={styles.gameContainer}>
                         <div className={styles.topgame}>
-                            
-                            <div className={styles.side}>
-                                <img src={leftAvatar} className={styles.Img} />
-                                <p >{leftplayer}</p>
+                            <div className={styles.player}>
+                                <img src={leftAvatar} className={styles.userImg}/>
+                                <div className={styles.playerInfo}>
+                                    <h2>{leftplayer}</h2>
+                                    <h3>score: {leftScore}</h3>
+                                </div>
                             </div>
-                            <div className={styles.side} style={{ justifyContent: 'end' }}>
-                                <p >{rightplayer}</p>
-                                <img src={rightAvatar} className={styles.Img} />
-                            </div>
-                            <div className={styles.score}>
-                                <p >{leftScore}</p>
-                                <p >:</p>
-                                <p >{rightScore}</p>
+                            <div className={styles.player}>
+                                <img src={rightAvatar} className={styles.userImg}/>
+                                <div className={styles.playerInfo}>
+                                    <h2>{rightplayer}</h2>
+                                    <h3>score: {rightScore}</h3>
+                                </div>
                             </div>
                         </div>
                         <canvas id="canvas" className={styles.canvass}></canvas>
                     </div>
                 </div>
             </div>
+    
+            
         </>
     );
 }
