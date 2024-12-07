@@ -25,6 +25,12 @@ class Player(AbstractUser):
     otp_verified = models.BooleanField(default=False)
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
     friends = models.ManyToManyField('self', symmetrical=True, through='Friend', blank=True)
+    qrcode_path = models.CharField(max_length=255, default='', blank=False, null=False) 
+    bool_login = models.BooleanField(default=False)
+    mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False) 
+    
+    class Meta: 
+        db_table = 'player' 
 
     class Meta:
         db_table = 'player'

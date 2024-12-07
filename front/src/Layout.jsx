@@ -1,31 +1,47 @@
-import { useNavigate } from 'react-router-dom';
 import Sidebar from "./components/SideBar/Sidebar";
 import style from "./App.module.css";
-import { Navigate, Outlet } from "react-router-dom";
-import { NotificationWebSocketProvider } from "./contexts/NotifWSContext.jsx";
-import { LocationProvider } from "./contexts/LocationContext.jsx";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "./UserContext/Context.jsx";
+import { Outlet } from "react-router-dom";
+import {useLocation} from 'react-router-dom';
+import { useEffect } from "react";
+import { useContext } from "react";
+import { AuthContext } from "./UserContext/Context";
 
-import Cookies from 'js-cookie';
+import { GridLoader } from "react-spinners";
+import { useState } from "react";
+
+
 const Layout = () => {
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate()
-  const token = localStorage.getItem('token');
+  const location = useLocation();
+ const {get_auth_user} = useContext(AuthContext);
+ const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    console.log("user ------ >", user);
-    !user && navigate("/login");
-  }, [location.pathname]);
+ useEffect(() => {
+   get_auth_user()
+ }
+ , [location.pathname])
+
+ useEffect(() => {
+  const timer = setTimeout(() => {
+    setLoading(false);
+  }, 1200);
+  return () => clearTimeout(timer);
+}, [location.pathname]);
 
   return (
+
+    loading ?   <div 
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh"
+    }}
+  >
+    <GridLoader color="#fff" loading={loading} size={20} />
+  </div> :
     <div className={style.EntirePage}>
-      <NotificationWebSocketProvider>
-        <LocationProvider>
-          <Sidebar />
-          <Outlet />
-        </LocationProvider>
-      </NotificationWebSocketProvider>
+          {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> }
+           <Outlet />
     </div>
   );
 };
