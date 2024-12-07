@@ -1,28 +1,33 @@
-import React from 'react';
-import styl from './CardFriend.module.css';
+import React from "react";
+import styl from "./CardFriend.module.css";
 
-const CardFriend = ({ friend, onClick }) => {
+const CardFriend = () => {
   return (
-    <div className={styl.friends}>
-      <div className={styl.CardFriend}>
-        <div className={styl.card}>
-          <div className={styl.First}></div>
-          <div className={styl.Last}>
-            <p id={styl.p2}>My Friend</p>
+    <div className={styl.cardFriend}>
+      <div className={styl.userImage}>
+        <div className={styl.extImg}>
+          <div className={styl.extImg} style={{width: '57px', height: '67px'}}>
+            <img src="image"/>
           </div>
         </div>
-        <div className={styl.User}>
-          <div className={styl.image}>
-            <img src={'http://localhost:8000'+friend.friend.image} alt={friend.friend.name} />
-            <div className={styl.online}></div>
+      </div>
+      <div className={styl.userName}>
+        <div className={styl.name}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.levels}>
+          <div className={styl.level}>
+            <p >Ping Pong level: </p>
+            <div className={styl.Parallelogram}>5</div>
           </div>
-          <button onClick={() => onClick(friend.friend)}>
-            <p>{friend.friend.name.toUpperCase()}</p>
-          </button>
+          <div className={styl.level}>
+            <p >Ping Pong level: </p>
+            <div className={styl.Parallelogram}>5</div>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default CardFriend;

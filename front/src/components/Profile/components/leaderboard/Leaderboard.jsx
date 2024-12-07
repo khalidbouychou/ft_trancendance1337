@@ -34,6 +34,424 @@ const Leaderboard = () => {
           <p >9</p>
         </div>
       </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
+      <button className={styl.cardRank}>
+        <div className={styl.rank}>
+          <p >#1</p>
+          <div className={styl.extImgLead}>
+            <div className={styl.intImgLead}>
+              <img src='userImage'/>
+            </div>
+          </div>
+        </div>
+        <div className={styl.playerName}>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.wins}>
+          <p >15</p>
+        </div>
+        <div className={styl.loses}>
+          <p >5</p>
+        </div>
+        <div className={styl.lvl}>
+          <p >9</p>
+        </div>
+      </button>
     </div>
   </div>
   )

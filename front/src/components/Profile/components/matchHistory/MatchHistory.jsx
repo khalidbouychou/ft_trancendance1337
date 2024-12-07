@@ -1,7 +1,7 @@
 import React from 'react'
 import styl from './MatchHistory.module.css'
 
-const MatchHistory = ({userData}) => {
+const MatchHistory = () => {
   return (
     <div className={styl.mthistory}>
     <div className={styl.mHead}>
@@ -15,7 +15,387 @@ const MatchHistory = ({userData}) => {
         <div className={styl.opponent}>
           <div className={styl.extImgOpp}>
             <div className={styl.intImgOpp}>
-              <img src={userData.avatar}/>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
+            </div>
+          </div>
+          <p >NOUAHIDI</p>
+        </div>
+        <div className={styl.res}>
+          <p >9 - 1</p>
+        </div>
+        <div className={styl.status_date}>
+          <p >vectory</p>
+        </div>
+        <div className={styl.status_date}>
+          <p className={styl.date}><p >2014-11-27</p><p style={{color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px'}}>13 : 37</p></p>
+        </div>
+      </div>
+      <div className={styl.cardMatch}>
+        <div className={styl.opponent}>
+          <div className={styl.extImgOpp}>
+            <div className={styl.intImgOpp}>
+              <img src='image'/>
             </div>
           </div>
           <p >NOUAHIDI</p>
