@@ -11,6 +11,7 @@ import Game from "./Login/game/local/game.jsx";
 // import Turnoi from "./Login/game/turnoi/game.jsx"; 
 import Remote from "./Login/game/remote/game.jsx";
 
+
 const LinkGame = () => {
   return (
     <div className={style.link_container}>
@@ -21,6 +22,41 @@ const LinkGame = () => {
   </div>
   );
 }
+
+const handleUpload = () => {
+  const file = document.getElementById('file').files[0];
+  if (file.type === 'image/jpeg' || file.type === 'image/png') {
+    const image = document.getElementById('image');
+  image.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="image" />`;
+  console.log("name -----> ", file.name);
+  console.log("type ------> ", file.type);
+  }
+  else {
+    alert('Please upload a valid image');
+  }
+
+}
+
+const UploadImage = () => {
+  return (
+    <>
+    <div className={style.imgholder}>
+      <div className={style.cover}>
+          <h1>Upload Image</h1>
+       <div className={style.upload}>
+    
+          <input type="file" id="file" className={style.file} />
+          <input type="text" className={style.text} placeholder="Enter Image Name" />
+          <button type="submit" className={style.submit} onClick={handleUpload}> Upload</button>
+       </div>
+      <div id="image" className={style.outputimg}>
+      </div>
+      </div>
+    </div>
+    </>
+  );
+}
+
 function App() {
   return (
     <div >
@@ -37,6 +73,8 @@ function App() {
             <Route path="twofa" element={<Twofa />} />
             <Route path="setting" element={<Settings />} />
             <Route path="otp" element={< Otplogin/>} />
+            <Route path="image" element={<UploadImage/>} />
+
            </Route> 
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/*" element={<PageNotFound />} /> 

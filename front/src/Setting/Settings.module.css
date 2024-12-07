@@ -231,3 +231,80 @@
     justify-content: center;
     align-items: center;
 }
+
+.updateinfos {
+    /* border: 1px solid rgb(222, 225, 15); */
+    height: 100%;
+    width: 100%;
+    margin-bottom: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.userinfos{
+   border: 1px solid rgb(222, 225, 15);
+    height: 80%;
+    width: 60%;
+}
+
+.delete{
+    border: 1px solid rgb(0, 195, 209);
+     height: 80%;
+     width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
+
+.data {
+    /* border: 1px solid rgb(255, 0, 0); */
+    width: 90%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.data button {
+    width: 100%;
+    height: 20%;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 10px;
+    color: white;
+    
+}
+
+.deletebtn {
+    background-color: rgb(213, 61, 61);
+}
+.deletebtn:hover {
+    background-color: rgb(237, 90, 90);
+}
+
+.anonymize {
+    background-color: rgb(51, 28, 186);
+}
+.anonymize:hover {
+    background-color: rgb(145, 131, 228);
+}
+
+.imgcover {
+    width: 50%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid white;
+    img {
+        width: 30%;
+        height: 30%;
+    }
+}
