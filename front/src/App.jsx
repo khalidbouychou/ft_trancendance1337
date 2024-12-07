@@ -24,20 +24,16 @@ const LinkGame = () => {
 function App() {
   return (
     <div >
-      <div>
         <Routes>
            <Route path="/" element={<Layout />}>
             <Route path="home" element={<h1>home</h1>} />
             <Route path="chat" element={<h1>chat</h1>} />
             <Route path="profile" element={<h1>profile</h1>} />
-            <Route path="games" element={<LinkGame />}/>
-            <Route path="games/remote" element={<Remote />} />
-            <Route path="games/turnoi" element={<Game />} />
-            <Route path="games/local" element={<Game />} />
-
-            {/* </Route> */}
-            {/* <Route path="setting" element={<h1>settings</h1>} /> */}
             <Route path="notification" element={<h1>notification</h1>} />
+            <Route path="game" element={<LinkGame />}/>
+            <Route path="game/remote" element={<Remote />} />
+            <Route path="game/turnoi" element={<Game />} />
+            <Route path="game/local" element={<Game />} />
             <Route path="twofa" element={<Twofa />} />
             <Route path="setting" element={<Settings />} />
             <Route path="otp" element={< Otplogin/>} />
@@ -45,7 +41,6 @@ function App() {
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/*" element={<PageNotFound />} /> 
         </Routes>
-      </div>
     </div> );
 }
 

@@ -12,9 +12,13 @@ import { useState } from "react";
 
 const Layout = () => {
   const location = useLocation();
- const {get_auth_user} = useContext(AuthContext);
+ const {user,get_auth_user} = useContext(AuthContext);
  const [loading, setLoading] = useState(true);
 
+// useEffect(() => {
+//   console.log("layout user " , user)
+// }
+// , [location.pathname])
  useEffect(() => {
    get_auth_user()
  }
@@ -24,7 +28,7 @@ const Layout = () => {
   const timer = setTimeout(() => {
     setLoading(false);
   }, 1200);
-  return () => clearTimeout(timer);
+  return () => clearTimeout(timer); 
 }, [location.pathname]);
 
   return (

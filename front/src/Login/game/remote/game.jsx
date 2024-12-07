@@ -4,15 +4,21 @@ import Matching from './matching/matching';
 import Remote from './remote-game/remote';
 const PongGame = () => {
   let socket = useRef(null);
+  const [message, setMessage] = useState(null);
+  const [type, setType] = useState(null);
   useEffect(() => {
     const handlesocket = () => {
     socket.current = new WebSocket('ws://localhost:8000/ws/game/remote');
     socket.current.onopen = () => {
-      console.log('WebSocket Client Connected');
-      socket.current.send("Hi From Client");
+      console.log('-------------- WebSocket Client Connected --------------');
     };
     socket.current.onmessage = (message) => {
-      console.log("MESSAGE --------- ",message);
+      let data = JSON.parse(message.data);
+      console.log("-------------- > data from server",data);
+        setMessage(data?.message);
+        setType(data?.type);
+      console.log("message from server",message.data);
+
     }
     socket.current.onclose = () => {
       console.log('.................... WebSocket Client Disconnected .......................'); 
@@ -23,6 +29,12 @@ const PongGame = () => {
       socket.current.close();
     }
   },[]);
+
+  useEffect(() => {
+    console.log("games type: ", type);
+    console.log("games message: ", message);
+  },[type, message]);
+
   // Game state
   const [playerAScore, setPlayerAScore] = useState(0);
   const [playerBScore, setPlayerBScore] = useState(0);
@@ -240,7 +252,7 @@ const PongGame = () => {
 
   return (
     <>
-    <Matching/>
+    <Matching {...{type, message}} />
     {/* <Remote {...{
       socket,
       winner,
@@ -255,7 +267,7 @@ const PongGame = () => {
       setCanvasSize,
       resetGame
     }}
-    /> */}
+    />  */}
     </>
   );
 };

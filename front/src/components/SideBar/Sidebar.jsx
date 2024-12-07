@@ -86,7 +86,7 @@ const Sidebar = () => {
           isOpen={isOpen}
           ICON={IoLogoGameControllerB}
           name={"Game"}
-          link={"/games"}
+          link={"/game"}
         />
         <CmpCard
           isOpen={isOpen}
