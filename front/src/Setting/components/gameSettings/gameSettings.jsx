@@ -22,24 +22,9 @@ const GameSettings = () => {
     const [activeSection, setActiveSection] = useState('tmp1');
     const [code, setCode] = useState(['','','','','',])
     const [confirmationMessage, setConfirmationMessage] = useState('');
-    const [qrValue, setQrValue] = useState('https://tailwindcss.com/')
+    // const [qrValue, setQrValue] = useState('https://tail')
 
-    const handleINputChange = (e, index) => {
-        const newCode = [...code]
-        newCode[index] = e.target.value.slice(-1)
-        setCode(newCode)
     
-        if (e.target.nextSibling) {
-          e.target.nextSibling.focus()
-        }
-      }
-    
-      const handleConfirmClick = () => {
-        if (code.join('').length === 5)
-          setConfirmationMessage(`Code Confirmed: ${code.join('')}`)
-        else
-          setConfirmationMessage('Please eter a 5-digit code.')
-      }
     
       const colors = ['red', 'green', 'yellow', 'black', 'gray', 'blue', 'white'];
     

@@ -50,7 +50,7 @@ services:
     networks:
       - connexion
     healthcheck:
-      test: ["CMD", "python manage.py check"]
+      test: ["CMD", "python3 manage.py check"]
       interval: 5s
       timeout: 5s
       retries: 3
@@ -69,6 +69,9 @@ services:
       - ./front:/app
       - .env:/app/.env
     restart: on-failure
+    # depends_on:
+    #   - back
+
 
   # redis:
   #   container_name: redis
