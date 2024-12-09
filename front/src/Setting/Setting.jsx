@@ -2,10 +2,16 @@
 import styl from './Settings.module.css'
 import Twofa from '../Login/2fa/twofa'
 import { RxUpload } from "react-icons/rx";
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AuthContext } from '../UserContext/Context';
+import { use } from 'react';
 const UserInfos = () => {
-  const {user} = useContext(AuthContext); 
+  const {user} = useContext(AuthContext);
+
+  useEffect(() => {
+    console.log(user)
+  }
+  , [user])
   return (
     <div className={styl.updateinfos}>
       {/* <div className={styl.upload_input}> */}
@@ -18,9 +24,9 @@ const UserInfos = () => {
 
             <div className={styl.imgcover}>
               <img src={user?.user?.avatar} alt={`user?.user?.username`} />
-              <RxUpload className={styl.upload} />
+              <RxUpload className={styl.upload} htmlFor="file" />
             </div>
-
+              <input type="file" />
         </div>
         <div className={styl.separator}></div>
         <div className={styl.delete}>

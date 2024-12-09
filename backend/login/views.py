@@ -349,18 +349,19 @@ class ClearQrcode (APIView):
         return response 
 
 class UpdateProfile (APIView):
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [SessionAuthentication] 
     permission_classes = [IsAuthenticated]
     
-    def put(request):
+    def put(self,request):
         data = request.data
         user = request.user
-        
-        getuser = Player.objects.filter(username=user.username).first()
-        if not getuser :
-            return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
-        getuser.profile_name = data.get('profile_name')
-        getuser.avatar = data.get('avatar')
+        getuser = Player.objects.filter(username=user.username).first() 
+        new_profile_name = data.get('profile_name')
+        new_avatar = data.get('avatar')
+        if new_profile_name is not None:
+            getuser.profile_name = new_profile_name
+        if new_avatar is not None:
+            getuser.avatar = new_avatar
         getuser.save()
-        return Response({'msg': 'Profile updated'}, status=status.HTTP_200_OK)
+        return Response({'msg': 'Profile updated' , "new data" : PlayerSerializer(getuser).data}, status=status.HTTP_200_OK)
 #-----------------------------------2FA-------------------------------------------------------------

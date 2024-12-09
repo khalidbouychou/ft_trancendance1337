@@ -65,12 +65,12 @@ services:
       - "5173:5173"
     networks:
       - connexion
+    depends_on:
+      - back
     volumes:
       - ./front:/app
       - .env:/app/.env
     restart: on-failure
-    # depends_on:
-    #   - back
 
 
   # redis:
