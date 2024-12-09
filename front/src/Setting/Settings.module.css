@@ -3,7 +3,7 @@
 	width: 100%;
 	height: 100%;
     justify-content: center;
-	overflow: auto;
+	overflow: hidden;
 }
 
 .content {
@@ -38,7 +38,7 @@
 
 .last {
     /* width: 100%; */
-    height: 70%;
+    height: 100%;
     display: flex;
     @media (max-width: 1280px) {
         width: 100%;
@@ -234,14 +234,14 @@
 
 .updateinfos {
     /* border: 1px solid rgb(222, 225, 15); */
-    height: 100%;
+    height: 90%;
     width: 100%;
     margin-bottom: 100px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 80px;
 }
 
 
@@ -308,13 +308,14 @@
     position: relative;
     width: 200px;
     height: 200px;
-    border-radius: 50%;
+    /* border-radius: 50%; */
     overflow: hidden;
 }
 
 .imgcover img {
     width: 100%;
     height: 100%;
+    border-radius: 5%;
     object-fit: cover;
 }
 

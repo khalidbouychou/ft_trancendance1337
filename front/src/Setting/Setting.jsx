@@ -24,9 +24,11 @@ const UserInfos = () => {
 
             <div className={styl.imgcover}>
               <img src={user?.user?.avatar} alt={`user?.user?.username`} />
-              <RxUpload className={styl.upload} htmlFor="file" />
+              <label htmlFor='uploadimg'>
+                <RxUpload className={styl.upload} />
+              </label>
+              <input id="uploadimg" type="file" hidden />
             </div>
-              <input type="file" />
         </div>
         <div className={styl.separator}></div>
         <div className={styl.delete}>

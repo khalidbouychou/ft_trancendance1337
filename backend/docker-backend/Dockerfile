@@ -1,5 +1,5 @@
-FROM python:3.11
-RUN apt-get update && apt-get install -y postgresql-client
+FROM python:3.11-alpine
+RUN apk update && apk add --no-cache postgresql-client bash
 WORKDIR /app
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
