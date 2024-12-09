@@ -80,7 +80,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
         try:
             response = requests.post(
                 'https://api.intra.42.fr/oauth/token/',
-                data={
+                data={ 
                     'grant_type': 'authorization_code',
                     'client_id': os.environ.get('C_ID'),
                     'client_secret': os.environ.get('SCID'),
@@ -339,11 +339,6 @@ class ClearQrcode (APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request):
         user = request.user
-        # user.two_factor = False
-        # user.mfa_secret = ""
-        # user.otp_verified = False
-        # user.qrcode_path = ""
-        # user.save()
         if not user.mfa_secret or not user.qrcode_path:
             return Response({'error': 'No secret found Or No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
         os.remove(user.qrcode_path)
@@ -351,5 +346,21 @@ class ClearQrcode (APIView):
         user.save()
         response = Response({'msg': 'QR code cleared'}, status=status.HTTP_200_OK)
         response.data = {'user': PlayerSerializer(user).data}
-        return response
+        return response 
+
+class UpdateProfile (APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def put(request):
+        data = request.data
+        user = request.user
+        
+        getuser = Player.objects.filter(username=user.username).first()
+        if not getuser :
+            return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
+        getuser.profile_name = data.get('profile_name')
+        getuser.avatar = data.get('avatar')
+        getuser.save()
+        return Response({'msg': 'Profile updated'}, status=status.HTTP_200_OK)
 #-----------------------------------2FA-------------------------------------------------------------

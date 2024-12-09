@@ -10,8 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/material": "^6.1.6",
@@ -22,7 +20,6 @@
     "axios": "^1.7.5",
     "chart.js": "^4.4.4",
     "dotenv": "^16.4.5",
-    "js-cookie": "^3.0.5",
     "prop-types": "^15.8.1",
     "qrcode.react": "^4.0.1",
     "react": "^18.3.1",
@@ -30,7 +27,7 @@
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
-    "react-icons": "^4.3.1",
+    "react-icons": "^4.12.0",
     "react-loader-spinner": "^6.1.6",
     "react-native-gifted-charts": "^1.4.43",
     "react-native-linear-gradient": "^2.8.3",
@@ -43,14 +40,9 @@
     "vite": "^5.4.9"
   },
   "devDependencies": {
-    "@eslint/js": "^9.8.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "eslint": "^9.8.0",
-    "eslint-plugin-react": "^7.35.0",
-    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
-    "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0"
   }
 }

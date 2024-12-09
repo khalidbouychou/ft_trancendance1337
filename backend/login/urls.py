@@ -1,6 +1,6 @@
 
 from django.urls import path, include
-from .views import PlayerViewSet, SignupForm, SigninForm , GenerateQRcode ,DesableTwoFactor , LogoutView , UserStatus ,VerifyOtp ,ClearQrcode
+from .views import PlayerViewSet, SignupForm, SigninForm , GenerateQRcode ,DesableTwoFactor , LogoutView , UserStatus ,VerifyOtp ,ClearQrcode , UpdateProfile
 from rest_framework import routers
 from .views import health_check , AuthUser
 router = routers.DefaultRouter()
@@ -21,4 +21,5 @@ urlpatterns = [
     path('d_2fa/',DesableTwoFactor.as_view(), name='disabletwofactor'),
     path('otpverify/',VerifyOtp.as_view(), name='VerifyOtp'),
     path('clearqrcode/',ClearQrcode.as_view() , name='ClearQrcode'),
+    path('update/',UpdateProfile.as_view() , name='UpdateProfile'), 
     ]
