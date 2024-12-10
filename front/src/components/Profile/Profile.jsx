@@ -17,6 +17,16 @@ const Profile = () => {
   const [ismyprofil, setIsMyProfil] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("Leaderboard");
+  const [pingLevel, setPingLevel] = useState('1')
+  const [nextpingLevel, setNextPingLevel] = useState('1')
+  const [pingExp, setPingExp] = useState('0')
+  const [maxPingExp, setMaxPingExp] = useState('0')
+  const [pingPercentage, setPingPercentage] = useState('')
+  const [ticLevel, setTicLevel] = useState('1')
+  const [nextticLevel, setNextTicLevel] = useState('1')
+  const [ticExp, setTicExp] = useState('0')
+  const [maxticExp, setMaxTicExp] = useState('0')
+  const [ticPercentage, setTicPercentage] = useState('')
 
   const handelClick = (section) => {
     setActiveSection(section);
@@ -25,15 +35,15 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!username) return;
-
+  
       setIsLoading(true);
       setIsMyProfil(1);
-
+  
       try {
         const response = await fetch(
           `http://localhost:8000/api/getuser/${username}/`
         );
-
+  
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error("User not found");
@@ -41,22 +51,70 @@ const Profile = () => {
             throw new Error("Failed to fetch user data");
           }
         }
-
+  
         const data = await response.json();
         setUserData(data);
-
+  
         if (data.profile_name === user?.user?.profile_name) {
           setIsMyProfil(0);
         }
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  
+        const pingResponse = await fetch(
+          `http://localhost:8000/api/pingdata/${username}/`
+        );
+  
+        if (!pingResponse.ok) {
+          throw new Error("Failed to fetch ping data");
+        }
+  
+        const pingData = await pingResponse.json();
+  
+        if (pingData && pingData.length > 0) {
+          const { exp_game } = pingData[0];
+          const calculatedLevel = Math.floor(exp_game / 100);
+          const calculatedNextLevel = calculatedLevel + 1;
+          const maxExperience = calculatedNextLevel * 100;
+  
+          setPingExp(exp_game);
+          setMaxPingExp(maxExperience);
+          setPingLevel(calculatedLevel);
+          setNextPingLevel(calculatedNextLevel);
+          setPingPercentage(Math.floor(exp_game / 100) * 10)
+        } else {
+          throw new Error("Ping data is invalid or empty");
+        }
 
+        const ticResponse = await fetch(`http://localhost:8000/api/ticdata/${username}/`);
+        if (!ticResponse.ok) {
+          throw new Error("Failed to fetch Tic Tac Toe data");
+        }
+        const ticData = await ticResponse.json();
+        console.log("Tic Tac Toe data:", ticData);
+        if (ticData && ticData.length > 0) {
+          const { exp_game } = ticData[0];
+          const calculatedLevel = Math.floor(exp_game / 100);
+          const calculatedNextLevel = calculatedLevel + 1;
+          const maxExperience = calculatedNextLevel * 100;
+  
+          setTicExp(exp_game);
+          setMaxTicExp(maxExperience);
+          setTicLevel(calculatedLevel);
+          setNextTicLevel(calculatedNextLevel);
+          setTicPercentage(Math.floor(exp_game / 100) * 10)
+        } else {
+          throw new Error("Ping data is invalid or empty");
+        }
+        } catch (error) {
+          setError(error.message);
+        } finally {
+          setIsLoading(false);
+        }
+    };
+  
     fetchData();
   }, [username, user]);
+
+  console.log('expsstic', ticPercentage)
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -103,22 +161,22 @@ const Profile = () => {
               <div className={styl.levels}>
                 <div className={styl.level}>
                   <div className={styl.tmp}>
-                    <p>Level 29</p>
+                    <p>Level {pingLevel}</p>
                     <div className={styl.gameName}>Ping Pong</div>
                     <p>
-                      2999 /{" "}
+                      {pingExp} /{" "}
                       <p
                         style={{
                           color: "rgba(255, 255, 255, 0.4)",
                           left: "2px",
                         }}
                       >
-                        3000
+                        {maxPingExp}
                       </p>
                     </p>
                   </div>
                   <div className={styl.extLvl}>
-                    <div className={styl.intLvl} style={{ width: "80%" }}></div>
+                    <div className={styl.intLvl} style={{ width: `${pingPercentage}%` }}></div>
                   </div>
                   <div className={styl.tmp} style={{ alignItems: "start" }}>
                     <p
@@ -126,27 +184,27 @@ const Profile = () => {
                     >
                       Next Level
                     </p>
-                    <p>Level 30</p>
+                    <p>Level {nextpingLevel}</p>
                   </div>
                 </div>
                 <div className={styl.level}>
                   <div className={styl.tmp}>
-                    <p>Level 29</p>
+                    <p>Level {ticLevel}</p>
                     <div className={styl.gameName}>Tic Tac Toe</div>
                     <p>
-                      2999 /{" "}
+                      {ticExp} /{" "}
                       <p
                         style={{
                           color: "rgba(255, 255, 255, 0.4)",
                           left: "2px",
                         }}
                       >
-                        3000
+                        {maxticExp}
                       </p>
                     </p>
                   </div>
                   <div className={styl.extLvl}>
-                    <div className={styl.intLvl} style={{ width: "80%" }}></div>
+                    <div className={styl.intLvl} style={{ width: `${ticPercentage}%` }}></div>
                   </div>
                   <div className={styl.tmp} style={{ alignItems: "start" }}>
                     <p
@@ -154,7 +212,7 @@ const Profile = () => {
                     >
                       Next Level
                     </p>
-                    <p>Level 30</p>
+                    <p>Level {nextpingLevel}</p>
                   </div>
                 </div>
               </div>

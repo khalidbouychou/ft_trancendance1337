@@ -7,6 +7,10 @@ import { AuthContext } from "../../UserContext/Context";
 import { FaSearchengin } from "react-icons/fa";
 import SearchCard from "./components/searchCard/SearchCard.jsx";
 import userImage from "./assets/nouahidi.jpeg";
+import { CiSettings } from "react-icons/ci";
+import { CiLogout } from "react-icons/ci";
+import { height } from "@mui/system";
+
 
 const Sidebar = () => {
   const { user } = useContext(AuthContext);
@@ -151,7 +155,16 @@ const Sidebar = () => {
                 <img src={userImage}/>
               </div>
           </button>
-          <div className={styl.settings} style={{display: openSet}}></div>
+          <div className={styl.settings} style={{display: openSet}}>
+            <button >
+              <CiSettings style={{width: '20px', height: '20px'}}/>
+              <p >settings</p>
+            </button>
+            <button >
+              <CiLogout style={{width: '20px', height: '20px'}}/>
+              <p >settings</p>
+            </button>
+          </div>
         </div>
       </div>
     </div>

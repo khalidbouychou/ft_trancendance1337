@@ -8,7 +8,7 @@ from .models import Player as Player , PingData , TicData
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken ,TokenError
 from django.http import JsonResponse
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.http import HttpResponse
 from django.contrib.auth import login , logout as django_logout
 from datetime import timedelta
@@ -35,17 +35,38 @@ def health_check(request):
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
+
+    def search_users(self, request):
+        search_query = request.query_params.get('q', None)
+        if search_query:
+            users = Player.objects.filter(profile_name__icontains=search_query)
+            serializer = PlayerSerializer(users, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'No search query provided'}, status=status.HTTP_400_BAD_REQUEST)
+ 
+    def get_user_by_profile_name(self, request, username):
+        try:
+            print('username ==>', username)
+            user = Player.objects.get(username=username)
+            serializer = PlayerSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Player.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
     def generate_qr_code(self, request):
-        token = request.COOKIES.get('access')
+        token = request.COOKIES.get('access') 
         if not token:
-            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST) 
         try:
             user = AccessToken(token).user
             if user.two_factor:
                 return Response({'error': '2FA already enabled'}, status=status.HTTP_400_BAD_REQUEST)
             user.two_factor = True
             user.save()
-            return Response({'msg': '2FA enabled'}, status=status.HTTP_200_OK)
+            return Response({'msg': '2FA enabled'}, status=status.HTTP_200_OK) 
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -57,6 +78,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
             status_network='online',
         )
         user.save()
+        PingData.objects.create(player=user)
+        TicData.objects.create(player=user)
         return user
 
     def auth_intra(self, request):
@@ -222,6 +245,7 @@ class AuthUser(APIView):
 class SignupForm (generics.CreateAPIView):
     queryset = Player.objects.all()
     serializer_class = SignupSerializer
+    
     
 
 class SigninForm(generics.CreateAPIView):

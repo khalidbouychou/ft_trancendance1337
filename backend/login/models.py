@@ -27,7 +27,7 @@ class Player(AbstractUser):
     friends = models.ManyToManyField('self', symmetrical=True, through='Friend', blank=True)
     qrcode_path = models.CharField(max_length=255, default='', blank=False, null=False) 
     bool_login = models.BooleanField(default=False)
-    mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False) 
+    mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False)
     
     class Meta: 
         db_table = 'player' 

@@ -68,10 +68,12 @@ class SignupSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = Player.objects.create_user(
             username=validated_data['username'],
-            profile_name=validated_data['profile_name'] 
+            profile_name=validated_data['profile_name']
         )
         user.set_password(validated_data['password'])
         user.save()
+        PingData.objects.create(player=user)
+        TicData.objects.create(player=user)
         return user
     
 
