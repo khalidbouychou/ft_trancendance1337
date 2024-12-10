@@ -36,9 +36,10 @@ const Twofa = () => {
         setTwofa(res.data.user.two_factor);
         setEnable(res.data.user.two_factor);
         if (res.data.user.qrcode_path) {
-          // setTimeout(() => {
-            setQrcode(`${res.data.user?.qrcode_path}`);
-          // }, 1000);
+          console.log("useeffect --- > ", res);
+          setTimeout(() => {
+            setQrcode(`http://localhost:8000/${res.data.user?.qrcode_path}`);
+          }, 2000);
         }
       }
      
@@ -60,6 +61,7 @@ useEffect(() => {
         try {
           const res = await axios.get("http://localhost:8000/api/clearqrcode/", { withCredentials: true });
           if (res.status === 200){
+          console.log("useeffect 2 --- > ", res);
             await get_auth_user();
             setQrcode(res.data?.qrcode_path);
             // setQrcode("");
@@ -79,7 +81,7 @@ useEffect(() => {
         setQrcode("");
         const res = await axios.get(url, { withCredentials: true });
         if (res.status === 200) { 
-
+          console.log("useeffect 22 --- > ", res);
           setTimeout(() => {
             setQrcode(`${res.data.user?.qrcode_path}`);
           }, 1000);

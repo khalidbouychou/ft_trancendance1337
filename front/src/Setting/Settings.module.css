@@ -1,12 +1,12 @@
 .Settings{
 	display: flex;
 	width: 100%;
-	height: 100%;
+	/* height: 100%; */
     justify-content: center;
 	overflow: hidden;
 }
 
-.content {
+/* .content {
 	margin: 5%;
 	width: 90%;
 	height: 1200px;
@@ -15,13 +15,34 @@
 	align-items: center;
     justify-content: center;
     gap: 20px;
-    /* overflow: scroll; */
-    /* @media (max-width: 768px) {
-        width: 95%;
-    } */
+} */
+
+.content {
+	display: flex;
+	width: 80%;
+	height: 90%;
+	min-height: 1100px;
+	/* justify-content: center; */
+	align-items: center;
+	margin-top: 80px;
+    gap: 10px;
+	flex-direction: column;
+    /* background-color: aqua; */
 }
 
-.head h1 
+.head h2
+{
+	text-align: center;
+    font-size:40px;
+	font-weight:300;
+	letter-spacing:10px;
+    text-transform: uppercase;
+    display: grid;
+    align-items: center;
+    color: white;
+}
+
+/* .head h1 
 {
     text-align: center;
     font-size:50px; font-weight:300; letter-spacing:15px;
@@ -35,15 +56,16 @@
         font-weight:100;
         letter-spacing:4px;
     }
-}
+} */
 
 .last {
-    /* width: 100%; */
-    height: 600px;
+    width: 100%;
+    height: 70%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    /* background-color: red; */
     @media (max-width: 1280px) {
         width: 100%;
     }
@@ -237,9 +259,10 @@
 }
 
 .updateinfos {
-    /* border: 1px solid rgb(222, 225, 15); */
-    height: 500px;
-    width: 100%;
+    /* border: 1px solid rgb(219, 23, 249); */
+    /* background-color: aquamarine; */
+    height: 30%;
+    width: 80%;
     /* margin-bottom: 100px; */
     display: flex;
     flex-direction: row;
@@ -251,8 +274,8 @@
 
 .delete{
     /* border: 1px solid rgb(0, 195, 209); */
-     height: 80%;
-     width: 30%;
+     height: 70%;
+     width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -260,18 +283,18 @@
 }
 
 .data {
-    /* border: 1px solid rgb(255, 0, 0); */
+    border: 5px solid rgb(255, 0, 0);
     width: 90%;
     height: 90%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 40px;
 }
 
 .data button {
-    width: 100%;
+    width: 50%;
     height: 20%;
     border: none;
     font-size: 20px;
@@ -282,7 +305,7 @@
 }
 
 .deletebtn {
-    background-color: rgb(213, 61, 61);
+    /* background-color: rgb(213, 61, 61); */
 }
 .deletebtn:hover {
     background-color: rgb(237, 90, 90);
@@ -292,21 +315,22 @@
     background-color: rgb(51, 28, 186);
 }
 .anonymize:hover {
-    background-color: rgb(145, 131, 228);
+    background-color: rgb(215, 238, 0);
 }
 
 
 .userinfos{
-   /* border: 1px solid rgb(222, 225, 15); */
-    height: 60%;
-    width: 50%;
-    padding-top: 50px;
-    padding-left: 50px;
+   /* background-color: #7667D9; */
+    height: 100%;
+    width: 70%;
+    min-width: 70%;
+    /* padding-top: 50px; */
+    /* padding-left: 50px; */
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-evenly;
     align-items: center;
-    gap: 100px;
+    /* gap: 100px; */
 }
 .imgcover {
     position: relative;
@@ -351,8 +375,8 @@
 }
 
 .profile input {
-    width: 100%;
-    height: 200px;
+    width: 400px;
+    height: 70px;
     border: none;
     border-bottom: 1px solid black;
     /* background-color: #7667D9; */
@@ -365,8 +389,8 @@
 }
 
 .profile button {
-    width: 100%;
-    height: 200px;
+    width: 420px;
+    height: 70px;
     border: none;
     background-color: #271e62;
     color: white;

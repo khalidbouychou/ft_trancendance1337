@@ -109,7 +109,7 @@ useEffect(() => {
             <button className={styl.deletebtn}>Delete Account</button>
           </div>  
         </div>
-      {/* </div> */} 
+      {/* </div>  */}
     </div>
   );
 }
@@ -118,9 +118,11 @@ const Settings = () => {
   return (
     <div className={styl.Settings}>
       <div className={styl.content}>
-        <div className={styl.head}><h1>SETTINGS</h1></div>
+        {/* <div className={styl.head}><h2>SETTINGS</h2></div> */}
         <UserInfos />
-        <div className={styl.last}><Twofa/></div>
+        <div className={styl.last}>
+          <Twofa/>
+          </div>
       </div>
     </div>
   );

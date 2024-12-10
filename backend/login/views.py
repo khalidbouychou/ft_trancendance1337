@@ -1,20 +1,19 @@
 
 from rest_framework.response import Response
+from django.http import JsonResponse
 import requests
 from django.contrib.auth.models import User
-from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer
-from .models import Player as Player
+from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer , PingDataSerializer , TicDataSerializer
+from .models import Player as Player , PingData , TicData
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken ,TokenError
-
-from django.contrib.auth import authenticate
+from django.http import JsonResponse
+from django.contrib.auth import authenticate, get_user_model
 from django.http import HttpResponse
 from django.contrib.auth import login , logout as django_logout
 from datetime import timedelta
-import os 
+import os
 from rest_framework import generics
-from django.forms.models import model_to_dict
-import jwt
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.views import APIView
 import pyotp
@@ -27,6 +26,7 @@ import random
 import cloudinary
 import cloudinary.uploader
 from django.core.files.storage import default_storage
+from django.db.models import Sum
 #---------------------------------CHECK HEALTH OF THE BACKEND-----------------------------------------------------------
 
 def health_check(request):
@@ -38,17 +38,38 @@ def health_check(request):
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
+
+    def search_users(self, request):
+        search_query = request.query_params.get('q', None)
+        if search_query:
+            users = Player.objects.filter(profile_name__icontains=search_query)
+            serializer = PlayerSerializer(users, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'No search query provided'}, status=status.HTTP_400_BAD_REQUEST)
+ 
+    def get_user_by_profile_name(self, request, username):
+        try:
+            print('username ==>', username)
+            user = Player.objects.get(username=username)
+            serializer = PlayerSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Player.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
     def generate_qr_code(self, request):
-        token = request.COOKIES.get('access')
+        token = request.COOKIES.get('access') 
         if not token:
-            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST) 
         try:
             user = AccessToken(token).user
             if user.two_factor:
                 return Response({'error': '2FA already enabled'}, status=status.HTTP_400_BAD_REQUEST)
             user.two_factor = True
             user.save()
-            return Response({'msg': '2FA enabled'}, status=status.HTTP_200_OK)
+            return Response({'msg': '2FA enabled'}, status=status.HTTP_200_OK) 
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -60,6 +81,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
             status_network='online',
         )
         user.save()
+        PingData.objects.create(player=user)
+        TicData.objects.create(player=user)
         return user
 
     def auth_intra(self, request):
@@ -151,8 +174,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             return False, None, "No valid authentication found"
         except Exception as e:
             return False, None, f"Authentication error: {str(e)}"
-    
- 
 
 
 #------------------------------------LOGIN INTRA------------------------------------------------------------
@@ -227,6 +248,7 @@ class AuthUser(APIView):
 class SignupForm (generics.CreateAPIView):
     queryset = Player.objects.all()
     serializer_class = SignupSerializer
+    
     
 
 class SigninForm(generics.CreateAPIView):
@@ -348,7 +370,7 @@ class VerifyOtp(APIView):
             response.data = {'user': PlayerSerializer(user).data} 
             return response
 
-        return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST) 
 
 class ClearQrcode (APIView):
     authentication_classes = [SessionAuthentication]
@@ -390,3 +412,65 @@ class UpdateProfile (APIView):
             user.save()
         return Response({'msg': 'Profile updated' , "new data" : PlayerSerializer(user).data}, status=status.HTTP_200_OK)
 #-----------------------------------2FA-------------------------------------------------------------
+
+def get_ping_data_by_username(request, username):
+    Player = get_user_model()
+    try:
+        player = Player.objects.get(username=username)
+    except Player.DoesNotExist:
+        return JsonResponse({'error': 'Player not found'}, status=404)
+    pingdata = PingData.objects.filter(player=player)
+    serializer = PingDataSerializer(pingdata, many=True)
+    data = serializer.data
+    print("--------->", data)
+    return JsonResponse(data, safe=False)
+
+def get_all_ping_data(request):
+    players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game') 
+    
+    all_ping_data = [] 
+
+    for player in players:
+        pingdata = PingData.objects.filter(player=player).order_by('-exp_game', '-wins')
+        serializer = PingDataSerializer(pingdata, many=True)
+        
+        all_ping_data.append({
+            'username': player.username,
+            'profile_name': player.profile_name,
+            'avatar': player.avatar,
+            'data': serializer.data,
+        })
+
+    return JsonResponse(all_ping_data, safe=False)
+
+def get_all_tic_data(request):
+    players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game')
+
+    all_tic_data = []
+
+    for player in players:
+        ticdata = TicData.objects.filter(player=player)
+        serializer = TicDataSerializer(ticdata, many=True)
+        
+        sorted_data = sorted(serializer.data, key=lambda x: (-x['exp_game'], -x['wins']))
+
+        all_tic_data.append({
+            'username': player.username,
+            'profile_name': player.profile_name,
+            'avatar': player.avatar,
+            'data': sorted_data,
+        })
+
+    return JsonResponse(all_tic_data, safe=False)
+
+def get_tic_data_by_username(request, username):
+    Player = get_user_model()
+    try:
+        player = Player.objects.get(username=username)
+    except Player.DoesNotExist:
+        return JsonResponse({'error': 'Player not found'}, status=404)	
+    ticdata = TicData.objects.filter(player=player)
+    serializer = TicDataSerializer(ticdata, many=True)
+    data = serializer.data
+    print("--------->", data)
+    return JsonResponse(data, safe=False)

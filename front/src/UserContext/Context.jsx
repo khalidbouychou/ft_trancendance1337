@@ -58,7 +58,7 @@ export default function AuthProvider({ children }) {
               closeOnClick: true
             });
           }
-          navigate("/home");
+          navigate(`/profile/${res.data.user.profile_name}`);
         }
       }
     } catch (error) {
@@ -66,7 +66,7 @@ export default function AuthProvider({ children }) {
         position: "top-right",
         autoClose: 1000
       });
-      navigate("/");
+      navigate(`/profile/${res.data.user.profile_name}`);
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,8 @@ export default function AuthProvider({ children }) {
           res.data.user.otp_verified &&
           navigate("/otp");
         if (window.location.pathname === "/login") {
-          navigate("/home");
+          // navigate("/home");
+          navigate(`/profile/${res.data.user.profile_name}`);
         }
       }
     } catch (error) {
