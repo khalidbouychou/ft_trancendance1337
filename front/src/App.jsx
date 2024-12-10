@@ -24,7 +24,7 @@ const LinkGame = () => {
 }
 
 const handleUpload = () => {
-  const file = document.getElementById('file').files[0];
+  const file = document.getElementById('xx').files[0];
   if (file.type === 'image/jpeg' || file.type === 'image/png') {
     const image = document.getElementById('image');
   image.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="image" />`;
@@ -45,7 +45,7 @@ const UploadImage = () => {
           <h1>Upload Image</h1>
        <div className={style.upload}>
     
-          <input type="file" id="file" className={style.file} />
+          <input type="file" id="xx" className={style.file} />
           <input type="text" className={style.text} placeholder="Enter Image Name" />
           <button type="submit" className={style.submit} onClick={handleUpload}> Upload</button>
        </div>

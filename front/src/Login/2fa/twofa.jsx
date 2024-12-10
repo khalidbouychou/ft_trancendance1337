@@ -36,9 +36,9 @@ const Twofa = () => {
         setTwofa(res.data.user.two_factor);
         setEnable(res.data.user.two_factor);
         if (res.data.user.qrcode_path) {
-          setTimeout(() => {
-            setQrcode(`https://localhost/${res.data.user?.qrcode_path}`);
-          }, 2000);
+          // setTimeout(() => {
+            setQrcode(`${res.data.user?.qrcode_path}`);
+          // }, 1000);
         }
       }
      
@@ -81,8 +81,8 @@ useEffect(() => {
         if (res.status === 200) { 
 
           setTimeout(() => {
-            setQrcode(`http://localhost:8000/${res.data.user?.qrcode_path}`);
-          }, 2000);
+            setQrcode(`${res.data.user?.qrcode_path}`);
+          }, 1000);
         }
       } catch (error) {
         // setQrcode("");

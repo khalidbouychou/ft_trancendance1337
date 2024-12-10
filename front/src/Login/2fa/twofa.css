@@ -124,6 +124,7 @@
     /* background-color: #fff; */
     border: 2px solid #000;
     outline: none;
+    color:#000;
 }
 
 .btn{
@@ -164,6 +165,7 @@
     align-items: center;
     flex-direction: column;
     width : 50%;
+    
 }
 
 .cont{

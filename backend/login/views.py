@@ -24,6 +24,9 @@ from rest_framework.decorators import api_view  , permission_classes , authentic
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 import random
+import cloudinary
+import cloudinary.uploader
+from django.core.files.storage import default_storage
 #---------------------------------CHECK HEALTH OF THE BACKEND-----------------------------------------------------------
 
 def health_check(request):
@@ -267,6 +270,15 @@ class UserStatus(APIView):
         user = request.user
         return Response({'user': PlayerSerializer(user).data}, status=status.HTTP_200_OK)
 
+
+# Configuration       
+cloudinary.config( 
+    cloud_name = "dkfrrfxa1", 
+    api_key = "575644558498264", 
+    api_secret = "tIbvrejZjv7e2M6WVMTRcL0ZDYw", # Click 'View API Keys' above to copy your API secret
+    secure=True
+)
+
 class GenerateQRcode(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -281,7 +293,11 @@ class GenerateQRcode(APIView):
         num = number_random % 1000
         path = f'uploads/{user.username}_{num}.png'
         url.save(path)
-        user.qrcode_path = path
+        path_url = f'/app/{path}'
+        cludinary_url = cloudinary.uploader.upload(path_url)
+        qrcode_url = cludinary_url['url']
+        # os.remove(path)
+        user.qrcode_path = qrcode_url
         user.save()
         response = Response({'msg': 'QR code generated'}, status=status.HTTP_200_OK)  
         response.data = {
@@ -348,6 +364,8 @@ class ClearQrcode (APIView):
         response.data = {'user': PlayerSerializer(user).data}
         return response 
 
+
+
 class UpdateProfile (APIView):
     authentication_classes = [SessionAuthentication] 
     permission_classes = [IsAuthenticated]
@@ -355,13 +373,20 @@ class UpdateProfile (APIView):
     def put(self,request):
         data = request.data
         user = request.user
-        getuser = Player.objects.filter(username=user.username).first() 
+        update = False
         new_profile_name = data.get('profile_name')
-        new_avatar = data.get('avatar')
+        new_avatar = data.get('avatar') 
         if new_profile_name is not None:
-            getuser.profile_name = new_profile_name
+            user.profile_name = new_profile_name
+            update = True
         if new_avatar is not None:
-            getuser.avatar = new_avatar
-        getuser.save()
-        return Response({'msg': 'Profile updated' , "new data" : PlayerSerializer(getuser).data}, status=status.HTTP_200_OK)
+            file_obj = new_avatar
+            file_name = default_storage.save(f'uploads/{file_obj.name}', file_obj)
+            image_path = f'/app/{file_name}'
+            cludinary_url = cloudinary.uploader.upload(image_path)
+            user.avatar = cludinary_url['url']
+            update = True
+        if update:
+            user.save()
+        return Response({'msg': 'Profile updated' , "new data" : PlayerSerializer(user).data}, status=status.HTTP_200_OK)
 #-----------------------------------2FA-------------------------------------------------------------

@@ -27,6 +27,7 @@
     font-size:50px; font-weight:300; letter-spacing:15px;
     text-transform: uppercase;
     display: grid;
+    height: 10px;
     align-items: center;
     color: white;
 	@media (max-width: 768px) {
@@ -38,8 +39,11 @@
 
 .last {
     /* width: 100%; */
-    height: 100%;
+    height: 600px;
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     @media (max-width: 1280px) {
         width: 100%;
     }
@@ -234,14 +238,14 @@
 
 .updateinfos {
     /* border: 1px solid rgb(222, 225, 15); */
-    height: 90%;
+    height: 500px;
     width: 100%;
-    margin-bottom: 100px;
+    /* margin-bottom: 100px; */
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 80px;
+    /* gap: 80px; */
 }
 
 
@@ -343,12 +347,12 @@
     height: 50%;
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    
 }
 
 .profile input {
     width: 100%;
-    height: 50px;
+    height: 200px;
     border: none;
     border-bottom: 1px solid black;
     /* background-color: #7667D9; */
@@ -357,11 +361,12 @@
     padding-left: 20px;
     border-radius: 5px;
     color: black;
+    margin-bottom: 30px;
 }
 
 .profile button {
     width: 100%;
-    height: 50px;
+    height: 200px;
     border: none;
     background-color: #271e62;
     color: white;
@@ -378,5 +383,5 @@
     border-right:  1px solid white;
     background-color: white;
     height: 300px;
-    width: 3px;
+    width: 3px;;
 }
