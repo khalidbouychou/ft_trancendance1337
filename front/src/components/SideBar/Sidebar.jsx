@@ -27,13 +27,10 @@ const Sidebar = () => {
   const [gameColor, setGameColor] = useState('white')
   const [chatColor, setChatColor] = useState('white')
   const [profileColor, setProfileColor] = useState('yellow')
+  const [menu, setMenu] = useState(false)
 
   const handelNotifOpen = () => {
     setOpenNotf(openNotf === "none" ? "flex" : "none");
-  }
-
-  const handelSetOpen = () => {
-    setOpenSet(openSet === "none" ? "flex" : "none");
   }
 
   const handelSetting = () => {
@@ -83,8 +80,6 @@ const Sidebar = () => {
       }
       if (notifRef.current && !notifRef.current.contains(event.target))
         setOpenNotf('none')
-      if (settRef.current && !settRef.current.contains(event.target))
-        setOpenSet('none')
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -99,11 +94,24 @@ const Sidebar = () => {
     }
   };
 
+  const handelClick = (e) => {
+    console.log("menuid: ", e)
+    if (settRef.current && !settRef.current.contains(e.target)) {
+      setMenu(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("click", handelClick);
+    return () => {
+      document.removeEventListener("click", handelClick);
+    };
+  }, []);
+
   return (
     <div className={styl.navBar}>
       <div className={styl.logo}>
         <img src={pinglogo}/>
-        <p >Ping Pong</p>
+        {/* <p >Ping Pong</p> */}
       </div>
       <div className={styl.search}>
         <div className={styl.iconSearch}>
@@ -157,23 +165,30 @@ const Sidebar = () => {
         </button>
         <div className={styl.sett}>
           <button className={styl.intImg}
-          onClick={handelSetOpen}
+          onClick={()=>
+            {
+              setMenu(true)
+              console.log("menu: ", menu)
+            }
+          }
           ref={settRef}
           >
               <div className={styl.extImg}>
               <img src={user.user.avatar}/>
               </div>
           </button>
-          <div className={styl.settings} style={{display: openSet}}>
-            <button >
+          {menu &&
+          <div id='menu' className={styl.settings}>
+            <Link className={styl.links} to='setting'>
               <CiSettings style={{width: '20px', height: '20px'}}/> 
-              <p >settings</p>
-            </button>
-            <button onClick={handelSetting}>
+              settings
+            </Link>
+            <Link className={styl.links} to='logout'>
               <CiLogout style={{width: '20px', height: '20px'}}/>
-              <p >settings</p>
-            </button>
+              logout
+            </Link>
           </div>
+          }
         </div>
       </div>
     </div>

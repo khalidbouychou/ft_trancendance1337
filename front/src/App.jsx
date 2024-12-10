@@ -21,40 +21,6 @@ import Settings from "./Setting/Setting.jsx";
 import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
 
 
-// const handleUpload = () => {
-//   const file = document.getElementById('xx').files[0];
-//   if (file.type === 'image/jpeg' || file.type === 'image/png') {
-//     const image = document.getElementById('image');
-//   image.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="image" />`;
-//   console.log("name -----> ", file.name);
-//   console.log("type ------> ", file.type);
-//   }
-//   else {
-//     alert('Please upload a valid image');
-//   }
-
-// }
-
-// const UploadImage = () => {
-//   return (
-//     <>
-//     <div className={style.imgholder}>
-//       <div className={style.cover}>
-//           <h1>Upload Image</h1>
-//        <div className={style.upload}>
-    
-//           <input type="file" id="xx" className={style.file} />
-//           <input type="text" className={style.text} placeholder="Enter Image Name" />
-//           <button type="submit" className={style.submit} onClick={handleUpload}> Upload</button>
-//        </div>
-//       <div id="image" className={style.outputimg}>
-//       </div>
-//       </div>
-//     </div>
-//     </>
-//   );
-// }
-
 function App() {
   return (
     <AuthProvider>

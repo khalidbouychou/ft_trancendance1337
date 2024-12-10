@@ -134,7 +134,7 @@ useEffect(() => {
 
   return (
     <>
-      <div className="container">
+      {/* <div className="container"> */}
         <div className="qrcode-container">
           <div className="switch-container">
             <div className="on">
@@ -214,7 +214,7 @@ useEffect(() => {
             </>
           )}
         </div>
-      </div>
+      {/* </div> */}
       <ToastContainer />
     </>
   );

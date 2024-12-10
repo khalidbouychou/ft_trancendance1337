@@ -120,6 +120,7 @@ const Settings = () => {
       <div className={styl.content}>
         {/* <div className={styl.head}><h2>SETTINGS</h2></div> */}
         <UserInfos />
+      
         <div className={styl.last}>
           <Twofa/>
           </div>

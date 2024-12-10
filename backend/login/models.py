@@ -16,7 +16,7 @@ class Player(AbstractUser):
     )
     username = models.CharField(max_length=255, default='default_username', unique=True, blank=False)
     profile_name = models.CharField(max_length=200, default='default_username')
-    avatar = models.URLField(max_length=200, default='default_avatar')
+    avatar = models.URLField(max_length=200, default='https://upload.wikimedia.org/wikipedia/commons/1/1e/Default-avatar.jpg')
     email = models.EmailField(max_length=200, default='default')
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
     status_game = models.CharField(max_length=10, choices=GAME_STATUS, default='offline')

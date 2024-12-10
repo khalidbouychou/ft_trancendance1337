@@ -35,10 +35,11 @@ export default function AuthProvider({ children }) {
         navigate("/login");
       }
       const code = urlParams.get("code");
+      let res = null;
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
-        const res = await axios.post(
+        res = await axios.post(
           `http://localhost:8000/api/login/`,
           params,
           {
@@ -71,10 +72,10 @@ export default function AuthProvider({ children }) {
       setLoading(false);
     }
   }
-
+  let res = null;
   async function get_auth_user() {
     try {
-      const res = await axios.get(`http://localhost:8000/api/user/`, {
+      res = await axios.get(`http://localhost:8000/api/user/`, {
         withCredentials: true
       });
 

@@ -10,7 +10,7 @@ import Statistic from "./components/statistc/Statistic";
 import CardFriend from "./components/History/components/CardFriend/CardFriend";
 
 const Profile = ({me}) => {
-  const { username } = useParams();
+  let { username } = useParams();
   const { user } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
@@ -35,10 +35,9 @@ const Profile = ({me}) => {
   useEffect(() => {
     const fetchData = async () => {
       if (!username) return;
-  
+      username = user?.user?.username;
       setIsLoading(true);
       setIsMyProfil(1);
-  
       try {
         const response = await fetch(
           `http://localhost:8000/api/getuser/${username}/`
@@ -55,7 +54,7 @@ const Profile = ({me}) => {
         const data = await response.json();
         setUserData(data);
   
-        if (data.profile_name === user?.user?.profile_name) {
+        if (data.username === user?.user?.username) {
           setIsMyProfil(0);
         }
   
