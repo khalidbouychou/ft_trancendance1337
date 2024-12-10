@@ -44,7 +44,7 @@ const Layout = () => {
     <GridLoader color="#fff" loading={loading} size={20} />
   </div> :
     <div className={style.EntirePage}>
-          {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> }
+          {/* {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> } */}
            <Outlet />
     </div>
   );
