@@ -3,18 +3,12 @@ import styl from "./Leaderboard.module.css";
 import { ImList2 } from "react-icons/im";
 
 const Leaderboard = () => {
-  const [openChooseGame, setOpenChooseGame] = useState("none");
-  const [game, setGame] = useState("ping");
   const [data, setData] = useState([]);
-
-  const handleChooseClick = () => {
-    setOpenChooseGame(openChooseGame === "none" ? "flex" : "none");
-  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/${game}data`);
+        const response = await fetch(`http://localhost:8000/api/pingdata`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -30,12 +24,7 @@ const Leaderboard = () => {
     };
 
     fetchData();
-  }, [game]);
-
-  const handleGameChange = (selectedGame) => {
-    setGame(selectedGame);
-    setOpenChooseGame("none");
-  };
+  }, []);
 
   return (
     <div className={styl.leaderboard}>
@@ -45,17 +34,6 @@ const Leaderboard = () => {
         <p id={styl.Wins}>Wins</p>
         <p id={styl.Loses}>Loses</p>
         <p id={styl.Loses}>Level</p>
-        <button className={styl.chooseGame} onClick={handleChooseClick}>
-          <ImList2 />
-          <div className={styl.games} style={{ display: openChooseGame }}>
-            <button onClick={() => handleGameChange("ping")}>
-              <p>Ping Pong</p>
-            </button>
-            <button onClick={() => handleGameChange("tic")}>
-              <p>Tic Tac Toe</p>
-            </button>
-          </div>
-        </button>
       </div>
       <div className={styl.pingRanking}>
         {data.map((player, index) => {
@@ -80,7 +58,7 @@ const Leaderboard = () => {
                 <p>{playerData.losses ?? "N/A"}</p>
               </div>
               <div className={styl.lvl}>
-                <p>{playerData.exp_game / 100 ?? "N/A"}</p>
+                <p>{playerData.exp_game ?? "N/A"}</p>
               </div>
             </button>
           );

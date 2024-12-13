@@ -4,18 +4,8 @@
 	height: 100%;
     justify-content: center;
 	overflow: hidden;
+    background-color: #7667D9;
 }
-
-/* .content {
-	margin: 5%;
-	width: 90%;
-	height: 1200px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-    justify-content: center;
-    gap: 20px;
-} */
 
 .content {
 	display: flex;
@@ -27,7 +17,7 @@
 	margin-top: 80px;
     gap: 10px;
 	flex-direction: column;
-    /* background-color: aqua; */
+    background-color: aqua;
 }
 
 .head h2

@@ -8,8 +8,11 @@ import MatchHistory from "./components/matchHistory/MatchHistory";
 import Leaderboard from "./components/leaderboard/Leaderboard";
 import Statistic from "./components/statistc/Statistic";
 import CardFriend from "./components/History/components/CardFriend/CardFriend";
+import { FaMedal } from "react-icons/fa";
+import { PiGameControllerFill } from "react-icons/pi";
+import { GiCrossMark } from "react-icons/gi";
 
-const Profile = ({me}) => {
+const Profile = ({ me }) => {
   let { username } = useParams();
   const { user } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
@@ -17,16 +20,11 @@ const Profile = ({me}) => {
   const [ismyprofil, setIsMyProfil] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("Leaderboard");
-  const [pingLevel, setPingLevel] = useState('1')
-  const [nextpingLevel, setNextPingLevel] = useState('1')
-  const [pingExp, setPingExp] = useState('0')
-  const [maxPingExp, setMaxPingExp] = useState('0')
-  const [pingPercentage, setPingPercentage] = useState('')
-  const [ticLevel, setTicLevel] = useState('1')
-  const [nextticLevel, setNextTicLevel] = useState('1')
-  const [ticExp, setTicExp] = useState('0')
-  const [maxticExp, setMaxTicExp] = useState('0')
-  const [ticPercentage, setTicPercentage] = useState('')
+  const [pingLevel, setPingLevel] = useState("1");
+  const [nextpingLevel, setNextPingLevel] = useState("1");
+  const [pingExp, setPingExp] = useState("0");
+  const [maxPingExp, setMaxPingExp] = useState("0");
+  const [pingPercentage, setPingPercentage] = useState("");
 
   const handelClick = (section) => {
     setActiveSection(section);
@@ -42,7 +40,7 @@ const Profile = ({me}) => {
         const response = await fetch(
           `http://localhost:8000/api/getuser/${username}/`
         );
-  
+
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error("User not found");
@@ -50,70 +48,47 @@ const Profile = ({me}) => {
             throw new Error("Failed to fetch user data");
           }
         }
-  
+
         const data = await response.json();
         setUserData(data);
-  
+
         if (data.username === user?.user?.username) {
           setIsMyProfil(0);
         }
-  
+
         const pingResponse = await fetch(
           `http://localhost:8000/api/pingdata/${username}/`
         );
-  
+
         if (!pingResponse.ok) {
           throw new Error("Failed to fetch ping data");
         }
-  
+
         const pingData = await pingResponse.json();
-  
+
         if (pingData && pingData.length > 0) {
           const { exp_game } = pingData[0];
           const calculatedLevel = Math.floor(exp_game / 100);
           const calculatedNextLevel = calculatedLevel + 1;
           const maxExperience = calculatedNextLevel * 100;
-  
+
           setPingExp(exp_game);
           setMaxPingExp(maxExperience);
           setPingLevel(calculatedLevel);
           setNextPingLevel(calculatedNextLevel);
-          setPingPercentage(Math.floor(exp_game / 100) * 10)
+          setPingPercentage(Math.floor((exp_game / maxExperience) * 100));
         } else {
           throw new Error("Ping data is invalid or empty");
         }
-
-        const ticResponse = await fetch(`http://localhost:8000/api/ticdata/${username}/`);
-        if (!ticResponse.ok) {
-          throw new Error("Failed to fetch Tic Tac Toe data");
-        }
-        const ticData = await ticResponse.json();
-        console.log("Tic Tac Toe data:", ticData);
-        if (ticData && ticData.length > 0) {
-          const { exp_game } = ticData[0];
-          const calculatedLevel = Math.floor(exp_game / 100);
-          const calculatedNextLevel = calculatedLevel + 1;
-          const maxExperience = calculatedNextLevel * 100;
-  
-          setTicExp(exp_game);
-          setMaxTicExp(maxExperience);
-          setTicLevel(calculatedLevel);
-          setNextTicLevel(calculatedNextLevel);
-          setTicPercentage(Math.floor(exp_game / 100) * 10)
-        } else {
-          throw new Error("Ping data is invalid or empty");
-        }
-        } catch (error) {
-          setError(error.message);
-        } finally {
-          setIsLoading(false);
-        }
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
-  
+
     fetchData();
   }, [username, user]);
-
-  console.log('expsstic', ticPercentage)
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -122,8 +97,6 @@ const Profile = ({me}) => {
   if (error) {
     return <div>Error: {error}</div>;
   }
-
-  console.log('===>>',userData)
 
   return (
     <div className={styl.profile}>
@@ -157,13 +130,37 @@ const Profile = ({me}) => {
                   </p>
                 </p>
               </div>
-              <div className={styl.levels}>
+              <div className={styl.Res}>
+                <div className={styl.stt}>
+                  <div className={styl.rs}>
+                    <div className={styl.Side}>
+                      <FaMedal className={styl.icon} />
+                    </div>
+                    <div className={styl.resName}>Wins</div>
+                    <div className={styl.Side}>4</div>
+                  </div>
+                  <hr />
+                  <div className={styl.rs}>
+                    <div className={styl.Side}>
+                      <GiCrossMark className={styl.icon} />
+                    </div>
+                    <div className={styl.resName}>Lose</div>
+                    <div className={styl.Side}>2</div>
+                  </div>
+                  <hr />
+                  <div className={styl.rs}>
+                    <div className={styl.Side}>
+                      <PiGameControllerFill className={styl.icon} />
+                    </div>
+                    <div className={styl.resName}>Games</div>
+                    <div className={styl.Side}>4</div>
+                  </div>
+                </div>
                 <div className={styl.level}>
                   <div className={styl.tmp}>
                     <p>Level {pingLevel}</p>
-                    <div className={styl.gameName}>Ping Pong</div>
                     <p>
-                      {pingExp} /{" "}
+                      {pingExp} / {" "}
                       <p
                         style={{
                           color: "rgba(255, 255, 255, 0.4)",
@@ -175,39 +172,17 @@ const Profile = ({me}) => {
                     </p>
                   </div>
                   <div className={styl.extLvl}>
-                    <div className={styl.intLvl} style={{ width: `${pingPercentage}%` }}></div>
+                    <div
+                      className={styl.intLvl}
+                      style={{ width: `${pingPercentage}%` }}
+                    ></div>
                   </div>
                   <div className={styl.tmp} style={{ alignItems: "start" }}>
                     <p
-                      style={{ color: "rgba(255, 255, 255, 0.4)", left: "2px" }}
-                    >
-                      Next Level
-                    </p>
-                    <p>Level {nextpingLevel}</p>
-                  </div>
-                </div>
-                <div className={styl.level}>
-                  <div className={styl.tmp}>
-                    <p>Level {ticLevel}</p>
-                    <div className={styl.gameName}>Tic Tac Toe</div>
-                    <p>
-                      {ticExp} /{" "}
-                      <p
-                        style={{
-                          color: "rgba(255, 255, 255, 0.4)",
-                          left: "2px",
-                        }}
-                      >
-                        {maxticExp}
-                      </p>
-                    </p>
-                  </div>
-                  <div className={styl.extLvl}>
-                    <div className={styl.intLvl} style={{ width: `${ticPercentage}%` }}></div>
-                  </div>
-                  <div className={styl.tmp} style={{ alignItems: "start" }}>
-                    <p
-                      style={{ color: "rgba(255, 255, 255, 0.4)", left: "2px" }}
+                      style={{
+                        color: "rgba(255, 255, 255, 0.4)",
+                        left: "2px",
+                      }}
                     >
                       Next Level
                     </p>
@@ -257,11 +232,11 @@ const Profile = ({me}) => {
           <div className={styl.side2}>
             <div className={styl.headBut}>
               <button>My Friends</button>
-              <button style={{display: 'none'}}>Blocked Friends</button>
+              <button style={{ display: "none" }}>Blocked Friends</button>
             </div>
             <div className={styl.displayFr}>
               <CardFriend />
-              <CardFriend />hb
+              <CardFriend />
             </div>
             <div className={styl.searchFr}>
               <input type="text" placeholder="Search" />
