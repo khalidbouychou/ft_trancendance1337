@@ -7,29 +7,44 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/4.2/ref/settings/
+https://docs.djangoproject.com/en/4.2/ref/settings/ 
 """
 
-from pathlib import Path
+from pathlib import Path 
 import os
-from datetime import timedelta
-from dotenv import load_dotenv
+from datetime import timedelta 
+from django.conf import settings
+from corsheaders.defaults import default_headers
 
+from dotenv import load_dotenv
 # Load the .env file
 load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+BASE_DIR = Path(__file__).resolve().parent.parent  
+# Add this setting to the end of the file or before the MIDDLEWARE setting
+CSRF_TRUSTED_ORIGINS = [
+    'https://127.0.0.1', 
+    'http://127.0.0.1', 
+    'http://localhost',
+    'https://localhost',
+    'http://localhost:8000', 
+    'https://127.0.0.1:5173',
+    "http://localhost:5173",
+]
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-gyx%6(g(2=e_y!!4_^&9!p=87&73$jlc(_*yhj1q*t=i@qvx&@')  # Ensure SECRET_KEY is set in .env
+# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-DEBUG = os.getenv('DEBUG', 'True') == 'True'  # Load from environment; convert to boolean
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-ALLOWED_HOSTS = ['*']  # Use specific domains in production
+# SECURITY WARNING: don't run with debug turned on in production! 
+DEBUG = True # Set to False in production
+ 
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 # Application definition
-INSTALLED_APPS = [
+
+INSTALLED_APPS = [ 
     'daphne',
     'channels',
     'corsheaders',
@@ -39,14 +54,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt.token_blacklist',  
     'rest_framework',
     'login',
     'pongame',
     'matches',
     'chat',
     'notification',
-    'xo_game'
+    # 'xo_game'
 ]
 
 MIDDLEWARE = [
@@ -65,10 +80,17 @@ ASGI_APPLICATION = 'api.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [("redis", 6379)],  # Use the service name from docker-compose
+        # },
     },
-}
+} 
+
 
 ROOT_URLCONF = 'api.urls'
+APPEND_SLASH = True
+# BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMPLATES = [
     {
@@ -90,19 +112,14 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 # Database configuration
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': "postgres",
-    #     'USER': "postgres",
-    #     'PASSWORD': "postgres",
-    #     'HOST': "postgres",
-    #     'PORT': "5432",
-    # }
-
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-}
+        'ENGINE': 'django.db.backends.postgresql', 
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"), 
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"), 
+        'HOST': os.getenv("POSTGRES_HOST"),
+        'PORT': os.getenv("POSTGRES_PORT"),
+    }
 }
 
 # Password validation
@@ -127,15 +144,22 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
-STATIC_URL = 'static/'
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+
+
 
 # Default primary key field type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' 
 
 # CORS settings
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = [
+
+CORS_ALLOW_HEADERS =  list(default_headers) + [
     'accept',
     'accept-encoding',
     'authorization',
@@ -146,18 +170,35 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
     'withcredentials',  
+    'user'
+]
+#************  khbouych ************ 
+# STATIC_URL = 'static/'
+STATIC_URL = 'uploads/'
+
+
+STATICFILES_DIRS = [
+    BASE_DIR / "uploads",
+    # BASE_DIR / "static",
+    
 ]
 
-# JWT settings
+
+# *************** jwt ********* 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+
 }
+
+
+
+
 
 AUTH_USER_MODEL = 'login.Player'
 SIMPLE_JWT = {
-   'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+   'ACCESS_TOKEN_LIFETIME': timedelta(hours=5),
    'REFRESH_TOKEN_LIFETIME': timedelta(days=90),
    'ROTATE_REFRESH_TOKENS': True,
    'BLACKLIST_AFTER_ROTATION': True,
@@ -166,18 +207,51 @@ SIMPLE_JWT = {
 ACCESS_TOKEN_LIFETIME = SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
 REFRESH_TOKEN_LIFETIME = SIMPLE_JWT['REFRESH_TOKEN_LIFETIME']
 
-JWT_AUTH_COOKIE = 'access_token'
+JWT_COOKIE_SECURE = False # Set to True in production
+
+
+# These are used for cookie settings
+JWT_AUTH_COOKIE = 'access_token' 
 JWT_AUTH_REFRESH_COOKIE = 'refresh_token'
-JWT_AUTH_SECURE = True  # Set to False in development if not using HTTPS
+JWT_AUTH_SECURE = False  # Set to False in development if not using HTTPS
 JWT_AUTH_SAMESITE = 'Lax'
 JWT_REFRESH_TOKEN_LIFETIME = REFRESH_TOKEN_LIFETIME
 
-# CORS settings (consider restricting in production)
-CORS_ALLOW_ALL_ORIGINS = True  # For development; restrict in production
-CORS_ALLOWED_ORIGINS = ['http://*']  # List of allowed origins
+CORS_ALLOW_ALL_ORIGINS = True  # Set to True for development, but not recommended for production
 
-# Security settings for production
-if not DEBUG:
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_SECONDS = 3600  # Enable HTTP Strict Transport Security
+# Read environment variables
+ip_frontendl = os.getenv("IP_FRONTEND")
+ip_backend = os.getenv("IP_BACKEND") 
+
+CORS_ALLOWED_ORIGINS = [
+    'https://127.0.0.1:5173',
+    'http://127.0.0.1:5173',
+    'https://127.0.0.1',  
+    'http://127.0.0.1',
+    'http://localhost',
+    'https://localhost',
+    "http://localhost:5173", 
+    ]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql', 
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"), 
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"), 
+        'HOST': os.getenv("POSTGRES_HOST"),
+        'PORT': os.getenv("POSTGRES_PORT"),
+    }
+}
+
+# Set secure cookies and headers for HTTPS
+# SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Tells Django that the request is secure
+# CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
+# SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
+
+# # Use the X-Forwarded-For header to get the real client IP address
+# USE_X_FORWARDED_HOST = True
+#************
+
+#************  khbouych ************ 

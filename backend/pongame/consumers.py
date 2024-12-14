@@ -9,7 +9,8 @@ from login.models import Player, PingData
 from matches.models import Matches
 from django.utils import timezone
 from channels.layers import get_channel_layer
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 channel_layer = get_channel_layer()
 
 class GameStateManager:
@@ -29,6 +30,8 @@ class GameStateManager:
             del cls._game_states[room_name]
 
 class GameConsumer(AsyncWebsocketConsumer):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated] 
     name = ''
     avatar = ''
     room_group_name = ''
@@ -37,7 +40,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     game = {}
     queue = {}
     instances = {}
-    game_loop = False
+    game_loop = False 
     game_width = 800
     game_height = 500
     right_paddleY = 0
@@ -47,7 +50,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     balldirectionX = 1
     balldirectionY = 1
     racketHeight = (game_height * 20 / 100)
-    racketWidth = (game_width * 2.5 / 100)
+    racketWidth = (game_width * 2.5 / 100) 
     baddle_speed = 10
     ball_radius = 15
     right_score = 0
@@ -69,16 +72,12 @@ class GameConsumer(AsyncWebsocketConsumer):
                 }
             )
             self.admin.game_loop = False
-            self.channel_layer.group_discard(
-                self.room_group_name,
-                self.channel_name
-            )
             GameStateManager.remove_state(self.room_group_name)
         if self.name in GameConsumer.queue:
             del GameConsumer.queue[self.name]
 
     async def receive(self, text_data):
-        # print('Received:', text_data)
+        print('Received:', text_data)
         if not text_data.strip():
             print('Received empty message')
             return
@@ -89,12 +88,10 @@ class GameConsumer(AsyncWebsocketConsumer):
             print('Received malformed JSON')
             return
 
-        print('received:', data)
         action = data.get('action')
         value = data.get('value', 0)
 
         if action == 'connect':
-            # print('...........................a user has connected', data.get('username'))
             if (data.get('username') in GameConsumer.queue):
                 self.close()
             GameConsumer.queue[data.get('username')] = {
@@ -254,11 +251,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def run_60_times_per_second(self):
         while self.game_loop:
-            # start_time = time.time()
             await self.gamelogic()
-            # end_time = time.time()
-            # execution_time = end_time - start_time
-            # print(f"gamelogic() execution time: {execution_time:.6f} seconds")
             await asyncio.sleep(1/60)
     
     async def gamelogic(self):
@@ -308,7 +301,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.right_score += 1
             self.bonus = 0
-            if (self.right_score >= 5):
+            if (self.right_score >= 5000):
                 self.game_loop = False
                 data = {
                     'winner': '2',
@@ -367,7 +360,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.left_score += 1
             self.bonus = 0
-            if (self.left_score >= 5):
+            if (self.left_score >= 5000):
                 self.game_loop = False
                 data = {
                     'winner': '1',
@@ -420,6 +413,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 
 class inviteConsumer(AsyncWebsocketConsumer):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     game_queue = {}
     room_group_name = ''
     name = ''
@@ -775,6 +770,8 @@ class inviteConsumer(AsyncWebsocketConsumer):
         
 
 class TournamentConsumer(AsyncWebsocketConsumer):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     tournaments = {}
     game = {}
 

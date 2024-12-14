@@ -1,0 +1,116 @@
+.cardRank {
+    width: 98%;
+    height: 120px;
+    min-height: 120px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    hr {
+        height: 70%;
+    }
+    position: relative;
+    transition: 0.5s;
+    left: 1%;
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+        transition: 0.5s;
+    }
+}
+
+.ranking {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p{
+        color: white;
+        font-size: 35px;
+        font-weight: 1000;
+        text-decoration: underline;
+    }
+}
+
+.user {
+    display: flex;
+    width: 40%;
+    height: 96%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 6px;
+    /* background-color: aquamarine; */
+    p {
+        font-size: 13px;
+        font-weight: 400;
+        color: white;
+    }
+}
+
+.intImg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 55px;
+    height: 60px;
+    background-color: rgb(81, 81, 3);
+    border: none;
+    clip-path: polygon(
+        50% 0%, 
+        100% 25%, 
+        100% 75%, 
+        50% 100%, 
+        0% 75%, 
+        0% 25%
+    );
+    img {
+        display: flex;
+        width: 55px;
+        height: 55px;
+    }
+}
+
+.wins {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+        font-size: 25px;
+        color: white;
+        font-weight: 500px;
+    }
+}
+
+.lvl {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+        font-size: 25px;
+        color: white;
+        font-weight: 500px;
+    }
+}
+
+@media (max-width: 1536px) {
+    .cardRank {
+        height: 100px;
+        min-height: 100px;
+    }
+    .ranking {
+        p {
+            font-size: 30px;
+        }
+    }
+    .wins, .lvl {
+        p {
+            font-size: 20px;
+        }
+    }
+}

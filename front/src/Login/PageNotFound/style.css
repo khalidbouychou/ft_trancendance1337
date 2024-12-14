@@ -1,0 +1,18 @@
+.container {
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    display:flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.backhome {
+    text-decoration: none;
+    color: #fff;
+    border: 2px solid rgb(249, 133, 255);
+    padding: 20px;
+}
+.backhome:hover {
+    background-color: rgb(102, 1, 153);
+}

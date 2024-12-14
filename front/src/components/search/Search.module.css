@@ -1,0 +1,179 @@
+.Search{
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+.cont {
+    margin: 3%;
+	width: 80%;
+	height: 1200px;
+	display: flex;
+    align-items: center;
+	flex-direction: column;
+    gap: 20px;
+    @media (max-width: 1280px) {
+        width: 100%;
+    }
+}
+
+.head h1
+{
+    text-align: center;
+    font-size:50px; font-weight:300; letter-spacing:15px;
+    text-transform: uppercase;
+    display: grid;
+    align-items: center;
+    color: white;
+    @media (max-width: 768px) {
+        font-size:30px;
+        font-weight:100;
+        letter-spacing:4px;
+    }
+}
+
+.search {
+    width: 80%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+}
+
+.extFrame {
+    width: 80%;
+    height: 50px;
+    border-radius: 50px;
+    border: 1px solid white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    @media (max-width: 768px) {
+        height: 35px;
+    }
+}
+
+
+.innerFrame {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    input {
+        width: 100%;
+        height: 100%;
+        background: none;
+        display: block;
+        border-radius: 30px;
+        padding-left: 20px;
+        font-size: 20px;
+        outline: none;
+        border: none;
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.searchBut {
+    display: flex;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(132, 0, 255);
+    border-radius: 50px;
+    right: -5px;
+    border: 2px solid white;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.searchResult {
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    position: absolute;
+    width: 75%;
+    top: 80%;
+    /* left: 11%; */
+    z-index: 1;
+    background-color: #660da5;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 0 0 10px 10px;
+    @media (max-width: 640px) {
+        width: 80%;
+    }
+}
+
+.searchCard {
+    width: 210px;
+    height: 60px;
+    display: flex;
+    cursor: pointer;
+    position: relative;
+}
+
+.allRes {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 80%;
+    height: 90%;
+    padding: 2%;
+    gap: 20px;
+    overflow: auto;
+    flex-wrap: wrap;
+    align-content: start;
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+}
+
+.SearchCard2 {
+    display: flex;
+    width: 100%;
+    height: 150px;
+}
+
+.NoResult {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    h3 {
+        letter-spacing: 2px;
+        font-size: 30px;
+        font-weight: 200;
+        color: white;
+    }
+}
+
+.fakeCard {
+    display: flex;
+    width: 450px;
+    min-width: 450px;
+    height: 250px;
+    background-color: #660da5;
+}
+
+@media (max-width: 768px) {
+    .searchBut {
+        height: 35px;
+        width: 35px;
+    }
+    .innerFrame {
+        input {
+            font-size: 15px;
+        }
+    }
+}

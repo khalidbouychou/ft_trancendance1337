@@ -16,8 +16,7 @@ class Player(AbstractUser):
     )
     username = models.CharField(max_length=255, default='default_username', unique=True, blank=False)
     profile_name = models.CharField(max_length=200, default='default_username')
-    avatar = models.URLField(max_length=200, default='default_avatar')
-    email = models.EmailField(max_length=200, default='default')
+    avatar = models.URLField(max_length=200, default='https://upload.wikimedia.org/wikipedia/commons/1/1e/Default-avatar.jpg')
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
     status_game = models.CharField(max_length=10, choices=GAME_STATUS, default='offline')
     two_factor = models.BooleanField(default=False)
@@ -25,9 +24,12 @@ class Player(AbstractUser):
     otp_verified = models.BooleanField(default=False)
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
     friends = models.ManyToManyField('self', symmetrical=True, through='Friend', blank=True)
-
-    class Meta:
-        db_table = 'player'
+    qrcode_path = models.CharField(max_length=255, default='', blank=False, null=False) 
+    bool_login = models.BooleanField(default=False)
+    mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False)
+    
+    class Meta: 
+        db_table = 'player' 
 
     def save(self, *args, **kwargs):
         if self.status_network == 'offline':
@@ -70,13 +72,3 @@ class PingData(models.Model):
 
     class Meta:
         db_table = 'ping_data'
-
-class TicData(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='tic_data')
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
-    exp_game = models.IntegerField(default=100)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'tic_data'

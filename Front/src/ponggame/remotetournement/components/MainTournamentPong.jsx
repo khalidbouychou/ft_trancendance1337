@@ -16,8 +16,7 @@ const MainTournamentPong = () => {
     }, [tournaments]);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        socket.current = new WebSocket(`ws://localhost:8000/ws/tournament-game/?token=${token}`);
+        socket.current = new WebSocket(`ws://localhost:8000/ws/tournament-game/`);
 
         socket.current.onopen = () => {
             console.log("name:", user.user.username);
@@ -139,7 +138,7 @@ const MainTournamentPong = () => {
                         Object.entries(tournaments).map(([tournamentName, tournament], index) => (
                             <div key={index} className={styles.tournament_card}>
                                 <h3>{tournament.name}</h3>
-                                <p>{tournament.players}/4 players</p>
+                                <h3>{tournament.players}/4 players</h3>
                                 <button onClick={() => joinTournament(tournamentName)}>Join</button>
                                 <button onClick={() => cancelTournament(tournamentName)}>Cancel</button>
                                 <button onClick={() => leaveTournament(tournamentName)}>Leave</button>
