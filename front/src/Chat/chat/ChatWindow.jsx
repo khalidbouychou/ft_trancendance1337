@@ -73,7 +73,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             const token = localStorage.getItem('token');
             const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
             pong_socket.onopen = () => {
-                const message_data = {
+                const data2 = {
                     action: 'friend_game',
                     player1: currentUser.username,
                     avatar1: currentUser.avatar,
@@ -81,9 +81,8 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                     avatar2: otherUser.avatar,
                     game_id: `${currentUser.username+'vs'+otherUser.username}`,
                 }
-                pong_socket.send(JSON.stringify(message_data));
+                pong_socket.send(JSON.stringify(data));
                 const game_key = `${currentUser.username}vs${otherUser.username}`;
-                console.log('from chat Game Key:', game_key);
                 navigate('/friend-game', { state: { game_key } });
             }
         }

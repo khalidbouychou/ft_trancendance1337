@@ -1,36 +1,38 @@
 .Game {
+    overflow: hidden;
     padding-top: 20px;
 	display: flex;
 	justify-content: center;
 	width: 100%;
 	height: 100%;
-	background-color: #25233C;
+	/* background-color: #25233C; */
 	overflow: auto;
-    background: url('./assets//background.svg');
+    /* background: url('./assets//background.svg'); */
     background-size: cover;
     @media (max-width: 2400px) {
-        background: url('./assets/background.svg') no-repeat center center;
+        /* background: url('./assets/background.svg') no-repeat center center; */
         background-size: 200vh 200vh;
     }
     &::-webkit-scrollbar {
         width: 10px;
         height: 100%;
     }
-
+    
     &::-webkit-scrollbar-thumb {
         border-radius: 10px;
-        background-color: rgba(255, 255, 255, 0.3);
+        /* background-color: rgba(255, 255, 255, 0.3); */
     }
 }
 
 .content {
-	margin: 3%;
+    overflow: hidden;
+	/* margin: 3%; */
 	width: 90%;
-	height: 1300px;
+	height: 80%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-    gap: 30px;
+    /* gap: 30px; */
     @media (max-width: 1536px) {
         width: 100%;
         margin: 0%;

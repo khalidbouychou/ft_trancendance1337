@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import api from '../auth/api';
+import api from '../../auth/api';
 import './ChatPage.css';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
-import Cookies from 'js-cookie';
-import axios from 'axios';
+// import Cookies from 'js-cookie';
+// import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function ChatPage() {
@@ -44,7 +44,7 @@ function ChatPage() {
 				setupSocket(1);
 				setupNotificationSocket();
 				initUnreadMessages(response.data);
-				// console.log('Current User:', response.data.user);
+				console.log('Current User:', response.data.user);
 			} catch (error) {
 				console.warn('Chat page inaccessible:', error);
 				navigate('/login');
@@ -242,6 +242,7 @@ function ChatPage() {
 							// console.log('Received empty message, ignoring');
 							break;
 						}
+						console.log('Received message:', data_re.message)
 						setData(prevData => updateChatRooms(prevData, data_re.message))
 
 						setReceivedMessage(data_re.message)
@@ -301,13 +302,14 @@ function ChatPage() {
 
 	const sendMessage = (e) => {
 		e.preventDefault()
-		const trimmedMessage = message.trimStart();
-		if (trimmedMessage) {
+		console.log('roomId:', roomId)
+		console.log('Current contact id:', currentContact.id)
+		if (message) {
 			sockets[roomId].send(JSON.stringify({
 				type: 'MESSAGE',
 				room_id: roomId,
 				sender: data.user.id,
-				content: trimmedMessage,
+				content: message,
 			}))
 			setMessage('')
 		}
