@@ -300,7 +300,7 @@ export default function OnlineGame() {
             cancelAnimationFrame(myReq);
 
             if (socket && socket.readyState === WebSocket.OPEN) {
-                socket.close(); // Close WebSocket when the component unmounts
+                socket.close();
             }
         };
     }, [username]);

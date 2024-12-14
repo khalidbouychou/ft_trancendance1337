@@ -8,6 +8,9 @@ from channels.layers import get_channel_layer
 from login.models import Player, PingData
 from matches.models import Matches
 from django.utils import timezone
+from channels.layers import get_channel_layer
+
+channel_layer = get_channel_layer()
 
 class GameStateManager:
     _game_states = {}
@@ -194,20 +197,15 @@ class GameConsumer(AsyncWebsocketConsumer):
             if action == 'ArrowDown':
                 if self.admin.right_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
                     self.admin.right_paddleY += value
-                    # print(f'right_paddleY set to: {self.admin.right_paddleY}')
             elif action == 'ArrowUp':
                 if self.admin.right_paddleY >= 10:
                     self.admin.right_paddleY -= value
-                    # print(f'right_paddleY set to: {self.admin.right_paddleY}')
-
             if action == 's':
                 if self.admin.left_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
                     self.admin.left_paddleY += value
-                    # print(f'left_paddleY set to: {self.admin.left_paddleY}')
             elif action == 'w':
                 if self.admin.left_paddleY >= 10:
                     self.admin.left_paddleY -= value
-                    # print(f'left_paddleY set to: {self.admin.left_paddleY}')
 
     async def pack_data_to_send(self):
         data = {
@@ -631,8 +629,6 @@ class inviteConsumer(AsyncWebsocketConsumer):
             'game_height': self.game_height,
             'ball_radius': 15,
         }
-
-
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -684,11 +680,7 @@ class inviteConsumer(AsyncWebsocketConsumer):
     
     async def run_60_times_per_second(self):
         while self.game_loop:
-            # start_time = time.time()
             await self.gamelogic()
-            # end_time = time.time()
-            # execution_time = end_time - start_time
-            # print(f"gamelogic() execution time: {execution_time:.6f} seconds")
             await asyncio.sleep(1/60)
 
     async def gamelogic(self):
@@ -781,3 +773,580 @@ class inviteConsumer(AsyncWebsocketConsumer):
                 GameStateManager.remove_state(self.room_group_name)
         await self.pack_data_to_send()
         
+
+class TournamentConsumer(AsyncWebsocketConsumer):
+    tournaments = {}
+    game = {}
+
+    name = ''
+    ingame = False
+    admin = None
+    game_loop = False
+    game_width = 800
+    game_height = 500
+    right_paddleY = 0
+    left_paddleY = 0
+    ballx = 400
+    bally = 250
+    balldirectionX = 1
+    balldirectionY = 1
+    racketHeight = (game_height * 20 / 100)
+    racketWidth = (game_width * 2.5 / 100)
+    baddle_speed = 10
+    ball_radius = 15
+    right_score = 0
+    left_score = 0
+    bonus = 0
+    ball_speed = 800 / (2 * 60) + bonus
+    room_group_name = ''
+    async def connect(self):
+        await self.accept()
+        
+    async def disconnect(self, close_code):
+        # print(f"disconnect, it could be {self.name}")
+        if self.name in TournamentConsumer.tournaments:
+            del TournamentConsumer.tournaments[self.name]
+        else:
+            for tournament in TournamentConsumer.tournaments.values():
+                if self.name in tournament.values():
+                    tournament['players'] -= 1
+                    if tournament['player1_name'] == self.name:
+                        tournament['player1_name'] = None
+                        tournament['player1_instance'] = None
+                    elif tournament['player2_name'] == self.name:
+                        tournament['player2_name'] = None
+                        tournament['player2_instance'] = None
+                    elif tournament['player3_name'] == self.name:
+                        tournament['player3_name'] = None
+                        tournament['player3_instance'] = None
+                    elif tournament['player4_name'] == self.name:
+                        tournament['player4_name'] = None
+                        tournament['player4_instance'] = None
+        data = {
+            'message': 'tournament_page',
+            'data': list(TournamentConsumer.tournaments.values()) 
+        }
+        await self.channel_layer.group_send(
+        "tournament",
+        {
+            'type': 'tournament_message',
+            'message': data,
+        })
+
+    async def remove_all_from_group(self, group_name):
+        channel_layer = get_channel_layer()
+        # Fetch channels from your custom storage or tracking
+        channels = await get_channels_in_group(group_name)  # Implement this method
+        for channel_name in channels:
+            await channel_layer.group_discard(group_name, channel_name)
+
+    async def receive(self, text_data):
+        if not text_data.strip():
+            print('Received empty message')
+            return
+        try:
+            data = json.loads(text_data)
+        except json.JSONDecodeError:
+            print('Received malformed JSON')
+            return
+
+        print('received:', data)
+        action = data.get('action')
+        if self.ingame:
+            print("yes im in game")
+            if action == 'ArrowDown':
+                print("arrow down")
+                if self.admin.right_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
+                    self.admin.right_paddleY += 10
+            elif action == 'ArrowUp':
+                print("arrow up")
+                if self.admin.right_paddleY >= 10:
+                    self.admin.right_paddleY -= 10
+            if action == 's':
+                print("s")
+                if self.admin.left_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
+                    self.admin.left_paddleY += 10
+            elif action == 'w':
+                print("w")
+                if self.admin.left_paddleY >= 10:
+                    self.admin.left_paddleY -= 10
+        else:
+            print("im not in the game", self.name)
+
+        if action == 'fetch_tournaments':
+            print("we are inside fetch_tournaments")
+            self.name = data.get('name')
+            await self.channel_layer.group_add(
+                "tournament",
+                self.channel_name
+            )
+            data = {
+                'message': 'tournament_page',
+                'data': list(TournamentConsumer.tournaments.values()) 
+            }
+            await self.channel_layer.group_send(
+            "tournament",
+            {
+                'type': 'tournament_message',
+                'message': data,
+                
+            })
+        elif action == 'connected':
+            print("we are inside connected")
+            tournament_name = data.get('room')
+            await self.channel_layer.group_add(
+                tournament_name,
+                self.channel_name
+            )
+        elif action == 'update_alias':
+            print("we are inside update_alias")
+            tournament_name = data.get('room')
+            if tournament_name in TournamentConsumer.game:
+                print("tournament exists")
+                tournament = TournamentConsumer.game[tournament_name]
+                if tournament['connected'] < 4 and data.get('name') in [tournament.get(f'player{i}_name') for i in range(1, 5)]:
+                    print("u are in player list")
+                    aliasname = data.get('aliasname')
+                    avatar = data.get('avatar')
+                    name = data.get('name')
+                    if aliasname in [tournament.get(f'player{i}_alias') for i in range(1, 5)]:
+                        print(f"user alias exists {aliasname}")
+                        message = "alias_exists"
+                        await self.send(text_data=json.dumps({'message': message}))
+                        return
+                    print("tournament", tournament)
+                    if tournament['player1_name'] == name:
+                        tournament['player1_alias'] = aliasname
+                        tournament['player1_avatar'] = avatar
+                        tournament['connected'] += 1
+                        tournament['player1_instance'] = self
+                        await self.channel_layer.group_add(
+                            tournament['group1'],
+                            self.channel_name
+                        )
+                    elif tournament['player2_name'] == name:
+                        tournament['player2_alias'] = aliasname
+                        tournament['player2_avatar'] = avatar
+                        tournament['connected'] += 1
+                        tournament['player2_instance'] = self
+                        await self.channel_layer.group_add(
+                            tournament['group1'],
+                            self.channel_name
+                        )
+                    elif tournament['player3_name'] == name:
+                        tournament['player3_alias'] = aliasname
+                        tournament['player3_avatar'] = avatar
+                        tournament['connected'] += 1
+                        tournament['player3_instance'] = self
+                        await self.channel_layer.group_add(
+                            tournament['group2'],
+                            self.channel_name
+                        )
+                    elif tournament['player4_name'] == name:
+                        tournament['player4_alias'] = aliasname
+                        tournament['player4_avatar'] = avatar
+                        tournament['connected'] += 1
+                        tournament['player4_instance'] = self
+                        await self.channel_layer.group_add(
+                            tournament['group2'],
+                            self.channel_name
+                        )
+                    data = {
+                        'message': 'update_players',
+                        'player1_alias': tournament['player1_alias'],
+                        'player1_avatar': tournament['player1_avatar'],
+                        'player2_alias': tournament['player2_alias'],
+                        'player2_avatar': tournament['player2_avatar'],
+                        'player3_alias': tournament['player3_alias'],
+                        'player3_avatar': tournament['player3_avatar'],
+                        'player4_alias': tournament['player4_alias'],
+                        'player4_avatar': tournament['player4_avatar'],
+                    }
+                    await self.channel_layer.group_send(
+                    tournament_name,
+                    {
+                        'type': 'tournament_message',
+                        'message': data,
+                    })
+                    if tournament['connected'] == 4:
+                        data = {
+                            'message': 'tournament_started',
+                        }
+                        await self.channel_layer.group_send(
+                        tournament_name,
+                        {
+                            'type': 'tournament_message',
+                            'message': data,
+                        })
+        elif action == 'startmygame':
+            print("we are inside startmygame")
+            tournament_name = data.get('room')
+            if tournament_name in TournamentConsumer.game:
+                print("tournament exists")
+                tournament = TournamentConsumer.game[tournament_name]
+                print("the user with alias:", data.get('aliasname'), "wants to start his game")
+                if data.get('aliasname') == tournament['player1_alias']:
+                    print("player:", tournament['player1_name'], "joined and will host his match") 
+                    self.game_loop = True
+                    self.ingame = True
+                    self.admin = tournament['player1_instance']
+                    data = {
+                            'message': 'game_started',
+                            'player_id1': tournament['player1_alias'],
+                            'player1_avatar': tournament['player1_avatar'],
+                            'player_id2': tournament['player2_alias'],
+                            'player2_avatar': tournament['player2_avatar'],
+                    }
+                    await self.channel_layer.group_send(
+                    tournament['group1'],
+                    {
+                        'type': 'tournament_message',
+                        'message': data,
+                    })
+                    asyncio.create_task(self.run_60_times_per_second(tournament, 'game1'))
+                elif data.get('aliasname') == tournament['player2_alias']:
+                    self.ingame = True
+                    self.admin = tournament['player1_instance']
+                elif data.get('aliasname') == tournament['player3_alias']:
+                    print("player:", tournament['player3_name'], "joined and will host his match") 
+                    self.ingame = True
+                    self.game_loop = True
+                    self.admin = tournament['player3_instance']
+                    data = {
+                            'message': 'game_started',
+                            'player_id1': tournament['player3_alias'],
+                            'player1_avatar': tournament['player3_avatar'],
+                            'player_id2': tournament['player4_alias'],
+                            'player2_avatar': tournament['player4_avatar'],
+                    }
+                    await self.channel_layer.group_send(
+                    tournament['group2'],
+                    {
+                        'type': 'tournament_message',
+                        'message': data,
+                    })
+                    asyncio.create_task(self.run_60_times_per_second(tournament, 'game2'))
+                elif data.get('aliasname') == tournament['player4_alias']:
+                    self.ingame = True
+                    self.admin = tournament['player3_instance']
+        elif action == 'create_tournament':
+            print("we are inside create_tournament")
+            key = data.get('name')
+            if key in TournamentConsumer.tournaments:
+                print("tournament already exists")
+                return
+            print("key in create:", key)
+            TournamentConsumer.tournaments[key] = {
+                'name': key,
+                'players': 0,
+                'player1_name': None,
+                'player2_name': None,
+                'player3_name': None,
+                'player4_name': None,
+            }
+            data = {
+                'message': 'tournament_created',
+                'tournament': TournamentConsumer.tournaments,
+            }
+            await self.channel_layer.group_send(
+            "tournament",
+            {
+                'type': 'tournament_message',
+                'message': data,
+            })
+            print("we did everything")
+        elif action == 'join_tournament':
+            tournament_name = data.get('target')
+            if tournament_name in TournamentConsumer.tournaments:
+                print("tournament exists")
+                tournament = TournamentConsumer.tournaments[tournament_name]
+                if tournament['players'] < 4 and data.get('name') not in [tournament.get(f'player{i}_name') for i in range(1, 5)]:
+                    print("player can join")
+                    tournament['players'] += 1
+                    name = data.get('name')
+                    if tournament['player1_name'] is None:
+                        tournament['player1_name'] = name
+                    elif tournament['player2_name'] is None:
+                        tournament['player2_name'] = name
+                    elif tournament['player3_name'] is None:
+                        tournament['player3_name'] = name
+                    elif tournament['player4_name'] is None:
+                        tournament['player4_name'] = name
+
+                    await self.channel_layer.group_add(
+                        tournament_name,
+                        self.channel_name
+                    )
+                    data = {
+                        'message': 'join_tournament',
+                        'tournament': TournamentConsumer.tournaments
+                    }
+                    await self.channel_layer.group_send(
+                    "tournament",
+                    {
+                        'type': 'tournament_message',
+                        'message': data,
+                    })
+                    #now i will check if the tournament should start
+                    if tournament['players'] == 4:
+                        data = {
+                            'message': 'tournament_about_to_start',
+                            'RoomName': tournament_name,
+                        }
+                        # asyncio.create_task(self.start_countdown(tournament_name)) we will need to start the countdown
+                        TournamentConsumer.game[tournament_name] = {
+                            'connected': 0,
+                            'player1_name': tournament['player1_name'],
+                            'player1_alias': 'Unknown',
+                            'player1_avatar': '/assets/unknown.png',
+                            'player2_name': tournament['player2_name'],
+                            'player2_alias': 'Unknown',
+                            'player2_avatar': '/assets/unknown.png',
+                            'player3_name': tournament['player3_name'],
+                            'player3_alias': 'Unknown',
+                            'player3_avatar': '/assets/unknown.png',
+                            'player4_name': tournament['player4_name'],
+                            'player4_alias': 'Unknown',
+                            'player4_avatar': '/assets/unknown.png',
+                            'group1': f"{tournament['player1_name']}vs{tournament['player2_name']}",
+                            'group2': f"{tournament['player3_name']}vs{tournament['player4_name']}",
+                            'group3': None,
+                        }
+                        await self.channel_layer.group_send(
+                        tournament_name,
+                        {
+                            'type': 'tournament_message',
+                            'message': data,
+                        })
+        elif action == 'leave_tournament':
+            print("im inside leave tournament")
+            tournament_name = data.get('target')
+            if tournament_name in TournamentConsumer.tournaments:
+                print("tournament exists")
+                tournament = TournamentConsumer.tournaments[tournament_name]
+                if data.get('name') in [tournament.get(f'player{i}_name') for i in range(1, 5)]:
+                    print("player can join")
+                    tournament['players'] -= 1
+                    name = data.get('name')
+                    if tournament['player1_name'] == name:
+                        tournament['player1_name'] = None
+                    elif tournament['player2_name'] == name:
+                        tournament['player2_name'] = None
+                    elif tournament['player3_name'] == name:
+                        tournament['player3_name'] = None
+                    elif tournament['player4_name'] == name:
+                        tournament['player4_name'] = None
+                    self.channel_layer.group_discard(
+                        tournament_name,
+                        self.channel_name,
+                    )
+                    data = {
+                        'message': 'leave_tournament',
+                        'tournament': TournamentConsumer.tournaments
+                    }
+                    await self.channel_layer.group_send(
+                    "tournament",
+                    {
+                        'type': 'tournament_message',
+                        'message': data,
+                    })
+        elif action == 'cancel_tournament':
+            tournament_name = data.get('target')
+            if tournament_name in TournamentConsumer.tournaments:
+                print("tournament exists")
+                tournament = TournamentConsumer.tournaments[tournament_name]
+                if tournament['players'] < 4 and tournament_name == data.get('name'):
+                    print("creater can cancel the match")
+                    del TournamentConsumer.tournaments[self.name]
+                    data = {
+                        'message': 'cancel_tournament',
+                        'tournament': TournamentConsumer.tournaments
+                    }
+                    self.remove_all_from_group(tournament_name)
+                    await self.channel_layer.group_send(
+                    "tournament",
+                    {
+                        'type': 'tournament_message',
+                        'message': data,
+                    })
+                    print("we did everything")
+
+    async def tournament_message(self, event):
+        data = event['message']
+        await self.send(text_data=json.dumps(data))
+
+    async def game_data(self, event):
+        data = event['message']
+        await self.send(text_data=json.dumps(data))
+
+    async def run_60_times_per_second(self, tournament, game):
+        while self.game_loop:
+            await self.gamelogic(tournament, game)
+            await asyncio.sleep(1/60)
+
+    async def gamelogic(self, tournament, game):
+        self.ballx += (self.ball_speed + self.bonus) * self.balldirectionX
+        self.bally += (self.ball_speed + self.bonus) * self.balldirectionY
+
+        if (self.ballx + 15 >= self.game_width - self.racketWidth and
+            self.right_paddleY <= (self.bally + 15) and
+            self.right_paddleY + self.racketHeight >= (self.bally - 15)):
+
+            offset = (self.bally - (self.right_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
+            if (offset > 0 and offset > 10):
+                offset = 5
+            elif (offset < 0 and offset < -10):
+                offset = -5
+            self.ballx = self.game_width - self.racketWidth - 16
+            self.balldirectionX *= -1
+            self.balldirectionY = offset
+            self.bonus += 1
+
+        elif (self.ballx - 15 <= self.racketWidth and
+            self.left_paddleY <= (self.bally + 15) and
+            self.left_paddleY + self.racketHeight >= (self.bally - 15)):
+
+            offset = (self.bally - (self.left_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
+            if (offset > 0 and offset > 10):
+                offset = 5
+            elif (offset < 0 and offset < -10):
+                offset = -5
+            self.ballx = self.racketWidth + 16
+            self.balldirectionX *= -1
+            self.balldirectionY = offset
+            self.bonus += 1
+
+        elif self.bally - 15 <= 0:
+            self.bally = 16
+            self.balldirectionY *= -1
+        
+        elif self.bally + 15 >= self.game_height:
+            self.bally = self.game_height - 16
+            self.balldirectionY *= -1
+        
+        elif self.ballx <= 15:
+            self.ballx = 400
+            self.bally = 250
+            self.balldirectionX = -1  
+            self.balldirectionY = random.uniform(-1, 1)
+            self.right_score += 1
+            self.bonus = 0
+            if (self.right_score >= 8):
+                self.game_loop = False
+                if game == 'game1':
+                    data = {
+                        'message': 'match_result',
+                        'winner': tournament['player2_alias'],
+                        'left_score': self.left_score,
+                        'loser': tournament['player1_alias'],
+                        'right_score': self.right_score
+                    }
+                    await self.channel_layer.group_send(
+                        tournament['group1'],
+                        {
+                            'type': 'game_data',
+                            'message': data
+                        }
+                    )
+                elif game == 'game2':
+                    data = {
+                        'message': 'match_result',
+                        'winner': tournament['player4_alias'],
+                        'left_score': self.left_score,
+                        'loser': tournament['player3_alias'],
+                        'right_score': self.right_score
+                    }
+                    await self.channel_layer.group_send(
+                        tournament['group2'],
+                        {
+                            'type': 'game_data',
+                            'message': data
+                        }
+                    )
+                #need to update it later
+                elif game == 'game3':
+                    data = {
+                        'message': 'match_result',
+                        'winner': tournament['player6_alias'],
+                        'left_score': self.left_score,
+                        'loser': tournament['player5_alias'],
+                        'right_score': self.right_score
+                    }
+                    await self.channel_layer.group_send(
+                        tournament['group3'],
+                        {
+                            'type': 'game_data',
+                            'message': data
+                        }
+                    )
+        elif self.ballx >= self.game_width - 15:
+            self.ballx = 400
+            self.bally = 250
+            self.balldirectionX = 1
+            self.balldirectionY = random.uniform(-1, 1)
+            self.left_score += 1
+            self.bonus = 0
+            if (self.left_score >= 8):
+                self.game_loop = False
+                if game == 'game1':
+                    data = {
+                        'message': 'match_result',
+                        'winner': tournament['player1_alias'],
+                        'left_score': self.left_score,
+                        'loser': tournament['player2_alias'],
+                        'right_score': self.right_score
+                    }
+                    await self.channel_layer.group_send(
+                        tournament['group1'],
+                        {
+                            'type': 'game_data',
+                            'message': data
+                        }
+                    )
+                elif game == 'game2':
+                    data = {
+                        'message': 'match_result',
+                        'winner': tournament['player3_alias'],
+                        'left_score': self.left_score,
+                        'loser': tournament['player4_alias'],
+                        'right_score': self.right_score
+                    }
+                    await self.channel_layer.group_send(
+                        tournament['group2'],
+                        {
+                            'type': 'game_data',
+                            'message': data
+                        }
+                    )
+        await self.pack_data_to_send(tournament, game)
+
+    async def pack_data_to_send(self, tournament, game):
+        data = {
+            'message': 'game_data',
+            'ballx': self.ballx,
+            'bally': self.bally,
+            'right_paddleY': self.right_paddleY,
+            'left_paddleY': self.left_paddleY,
+            'right_score': self.right_score,
+            'left_score': self.left_score,
+            'game_width': self.game_width,
+            'game_height': self.game_height,
+            'ball_radius': 15,
+        }
+
+        if game == 'game1':
+            await self.channel_layer.group_send(
+                tournament['group1'],
+                {
+                    'type': 'game_data',
+                    'message': data
+                }
+            )
+        elif game == 'game2':
+            await self.channel_layer.group_send(
+                tournament['group2'],
+                {
+                    'type': 'game_data',
+                    'message': data
+                }
+            )
