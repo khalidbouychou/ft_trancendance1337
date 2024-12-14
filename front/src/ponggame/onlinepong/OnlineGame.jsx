@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './OnlineGame.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../UserContext/Context';
-import axios from 'axios';
+import api from '../auth/api';
 
 export default function OnlineGame() {
 
@@ -35,7 +35,7 @@ export default function OnlineGame() {
             };
             socket.send(JSON.stringify(message));
         } else {
-            console.log("Only the left player can move the left paddle."); 
+            console.log("Only the left player can move the left paddle.");
         }
     };
 
@@ -77,9 +77,7 @@ export default function OnlineGame() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios('http://localhost:8000/api/pong_data/',{
-                withCredentials: true,
-            });
+            const response = await api.get('/pingpong/');
             if (response.status === 200) {
                 console.log('response: ', response);
             }
@@ -90,8 +88,7 @@ export default function OnlineGame() {
             if (response.status === 200) {
                 // setUser(response.data);
                 setUsername(response.data.user);
-                setLeftPlayerAvatar(response.data.avatar); 
-                setLeftPlayerName(response.data.user);
+                setLeftPlayerAvatar(response.data.avatar);
                 setAvatar(response.data.avatar);
                 setLevel(response.data.exp_game);
             } else {
@@ -120,8 +117,9 @@ export default function OnlineGame() {
         let rightRacketY = 0;
         let player_id = 0;
         let myReq;
+        const token = localStorage.getItem('token');
         if (FetchedData)
-            socket = new WebSocket(`ws://localhost:8000/ws/remote-game/`);
+            socket = new WebSocket(`ws://localhost:8000/ws/remote-game/?token=${token}`);
 
         if (socket) {
             socket.onopen = () => {

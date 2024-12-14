@@ -7,21 +7,21 @@ import { useState, useEffect, useContext } from "react";
 import Tmp2 from "./components/Tmp2/Tmp2";
 import SearchCard from "./components/SearchCard/SearchCard";
 import { AuthContext } from "../../UserContext/Context";
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 const Home = () => {
   const { user } = useContext(AuthContext);
   const username = user?.user?.username;
-  console.log("Logged-in username:", username);
-  console.log("hhhh-->", user);
+  // console.log("Logged-in username:", username);
+  // console.log("hhhh-->", user);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navigate = useNavigate();
   const [filteredPingData, setFilteredPingData] = useState(null);
-  // const [filteredTicData, setFilteredTicData] = useState(null);
+  const [filteredTicData, setFilteredTicData] = useState(null);
   const [pingRes, setPingRes] = useState(null);
   const [error, setError] = useState(null);
   const [pingData, setPingData] = useState([]);
-  // const [ticData, setTicData] = useState([]);
+  const [ticData, setTicData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const handleClick = () => {
@@ -52,10 +52,10 @@ const Home = () => {
     const fetchSearchResults = async () => {
       if (searchQuery.trim()) {
         const response = await fetch(
-          `http://localhost:8000/api/search/?q=${searchQuery}`
+          `localhost:8000/api/search/?q=${searchQuery}`
         );
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setSearchResults(data);
       } else {
         setSearchResults([]);
@@ -93,23 +93,23 @@ const Home = () => {
   useEffect(() => {
     const fetchDataResults = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/pingdata/`);
+        const response = await fetch(`localhost:8000/api/pingdata/`);
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
 
         const data = await response.json();
-        console.log("ppppll+++>>>", data);
+        // console.log("ppppll+++>>>", data);
         setPingData(data);
         const userData = data.find((item) => item.username === username);
         // console.log('username***>', item)
         setFilteredPingData(userData);
-        // const ticData = await fetch(`http://localhost:8000/api/ticdata/`);
-        // const ticDataJson = await ticData.json();
-        // setTicData(ticDataJson);
-        // const ticUserData = ticDataJson.find((item) => item.username === username);
-        // setFilteredTicData(ticUserData);
+        const ticData = await fetch(`localhost:8000/api/ticdata/`);
+        const ticDataJson = await ticData.json();
+        setTicData(ticDataJson);
+        const ticUserData = ticDataJson.find((item) => item.username === username);
+        setFilteredTicData(ticUserData);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -119,12 +119,14 @@ const Home = () => {
 
     fetchDataResults();
   }, [username]);
+  // console.log("piiiing+++>>>", ticData);
+  // console.log("filteredPingData", filteredTicData);
 
   return (
     <div className={styl.Home}>
       <div className={styl.cont}>
         <div className={styl.head}>
-          <h2>HOME</h2>
+          <h1>HOME</h1>
         </div>
         {/* <div className={styl.search}>
           <div className={styl.extFrame}>
@@ -171,7 +173,7 @@ const Home = () => {
           </div>
         </div>
         <div className={styl.last}>
-          {pingData.length > 0 && filteredPingData  ? (
+          {pingData.length > 0 && filteredPingData && filteredTicData ? (
             isMobile ? (
               <Tmp2 Data={{ ping: pingData, tic: ticData }} myData={{ping : filteredPingData, tic: filteredTicData}} />
             ) : (

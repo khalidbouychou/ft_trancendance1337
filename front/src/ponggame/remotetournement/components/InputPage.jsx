@@ -27,7 +27,8 @@ const MainTournament = () => {
     const [MESSAGE, setMessage] = useState("message");
 
     useEffect(() => {
-        socket.current = new WebSocket(`ws://localhost:8000/ws/tournament-game/`);
+        const token = localStorage.getItem('token');
+        socket.current = new WebSocket(`ws://localhost:8000/ws/tournament-game/?token=${token}`);
 
         socket.current.onopen = () => {
             console.log("name:", user.user.username);
@@ -62,6 +63,7 @@ const MainTournament = () => {
 
     useEffect(() => {
         console.log("we enter useeffect matchstart:", matchstart, "PlayerAliasName:", PlayerAliasName);
+        console.log("text"*1000);
         const game_width = 800;
         const game_height = 500;
         let ballx = 0;

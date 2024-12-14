@@ -14,7 +14,8 @@ const Tmp1 = ({ Data, myData}) => {
     const winPercentage = (15 / total) * 100;
     const lossPercentage = (10 / total) * 100;
     const [daTa, setDaTa] = useState(Data.ping || [])
-    const [mydaTa, setMydaTa] = useState(myData.Ping.data[0] || [])
+    const [mydaTa, setMydaTa] = useState(myData.Ping.ping_data[0] || [])
+    // console.log('daaata-->', daTa)
     const data = [
         { time: 'Jan', wins: 5, losses: 3 },
         { time: 'Feb', wins: 8, losses: 2 },
@@ -36,18 +37,15 @@ const Tmp1 = ({ Data, myData}) => {
 
     const handlepingDataClick = () => {
         setDaTa(Data.ping || [])
-        setMydaTa(myData.Ping.data[0]|| [])
+        setMydaTa(myData.Ping.ping_data[0]|| [])
     }
 
-    console.log('pp::}++>', mydaTa)
+    // console.log('pp::}++>', mydaTa)
 
     const handleticDataClick = () => {
         setDaTa(Data.tic || [])
-        setMydaTa(myData.Tic.data[0] || [])
+        setMydaTa(myData.Tic.tic_data[0] || [])
     }
-
-    console.log('daTa = ', daTa)
-
 
   return (
     <div className={styl.tmp1}>
@@ -75,15 +73,14 @@ const Tmp1 = ({ Data, myData}) => {
         <div className={styl.content}>
             <div className={styl.leaderboard}>
                 <div className={styl.bar}>
-                    <p >RANK</p>
-                    <p style={{width: '40%'}}>PLAYER</p>
-                    <p >WINS</p>
-                    <p >LVL</p>
+                    <p style={{width: '20%', height: '100%'}}>RANK</p>
+                    <p style={{width: '40%', height: '100%'}}>PLAYER</p>
+                    <p style={{width: '20%', height: '100%'}}>WINS</p>
+                    <p style={{width: '20%', height: '100%'}}>LVL</p>
                 </div>
                 <div className={styl.cards}>
-                    {daTa.sort((a, b) => b.data[0].exp_game - a.data[0].exp_game)
-                    .map((item, index) => (
-                        <CardRank key={index} data={item} index={index}/>
+                    {daTa.map((item, index) => (
+                        <CardRank key={index} data={item} index={index} />
                     ))
                     }
                 </div>
