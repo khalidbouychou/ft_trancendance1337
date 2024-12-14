@@ -12,22 +12,6 @@ function Chat() {
 	// const {sendMessage, isConnected} = useNotificationWS();
 	return (
 		<ChatPage />
-		// <div>
-		// 	{isConnected ? <ChatPage /> : <div>Not connected</div>}
-		// </div>
-		// <Router>
-		// 	<Routes>
-		// 		<Route path="/api/login" element={ <LoginPage /> } />
-		// 		<Route
-		// 			path="/api/chat"
-		// 			element={
-		// 				<PrivateRoute>
-		// 					<ChatPage />
-		// 				</PrivateRoute>
-		// 			}
-		// 		/>
-		// 	</Routes>
-		// </Router>
 	)
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 function MessageItem({ message, currentUser }) {
     if (!currentUser) {

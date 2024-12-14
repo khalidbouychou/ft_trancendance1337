@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './FriendGame.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../UserContext/Context';
-import axios from 'axios';
+import api from '../auth/api';
 
 export default function FriendGame() {
 
@@ -81,7 +81,7 @@ export default function FriendGame() {
     useEffect(() => {
         // console.log("im here");
         const fetchData = async () => {
-            const response = await axios('http//localhost:8000/api/pingpong/');
+            const response = await api.get('/pingpong/');
             // console.log('response:', response);
             if (response.status === 200) {
                 setUsername(response.data.user);
@@ -113,8 +113,9 @@ export default function FriendGame() {
         let rightRacketY = 0;
         let player_id = 0;
         let myReq;
+        const token = localStorage.getItem('token');
         if (FetchedData)
-            socket = new WebSocket(`ws://localhost:8000/ws/play-friend/`);
+            socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
 
         if (socket) {
             socket.onopen = () => {
