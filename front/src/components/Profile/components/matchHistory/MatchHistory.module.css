@@ -5,7 +5,6 @@
 	flex-direction: column;
 	align-items: center;
 	gap: 7px;
-	background-color: rgba(80, 79, 79, 0.4);
 	border-radius: 10px;
 }
 
@@ -48,7 +47,7 @@
 	width: 80%;
 	height: 55px;
 	min-height: 55px;
-	background-color: black;
+	background-color: rgba(80, 79, 79, 0.4);
 	border-radius: 10px;
 	opacity: 0;
 	animation: slideFrame 0.5s ease-in-out forwards, fadeIn 0.5s ease-in-out forwards;
