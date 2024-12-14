@@ -38,6 +38,7 @@ function App() {
                 <Route path="games/localteampong" element={<LocalTeamGame />} />
                 <Route path="games/onlinepong" element={<OnlineGame />} />
                 <Route path="chat" element={<Setting />} />
+                <Route path="" element={<Home />} />
                 <Route path="profile/:username" element={<Profile />} />
                 <Route path="setting" element={<Setting />} />
                 <Route path="notification" element={<Notificationz />} />

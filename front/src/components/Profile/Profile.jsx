@@ -33,14 +33,11 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchData = async () => {
       if (!username) return;
-      username = user?.user?.username;
       setIsLoading(true);
-      setIsMyProfil(1);
-      try {
-        const response = await fetch(
-          `http://localhost:8000/api/getuser/${username}/`
-        );
+      setError(null);
 
+      try {
+        const response = await fetch(`http://localhost:8000/api/getuser/${username}/`);
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error("User not found");
@@ -52,20 +49,19 @@ const Profile = ({ me }) => {
         const data = await response.json();
         setUserData(data);
 
+        // Check if the profile is the logged-in user's profile
         if (data.username === user?.user?.username) {
-          setIsMyProfil(0);
+          setIsMyProfil(1); // Logged-in user's profile
+        } else {
+          setIsMyProfil(0); // Other user's profile
         }
 
-        const pingResponse = await fetch(
-          `http://localhost:8000/api/pingdata/${username}/`
-        );
-
+        const pingResponse = await fetch(`http://localhost:8000/api/pingdata/${username}/`);
         if (!pingResponse.ok) {
           throw new Error("Failed to fetch ping data");
         }
 
         const pingData = await pingResponse.json();
-
         if (pingData && pingData.length > 0) {
           const { exp_game } = pingData[0];
           const calculatedLevel = Math.floor(exp_game / 100);
@@ -91,11 +87,16 @@ const Profile = ({ me }) => {
   }, [username, user]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className={styl.loading}>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className={styl.error}>
+        <h2>Error</h2>
+        <p>{error}</p>
+      </div>
+    );
   }
 
   return (
@@ -160,7 +161,7 @@ const Profile = ({ me }) => {
                   <div className={styl.tmp}>
                     <p>Level {pingLevel}</p>
                     <p>
-                      {pingExp} / {" "}
+                      {pingExp} /{" "}
                       <p
                         style={{
                           color: "rgba(255, 255, 255, 0.4)",

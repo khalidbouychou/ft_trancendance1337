@@ -7,9 +7,14 @@ import { useState, useEffect, useContext } from "react";
 import Tmp2 from "./components/Tmp2/Tmp2";
 import SearchCard from "./components/SearchCard/SearchCard";
 import { AuthContext } from "../../UserContext/Context";
+import CurveChart from "./components/CurveChart/CurveChart";
+import CurveLevel from "./components/CurveLevel/CurveLevel";
+import Statistic from "../Profile/components/statistc/Statistic";
+import { FaChartArea } from "react-icons/fa";
 // import Cookies from "js-cookie";
 
 const Home = () => {
+  console.log("----->>>>>>Home");
   const { user } = useContext(AuthContext);
   const username = user?.user?.username;
   console.log("Logged-in username:", username);
@@ -108,7 +113,9 @@ const Home = () => {
         const ticData = await fetch(`http://localhost:8000/api/ticdata/`);
         const ticDataJson = await ticData.json();
         setTicData(ticDataJson);
-        const ticUserData = ticDataJson.find((item) => item.username === username);
+        const ticUserData = ticDataJson.find(
+          (item) => item.username === username
+        );
         setFilteredTicData(ticUserData);
       } catch (error) {
         setError(error.message);
@@ -173,7 +180,9 @@ const Home = () => {
           </div>
         </div>
         <div className={styl.last}>
-          {pingData.length > 0 && filteredPingData && filteredTicData ? (
+          <p className={styl.dachHead}><FaChartArea style={{width: '30px', height: '30px', color: 'gold'}}/> Dashboard</p>
+          <Statistic /> 
+          {/* {pingData.length > 0 && filteredPingData && filteredTicData ? (
             isMobile ? (
               <Tmp2 Data={{ ping: pingData, tic: ticData }} myData={{ping : filteredPingData, tic: filteredTicData}} />
             ) : (
@@ -181,7 +190,7 @@ const Home = () => {
             )
           ) : (
             <p>Loading data...</p>
-          )}
+          )} */}
         </div>
       </div>
     </div>
