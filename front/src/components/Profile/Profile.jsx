@@ -119,7 +119,9 @@ const Profile = ({ me }) => {
                   </div>
                 </div>
                 <p className={styl.userName}>
-                  {userData.profile_name.toUpperCase()}
+                  {userData.profile_name.length > 8 
+                      ? userData.profile_name.toUpperCase().slice(0, 8) + '.' 
+                      : userData.profile_name.toUpperCase()}
                   <p style={{ color: "rgba(255, 255, 255, 0.4)" }}>
                     <div className={styl.ongline}>
                       <div

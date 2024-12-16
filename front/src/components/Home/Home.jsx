@@ -11,89 +11,17 @@ import CurveChart from "./components/CurveChart/CurveChart";
 import CurveLevel from "./components/CurveLevel/CurveLevel";
 import Statistic from "../Profile/components/statistc/Statistic";
 import { FaChartArea } from "react-icons/fa";
-// import Cookies from "js-cookie";
+import { FaMedal } from "react-icons/fa6";
+import { ImFontSize } from "react-icons/im";
+import { fontString } from "chart.js/helpers";
+import { GiCrossMark } from "react-icons/gi";
+import { PiGameControllerFill } from "react-icons/pi";
 
 const Home = () => {
-  console.log("----->>>>>>Home");
   const { user } = useContext(AuthContext);
-  const username = user?.user?.username;
-  console.log("Logged-in username:", username);
-  console.log("hhhh-->", user);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const navigate = useNavigate();
+  const profile_name = user?.user?.profile_name;
   const [filteredPingData, setFilteredPingData] = useState(null);
-  const [filteredTicData, setFilteredTicData] = useState(null);
-  const [pingRes, setPingRes] = useState(null);
-  const [error, setError] = useState(null);
-  const [pingData, setPingData] = useState([]);
-  const [ticData, setTicData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const handleClick = () => {
-    navigate("/games");
-  };
-
-  const handleResize = () => {
-    setIsMobile(window.innerWidth < 768);
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  const [selectedTab, setSelectedTab] = useState("leaderBoard");
-
-  const handleTabClick = (tab) => {
-    setSelectedTab(tab);
-  };
-
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      if (searchQuery.trim()) {
-        const response = await fetch(
-          `http://localhost:8000/api/search/?q=${searchQuery}`
-        );
-        const data = await response.json();
-        console.log(data);
-        setSearchResults(data);
-      } else {
-        setSearchResults([]);
-      }
-    };
-
-    fetchSearchResults();
-  }, [searchQuery]);
-
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${searchQuery}`);
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
-
-  const data = [
-    { time: "Jan", wins: 5, losses: 3 },
-    { time: "Feb", wins: 8, losses: 2 },
-    { time: "Mar", wins: 4, losses: 5 },
-  ];
-
-  const levelData = [
-    { level: 1, time: 5 },
-    { level: 2, time: 12 },
-    { level: 3, time: 20 },
-    { level: 4, time: 25 },
-  ];
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const fetchDataResults = async () => {
@@ -103,31 +31,26 @@ const Home = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
         const data = await response.json();
-        console.log("ppppll+++>>>", data);
-        setPingData(data);
-        const userData = data.find((item) => item.username === username);
-        // console.log('username***>', item)
-        setFilteredPingData(userData);
-        const ticData = await fetch(`http://localhost:8000/api/ticdata/`);
-        const ticDataJson = await ticData.json();
-        setTicData(ticDataJson);
-        const ticUserData = ticDataJson.find(
-          (item) => item.username === username
-        );
-        setFilteredTicData(ticUserData);
+        const sortedData = data
+          .sort((a, b) => {
+            if (b.level === a.level) {
+              return b.wins - a.wins;
+            }
+            return b.level - a.level;
+          })
+          .slice(0, 3);
+
+        setFilteredPingData(sortedData);
+        const userSpecificData = data.find(item => item.profile_name === profile_name);
+        setUserData(userSpecificData);
       } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching data:", error.message);
       }
     };
 
     fetchDataResults();
-  }, [username]);
-  console.log("piiiing+++>>>", ticData);
-  console.log("filteredPingData", filteredTicData);
+  }, [profile_name]);
 
   return (
     <div className={styl.Home}>
@@ -135,62 +58,70 @@ const Home = () => {
         <div className={styl.head}>
           <h2>HOME</h2>
         </div>
-        {/* <div className={styl.search}>
-          <div className={styl.extFrame}>
-            <div className={styl.innerFrame}>
-              <input
-                type="text"
-                placeholder="search..."
-                name="search"
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-            </div>
-            <button className={styl.searchBut} onClick={handleSearch}>
-              <FaSearchengin style={{ width: "70%", height: "70%" }} />
-            </button>
-          </div>
-          <div className={styl.searchResult}>
-            {searchResults.length > 0 && (
-              <div className={styl.searchResult}>
-                {searchResults.map((user) => (
-                  <SearchCard key={user.id} user={user} />
-                ))}
-              </div>
-            )}
-            {searchResults.length === 0 && searchQuery.trim() !== "" && (
-              <div className={styl.noResult}>
-                <p>No results found</p>
-              </div>
-            )}
-          </div>
-        </div> */}
         <div className={styl.first}>
-          <div className={styl.intro}>
-            <p className={styl.str}>
-              Gear up for epic battles as you challenge your friends to
-              thrilling matches in Ping Pong Legends and Tic Tac Toe ! Who will
-              rise to the top and prove their dominance on the table?
-            </p>
+          <div className={styl.result}>
+            <div className={styl.card}>
+              <p>
+                WINS
+                <FaMedal />
+              </p>
+              <p id={styl.sm}>{userData?.data[0]?.wins ?? -5}</p>
+            </div>
+            <div className={styl.card}>
+              <p>
+                LOSE
+                <GiCrossMark />
+              </p>
+              <p id={styl.sm}>{userData?.data[0]?.losses ?? -5}</p>
+            </div>
+            <div className={styl.card}>
+              <p>
+                GAMES
+                <PiGameControllerFill />
+              </p>
+              <p id={styl.sm}>
+                {(userData?.data[0]?.losses + userData?.data[0]?.wins) ?? -5}
+              </p>
+            </div>
           </div>
-          <div className={styl.play}>
-            <button onClick={handleClick}>
-              <p>Play Now</p>
-            </button>
+
+          <div className={styl.top3}>
+            {filteredPingData?.map((user, index) => (
+              <div
+                key={user.profile_name}
+                className={index === 1 ? styl.cardRankMd : styl.cardRank}
+              >
+                <div className={styl.extImg}>
+                  <div className={styl.intImg}>
+                    <img src={user.avatar} alt={user.profile_name} />
+                  </div>
+                </div>
+                <p>
+                  {user.profile_name.length > 8
+                    ? user.profile_name.substring(0, 8) + "."
+                    : user.profile_name.toUpperCase()}
+                </p>
+
+                <div
+                  className={styl.nbRank}
+                  style={{
+                    border: index === 1 ? "gold 4px solid" : "silver 4px solid",
+                  }}
+                >
+                  <p>{index + 1}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         <div className={styl.last}>
-          <p className={styl.dachHead}><FaChartArea style={{width: '30px', height: '30px', color: 'gold'}}/> Dashboard</p>
-          <Statistic /> 
-          {/* {pingData.length > 0 && filteredPingData && filteredTicData ? (
-            isMobile ? (
-              <Tmp2 Data={{ ping: pingData, tic: ticData }} myData={{ping : filteredPingData, tic: filteredTicData}} />
-            ) : (
-              <Tmp1 Data={{ ping: pingData, tic: ticData }} myData={{Ping : filteredPingData, Tic: filteredTicData}} />
-            )
-          ) : (
-            <p>Loading data...</p>
-          )} */}
+          <p className={styl.dachHead}>
+            <FaChartArea
+              style={{ width: "30px", height: "30px", color: "gold" }}
+            />{" "}
+            Dashboard
+          </p>
+          <Statistic />
         </div>
       </div>
     </div>
