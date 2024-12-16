@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useContext } from "react"
 import AuthProvider from "./UserContext/Context.jsx";
 import style from "./App.module.css";
 import Layout from "./Layout.jsx";
@@ -17,44 +18,50 @@ import FriendGame from "./ponggame/friendpong/FriendGame.jsx";
 import LoginSignup from "./Login/SignupSignin/SignupSignin.jsx";
 import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
 import Twofa from "./Login/2fa/twofa.jsx";
-import Settings from "./Setting/Setting.jsx";
 import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
-
+import { AuthContext } from "./UserContext/Context.jsx";
 
 function App() {
   return (
     <AuthProvider>
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
-            <Routes>
+          <Routes>
             <Route path="/" element={<Layout />}>
-                {/* <Route path="home" element={<Profile />} /> */}
-                <Route path="games" element={<Games />} />
-                <Route path="pingpong-games" element={<PingPongGames />} />
-                <Route path="xo" element={<XO invite={false} />} />
-	              <Route path="xo_with_invitation" element={<XO invite={true} />} /> 
-                <Route path="games/localpong" element={<LocalGame />} />
-                <Route path="friend-game" element={<FriendGame />} />
-                <Route path="games/localteampong" element={<LocalTeamGame />} />
-                <Route path="games/onlinepong" element={<OnlineGame />} />
-                <Route path="chat" element={<Setting />} />
-                <Route path="" element={<Home />} />
-                <Route path="profile/:username" element={<Profile />} />
-                <Route path="setting" element={<Setting />} />
-                <Route path="notification" element={<Notificationz />} />
-                <Route path="twofa" element={<Twofa />} />
-                {/* <Route path="setting" element={<Settings />} /> */}
-                <Route path="otp" element={< Otplogin/>} />
-              </Route>
-              <Route path="/login" element={<LoginSignup />} />
-          <Route path="/*" element={<PageNotFound />} />
-            </Routes>
+              <Route path="" element={<Home />} />
+              <Route path="profile" element={<RedirectToMyProfile />} />
+              <Route path="profile/:profile_name" element={<Profile />} />
+              <Route path="games" element={<Games />} />
+              <Route path="pingpong-games" element={<PingPongGames />} />
+              <Route path="xo" element={<XO invite={false} />} />
+              <Route path="xo_with_invitation" element={<XO invite={true} />} />
+              <Route path="games/localpong" element={<LocalGame />} />
+              <Route path="friend-game" element={<FriendGame />} />
+              <Route path="games/localteampong" element={<LocalTeamGame />} />
+              <Route path="games/onlinepong" element={<OnlineGame />} />
+              <Route path="chat" element={<Setting />} />
+              <Route path="setting" element={<Setting />} />
+              <Route path="notification" element={<Notificationz />} />
+              <Route path="twofa" element={<Twofa />} />
+              <Route path="otp" element={<Otplogin />} />
+            </Route>
+            <Route path="/login" element={<LoginSignup />} />
+            <Route path="/*" element={<PageNotFound />} />
+          </Routes>
         </div>
       </div>
     </AuthProvider>
   );
-
 }
 
+const RedirectToMyProfile = () => {
+  const { user } = useContext(AuthContext);
+
+  if (!user || !user.user || !user.user.profile_name) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Navigate to={`/profile/${user.user.profile_name}`} replace />;
+};
 
 export default App;

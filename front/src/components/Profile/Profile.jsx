@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styl from "./Profile.module.css";
-import UserData from "./components/UserData/UserData";
-import History from "./components/History/History";
 import { AuthContext } from "../../UserContext/Context";
 import MatchHistory from "./components/matchHistory/MatchHistory";
 import Leaderboard from "./components/leaderboard/Leaderboard";
@@ -13,7 +11,7 @@ import { PiGameControllerFill } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
 
 const Profile = ({ me }) => {
-  let { username } = useParams();
+  let { profile_name } = useParams();
   const { user } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
@@ -30,34 +28,39 @@ const Profile = ({ me }) => {
     setActiveSection(section);
   };
 
+
+  // if (!profile_name)
+  //     profile_name = user.user.profile_name
   useEffect(() => {
     const fetchData = async () => {
-      if (!username) return;
+      if (!profile_name) return;
       setIsLoading(true);
       setError(null);
-
+      
+      console.log("=====>>> ppppppPPPPP", profile_name)
       try {
-        const response = await fetch(`http://localhost:8000/api/getuser/${username}/`);
+        const response = await fetch(`http://localhost:8000/api/getuser/${profile_name}/`);
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error("User not found");
           } else {
+            console.log("checkkk")
             throw new Error("Failed to fetch user data");
           }
         }
 
         const data = await response.json();
         setUserData(data);
-
-        // Check if the profile is the logged-in user's profile
-        if (data.username === user?.user?.username) {
-          setIsMyProfil(1); // Logged-in user's profile
+        
+        if (data.profile_name === user?.user?.profile_name) {
+          setIsMyProfil(1);
         } else {
-          setIsMyProfil(0); // Other user's profile
+          setIsMyProfil(0);
         }
-
-        const pingResponse = await fetch(`http://localhost:8000/api/pingdata/${username}/`);
+        
+        const pingResponse = await fetch(`http://localhost:8000/api/pingdata/${profile_name}/`);
         if (!pingResponse.ok) {
+          console.log('Failed to')
           throw new Error("Failed to fetch ping data");
         }
 
@@ -67,7 +70,7 @@ const Profile = ({ me }) => {
           const calculatedLevel = Math.floor(exp_game / 100);
           const calculatedNextLevel = calculatedLevel + 1;
           const maxExperience = calculatedNextLevel * 100;
-
+          
           setPingExp(exp_game);
           setMaxPingExp(maxExperience);
           setPingLevel(calculatedLevel);
@@ -84,8 +87,9 @@ const Profile = ({ me }) => {
     };
 
     fetchData();
-  }, [username, user]);
-
+  }, [profile_name, user]);
+  console.log("userDDDDDaata", userData)
+  
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
   }

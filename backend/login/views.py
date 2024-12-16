@@ -48,11 +48,11 @@ class PlayerViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'No search query provided'}, status=status.HTTP_400_BAD_REQUEST)
  
-    def get_user_by_profile_name(self, request, username):
+    def get_user_by_profile_name(self, request, profile_name):
         try:
-            print('username ==>', username)
-            user = Player.objects.get(username=username)
-            serializer = PlayerSerializer(user)
+            print('profile_name ==>', profile_name)
+            user = Player.objects.get(profile_name=profile_name)
+            serializer = self.get_serializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Player.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -413,10 +413,10 @@ class UpdateProfile (APIView):
         return Response({'msg': 'Profile updated' , "new data" : PlayerSerializer(user).data}, status=status.HTTP_200_OK)
 #-----------------------------------2FA-------------------------------------------------------------
 
-def get_ping_data_by_username(request, username):
+def get_ping_data_by_profile_name(request, profile_name):
     Player = get_user_model()
     try:
-        player = Player.objects.get(username=username)
+        player = Player.objects.get(profile_name=profile_name)
     except Player.DoesNotExist:
         return JsonResponse({'error': 'Player not found'}, status=404)
     pingdata = PingData.objects.filter(player=player)
