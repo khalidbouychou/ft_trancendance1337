@@ -3,8 +3,6 @@ import api from '../../auth/api';
 import './ChatPage.css';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
-// import Cookies from 'js-cookie';
-// import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function ChatPage() {

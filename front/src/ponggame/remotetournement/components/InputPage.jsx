@@ -88,6 +88,16 @@ const MainTournament = () => {
                     setPlayer4Name(data.player4_alias);
                     setPlayer4Avatar(data.player4_avatar);
             }
+            else if (data.message === 'first_winner') {
+                console.log('first_winner:', data);
+                setPlayer5Name(data.winner_name);
+                setPlayer5Avatar(data.winner_avatar);
+            }
+            else if (data.message === 'second_winner') {
+                console.log('second_winner:', data);
+                setPlayer6Name(data.winner_name);
+                setPlayer6Avatar(data.winner_avatar);
+            }
             else if (data.message === 'alias_exists') {
                 console.log('alias name is already taken');
                 setAliasName(false);
@@ -98,6 +108,7 @@ const MainTournament = () => {
                 if (socket.current.readyState === WebSocket.OPEN) {
                     const message = {
                         action: 'startmygame',
+                        name: user.user.username,
                         aliasname: PlayerAliasName,
                         avatar: user.user.avatar,
                         room: RoomName,
@@ -106,33 +117,45 @@ const MainTournament = () => {
                 }
                 console.log('send to server startmygame');
             }
-            else if (data.message === 'match_result'){
+            else if (data.message === 'match_result1'){
                 console.log("data:", data);
                 console.log("PlayerAliasName:", PlayerAliasName);
                 // wait for match screen 
                 if (data.winner === PlayerAliasName){
                     console.log("u win");
+                    setMessage("You won the match and you are qualified to the next round");
                     localcondition = 'W';
                     setCondition('W');
                 }
                 else{
                     console.log("u lost");
+                    setMessage("You lost the match");
                     localcondition = 'L';
                     setCondition('L');
                     socket.current.close();
                 }
             }
-            // else if (){
-                // u win screen
-            // }
-            // else if (){
-                // u lost screen
-            // }
-            // else if (){
-                // someone disconnect so the tournament is over
-            // }
+            else if (data.message === 'match_result2'){
+                console.log("data:", data);
+                console.log("PlayerAliasName:", PlayerAliasName);
+                // wait for match screen 
+                if (data.winner === PlayerAliasName){
+                    console.log("u win");
+                    setMessage("You won the final match and you are tournament winner");
+                    localcondition = 'W';
+                    setCondition('W');
+                    setPlayer7Name(PlayerAliasName);
+                    setPlayer7Avatar(user.user.avatar);
+                }
+                else{
+                    console.log("u lost");
+                    setMessage("You lost the match");
+                    localcondition = 'L';
+                    setCondition('L');
+                }
+            }
             else if (data.message === 'game_data') {
-                // console.log("data:", data);
+                console.log("data:", data);
                 ballx = (data.ballx / game_width) * canvas.width
                 // console.log("after update ballx:", ballx);
                 bally = (data.bally / game_height) * canvas.height
@@ -149,10 +172,10 @@ const MainTournament = () => {
                 console.log("we received game started message we begin the game");
                 console.log("data:", data);
                 console.log("my alias name:", PlayerAliasName);
+                setCondition('N');
                 if (data.player_id1 === PlayerAliasName) {
                     console.log("player id 1");
                     player_id = 1;
-                    // setPlayerId(1);
                     setLeftPlayerName(data.player_id1);
                     setRightPlayerName(data.player_id2);
                     setLeftPlayerAvatar(data.player1_avatar);
@@ -161,14 +184,11 @@ const MainTournament = () => {
                 if (data.player_id2 === PlayerAliasName) {
                     console.log("player id 2");
                     player_id = 2;
-                    // setPlayerId(2);
-
                     setLeftPlayerName(data.player_id1);
                     setRightPlayerName(data.player_id2);
                     setLeftPlayerAvatar(data.player1_avatar);
                     setRightPlayerAvatar(data.player2_avatar);
                 }
-                // setGameStarted(true);
             }
             // else if (data.message === 'disconnected') {
             //     setCondition('D');
@@ -178,7 +198,7 @@ const MainTournament = () => {
 
         };
 
-        if (matchstart){
+        if (matchstart && condition === 'N') {
             console.log("we enter matchstart:", matchstart);
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
@@ -209,7 +229,6 @@ const MainTournament = () => {
             }
     
             const draw = () => {
-                // console.log("draw player_id:", player_id);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
     
                 if (pressedKeys.current.has('w') && player_id === 1) {
@@ -283,7 +302,7 @@ const MainTournament = () => {
             };
         }
         
-    }, [matchstart, PlayerAliasName]);
+    }, [matchstart, PlayerAliasName, condition]);
 
     useEffect(() => {  
         if(PlayerAliasName !== ''){{
@@ -364,7 +383,7 @@ const MainTournament = () => {
                 </div>
                 <canvas id="canvas" className={styles.canvass}></canvas>
             </div> ) : (
-                <div>
+                <div className={styles.subContainer}>
                     <h2>{MESSAGE}</h2>
                 </div>
             )

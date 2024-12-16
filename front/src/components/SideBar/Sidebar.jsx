@@ -27,7 +27,8 @@ const Sidebar = () => {
   const [gameColor, setGameColor] = useState('white')
   const [chatColor, setChatColor] = useState('white')
   const [profileColor, setProfileColor] = useState('yellow')
-// sdjkjnv?÷÷
+  const [menu, setMenu] = useState(false)
+
   const handelNotifOpen = () => {
     setOpenNotf(openNotf === "none" ? "flex" : "none");
   }
@@ -85,8 +86,6 @@ const Sidebar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  console.log("''''''++++>", user.user.username)
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -175,11 +174,7 @@ const Sidebar = () => {
           ref={settRef}
           >
               <div className={styl.extImg}>
-<<<<<<< HEAD
               <img src={user.user.avatar}/>
-=======
-                <img src={user.user.avatar}/>
->>>>>>> 55b7fcf3ece2dfb65489c9ece31071d1094f4451
               </div>
           </button>
           {menu &&

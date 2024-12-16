@@ -13,6 +13,7 @@
 	width: 80%;
 	height: 30px;
 	position: relative;
+
 }
 
 #Rank , #Name, #Wins, #Loses, #Level {
@@ -37,20 +38,15 @@
 	background: none;
 	position: absolute;
 	border-radius: 5px;
-	border: 2px rgba(255, 255, 255, 0.3) solid;
-	color: rgba(255, 255, 255, 0.5);
-	&:hover {
-		transition: 0.3s;
-        border: 2px rgba(255, 255, 255, 0.5) solid;
-        color: white;
-	}
+	border: 1px white solid;
+	color: white;
 }
 
 .games {
 	display: flex;
 	width: 150px;
 	height: 100px;
-	background-color: rgb(44, 42, 42);
+	background-color: royalblue;
 	position: absolute;
 	top: 110%;
 	left: 80%;
@@ -80,7 +76,7 @@
 	}
 }
 
-.Ranking {
+.pingRanking {
 	display: flex;
 	width: 80%;
 	height: 100%;
@@ -368,3 +364,45 @@
 		}
 	}
 }
+
+/* .extImgLead {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 75px;
+    height: 80px;
+    background-color: rgb(130, 130, 5);
+    border: none;
+	position: relative;
+    clip-path: polygon(
+		50% 0%, 
+		100% 25%, 
+		100% 75%, 
+		50% 100%, 
+		0% 75%, 
+		0% 25%
+	);
+}
+	
+.intImgLead {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 72px;
+	height: 77px;
+	background-color: green;
+	border: none;
+	position: relative;
+	clip-path: polygon(
+	50% 0%, 
+	100% 25%, 
+	100% 75%, 
+	50% 100%, 
+	0% 75%, 
+	0% 25%
+	);
+	img {
+		display: flex;
+		height: 77px;
+	}
+} */
