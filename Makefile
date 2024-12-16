@@ -59,6 +59,3 @@ push:
 	@git push
 
 re: clean all
-
-
-
