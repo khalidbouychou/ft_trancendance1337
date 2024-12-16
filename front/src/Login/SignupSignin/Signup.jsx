@@ -18,17 +18,34 @@ const Signup = ({ isLogin, setIsLogin }) => {
       });
       if (res.status === 201) {
         toast.success("Account created successfully", {
-          position: "top-right",
-          autoClose: 2000
+          position: "top-center",
+          autoClose: 1000,
+          style: { 
+            color: "green",
+            border: "1px solid green",
+            backgroundColor: "white",
+            textAlign: "center",
+            // borderRadius: "5px",
+            padding: "15px",
+          }
         });
         setTimeout(() => {
           setIsLogin(true);
         }, 1000);
       }
     } catch (err) {
-      toast.error("Opps something went wrong", {
-        position: "top-right",
-        autoClose: 1000
+      let errmsg = err.response.data.error || "player with this username already exists."; 
+      toast.error(errmsg, {
+        position: "top-center",
+        autoClose: 1000,
+        style: { 
+          color: "red",
+          border: "1px solid red",
+          backgroundColor: "white",
+          textAlign: "center",
+          // borderRadius: "5px",
+          padding: "15px",
+        }
       });
     }
   };

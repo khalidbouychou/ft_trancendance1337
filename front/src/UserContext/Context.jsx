@@ -75,7 +75,8 @@ export default function AuthProvider({ children }) {
   let res = null;
   async function get_auth_user() {
     try {
-      res = await axios.get(`http://localhost:8000/api/user/`, {
+      console.log("----------------------> get_auth_user");
+      const res = await axios.get(`http://localhost:8000/api/user/`, {
         withCredentials: true
       });
 

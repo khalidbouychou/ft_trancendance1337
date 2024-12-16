@@ -50,25 +50,29 @@ class TicDataSerializer(serializers.ModelSerializer):
         fields = ['wins', 'losses', 'exp_game', 'timestamp']
         # fields = ['username', 'profile_name','avatar' ,'status_network', 'status_game', 'two_factor', 'otp_verified', 'qrcode_path','bool_login']
 
+def myownvalidate(data):
+    username = data.get('username')
+    profile_name = data.get('profile_name')
+    password = data.get('password')
+    if len(username) < 9 or len(username) > 15:
+        raise serializers.ValidationError({'error': 'Username must be between 9 and 15 characters'})
+    if len(profile_name) < 9 or len(profile_name) > 15:
+        raise serializers.ValidationError({'error': 'Profile name must be between 9 and 15 characters'})
+    if len(password) < 8 or len(password) > 16:
+        raise serializers.ValidationError({'error': 'Password must be between 8 and 16 characters'})
+    return data
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ['username', 'password', 'profile_name']
-        extra_kwargs = {'password': {'write_only': True,'required': True ,'min_length': 8 , 'max_length': 16},
-                        'username': {
-                            'required': True,
-                            'min_length': 9,
-                            'max_length': 15,
-                            } , 
-                        'profile_name': {'write_only': True ,
-                                         'required': True, 'min_length': 9,
-                                         'max_length': 15
-                                         } }
+        extra_kwargs = {'password': {'write_only': True,'required': True},
+                        'username': {'required': True,} , 'profile_name': {'write_only': True ,'required': True,} }
 
     def create(self, validated_data):
+        validdata = myownvalidate(validated_data)
         user = Player.objects.create_user(
-            username=validated_data['username'],
-            profile_name=validated_data['profile_name']
+            username=validdata['username'],
+            profile_name=validdata['profile_name'], 
         )
         user.set_password(validated_data['password'])
         user.save()

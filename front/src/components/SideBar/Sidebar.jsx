@@ -1,7 +1,9 @@
 import { Link, useNavigate} from "react-router-dom";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import styl from "./Sidebar.module.css";
-import pinglogo from "./assets/pinglogo.png";
+import En from "../../../public/assets/icons/lang-icons/En-lang.png";
+import Fr from "../../../public/assets/icons/lang-icons/Fr-lang.png";
+import It from "../../../public/assets/icons/lang-icons/It-lang.png";
 import { MdNotifications, MdNotificationImportant } from "react-icons/md";
 import { AuthContext } from "../../UserContext/Context";
 import { FaSearchengin } from "react-icons/fa";
@@ -14,7 +16,7 @@ import { use } from "react";
 
 
 const Sidebar = () => {
-  const { user } = useContext(AuthContext);
+  const { user , setUser} = useContext(AuthContext);
   const navigate = useNavigate();
   const searchRef = useRef(null);
   const notifRef = useRef(null);
@@ -28,6 +30,21 @@ const Sidebar = () => {
   const [chatColor, setChatColor] = useState('white')
   const [profileColor, setProfileColor] = useState('yellow')
   const [menu, setMenu] = useState(false)
+
+  async function Handelogout() {
+  
+    try {
+      const res = await axios.get(`http://localhost:8000/api/logout/`,{withCredentials: true,});
+      if (res.status === 200) {
+        setUser(null)
+        navigate('/login')
+      }
+    } catch (error) {
+      navigate('/login')
+    }
+  }
+
+
 
   const handelNotifOpen = () => {
     setOpenNotf(openNotf === "none" ? "flex" : "none");
@@ -110,7 +127,9 @@ const Sidebar = () => {
   return (
     <div className={styl.navBar}>
       <div className={styl.logo}>
-        <img src={pinglogo}/>
+        <img src={En}/>
+        <img src={Fr}/>
+        <img src={It}/>
         {/* <p >Ping Pong</p> */}
       </div>
       <div className={styl.search}>
@@ -179,14 +198,19 @@ const Sidebar = () => {
           </button>
           {menu &&
           <div id='menu' className={styl.settings}>
-            <Link className={styl.links} to='setting'>
+            <div className={styl.links} onClick={
+              ()=> {
+                // setMenu(false)
+                navigate('/setting')
+              }
+            }>
               <CiSettings style={{width: '20px', height: '20px'}}/> 
               settings
-            </Link>
-            <Link className={styl.links} to='logout'>
-              <CiLogout style={{width: '20px', height: '20px'}}/>
+            </div>
+            <div onClick={Handelogout} className={styl.links}>
+              <CiLogout style={{width: '20px', height: '20px'}} />
               logout
-            </Link>
+            </div>
           </div>
           }
         </div>

@@ -9,7 +9,7 @@ import LocalGame from "./ponggame/localpong/LocalGame.jsx";
 import LocalTeamGame from "./ponggame/teampong/LocalTeamGame.jsx";
 import OnlineGame from "./ponggame/onlinepong/OnlineGame.jsx";
 import XO from "./xo_game/online.jsx";
-import Chat from "./Chat/Chat.jsx";
+// import Chat from "./Chat/Chat.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import Setting from "./Setting/Setting.jsx";
 import Notificationz from "./components/Notification/Notification.jsx";
@@ -28,7 +28,7 @@ function App() {
         <div className={style.MainContent}>
             <Routes>
             <Route path="/" element={<Layout />}>
-                {/* <Route path="home" element={<Profile />} /> */}
+                {/* <Route path="home" element={<Profile />} /> */} 
                 <Route path="games" element={<Games />} />
                 <Route path="pingpong-games" element={<PingPongGames />} />
                 <Route path="xo" element={<XO invite={false} />} />
@@ -37,7 +37,7 @@ function App() {
                 <Route path="friend-game" element={<FriendGame />} />
                 <Route path="games/localteampong" element={<LocalTeamGame />} />
                 <Route path="games/onlinepong" element={<OnlineGame />} />
-                <Route path="chat" element={<Setting />} />
+                <Route path="chat" element={<h1>No Chat Yet -_-</h1>} />
                 <Route path="profile/:username" element={<Profile />} />
                 <Route path="setting" element={<Setting />} />
                 <Route path="notification" element={<Notificationz />} />
