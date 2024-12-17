@@ -82,27 +82,6 @@ const Profile = ({me}) => {
         } else {
           throw new Error("Ping data is invalid or empty");
         }
-
-        const ticResponse = await fetch(`http://localhost:8000/api/ticdata/${username}/`);
-        if (!ticResponse.ok) {
-          throw new Error("Failed to fetch Tic Tac Toe data");
-        }
-        const ticData = await ticResponse.json();
-        console.log("Tic Tac Toe data:", ticData);
-        if (ticData && ticData.length > 0) {
-          const { exp_game } = ticData[0];
-          const calculatedLevel = Math.floor(exp_game / 100);
-          const calculatedNextLevel = calculatedLevel + 1;
-          const maxExperience = calculatedNextLevel * 100;
-  
-          setTicExp(exp_game);
-          setMaxTicExp(maxExperience);
-          setTicLevel(calculatedLevel);
-          setNextTicLevel(calculatedNextLevel);
-          setTicPercentage(Math.floor(exp_game / 100) * 10)
-        } else {
-          throw new Error("Ping data is invalid or empty");
-        }
         } catch (error) {
           setError(error.message);
         } finally {
