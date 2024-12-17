@@ -96,8 +96,8 @@ export default function GameComponent({ type }) {
                 ballx = (canvas.width / 2 ) - racketWidth - 15 - 1;
                 balldirectionX *= -1;
                 balldirectionY = offset;
-                if (bonus > 2)
-                    bonus = 2;
+                if (bonus > 3)
+                    bonus = 3;
                 bonus++;
             }
             else if (leftRacketY <= ((canvas.height / 2) + bally + 15) && leftRacketY + racketHeight >= ((canvas.height / 2) + bally - 15) && ((canvas.width / 2) + ballx - 15) <= (0 + racketWidth)) {
@@ -106,8 +106,8 @@ export default function GameComponent({ type }) {
                 ballx = -(canvas.width / 2 ) + racketWidth + 15;
                 balldirectionX *= -1;
                 balldirectionY = offset;
-                if (bonus > 2)
-                    bonus = 2;
+                if (bonus > 3)
+                    bonus = 3;
                 bonus++;
             }
             else if (((canvas.height / 2) + bally - 15) <= 0) {
@@ -125,7 +125,8 @@ export default function GameComponent({ type }) {
                 balldirectionY = Math.random() * 2 - 1;
                 setLeftScore(prevScore => prevScore + 1);
                 left_score++;
-                if (left_score >= 5000){
+                bonus = 0;
+                if (left_score >= 5){
                     setCondition('S');
                     mycondition = 'S';
                     if (type === "left"){
@@ -149,6 +150,7 @@ export default function GameComponent({ type }) {
                 balldirectionY = Math.random() * 2 - 1;
                 setRightScore(prevScore => prevScore + 1);
                 right_score++;
+                bonus = 0;
                 if (right_score >= 5){
                     setCondition('S');
                     mycondition = 'S';
@@ -194,7 +196,7 @@ export default function GameComponent({ type }) {
             drawRightRacket();
             gamelogic();
             const currentPath = window.location.pathname;
-            if (currentPath === '/games/tournament' && condition === 'R')
+            if (currentPath === '/games/localtournament' && condition === 'R')
             {
                 return requestAnimationFrame(draw);
             }else

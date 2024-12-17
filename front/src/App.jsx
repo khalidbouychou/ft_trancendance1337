@@ -21,7 +21,7 @@ import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
 import { AuthContext } from "./UserContext/Context.jsx";
 import LocalTournament from "./ponggame/tournamentpong/Tournament.jsx";
 import RemoteTournament from "./ponggame/remotetournement/RemoteTournament.jsx";
-
+import Newpong from "./ponggame/pong3d/newpong.jsx";
 
 function App() {
   return (
@@ -33,12 +33,15 @@ function App() {
               <Route path="" element={<Home />} />
               <Route path="profile" element={<RedirectToMyProfile />} />
               <Route path="profile/:profile_name" element={<Profile />} />
-              <Route path="games" element={<Games />} />
-              <Route path="pingpong-games" element={<PingPongGames />} />
+              {/* <Route path="games" element={<Games />} /> */}
+              <Route path="games" element={<PingPongGames />} />
               <Route path="games/localpong" element={<LocalGame />} />
-              <Route path="friend-game" element={<FriendGame />} />
-              <Route path="games/localteampong" element={<LocalTeamGame />} />
               <Route path="games/onlinepong" element={<OnlineGame />} />
+              <Route path="games/localteampong" element={<LocalTeamGame />} />
+              <Route path="friend-game" element={<FriendGame />} />
+              <Route path="games/localtournament" element={<LocalTournament />} />
+              <Route path="games/remotetournament" element={<RemoteTournament />} />
+              <Route path="games/pong3d" element={<Newpong />} />
               <Route path="chat" element={<Chat />} />
               <Route path="setting" element={<Setting />} />
               <Route path="notification" element={<Notificationz />} />
