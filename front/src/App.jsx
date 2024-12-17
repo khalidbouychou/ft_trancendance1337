@@ -21,12 +21,11 @@ import Settings from "./Setting/Setting.jsx";
 import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
 import LocalTournament from "./ponggame/tournamentpong/Tournament.jsx";
 import RemoteTournament from "./ponggame/remotetournement/RemoteTournament.jsx";
-import Notification from "./notification/notification.jsx";
+
 
 function App() {
   return (
     <AuthProvider>
-      {user && <Notification />}
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
             <Routes>
