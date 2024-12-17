@@ -2,7 +2,6 @@
 from django.http import JsonResponse
 from .consumers import GameStateManager
 from rest_framework.decorators import api_view, permission_classes , authentication_classes
-from rest_framework.permissions import IsAuthenticated
 from login.models import Player, PingData
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication 

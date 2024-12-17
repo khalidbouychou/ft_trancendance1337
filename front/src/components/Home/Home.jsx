@@ -146,14 +146,14 @@ const Home = () => {
                 WINS
                 <FaMedal />
               </p>
-              <p id={styl.sm}>{userData?.data[0]?.wins ?? -5}</p>
+              {/* <p id={styl.sm}>{userData?.data[0]?.wins ?? -5}</p> */}
             </div>
             <div className={styl.card}>
               <p>
                 LOSE
                 <GiCrossMark />
               </p>
-              <p id={styl.sm}>{userData?.data[0]?.losses ?? -5}</p>
+              {/* <p id={styl.sm}>{userData?.data[0]?.losses ?? -5}</p> */}
             </div>
             <div className={styl.card}>
               <p>
@@ -161,7 +161,7 @@ const Home = () => {
                 <PiGameControllerFill />
               </p>
               <p id={styl.sm}>
-                {(userData?.data[0]?.losses + userData?.data[0]?.wins) ?? -5}
+                {/* {(userData?.data[0]?.losses + userData?.data[0]?.wins) ?? -5} */}
               </p>
             </div>
           </div>

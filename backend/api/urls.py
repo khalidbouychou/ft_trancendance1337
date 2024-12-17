@@ -21,7 +21,6 @@ urlpatterns = [
     path('api/chat/', include('chat.urls')),
     path('api/notif/', include('notification.urls')),
     path('api/', include('pongame.urls')),
-    path('api/', include('login.urls')),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('verify/', TokenVerifyView.as_view(), name='token_verify'),
     #---------------game urls------------------

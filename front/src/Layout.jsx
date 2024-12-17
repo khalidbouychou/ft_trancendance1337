@@ -9,6 +9,8 @@ import { AuthContext } from "./UserContext/Context";
 import { GridLoader } from "react-spinners";
 import { useState } from "react";
 import Notification from "./notification/notification.jsx";
+import { NotificationWebSocketProvider } from "./contexts/NotifWSContext.jsx";
+import { LocationProvider } from "./contexts/LocationContext.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -42,7 +44,11 @@ const Layout = () => {
     <div className={style.EntirePage}>
       {user && <Notification />}
           {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> } 
-           <Outlet />
+          <NotificationWebSocketProvider>
+            <LocationProvider>
+              <Outlet />
+            </LocationProvider>
+          </NotificationWebSocketProvider>
     </div>
   );
 };

@@ -112,7 +112,6 @@ const Sidebar = () => {
           <button style={{ color: buttonColors.chat }}>Chat</button>
         </Link>
       </div>
-      <hr />
       <div className={styl.end}>
         <button
           className={styl.notifIcon}

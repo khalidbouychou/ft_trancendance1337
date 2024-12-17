@@ -140,7 +140,6 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                         <ChatOptionsMenu
                             // onBlockUser={handleBlockUser}
                             onPlayPong={handlePlayPong}
-                            onPlayTicTacToe={handlePlayTicTacToe}
                             otherUser={otherUser}
                             currentUser={currentUser}
                             viewProfile={viewProfile}

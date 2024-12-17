@@ -47,7 +47,7 @@ function ChatPage() {
 				console.log('Current User:', response.data.user);
 			} catch (error) {
 				console.warn('Chat page inaccessible:', error);
-				navigate('/login');
+				// navigate('/login');
 			}
 		};
 		
@@ -343,7 +343,7 @@ function ChatPage() {
 						allUsers={allUsers}
 						unreadMessages={unreadMessages}
 						/>
-					{/* <ChatWindow
+					<ChatWindow
 						currentContact={currentContact}
 						chat={chat}
 						message={message}
@@ -353,7 +353,7 @@ function ChatPage() {
 						chatMessagesRef={chatMessagesRef}
 						sockets={sockets}
 						typingUser={typingUser}
-						/> */}
+						/>
 				</div>
         </div>
     );
