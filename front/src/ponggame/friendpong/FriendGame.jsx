@@ -92,10 +92,10 @@ export default function  FriendGame() {
 
                 //khedma ta3 bohali
                 console.log('user', user);
-                setUsername(response.data.user);
-                setLeftPlayerAvatar(response.data.avatar);
-                setAvatar(response.data.avatar);
-                setLevel(response.data.exp_game);
+                setUsername(response?.data?.user);
+                setLeftPlayerAvatar(response?.data?.avatar);
+                setAvatar(response?.data?.avatar);
+                setLevel(response?.data?.exp_game);
             // }else {
             //     console.log("error:", response.status);
             // }

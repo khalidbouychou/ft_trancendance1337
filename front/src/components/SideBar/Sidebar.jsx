@@ -12,11 +12,12 @@ import userImage from "./assets/nouahidi.jpeg";
 import { CiSettings } from "react-icons/ci";
 import { CiLogout } from "react-icons/ci";
 import { use } from "react";
+import i18n from "../../i18n";
 // import { height } from "@mui/system";
 
 
 const Sidebar = () => {
-  const { user , setUser} = useContext(AuthContext);
+  const { user ,Logout} = useContext(AuthContext);
   const navigate = useNavigate();
   const searchRef = useRef(null);
   const notifRef = useRef(null);
@@ -31,27 +32,21 @@ const Sidebar = () => {
   const [profileColor, setProfileColor] = useState('yellow')
   const [menu, setMenu] = useState(false)
 
-  async function Handelogout() {
-  
-    try {
-      const res = await axios.get(`http://localhost:8000/api/logout/`,{withCredentials: true,});
-      if (res.status === 200) {
-        setUser(null)
-        navigate('/login')
-      }
-    } catch (error) {
-      navigate('/login')
-    }
+
+
+  //------------Translation----------------
+  const French = () => {
+    i18n.changeLanguage("fr");
   }
-
-
-
+  const English = () => {
+    i18n.changeLanguage("en");
+  }
+  const Italian = () => {
+    i18n.changeLanguage("it");
+  }
+  //------------Translation----------------
   const handelNotifOpen = () => {
     setOpenNotf(openNotf === "none" ? "flex" : "none");
-  }
-
-  const handelSetting = () => {
-    navigate('/setting')
   }
 
   const handlGameColor = () => {
@@ -107,7 +102,7 @@ const Sidebar = () => {
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       if (searchResults.length > 0)
-        navigate(`/profile/${searchResults[0].profile_name}`);
+        navigate(`/profile/${searchResults[0]?.profile_name}`);
     }
   };
 
@@ -127,10 +122,11 @@ const Sidebar = () => {
   return (
     <div className={styl.navBar}>
       <div className={styl.logo}>
-        <img src={En}/>
-        <img src={Fr}/>
-        <img src={It}/>
-        {/* <p >Ping Pong</p> */}
+        <img src={En} onClick={English}/>
+        <img src={Fr} onClick={French}/>
+        <img src={It}
+        onClick={Italian} 
+        />
       </div>
       <div className={styl.search}>
         <div className={styl.iconSearch}>
@@ -152,7 +148,8 @@ const Sidebar = () => {
       </div>
         <div className={styl.components}>
         <Link to={`/profile/${user?.user?.profile_name}`} onClick={handlProfileColor}><button style={{color: profileColor}}>Profile</button></Link>
-        <Link to={'/games'} onClick={handlGameColor}><button style={{color: gameColor}}>Game</button></Link>
+        <Link to="/lang"><button style={{color: profileColor}}>Lang</button></Link>
+        <Link to={'/pingpong-games'} onClick={handlGameColor}><button style={{color: gameColor}}>Game</button></Link>
         <Link to={'/chat'} onClick={handlChatColor}><button style={{color: chatColor}}>Chat</button></Link>
         </div>
         <hr />
@@ -193,7 +190,7 @@ const Sidebar = () => {
           ref={settRef}
           >
               <div className={styl.extImg}>
-              <img src={user.user.avatar}/>
+              <img src={user?.user?.avatar}/>
               </div>
           </button>
           {menu &&
@@ -207,7 +204,7 @@ const Sidebar = () => {
               <CiSettings style={{width: '20px', height: '20px'}}/> 
               settings
             </div>
-            <div onClick={Handelogout} className={styl.links}>
+            <div onClick={Logout} className={styl.links}>
               <CiLogout style={{width: '20px', height: '20px'}} />
               logout
             </div>

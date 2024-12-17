@@ -73,8 +73,8 @@ const NotiCardSent = ({request}) => {
   return (
     <div className={styl.notiCard}>
         <div className={styl.userimage}>
-            {request.to_user.avatar ? (
-                <img src={request.to_user.avatar} alt={request.to_user.username} className="contact-avatar" />
+            {request?.to_user?.avatar ? (
+                <img src={request.to_user.avatar} alt={request?.to_user?.username} className="contact-avatar" />
             ) : (
                 <div className="contact-avatar default-avatar">
                     <FontAwesomeIcon icon={faUser} />
@@ -84,10 +84,10 @@ const NotiCardSent = ({request}) => {
         <div className={styl.Sender}>
             <p>
                 {request.notif_type === 'FR' ? (
-                    `Friend request sent to ${request.to_user.username}`
+                    `Friend request sent to ${request?.to_user?.username}`
                 ) : (
                     <>
-                    `Game invitation (${request.game_type}) sent to ${request.to_user.username}`
+                    `Game invitation (${request?.game_type}) sent to ${request?.to_user?.username}`
                     <span className={styl.timeLeft}> {timeLeft}s</span>
                     </>
                 )}

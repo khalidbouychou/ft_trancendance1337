@@ -212,7 +212,7 @@ class AuthUser(APIView):
         try:
             user = request.user
             token = request.COOKIES.get('token')
-            if not token:
+            if not token or token == 'null':
                 response = Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
                 django_logout(request)
                 response.delete_cookie('token')
@@ -222,11 +222,11 @@ class AuthUser(APIView):
                 return response
 
             try:
-                isvalid = AccessToken(token) # Check if the token is valid
+                AccessToken(token) # Check if the token is valid
             except TokenError as e:
                 refresh = request.COOKIES.get('refresh')
                 crstf = request.COOKIES.get('csrftoken')
-                res = requests.post('https://localhost/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
+                res = requests.post('http://localhost:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
                 res.raise_for_status() # Raise an exception if the status code is not 2xx
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')
@@ -394,11 +394,14 @@ class UpdateProfile (APIView):
     
     def put(self,request):
         data = request.data
+        profile_name = data.get('profile_name')
         user = request.user
         update = False
         new_profile_name = data.get('profile_name')
         new_avatar = data.get('avatar') 
         if new_profile_name is not None:
+            if (len(new_profile_name) < 9 or len(new_profile_name) > 15):
+                return Response({'error': 'Profile name must be between 9 and 15 characters'}, status=status.HTTP_400_BAD_REQUEST)
             user.profile_name = new_profile_name
             update = True
         if new_avatar is not None:

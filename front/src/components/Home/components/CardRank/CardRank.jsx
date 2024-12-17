@@ -33,7 +33,7 @@ const CardRank = ({data, index}) => {
     }
 
     useEffect(() => {
-        if (user && user.user.username === username) {
+        if (user && user?.user?.username === username) {
             setColor('rgba(65, 21, 160, 0.3)');
         }
         else 

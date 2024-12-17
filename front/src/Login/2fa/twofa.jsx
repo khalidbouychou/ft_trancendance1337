@@ -4,7 +4,7 @@ import "./twofa.css";
 import { AuthContext } from "../../UserContext/Context";
 import { useLocation } from "react-router-dom";
 import Desable2fa from "./Desable2fa";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import BounceLoader from "react-spinners/BounceLoader";
 
 const Twofa = () => {
@@ -74,7 +74,7 @@ useEffect(() => {
     else if (url == "undefined") {
       setQrcode("");
       setEnable(!isOn);
-      setTwofa(user.user?.two_factor); 
+      setTwofa(user?.user?.two_factor); 
     } else {
       try {
         await get_auth_user();
@@ -118,16 +118,18 @@ useEffect(() => {
       if (res.status === 200) {
         setVerified(true);
         toast.success("2FA verified", {
-          position: "top-right",
-          autoClose: 1000,
-          closeOnClick: true
+          style: {
+            backgroundColor: 'rgb(0, 128, 0)',
+            color: 'white'
+          }
         });
       }
     } catch (error) {
       toast.error("OTP code is not correct", {
-        position: "top-right",
-        autoClose: 1000,
-        closeOnClick: true
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
       });
     }
   };
@@ -215,7 +217,6 @@ useEffect(() => {
           )}
         </div>
       {/* </div> */}
-      <ToastContainer />
     </>
   );
 };

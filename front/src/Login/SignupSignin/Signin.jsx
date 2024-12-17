@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../UserContext/Context";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useRef } from "react";
 
 const Signin = () => {
@@ -18,8 +18,10 @@ const Signin = () => {
     try {
       if (!username || !password) {
         toast.error("Please fill all the fields", {
-          position: "top-right",
-          autoClose: 1000
+          style: {
+            backgroundColor: 'rgb(255, 0, 0)',
+            color: 'white'
+          }
         });
         return;
       }
@@ -36,9 +38,10 @@ const Signin = () => {
       if (response.status === 200) {
         setUser(response.data.user);
         toast.success("login success", {
-          position: "top-right",
-          autoClose: 1000,
-          closeOnClick: true
+          style: {
+            backgroundColor: 'rgb(0, 128, 0)',
+            color: 'white'
+          }
         });
         setTimeout(() => {
           navigate("/");
@@ -46,8 +49,10 @@ const Signin = () => {
       }
     } catch (err) {
       toast.error("login failed", {
-        position: "top-right",
-        autoClose: 1000
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
       });
     }
   };
@@ -94,7 +99,7 @@ const Signin = () => {
           INTRA 42
         </button>
       </form>
-      <ToastContainer />
+
     </>
   );
 };

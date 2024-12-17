@@ -19,9 +19,22 @@ import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
 import Twofa from "./Login/2fa/twofa.jsx";
 import Settings from "./Setting/Setting.jsx";
 import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
+import { use, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { color } from "chart.js/helpers";
+import i18n from "./i18n.js";
+import { ToastContainer } from "react-toastify";
 
 
 function App() {
+  const {t} = useTranslation();
+
+  useEffect(() => {
+    i18n.changeLanguage(localStorage.getItem('lang') || 'en')
+  }
+  , [localStorage.getItem('lang')])
+
+
   return (
     <AuthProvider>
       <div className={style.EntirePage}>
@@ -42,6 +55,78 @@ function App() {
                 <Route path="setting" element={<Setting />} />
                 <Route path="notification" element={<Notificationz />} />
                 <Route path="twofa" element={<Twofa />} />
+                <Route path="lang" element={
+                  <div>
+                    <div style={
+                      {
+                        display: 'flex',
+                        justifyContent: 'center',
+                        gap: '10px',
+                        marginTop: '10px',
+                        marginBottom: '10px',
+                        color: 'red',
+                        width: '100%'
+                      }
+                    }>
+                    <button style={
+                      {
+                        color: 'black',
+                        backgroundColor: 'white',
+                        border: '1px solid red',
+                        padding: '5px',
+                        borderRadius: '5px',
+                        width : '100px',
+                        fontSize: '20px'
+                      }
+                    }
+                    onClick={()=>{
+                      localStorage.setItem('lang', 'en')
+                      i18n.changeLanguage(localStorage.getItem('lang'))
+
+                    }
+                    }
+                    >en</button>
+                    <button style={
+                      {
+                        color: 'black',
+                        backgroundColor: 'white',
+                        border: '1px solid red',
+                        padding: '5px',
+                        borderRadius: '5px',
+                        width : '100px',
+                        fontSize: '20px'
+                      }
+                    }
+                    onClick={()=>{
+                      localStorage.setItem('lang', 'fr')
+                      i18n.changeLanguage(localStorage.getItem('lang'))
+                    }
+                    }
+                    >fr</button>
+                    <button style={
+                      {
+                        color: 'black',
+                        backgroundColor: 'white',
+                        border: '1px solid red',
+                        padding: '5px',
+                        borderRadius: '5px',
+                        width : '100px',
+                        fontSize: '20px'
+                      }
+                    }
+                    onClick={()=>{
+                      localStorage.setItem('lang', 'it')
+                      i18n.changeLanguage(localStorage.getItem('lang'))
+                    }
+                    }
+                    >it</button>
+                    </div> 
+
+                    <h1 style={
+                      {color: 'red'}
+                    }> {t("fristname lastname")}</h1>
+                  </div>
+                } />
                 {/* <Route path="setting" element={<Settings />} /> */}
                 <Route path="otp" element={< Otplogin/>} />
               </Route>
@@ -50,6 +135,14 @@ function App() {
             </Routes>
         </div>
       </div>
+      <ToastContainer 
+        position="top-center"
+        autoClose={2000}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        stacked
+      />
     </AuthProvider>
   );
 

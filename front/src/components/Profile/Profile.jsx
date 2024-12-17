@@ -8,6 +8,7 @@ import MatchHistory from "./components/matchHistory/MatchHistory";
 import Leaderboard from "./components/leaderboard/Leaderboard";
 import Statistic from "./components/statistc/Statistic";
 import CardFriend from "./components/History/components/CardFriend/CardFriend";
+import {useTranslation} from 'react-i18next'
 
 const Profile = ({me}) => {
   let { username } = useParams();
@@ -27,6 +28,7 @@ const Profile = ({me}) => {
   const [ticExp, setTicExp] = useState('0')
   const [maxticExp, setMaxTicExp] = useState('0')
   const [ticPercentage, setTicPercentage] = useState('')
+  const {t} = useTranslation()
 
   const handelClick = (section) => {
     setActiveSection(section);
@@ -129,7 +131,7 @@ const Profile = ({me}) => {
     <div className={styl.profile}>
       <div className={styl.content}>
         <div className={styl.head}>
-          <h2>PROFILE</h2>
+          {/* <h2>{t("PROFILE")}</h2> */}
         </div>
         <div className={styl.userPrf}>
           <div className={styl.side1}>

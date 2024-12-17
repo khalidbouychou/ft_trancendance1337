@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../UserContext/Context';
 import { use } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 const UserInfos = () => {
   const {user, get_auth_user} = useContext(AuthContext);
   const [updated, setUpdated] = useState(false);
@@ -34,6 +35,12 @@ const UserInfos = () => {
                 }
             }).then((res) => {
                 setUpdated(true);
+                toast.success('Image uploaded successfully', {
+                    style: {
+                      backgroundColor: 'rgb(0, 128, 0)',
+                      color: 'white'
+                    }
+                  });
             }
           ).catch((err) => {
               console.log(err);
@@ -45,10 +52,17 @@ const UserInfos = () => {
 
 const Setupload = (e) => {
   const file = e.target.files[0];
+  console.log(file);
   if (file.type === 'image/jpeg' || file.type === 'image/png') {
     uploadImage();
   }else {
-    alert('Please upload a valid image');
+    toast.error('Invalid image format', {
+      style: {
+        backgroundColor: 'rgb(255, 0, 0)',
+        color: 'white'
+      }
+    }
+  );
   }
 }
 
@@ -84,10 +98,22 @@ useEffect(() => {
                       }
                   }).then((res) => {
                     console.log(res);
+                    toast.success('Profile name updated successfully', {
+                        style: {
+                          backgroundColor: 'rgb(0, 128, 0)',
+                          color: 'white'
+                        }
+                      });
+                    setUpdated(true);
                     setUpdated(true);
                   }
                 ).catch((err) => {
-                    console.log(err);
+                    toast.error(err.response.data.error || 'Profile name update failed', {
+                      style: {
+                        backgroundColor: 'rgb(255, 0, 0)',
+                        color: 'white'
+                      }
+                    });
                 }
               );
               }

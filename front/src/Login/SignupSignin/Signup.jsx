@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Signup = ({ isLogin, setIsLogin }) => {
   const [username, setUsername] = useState("");
@@ -18,16 +18,11 @@ const Signup = ({ isLogin, setIsLogin }) => {
       });
       if (res.status === 201) {
         toast.success("Account created successfully", {
-          position: "top-center",
-          autoClose: 1000,
-          style: { 
-            color: "green",
-            border: "1px solid green",
-            backgroundColor: "white",
-            textAlign: "center",
-            // borderRadius: "5px",
-            padding: "15px",
+          style: {
+            backgroundColor: 'rgb(0, 128, 0)',
+            color: 'white'
           }
+          
         });
         setTimeout(() => {
           setIsLogin(true);
@@ -36,15 +31,9 @@ const Signup = ({ isLogin, setIsLogin }) => {
     } catch (err) {
       let errmsg = err.response.data.error || "player with this username already exists."; 
       toast.error(errmsg, {
-        position: "top-center",
-        autoClose: 1000,
-        style: { 
-          color: "red",
-          border: "1px solid red",
-          backgroundColor: "white",
-          textAlign: "center",
-          // borderRadius: "5px",
-          padding: "15px",
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
         }
       });
     }
@@ -87,7 +76,6 @@ const Signup = ({ isLogin, setIsLogin }) => {
           <hr />
         </div>
       </form>
-      <ToastContainer />
     </>
   );
 };

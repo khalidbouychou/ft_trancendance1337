@@ -7,16 +7,19 @@ import { useContext, useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
+import i18n from "../../i18n";
 
 const Desable2fa = ({  message, setVerified }) => {
   const { user, get_auth_user } = useContext(AuthContext);
   const [formsg, setFormsg] = useState(false);
+  const {t} = useTranslation()
 
   useEffect(() => {
     get_auth_user();
-    console.log("frm--",user.user.otp_verified)
-    setFormsg(user.user.otp_verified);
-  }, [user.user.otp_verified]);
+    console.log("frm--",user?.user?.otp_verified)
+    setFormsg(user?.user?.otp_verified);
+  }, [user?.user?.otp_verified]);
 
   const renderInputs = () => {
     return Array.from({
@@ -25,6 +28,9 @@ const Desable2fa = ({  message, setVerified }) => {
       <input key={i} type="text" className="otp-input" maxLength={1} />
     ));
   };
+  // useEffect(() => {
+  //   i18n.changeLanguage("en");
+  // }, []);
 
   const Disable_twofa = async () => {
     const inputs = document.getElementsByClassName("otp-input");
@@ -52,16 +58,19 @@ const Desable2fa = ({  message, setVerified }) => {
         setVerified(res.data.otp_verified);
         setFormsg(res.data.otp_verified);
         toast.success("2FA Disabled", {
-          position: "top-right",
-          autoClose: 1000,
-          closeOnClick: true
+          style: {
+            backgroundColor: 'rgb(0, 128, 0)',
+            color: 'white'
+          }
         });
       }
     } catch (error) {
       toast.error("OTP code is not correct", {
-        position: "top-right",
-        autoClose: 1000,
-        closeOnClick: true
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
+
       });
     }
   };
@@ -78,7 +87,7 @@ const Desable2fa = ({  message, setVerified }) => {
     </div>
   ) : (
     <>
-      <h1>2fa desabled </h1>
+      <h1>{t("2fa desabled")} </h1>
     </>
   );
 };

@@ -15,7 +15,7 @@ const SearchCard = ({ user }) => {
           </div>
         </div>
       </div>
-      <p className={styl.userName}>{user.username}</p>
+      <p className={styl.userName}>{user?.username}</p>
     </button>
   );
 };

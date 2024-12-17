@@ -87,8 +87,8 @@ const NotiCard = ({request}) => {
 							xo_invite_socket.close();
 							navigate("/xo_with_invitation", { state: {
 								room_id: room_id,
-								name: request.to_user.username,
-								other_name: request.from_user.username,
+								name: request.to_user?.username,
+								other_name: request.from_user?.username,
 								role: "guest"
 							}});
 						}
@@ -138,8 +138,8 @@ const NotiCard = ({request}) => {
 	return (
 		<div className={styl.notiCard}> 
 		<div className={styl.userimage}>
-		{request.from_user.avatar ? (
-			<img src={request.from_user.avatar} alt={request.from_user.username} className="contact-avatar" />
+		{request?.from_user?.avatar ? (
+			<img src={request?.from_user?.avatar} alt={request?.from_user?.username} className="contact-avatar" />
 		) : (
 			<div className="contact-avatar default-avatar">
 			<FontAwesomeIcon icon={faUser} />
@@ -148,7 +148,7 @@ const NotiCard = ({request}) => {
 		</div>
 		<div className={styl.Sender}>
 		<p >
-		{request.from_user.username}
+		{request?.from_user?.username}
 		{request.notif_type === 'FR' ? (
 			' sent you a friend request'
 		) : (

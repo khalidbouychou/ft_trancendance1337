@@ -54,9 +54,10 @@ export default function AuthProvider({ children }) {
           }, 1000);
           if (res.data.otp_login) {
             toast.success("login success", {
-              position: "top-right",
-              autoClose: 1000,
-              closeOnClick: true
+              style: {
+                backgroundColor: 'rgb(0, 128, 0)',
+                color: 'white'
+              }
             });
           }
           navigate(`/profile/${res.data.user.profile_name}`);
@@ -64,8 +65,10 @@ export default function AuthProvider({ children }) {
       }
     } catch (error) {
       toast.error("login failed", {
-        position: "top-right",
-        autoClose: 1000
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
       });
       navigate(`/profile/${res.data.user.profile_name}`);
     } finally {
