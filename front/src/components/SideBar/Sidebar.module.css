@@ -328,23 +328,22 @@ ul:last-of-type li {
 		50% 100%, 
 		0% 75%, 
 		0% 25%
-        );
-        img {
-            display: flex;
-            width: 50px;
-            height: 50px;
-        }
-    }
-    
-    
-    .notifIcon {
+    );
+    img {
         display: flex;
-        width: 100px;
-        height: 100%;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        border: none;
+        width: 50px;
+        height: 50px;
+    }
+}
+    
+.notifIcon {
+    display: flex;
+    width: 100px;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: none;
     background: none;
     /* cursor: pointer; */
     position: relative;
@@ -355,7 +354,6 @@ ul:last-of-type li {
     position: absolute;
     width: 350px;
     height: 280px;
-    background-color: aquamarine;
     top: 100%;
     right: 20%;
     overflow: auto;
@@ -403,6 +401,9 @@ ul:last-of-type li {
     border: none;
     background: none;
     cursor: pointer;
+    img  {
+        width: 50px;
+    }
 }
 
 .choose {
@@ -466,7 +467,7 @@ ul:last-of-type li {
     width: 150px;
     position: absolute;
     top: 100%;
-    right: 25%;
+    /* right: 25%; */
     padding: 15px 2px;
     gap: 20px;
     background-color: rgba(128, 128, 128, 0.505);
@@ -477,7 +478,6 @@ ul:last-of-type li {
         display: flex;
         width: 100%;
         height: 60px;
-        /* background-color: red; */
         border: none;
         background: none;
         cursor: pointer;
@@ -579,6 +579,7 @@ ul:last-of-type li {
     /* background: linear-gradient(300deg, #330752, #641688);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease; */
+    /* background: non; */
     p {
         /* display: flex;
         justify-content: center;
@@ -601,6 +602,10 @@ ul:last-of-type li {
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
+    img {
+        width: 70px;
+        height: 70px;
+    }
 }
 
 @media (max-width: 900px) {
@@ -618,6 +623,14 @@ ul:last-of-type li {
     width: 100%;
     height: 100%;
     position: relative;
+    input {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 16px;
+        position: relative;
+        /* left: 10px; */
+    }
 }
 
 .end {
