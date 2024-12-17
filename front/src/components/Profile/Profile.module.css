@@ -1,0 +1,583 @@
+.profile {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.content {
+	display: flex;
+	width: 95%;
+	height: 90%;
+	min-height: 1250px;
+	justify-content: center;
+	align-items: center;
+	margin-top: 80px;
+	flex-direction: column;
+}
+
+.head h2
+{
+	text-align: center;
+    font-size:40px;
+	font-weight:300;
+	letter-spacing:10px;
+    text-transform: uppercase;
+    display: grid;
+    align-items: center;
+    color: white;
+}
+
+.userPrf {
+	display: flex;
+	justify-content: center;
+	width: 93%;
+	height: 100%;
+	min-height: 100%;
+	gap: 3%;
+	min-width: 1800px;
+}
+
+.side1 {
+	display: flex;
+	width: 70%;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 30px;
+	margin-bottom: 2%;
+	@media (max-width: 1730px) {
+		width: 60%;
+	}
+}
+
+.userInfo {
+	display: flex;
+	width: 98%;
+	height: 30%;
+	background-color: rgba(80, 79, 79, 0.4);
+	margin: 2%;
+	position: relative;
+	justify-content: center;
+	min-height: 300px;
+	border-radius: 10px;
+}
+
+.userDis {
+	display: flex;
+	width: 40%;
+	padding-left: 5%;
+	position: relative;
+	gap: 10%;
+}
+
+
+.extImg {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 200px;
+    background-color: rgb(130, 130, 5);
+	/* background-color: rgb(68, 68, 68); */
+    border: none;
+	position: relative;
+	bottom: 30px;
+	clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+}
+	
+.intImg {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 140px;
+	height: 190px;
+	background-color: green;
+	border: none;
+	position: relative;
+	clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+	img {
+		display: flex;
+		width: 190px;
+		
+	}
+}
+	
+.userName {
+	display: flex;
+	font-size: 19px;
+	font-weight: 600;
+	position: relative;
+	top: 20%;
+	color: white;
+	letter-spacing: 5px;
+	flex-direction: column;
+	p {
+		display: flex;
+		align-items: center;
+		font-size: 14px;
+		letter-spacing: 0.5px;
+		gap: 5px;
+	}
+}
+
+.ongline {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 13px;
+	height: 13px;
+	background-color: white;
+	border-radius: 10px;
+}
+
+.chooseData {
+	display: flex;
+	position: absolute;
+	width: 50%;
+	height: 40px;
+	background-color: black;
+	bottom: -15px;
+	border-radius: 10px 10px 0px 0px;
+	button {
+		flex: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: none;
+		border: none;
+		cursor: pointer;
+		p {
+			color: rgba(255, 255, 255, 0.6);
+			font-size: 13px;
+			letter-spacing: 1px;
+			text-decoration: underline;
+			text-decoration-thickness: 1.5px;
+			text-underline-offset: 7px;
+			text-decoration-color: #ff0000;
+			transition: 0.3s;
+			&:hover {
+				transition: 0.3s;
+				color: white;
+			}
+		}
+	}
+}
+
+.levels {
+	display: flex;
+	width: 70%;
+	height: 95%;
+	/* background-color: antiquewhite; */
+	gap: 10px;
+	flex-direction: column;
+}
+
+.level {
+	display: flex;
+	width: 100%;
+	height: 50%;
+	/* background-color: aqua; */
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
+}
+
+.extLvl {
+	display: flex;
+	width: 60%;
+	height: 20px;
+	background-color: rgb(19, 5, 62);
+	border-radius: 30px;
+	overflow: hidden;
+	align-items: center;
+	border: 1px gray solid;
+}
+
+.intLvl {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	background-color: gray;
+	border-radius: 30px;
+}
+
+.tmp {
+	width: 59%;
+	height: 40%;
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+	p {
+		color: white;
+		font-size: 12.5px;
+		display: flex;
+		align-items: center;
+		position: relative;
+		padding: 0;
+		margin: 0;
+	}
+}
+
+.gameName {
+	font-size: 16px;
+	font-weight: 600;
+	color: rgb(184, 187, 8);
+	display: flex;
+	position: relative;
+	bottom: 10px;
+}
+
+.userData {
+	display: flex;
+	width: 98%;
+	height: 70%;
+	min-height: 70%;
+	margin: 1%;
+}
+
+.statistic {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
+}
+
+.upperPart {
+	display: flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+	gap: 2%;
+}
+
+.circ {
+    display: flex;
+    width: 50%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.chartCir {
+    width: 270px;
+    height: 270px;
+    border-radius: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chartText{
+    position: absolute;
+    text-align: center;
+    color: white;
+    p {
+        margin: 0;
+    }
+}
+
+.CurveChart {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bottom {
+	display: flex;
+	width: 100%;
+	height: 50%;
+}
+
+@media (max-width: 768px) {
+	.circ {
+		width: 40%;
+	}
+
+	.CurveChart {
+		width: 60%;
+	}
+
+	.chartCir {
+		width: 170px;
+		height: 170px;
+	}
+	.chartText {
+		p{
+			font-size: 13px;
+		}
+	}
+}
+
+.side2 {
+	display: flex;
+	width: 400px;
+	min-width: 400px;
+	margin-bottom: 2%;
+	flex-direction: column;
+	border-radius: 10px;
+	overflow: hidden;
+	/* gap: 10px; */
+	@media (max-width: 1900px) {
+		width: 350px;
+		min-width: 350px;
+	}
+}
+
+.headBut {
+	display: flex;
+	width: 100%;
+	height: 50px;
+	/* gap: 5px; */
+	background-color: rgba(80, 79, 79, 0.4);
+	button {
+		display: flex;
+		width: 50%;
+		height: 100%;
+		/* border-radius: 30px 30px 0px 0px; */
+		justify-content: center;
+		align-items: center;
+		color: white;
+		background: none;
+		border: none;
+		border-radius: 0 10px 0 0;
+		/* background-color:rgba(255, 255, 255, 0.4); */
+	}
+}
+
+.displayFr {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	padding-top: 10px;
+	background-color: rgba(80, 79, 79, 0.4);
+	flex-direction: column;
+	align-items: center;
+	overflow: auto;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+.searchFr {
+	display: flex;
+	width: 100%;
+	height: 80px;
+	justify-content: center;
+	align-items: center;
+	/* background-color: antiquewhite; */
+	background-color: rgba(80, 79, 79, 0.4);
+	input {
+		display: flex;
+		width: 96%;
+		height: 70%;
+		margin: 2%;
+		border: none;
+		border-radius: 20px;
+		padding: 5px;
+		background-color: black;
+		color: white;
+		font-size: 15px;
+	}
+}
+
+@media (max-width: 640px) {
+	.upperPart {
+		flex-direction: column;
+		gap: 0;
+	}
+	.circ {
+		width: 100%;
+		height: 40%;
+	}
+
+	.CurveChart {
+		width: 100%;
+		height: 60%;
+	}
+}
+
+@media (max-width: 640px) {
+	.userPrf {
+		width: 100%;
+	}
+}
+
+@media (max-width: 1540px) {
+	.extLvl {
+		width: 90%;
+	}
+
+	.tmp {
+		width: 88%;
+	}
+
+	.extImg {
+		width: 130px;
+		height: 180px;
+		min-height: 180px;
+	}
+	.intImg {
+		width: 120px;
+		height: 170px;
+		img {
+			width: 170px;
+		}
+	}
+	.side1 {
+		width: 100%;
+	}
+	.userPrf {
+		min-width: 0px;
+	}
+	.side2 {
+		display: none;
+	}
+	.userName {
+		font-size: 17px;
+		font-weight: 500;
+		letter-spacing: 3.5px;
+		p {
+			font-size: 12px;
+		}
+	}
+}
+
+@media (max-width: 1024px) {
+	.chooseData {
+		width: 90%;
+		/* right: 0px;
+		border-radius: 0px 10px 0px 0px; */
+	}
+	.userDis {
+		width: 30%;
+		flex-direction: column;
+		gap: 0;
+	}
+	.userName {
+		top: 0;
+		padding-bottom: 50px;
+	}
+}
+
+@media (max-width: 768px) {
+	.mHead {
+		width: 100%;
+		p {
+			font-size: 10px;
+			letter-spacing: 0.8px;
+		}
+	}
+	.matches {
+		width: 100%;
+	}
+	.cardMatch {
+		width: 100%;
+	}
+	.head h2 {
+		font-size:25px;
+        font-weight:100;
+        letter-spacing:4px;
+	}
+	.content {
+		margin-top: 50px;
+	}
+	.userInfo {
+		height: 22%;
+	}
+	.extImg {
+		width: 100px;
+		height: 130px;
+		min-height: 130px;
+		bottom: 20px;
+	}
+	.intImg {
+		width: 90px;
+		height: 120px;
+		img {
+			height: 120px;
+		}
+	}
+	.userName {
+		font-size: 15px;
+		font-weight: 400;
+		letter-spacing: 2px;
+		top: 30px;
+	}
+	.tmp {
+		width: 87%;
+		p {
+			font-size: 11px;
+		}
+	}
+	.gameName {
+		font-size: 15px;
+		font-weight: 500;
+	}
+	.chooseData {
+		width: 100%;
+		border-radius: 0px;
+		p {
+			font-size: 11px;
+		}
+	}
+}
+
+@media (max-width: 425px) {
+	.head h2 {
+		font-size:20px;
+        font-weight:100;
+        letter-spacing:3px;
+	}
+	.userDis {
+		left: 0;
+	}
+	.extImg {
+		width: 70px;
+		height: 100px;
+		min-height: 100px;
+		bottom: 13px;
+	}
+	.intImg {
+		width: 65px;
+		height: 95px;
+		min-height: 95px;
+		img {
+			height: 95px;
+		}
+	}
+	.userName {
+		font-size: 12px;
+		font-weight: 300;
+		letter-spacing: 1px;
+		top: 20px;
+		p{ 
+			font-size: 10px;
+		}
+	}
+	.extLvl {
+		width: 100%;
+		height: 10px;
+	}
+	.tmp {
+		width: 95%;
+		p {
+			font-size: 9px;
+		}
+	}
+	.gameName {
+		font-size: 12px;
+	}
+	.chooseData {
+		p {
+			font-size: 10px;
+			letter-spacing: 0.5px;
+		}
+	}
+}

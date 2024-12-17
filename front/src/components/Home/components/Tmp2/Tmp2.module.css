@@ -1,0 +1,226 @@
+.tmp2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+    position: relative;
+}
+
+.Head {
+    /* background-color: azure; */
+    display: flex;
+    width: 100%;
+    height: 10%;
+    button {
+        background-color: rgba(255, 255, 255, 0.3);
+        border: 1px solid white;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        gap: 10px;
+        p {
+            font-size: 17px;
+            color: white;
+            transition: 0.5s;
+        }
+        transition: 0.5s;
+        &:hover {
+            p {
+                font-size: 1rem;
+                transition: 0.5s;
+            }
+        }
+    }
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    color: gold;
+    display: flex;
+    position: relative;
+    bottom: 2px;
+}
+.cardGn {
+    width: 100%;
+    height: 90%;
+    /* background-color: aquamarine; */
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    border: solid 1px white;
+    padding: 1%;
+    gap: 10px;
+}
+.cards {
+    width: 100%;
+    height: 93%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 1%;
+    position: relative;
+    &::-webkit-scrollbar {
+		width: 7px;
+		height: 50%;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: 20px;
+		background-color: rgba(255, 255, 255, 0.2);
+	}
+}
+
+.statistic {
+    padding: 1%;
+    width: 100%;
+    height: 90%;
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart1 {
+    display: flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart2 {
+    display: flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.circ {
+    display: flex;
+    width: 50%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.CurveChart {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chartCir {
+    width: 200px;
+    height: 200px;
+    border-radius: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chartText{
+    position: absolute;
+    text-align: center;
+    color: white;
+    p {
+        margin: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .chartCir {
+        width: 130px;
+        height: 130px;
+    }
+    .chartText {
+        p{
+            font-size: 12px;
+        }
+    }
+}
+
+.bar {
+    width: 100%;
+    height: 40px;
+    min-height: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    /* position: absolute; */
+    justify-content: center;
+    align-items: center;
+}
+
+.Nname{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: 800;
+}
+
+.sett {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    background-color: blueviolet;
+    border: 2px solid rgba(255, 255, 255, 0.428);
+    border-radius: 3px;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: relative;
+    cursor: pointer;
+}
+
+.choiceGame {
+    display: flex;
+    width: 150px;
+    height: 60px;
+    position: absolute;
+    background-color: blueviolet;
+    top: 120%;
+    left: 30%;
+    border-radius: 0px 10px 10px 10px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.game {
+    display: flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    p {
+        font-size: 15px;
+        font-weight: 1000;
+        color: white;
+    }
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: scale(1.05);
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        
+        p {
+            color: #FFD700;
+        }
+    }
+}
