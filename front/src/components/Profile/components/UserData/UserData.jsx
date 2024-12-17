@@ -30,12 +30,11 @@ const UserData = ({ userData, ismyprofil }) => {
         if (response.ok) {
           const data = await response.json();
           setStatisticData(data[0]);
-          console.log('Fetched Data:', data);
-        } else {
-          console.log('Failed to fetch data.');
+       
         }
+      
       } catch (error) {
-        console.log('Fetch error:', error);
+      
       }
     };
 

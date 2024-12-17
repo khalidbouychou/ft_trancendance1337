@@ -20,10 +20,10 @@ export default function AuthProvider({ children }) {
     });
     try {
       if (response.status === 200) {
-        setUrl(response.data.url);
+        window.location.href = response.data.url;
       }
     } catch (error) {
-      console.log("auth_intra42", error);
+      navigate("/login");
     }
   }
 
@@ -35,7 +35,6 @@ export default function AuthProvider({ children }) {
         navigate("/login");
       }
       const code = urlParams.get("code");
-      console.log("code", code);
       let res = null;
       if (code) {
         const params = new URLSearchParams();
@@ -65,21 +64,13 @@ export default function AuthProvider({ children }) {
         }
       }
     } catch (error) {
-      toast.error("login failed", {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      });
       navigate(`/`);
     } finally {
       setLoading(false);
     }
   }
-  let res = null;
   async function get_auth_user() {
     try {
-      console.log("----------------------> get_auth_user");
       const res = await axios.get(`http://localhost:8000/api/user/`, {
         withCredentials: true
       });
@@ -91,12 +82,10 @@ export default function AuthProvider({ children }) {
           res.data.user.otp_verified &&
           navigate("/otp");
         if (window.location.pathname === "/login") {
-          // navigate("/home");
           navigate(`/`);
         }
       }
     } catch (error) {
-      console.log("user", error);
       setUser(null);
       navigate("/login");
     }
@@ -113,20 +102,20 @@ export default function AuthProvider({ children }) {
         navigate("/login");
       }
     } catch (error) {
-      console.log("logout", error);
       setUser(null);
     }
   }
 
   useEffect(() => {
-    Login()
-    
-  }, [location.pathname]);
+    !user && Login()
+  }, []);
   useEffect(
     () => {
-      !user && get_auth_user();
+      if (!user) {
+        get_auth_user();
+      }
     },
-    [location.pathname]
+    [user]
   );
   return (
     <AuthContext.Provider

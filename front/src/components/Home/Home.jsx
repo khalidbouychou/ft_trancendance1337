@@ -12,8 +12,6 @@ import { AuthContext } from "../../UserContext/Context";
 const Home = () => {
   const { user } = useContext(AuthContext);
   const username = user?.user?.username;
-  console.log("Logged-in username:", username);
-  console.log("hhhh-->", user);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navigate = useNavigate();
   const [filteredPingData, setFilteredPingData] = useState(null);
@@ -55,7 +53,6 @@ const Home = () => {
           `http://localhost:8000/api/search/?q=${searchQuery}`
         );
         const data = await response.json();
-        console.log(data);
         setSearchResults(data);
       } else {
         setSearchResults([]);
@@ -100,10 +97,8 @@ const Home = () => {
         }
 
         const data = await response.json();
-        console.log("ppppll+++>>>", data);
         setPingData(data);
         const userData = data.find((item) => item.username === username);
-        // console.log('username***>', item)
         setFilteredPingData(userData);
         const ticData = await fetch(`http://localhost:8000/api/ticdata/`);
         const ticDataJson = await ticData.json();
@@ -119,8 +114,6 @@ const Home = () => {
 
     fetchDataResults();
   }, [username]);
-  console.log("piiiing+++>>>", ticData);
-  console.log("filteredPingData", filteredTicData);
 
   return (
     <div className={styl.Home}>

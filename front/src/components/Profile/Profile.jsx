@@ -90,7 +90,7 @@ const Profile = ({me}) => {
           throw new Error("Failed to fetch Tic Tac Toe data");
         }
         const ticData = await ticResponse.json();
-        console.log("Tic Tac Toe data:", ticData);
+   
         if (ticData && ticData.length > 0) {
           const { exp_game } = ticData[0];
           const calculatedLevel = Math.floor(exp_game / 100);
@@ -115,7 +115,6 @@ const Profile = ({me}) => {
     fetchData();
   }, [username, user]);
 
-  console.log('expsstic', ticPercentage)
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -125,7 +124,6 @@ const Profile = ({me}) => {
     return <div>Error: {error}</div>;
   }
 
-  console.log('===>>',userData)
 
   return (
     <div className={styl.profile}>

@@ -8,7 +8,7 @@ export function LocationProvider({ children }) {
     const location = useLocation();
 
     useEffect(() => {
-        console.log(location.pathname);
+     
         setCurrentLocation(location.pathname);
     }, [location]);
 

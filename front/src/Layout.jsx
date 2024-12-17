@@ -15,10 +15,6 @@ const Layout = () => {
  const {user,get_auth_user} = useContext(AuthContext);
  const [loading, setLoading] = useState(true);
 
-// useEffect(() => {
-//   console.log("layout user " , user)
-// }
-// , [location.pathname])
  useEffect(() => {
    get_auth_user()
  }

@@ -12,11 +12,6 @@ const UserInfos = () => {
   const [updated, setUpdated] = useState(false);
   const [NewProfileName, setNewProfileName] = useState(null);
 
-  useEffect(() => {
-    console.log(user)
-  }
-  , [user])
-
   const uploadImage = () => { 
     const input = document.getElementById('uploadimg');
     if (input.files.length > 0) {
@@ -43,7 +38,6 @@ const UserInfos = () => {
                   });
             }
           ).catch((err) => {
-              console.log(err);
               setUpdated(false);
           }
         );
@@ -52,7 +46,6 @@ const UserInfos = () => {
 
 const Setupload = (e) => {
   const file = e.target.files[0];
-  console.log(file);
   if (file.type === 'image/jpeg' || file.type === 'image/png') {
     uploadImage();
   }else {
@@ -97,7 +90,6 @@ useEffect(() => {
                           .split("=")[1]
                       }
                   }).then((res) => {
-                    console.log(res);
                     toast.success('Profile name updated successfully', {
                         style: {
                           backgroundColor: 'rgb(0, 128, 0)',

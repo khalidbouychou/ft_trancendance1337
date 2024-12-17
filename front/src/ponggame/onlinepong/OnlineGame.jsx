@@ -34,9 +34,7 @@ export default function  OnlineGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle.");
-        }
+        } 
     };
     
     const leftdown = () => {
@@ -46,9 +44,7 @@ export default function  OnlineGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle.");
-        }
+        } 
     };
     
     const rightup = () => {
@@ -58,9 +54,7 @@ export default function  OnlineGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the right player can move the right paddle.");
-        }
+        } 
     };
     
     const rightdown = () => {
@@ -71,17 +65,12 @@ export default function  OnlineGame() {
             };
             socket.send(JSON.stringify(message));
         } else {
-            console.log("Only the right player can move the right paddle.");
         }
     };
 
     useEffect(() => {
         const fetchData = async () => {
             const response = await api.get('/pingpong/');
-            // console.log('response: ',response.data);
-            // console.log('username:', response.data.user);
-            // console.log('avatar:', response.data.avatar);
-            // console.log('exp_game:', response.data.exp_game);
             if (response.status === 200)
             {
                 // setUser(response.data);
@@ -89,8 +78,6 @@ export default function  OnlineGame() {
                 setLeftPlayerAvatar(response.data.avatar);
                 setAvatar(response.data.avatar);
                 setLevel(response.data.exp_game);
-            }else {
-                console.log("error:", response.status);
             }
         };
         
@@ -129,7 +116,6 @@ export default function  OnlineGame() {
                         level: level,
                     };
                     socket.send(JSON.stringify(message));
-                    console.log('WebSocket is open now');
                 } else {
                     console.error('WebSocket is not open. readyState:', socket.readyState);
                 }
@@ -141,7 +127,7 @@ export default function  OnlineGame() {
             window.rightdown = rightdown;
             socket.onmessage = (event) => {
                     const data = JSON.parse(event.data);
-                    // console.log('Received:', data)
+
                     if (data.message){
                         if (data.message === 'game_data'){
                             ballx = (data.ballx / game_width) * canvas.width
@@ -195,15 +181,6 @@ export default function  OnlineGame() {
                         }
                         socket.close();
                     }
-            };
-
-            socket.onclose = () => {
-                console.log('WebSocket connection closed');
-            };
-
-
-            socket.onerror = (error) => {
-                console.error('WebSocket error:', error);
             };
         }
 
@@ -304,7 +281,6 @@ export default function  OnlineGame() {
     }, [username]);
 
     useEffect(() => {
-        console.log("gamestarted", gamestarted);
         if (gamestarted){
             document.getElementById('matchmaking').style.display = "none";
             document.getElementById('result').style.display = "none";

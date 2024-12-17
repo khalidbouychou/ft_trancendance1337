@@ -67,8 +67,7 @@ const History = ({ username, ismyprofil }) => {
     setSett(prevSett => prevSett === 'none' ? 'flex' : 'none')
   }
 
-  console.log("matches", matches);
-  console.log("username", username);
+
   return (
     <div className={styl.last}>
       <div className={styl.Title}>

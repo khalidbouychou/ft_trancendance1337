@@ -30,7 +30,6 @@ const MainTournament = () => {
     },[player1Input, player2Input, player3Input, player4Input]);
 
     const starttournament = () => {
-        console.log('Start Tournament');
         setTournamentStart('yes');
         setPlayer1Name(player1Input);
         setPlayer2Name(player2Input);

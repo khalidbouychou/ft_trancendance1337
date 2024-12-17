@@ -14,7 +14,7 @@ const CardRank = ({data, index}) => {
     const [color, setColor] = useState('rgba(255, 255, 255, 0.3)')
     const [type, setType] = useState('')
     const Navigate = useNavigate();
-    console.log('huwaaa', data)
+
 
     useEffect(() => {
         if (data) {

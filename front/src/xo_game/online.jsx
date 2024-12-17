@@ -117,7 +117,6 @@ var	XO = props => {
 		} else	message += ": attempted refresh! -1</span>";
 		if (roleRef.current === 'host')	setPlayer1Score(player1Score - 1);
 		else if (roleRef.current === 'guest')	setPlayer2Score(player2Score - 1);
-		console.log("s: ", s.readyState);
 		send_update("move", JSON.stringify({
 			log: message,
 		}), roleRef.current === 'host' ? 'guest' : 'host', s)
@@ -182,7 +181,6 @@ var	XO = props => {
 			setPlayer2Score(data.player2Score);
 		if (data.oponent_name) {
 			setOponentName(data.oponent_name);
-			console.log("just received: ", data.oponent_name);
 		}
 	}, [obj])
 

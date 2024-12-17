@@ -10,7 +10,7 @@ import BounceLoader from "react-spinners/BounceLoader";
 const Twofa = () => {
   const [twofa, setTwofa] = useState(false);
   const [qrcode, setQrcode] = useState("");
-  const { user, get_auth_user } = useContext(AuthContext);
+  const { user, get_auth_user ,setUser } = useContext(AuthContext);
   const [isEnable, setEnable] = useState("Off");
   const [verified, setVerified] = useState(false);
 
@@ -32,13 +32,14 @@ const Twofa = () => {
       await get_auth_user();
       const res = await axios.get(USER_STATUS_URL, { withCredentials: true });
       if (res.status === 200) {
-        setVerified(res.data.user.otp_verified);
-        setTwofa(res.data.user.two_factor);
-        setEnable(res.data.user.two_factor);
-        if (res.data.user.qrcode_path) {
-          console.log("useeffect --- > ", res);
+        setUser(res?.data?.user);
+        setVerified(res?.data?.user?.otp_verified);
+        setTwofa(res?.data?.user?.two_factor);
+        setEnable(res?.data?.user?.two_factor);
+        if (res?.data?.user?.qrcode_path) {
+        
           setTimeout(() => {
-            setQrcode(`http://localhost:8000/${res.data.user?.qrcode_path}`);
+            setQrcode(`http://localhost:8000/${res?.data?.user?.qrcode_path}`);
           }, 2000);
         }
       }
@@ -49,7 +50,7 @@ const Twofa = () => {
 
 
 useEffect(() => {
-  console.log("------------------->" , isEnable);
+
 }, [isEnable])
   const handleSwitch = async (e) => {
     const isOn = e.target.value === "On";
@@ -61,7 +62,7 @@ useEffect(() => {
         try {
           const res = await axios.get("http://localhost:8000/api/clearqrcode/", { withCredentials: true });
           if (res.status === 200){
-          console.log("useeffect 2 --- > ", res);
+        
             await get_auth_user();
             setQrcode(res.data?.qrcode_path);
             // setQrcode("");
@@ -81,9 +82,9 @@ useEffect(() => {
         setQrcode("");
         const res = await axios.get(url, { withCredentials: true });
         if (res.status === 200) { 
-          console.log("useeffect 22 --- > ", res);
+    
           setTimeout(() => {
-            setQrcode(`${res.data.user?.qrcode_path}`);
+            setQrcode(`${res.data?.user?.qrcode_path}`);
           }, 1000);
         }
       } catch (error) {

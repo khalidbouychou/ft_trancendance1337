@@ -36,8 +36,6 @@ export default function  FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle.");
         }
     };
     
@@ -48,9 +46,7 @@ export default function  FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle.");
-        }
+        } 
     };
     
     const rightup = () => {
@@ -60,9 +56,7 @@ export default function  FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the right player can move the right paddle.");
-        }
+        } 
     };
     
     const rightdown = () => {
@@ -72,33 +66,19 @@ export default function  FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the right player can move the right paddle.");
-        }
+        } 
     };
 
     useEffect(() => {
-        console.log("im here");
+       
         const fetchData = async () => {
             const response = await api.get('/pingpong/');
-            console.log('response:', response);
-            // if (response.status === 200)
-            // {
-                // setUser(response.data.user);
-                // setUsername(response.data.user.username);
-                // setLeftPlayerAvatar(response.data.user.avatar);
-                // setAvatar(response.data.user.avatar);
-                // setLevel(response.data.user.exp_game);
-
-                //khedma ta3 bohali
-                console.log('user', user);
+            
                 setUsername(response?.data?.user);
                 setLeftPlayerAvatar(response?.data?.avatar);
                 setAvatar(response?.data?.avatar);
                 setLevel(response?.data?.exp_game);
-            // }else {
-            //     console.log("error:", response.status);
-            // }
+
         };
         
         if (!hasFetchedData.current) {
@@ -128,7 +108,7 @@ export default function  FriendGame() {
         if (socket) {
             socket.onopen = () => {
                 if (socket.readyState === WebSocket.OPEN) {
-                    console.log('WebSocket is open now and the game_id is:', game_key);
+                  
                     const message = {
                         action: 'connect',
                         username: username,
@@ -137,9 +117,7 @@ export default function  FriendGame() {
                         game_id: game_key,
                     };
                     socket.send(JSON.stringify(message));
-                    console.log('WebSocket is open now');
-                } else {
-                    console.error('WebSocket is not open. readyState:', socket.readyState);
+            
                 }
             };
     
@@ -149,7 +127,7 @@ export default function  FriendGame() {
             window.rightdown = rightdown;
             socket.onmessage = (event) => {
                     const data = JSON.parse(event.data);
-                    console.log('Received:', data)
+        
                     if (data.message){
                         if (data.message === 'game_data'){
                             ballx = (data.ballx / game_width) * canvas.width
@@ -207,14 +185,9 @@ export default function  FriendGame() {
             };
 
             socket.onclose = () => {
-                console.log('WebSocket connection closed');
                 socket.close();
             };
 
-
-            socket.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
         }
 
         const drawball = () => {
@@ -314,7 +287,6 @@ export default function  FriendGame() {
     }, [username]);
 
     useEffect(() => {
-        console.log("gamestarted", gamestarted);
         if (gamestarted){
             document.getElementById('matchmaking').style.display = "none";
             document.getElementById('result').style.display = "none";

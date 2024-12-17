@@ -85,16 +85,16 @@ class PlayerViewSet(viewsets.ModelViewSet):
         TicData.objects.create(player=user)
         return user
 
-    # def auth_intra(self, request):
-    #     CID = os.environ.get('C_ID')
-    #     print('CID ==>', CID, flush=True)
-    #     REDIRECT_URI = os.environ.get('REDIRECT_URI')
-    #     try:
-    #         response = Response(
-    #             {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
-    #         return response
-    #     except Exception as e:
-    #         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    def auth_intra(self, request):
+        CID = os.environ.get('C_ID')
+        print('CID ==>', CID, flush=True)
+        REDIRECT_URI = os.environ.get('REDIRECT_URI')
+        try:
+            response = Response(
+                {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
+            return response
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def create_jwt_token(self, user):
         refresh = RefreshToken.for_user(user)
@@ -361,7 +361,6 @@ class VerifyOtp(APIView):
             return Response({'error': 'No secret found'}, status=status.HTTP_400_BAD_REQUEST) 
         totp = pyotp.TOTP(user.mfa_secret)
         is_valid = totp.verify(otp)
-        print("Is OTP valid:", is_valid)
         if is_valid:
             user.two_factor = True
             user.otp_verified = True
@@ -380,7 +379,7 @@ class ClearQrcode (APIView):
         user = request.user
         if not user.mfa_secret or not user.qrcode_path:
             return Response({'error': 'No secret found Or No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
-        os.remove(user.qrcode_path)
+        # os.remove(user.qrcode_path)
         user.qrcode_path = ""
         user.save()
         response = Response({'msg': 'QR code cleared'}, status=status.HTTP_200_OK)
@@ -426,18 +425,14 @@ def get_ping_data_by_username(request, username):
     pingdata = PingData.objects.filter(player=player)
     serializer = PingDataSerializer(pingdata, many=True)
     data = serializer.data
-    print("--------->", data)
     return JsonResponse(data, safe=False)
 
 def get_all_ping_data(request):
     players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game') 
-    
     all_ping_data = [] 
-
     for player in players:
         pingdata = PingData.objects.filter(player=player).order_by('-exp_game', '-wins')
         serializer = PingDataSerializer(pingdata, many=True)
-        
         all_ping_data.append({
             'username': player.username,
             'profile_name': player.profile_name,
