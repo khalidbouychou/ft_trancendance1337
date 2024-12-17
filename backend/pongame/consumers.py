@@ -12,7 +12,7 @@ from channels.layers import get_channel_layer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 channel_layer = get_channel_layer()
-
+ 
 class GameStateManager: 
     _game_states = {}
 

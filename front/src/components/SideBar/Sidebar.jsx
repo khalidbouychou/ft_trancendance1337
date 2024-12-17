@@ -54,7 +54,7 @@ const Sidebar = () => {
   }
 
   useEffect(() => {
-    console.log("user", user);
+    // console.log("user", user);
   }, [user]);
   useEffect(() => {
     const fetchSearchResults = async () => {
@@ -66,7 +66,7 @@ const Sidebar = () => {
         setSearchResults(data);
       } else {
         setSearchResults([]);
-        console.log("dkhal");
+        // console.log("dkhal");
       }
     };
 
@@ -95,7 +95,7 @@ const Sidebar = () => {
   };
 
   const handelClick = (e) => {
-    console.log("menuid: ", e)
+    // console.log("menuid: ", e)
     if (settRef.current && !settRef.current.contains(e.target)) {
       setMenu(false);
     }

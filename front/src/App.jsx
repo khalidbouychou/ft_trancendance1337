@@ -21,10 +21,12 @@ import Settings from "./Setting/Setting.jsx";
 import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
 import LocalTournament from "./ponggame/tournamentpong/Tournament.jsx";
 import RemoteTournament from "./ponggame/remotetournement/RemoteTournament.jsx";
+import Notification from "./notification/notification.jsx";
 
 function App() {
   return (
     <AuthProvider>
+      {user && <Notification />}
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
             <Routes>
@@ -38,7 +40,7 @@ function App() {
                 <Route path="games/localtournament" element={<LocalTournament />} />
                 <Route path="games/remotetournament" element={<RemoteTournament />} />
                 <Route path="games/onlinepong" element={<OnlineGame />} />
-                <Route path="chat" element={<Setting />} />
+                <Route path="chat" element={<Chat />} />
                 <Route path="profile/:username" element={<Profile />} />
                 <Route path="setting" element={<Setting />} />
                 <Route path="notification" element={<Notificationz />} />
