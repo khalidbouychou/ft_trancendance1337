@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import api from '../../auth/api';
 import './ChatPage.css';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function ChatPage() {
 	const navigate = useNavigate();
@@ -37,7 +37,9 @@ function ChatPage() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get('/chat/');
+				const response = await axios('http://localhost:8000/api/chat/',{
+					withCredentials: true,
+				});
 				setData(response.data);
 				setupSocket(1);
 				setupNotificationSocket();
@@ -341,7 +343,7 @@ function ChatPage() {
 						allUsers={allUsers}
 						unreadMessages={unreadMessages}
 						/>
-					<ChatWindow
+					{/* <ChatWindow
 						currentContact={currentContact}
 						chat={chat}
 						message={message}
@@ -351,7 +353,7 @@ function ChatPage() {
 						chatMessagesRef={chatMessagesRef}
 						sockets={sockets}
 						typingUser={typingUser}
-						/>
+						/> */}
 				</div>
         </div>
     );

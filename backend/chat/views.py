@@ -36,32 +36,3 @@ def list_chat(request):
     }
     return Response(context)
 
-# @csrf_exempt
-# @api_view(['POST'])
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.data.get('username')
-#         password = request.data.get('password')
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-#             user_data = PlayerSerializer(user).data
-#             refresh = RefreshToken.for_user(user)
-#             return Response({
-#                 'status': 'success',
-#                 'refresh': str(refresh),
-#                 'access': str(refresh.access_token),
-#                 'user': user_data,
-#             })
-#         else:
-#             return Response({'status': 'failed', 'error': 'Invalid username or password'})
-#     return Response({'status': 'failed', 'error': 'Invalid request method'})
-
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def logout_view(request):
-#     if request.method == 'POST':
-#         logout(request)
-#         return Response({'status': 'logged out'})
-#     return Response({'status': 'failed'})
-
