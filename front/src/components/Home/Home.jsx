@@ -42,7 +42,9 @@ const Home = () => {
           .slice(0, 3);
 
         setFilteredPingData(sortedData);
-        const userSpecificData = data.find(item => item.profile_name === profile_name);
+        const userSpecificData = data.find(
+          (item) => item.profile_name === profile_name
+        );
         setUserData(userSpecificData);
       } catch (error) {
         console.error("Error fetching data:", error.message);
@@ -80,38 +82,73 @@ const Home = () => {
                 <PiGameControllerFill />
               </p>
               <p id={styl.sm}>
-                {(userData?.data[0]?.losses + userData?.data[0]?.wins) ?? -5}
+                {userData?.data[0]?.losses + userData?.data[0]?.wins ?? -5}
               </p>
             </div>
           </div>
-
           <div className={styl.top3}>
-            {filteredPingData?.map((user, index) => (
-              <div
-                key={user.profile_name}
-                className={index === 1 ? styl.cardRankMd : styl.cardRank}
-              >
-                <div className={styl.extImg}>
-                  <div className={styl.intImg}>
-                    <img src={user.avatar} alt={user.profile_name} />
-                  </div>
-                </div>
-                <p>
-                  {user.profile_name.length > 8
-                    ? user.profile_name.substring(0, 8) + "."
-                    : user.profile_name.toUpperCase()}
-                </p>
-
-                <div
-                  className={styl.nbRank}
-                  style={{
-                    border: index === 1 ? "gold 4px solid" : "silver 4px solid",
-                  }}
-                >
-                  <p>{index + 1}</p>
+            <div className={styl.cardRank}>
+              <div className={styl.extImg}>
+                <div className={styl.intImg}>
+                  <img
+                    src={filteredPingData?.[1]?.avatar}
+                    alt={filteredPingData?.[1]?.profile_name}
+                  />
                 </div>
               </div>
-            ))}
+              <p>
+                {filteredPingData?.[1]?.profile_name.length > 8
+                  ? filteredPingData?.[1]?.profile_name.substring(0, 8) + "."
+                  : filteredPingData?.[1]?.profile_name.toUpperCase()}
+              </p>
+              <div
+                className={styl.nbRank}
+                style={{ border: "silver 4px solid" }}
+              >
+                <p>2</p>
+              </div>
+            </div>
+
+            <div className={styl.cardRankMd}>
+              <div className={styl.extImg}>
+                <div className={styl.intImg}>
+                  <img
+                    src={filteredPingData?.[0]?.avatar}
+                    alt={filteredPingData?.[0]?.profile_name}
+                  />
+                </div>
+              </div>
+              <p>
+                {filteredPingData?.[0]?.profile_name.length > 8
+                  ? filteredPingData?.[0]?.profile_name.substring(0, 8) + "."
+                  : filteredPingData?.[0]?.profile_name.toUpperCase()}
+              </p>
+              <div className={styl.nbRank} style={{ border: "gold 4px solid" }}>
+                <p>1</p>
+              </div>
+            </div>
+
+            <div className={styl.cardRank}>
+              <div className={styl.extImg}>
+                <div className={styl.intImg}>
+                  <img
+                    src={filteredPingData?.[2]?.avatar}
+                    alt={filteredPingData?.[2]?.profile_name}
+                  />
+                </div>
+              </div>
+              <p>
+                {filteredPingData?.[2]?.profile_name.length > 8
+                  ? filteredPingData?.[2]?.profile_name.substring(0, 8) + "."
+                  : filteredPingData?.[2]?.profile_name.toUpperCase()}
+              </p>
+              <div
+                className={styl.nbRank}
+                style={{ border: "silver 4px solid" }}
+              >
+                <p>3</p>
+              </div>
+            </div>
           </div>
         </div>
         <div className={styl.last}>

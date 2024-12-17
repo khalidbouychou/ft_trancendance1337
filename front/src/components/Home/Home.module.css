@@ -144,10 +144,10 @@
 
 .cardRank {
     background: linear-gradient(135deg, #6c6c6c, #8e8d8d);
-    width: 130px;
-    min-width: 130px;
-    height: 80%;
-    min-height: 80%;
+    width: 100px;
+    min-width: 100px;
+    height: 70%;
+    min-height: 70%;
     display: flex;
     align-items: center;
     padding: 2%;
@@ -182,10 +182,10 @@
 
 .cardRankMd {
     background: linear-gradient(300deg, #4d4101, #f8c951);
-    width: 150px;
-    min-width: 150px;
-    height: 95%;
-    min-height: 95%;
+    width: 120px;
+    min-width: 120px;
+    height: 85%;
+    min-height: 85%;
     display: flex;
     align-items: center;
     padding: 2%;

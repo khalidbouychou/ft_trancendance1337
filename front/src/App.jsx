@@ -10,7 +10,7 @@ import LocalGame from "./ponggame/localpong/LocalGame.jsx";
 import LocalTeamGame from "./ponggame/teampong/LocalTeamGame.jsx";
 import OnlineGame from "./ponggame/onlinepong/OnlineGame.jsx";
 import XO from "./xo_game/online.jsx";
-import Chat from "./Chat/Chat.jsx";
+import Chat from "./components/chat/Chat.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import Setting from "./Setting/Setting.jsx";
 import Notificationz from "./components/Notification/Notification.jsx";
@@ -39,7 +39,7 @@ function App() {
               <Route path="friend-game" element={<FriendGame />} />
               <Route path="games/localteampong" element={<LocalTeamGame />} />
               <Route path="games/onlinepong" element={<OnlineGame />} />
-              <Route path="chat" element={<Setting />} />
+              <Route path="chat" element={<Chat />} />
               <Route path="setting" element={<Setting />} />
               <Route path="notification" element={<Notificationz />} />
               <Route path="twofa" element={<Twofa />} />
