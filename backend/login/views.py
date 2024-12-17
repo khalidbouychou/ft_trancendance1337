@@ -85,15 +85,16 @@ class PlayerViewSet(viewsets.ModelViewSet):
         TicData.objects.create(player=user)
         return user
 
-    def auth_intra(self, request):
-        CID = os.environ.get('C_ID')
-        REDIRECT_URI = os.environ.get('REDIRECT_URI')
-        try:
-            response = Response(
-                {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
-            return response
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    # def auth_intra(self, request):
+    #     CID = os.environ.get('C_ID')
+    #     print('CID ==>', CID, flush=True)
+    #     REDIRECT_URI = os.environ.get('REDIRECT_URI')
+    #     try:
+    #         response = Response(
+    #             {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
+    #         return response
+    #     except Exception as e:
+    #         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def create_jwt_token(self, user):
         refresh = RefreshToken.for_user(user)

@@ -35,6 +35,7 @@ export default function AuthProvider({ children }) {
         navigate("/login");
       }
       const code = urlParams.get("code");
+      console.log("code", code);
       let res = null;
       if (code) {
         const params = new URLSearchParams();
@@ -60,7 +61,7 @@ export default function AuthProvider({ children }) {
               }
             });
           }
-          navigate(`/profile/${res.data.user.profile_name}`);
+          navigate(`/`);
         }
       }
     } catch (error) {
@@ -70,7 +71,7 @@ export default function AuthProvider({ children }) {
           color: 'white'
         }
       });
-      navigate(`/profile/${res.data.user.profile_name}`);
+      navigate(`/`);
     } finally {
       setLoading(false);
     }
@@ -91,7 +92,7 @@ export default function AuthProvider({ children }) {
           navigate("/otp");
         if (window.location.pathname === "/login") {
           // navigate("/home");
-          navigate(`/profile/${res.data.user.profile_name}`);
+          navigate(`/`);
         }
       }
     } catch (error) {
@@ -120,7 +121,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     Login()
     
-  }, []);
+  }, [location.pathname]);
   useEffect(
     () => {
       !user && get_auth_user();

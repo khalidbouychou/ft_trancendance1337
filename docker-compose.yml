@@ -4,8 +4,8 @@ networks:
   connexion:
     driver: bridge
 
-volumes:
-  db:
+# volumes:
+#   db:
 
 services:
   postgres:
@@ -18,7 +18,7 @@ services:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
     volumes:
-      - db:/var/lib/postgresql/data
+      - ./db:/var/lib/postgresql/data
       - .env:/app/.env
     ports:
       - 5432:5432
@@ -36,6 +36,7 @@ services:
 
   back:
     container_name: back
+    image: back
     build: backend/docker-backend
     env_file:
       - .env
@@ -59,6 +60,7 @@ services:
 
   front:
     container_name: front
+    image: front
     build:
       context: ./front/docker-front
     ports:

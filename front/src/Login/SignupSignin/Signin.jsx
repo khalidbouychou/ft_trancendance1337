@@ -12,7 +12,11 @@ const Signin = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const loggedIntra = useRef(false);
-  const url = `https://api.intra.42.fr/oauth/authorize?client_id=${import.meta.env.VITE_APP_CID}&redirect_uri=${import.meta.env.VITE_APP_REDIRECT_URI}&response_type=code`
+  const REDIRECT_URI="http://localhost:5173"
+  const C_ID="u-s4t2ud-86ebf6e58c1ee7b72120758624f1bdf92ef623b1d8a560e86efb6b4952fafdb9"
+  console.log("---->", C_ID, REDIRECT_URI)
+  const url = `https://api.intra.42.fr/oauth/authorize?client_id=${C_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`
+  // https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-86ebf6e58c1ee7b72120758624f1bdf92ef623b1d8a560e86efb6b4952fafdb9&redirect_uri=http://localhost:5173&response_type=code
   const handelogin = async (e) => {
     e.preventDefault();
     try {

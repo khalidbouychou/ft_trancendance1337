@@ -27,6 +27,9 @@ build:
 	@rm -rf db
 	@docker-compose build --no-cache && docker-compose up
 
+clean_db:
+	@rm -rf db
+
 clean:
 	@rm -rf front/.vite-cache
 	@rm -rf dump.rdb
