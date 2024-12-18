@@ -18,7 +18,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_pk']
         self.room_group_name = f'chat_room_{self.room_name}'
-        # self.token = self.scope['session'].get('token')
         self.user = self.scope['user']
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -38,7 +37,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json.get('content')
         sender = text_data_json.get('sender')
         room_pk = text_data_json.get('room_id')
-        # print(f"received message type: {message_type}", file=sys.stderr)
         try:
             if message_type == 'MESSAGE':
                 message = await self.create_message(room_pk, sender, message)
@@ -131,7 +129,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except Player.DoesNotExist:
             return False
 
-    # Receive message from room group
     async def chat_message(self, event):
         message = event['message']
 
