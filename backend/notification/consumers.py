@@ -7,14 +7,14 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from login.models import Player
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 
 class NotificationConsumer(AsyncWebsocketConsumer):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     async def connect(self):
-        self.notification_group_name = f'_'
         self.user = self.scope['user']
-        if self.user == AnonymousUser():
-            await self.close()
-            return
         self.user_id = self.user.id
         self.notification_group_name = f'user_{self.user_id}_NOTIF'
 

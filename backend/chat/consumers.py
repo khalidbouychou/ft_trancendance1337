@@ -8,20 +8,18 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from .serializers import MessageSerializer, ChatRoomSerializer
 from login.serializers import PlayerSerializer
-from django.contrib.auth.models import AnonymousUser
 import sys
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
  
 class ChatConsumer(AsyncWebsocketConsumer):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_pk']
         self.room_group_name = f'chat_room_{self.room_name}'
-        self.token = self.scope['session'].get('token')
+        # self.token = self.scope['session'].get('token')
         self.user = self.scope['user']
-        if self.user == AnonymousUser():
-            await self.close()
-            return
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -79,7 +77,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 try:
                     user1 = await self.get_user_by_username(username)
                     user2 = self.scope['user']
-                    if user2 == AnonymousUser() or user1 == None:
+                    if user2 == None or user1 == None:
                         return
                     chat_room = await self.create_or_get_chat_room(user1, user2)
                     chat_room_serializer = await self.get_chat_room_serializer(chat_room)
@@ -105,7 +103,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     await self.block_user(user_to_block)
                 elif event == 'UNBLOCK':
                     await self.unblock_user(user_to_block)
-                current_user = self.scope["user"]
                 await self.send(text_data=json.dumps({
                     'type': 'BLOCK_USER',
                     'user_id': user_to_block,
@@ -216,12 +213,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 
 class UserNotificationConsumer(AsyncWebsocketConsumer):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     async def connect(self):
-        self.notification_group_name = f'__'
         self.user = self.scope['user']
-        if self.user == AnonymousUser():
-            await self.close()
-            return
         self.user_id = self.user.id
         self.notification_group_name = f'user_{self.user_id}_notification'
 
@@ -229,7 +224,6 @@ class UserNotificationConsumer(AsyncWebsocketConsumer):
             self.notification_group_name,
             self.channel_name
         )
-
         await self.accept()
 
     async def disconnect(self, close_code):
