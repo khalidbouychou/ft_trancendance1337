@@ -140,8 +140,10 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 user = self.create_user(user_data)
             authenticate(request, username=user_data['username'])
             login(request, user)
-            tokens = self.create_jwt_token(user)
+            user.bool_login = True
+            user.status_network = 'online'
             user.save()
+            tokens = self.create_jwt_token(user)
             data= PlayerSerializer(user).data
             response = Response(data, status=status.HTTP_200_OK)
             is_secure = request.is_secure()
@@ -192,6 +194,7 @@ class LogoutView(APIView):
             if not user.is_authenticated:
                 return Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
             user.bool_login = False
+            user.status_network = 'offline'
             user.save()
             django_logout(request)
             response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK) 
@@ -265,6 +268,9 @@ class SigninForm(generics.CreateAPIView):
             if not getuser:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
             login(request, getuser)
+            getuser.bool_login = True
+            getuser.status_network = 'online'
+            getuser.save()
             refresh = RefreshToken.for_user(getuser)
             access = str(refresh.access_token)
             # Check if the request is secure (HTTPS)

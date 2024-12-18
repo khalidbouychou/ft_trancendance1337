@@ -24,7 +24,7 @@ import { useTranslation } from "react-i18next";
 import { color } from "chart.js/helpers";
 import i18n from "./i18n.js";
 import { ToastContainer } from "react-toastify";
-
+import Network from "./Login/Network/Network.jsx";  
 
 function App() {
   const {t} = useTranslation();
@@ -129,6 +129,7 @@ function App() {
                 } />
                 {/* <Route path="setting" element={<Settings />} /> */}
                 <Route path="otp" element={< Otplogin/>} />
+                <Route path="network" element={< Network/>} />
               </Route>
               <Route path="/login" element={<LoginSignup />} />
           <Route path="/*" element={<PageNotFound />} />
