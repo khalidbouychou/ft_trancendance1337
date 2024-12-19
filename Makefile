@@ -1,4 +1,4 @@
-all : uploads_dir up
+all : uploads_dir s  up 
 # Load environment variables from .env file
 ifneq ("$(wildcard .env)","")
     include .env

@@ -69,7 +69,7 @@ const Sidebar = () => {
     const fetchSearchResults = async () => {
       if (searchQuery.trim()) {
         const response = await fetch(
-          `http://localhost:8000/api/search/?q=${searchQuery}`
+          `https://localhost/api/search/?q=${searchQuery}`
         );
         const data = await response.json();
         setSearchResults(data);

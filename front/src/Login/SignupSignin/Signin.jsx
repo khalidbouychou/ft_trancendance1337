@@ -11,7 +11,7 @@ const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const REDIRECT_URI="http://localhost:8000/api/callback"
+  const REDIRECT_URI="https://localhost/api/callback"
   const C_ID="u-s4t2ud-c3d3ca71aba0ce6a6aec57c097d7e1ee156494d86b9f05b7dd64b975a19d3149"
   const url = `https://api.intra.42.fr/oauth/authorize?client_id=${C_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`
   const handelogin = async (e) => {
@@ -27,7 +27,7 @@ const Signin = () => {
         return;
       }
       const response = await axios.post(
-        "http://localhost:8000/api/singin/",
+        "https://localhost/api/singin/",
         {
           username,
           password

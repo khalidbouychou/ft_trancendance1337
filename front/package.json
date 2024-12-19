@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -37,7 +37,8 @@
     "react-spinners": "^0.14.1",
     "react-toastify": "^10.0.6",
     "styled-components": "^6.1.13",
-    "vite": "^5.4.9"
+    "vite": "^5.4.9",
+    "@vitejs/plugin-react": "^3.0.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-class-properties": "^7.18.6",

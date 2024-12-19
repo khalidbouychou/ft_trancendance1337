@@ -17,7 +17,7 @@ const UserInfos = () => {
     if (input.files.length > 0) {
         const formData = new FormData();
         formData.append('avatar', input.files[0]);
-            axios.put('http://localhost:8000/api/update/', 
+            axios.put('https://localhost/api/update/', 
               formData,
               {
               withCredentials : true,
@@ -76,7 +76,7 @@ useEffect(() => {
               }}/>
               <button disabled={!NewProfileName && true} onClick={
                 () => {
-                  axios.put('http://localhost:8000/api/update/', 
+                  axios.put('https://localhost/api/update/', 
                     {
                       profile_name: NewProfileName
                     },

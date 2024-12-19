@@ -1,48 +1,4 @@
 
-section {
-  position: relative;
-  z-index: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2px;
-  flex-wrap: wrap;
-  overflow: hidden;
-}
-/* Animated gradient effect */
-section::before {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(#ffffff, rgb(146, 0, 236), #ffffff);
-  animation: animate 5s linear infinite;
-}
-/* Animation keyframes */
-@keyframes animate {
-  0% {
-      transform: translateY(-100%);
-  }
-  100% {
-      transform: translateY(100%);
-  }
-}
-/* Styling for individual spans */
-section span {
-  position: relative;
-  display: block;
-  width: calc(6.25vw - 2px);
-  height: calc(6.25vw - 2px);
-  background: #430043;
-  z-index: 2;
-  transition: 1.5s;
-}
-section span:hover {
-  background: rgb(255, 255, 255);
-  transition: 0s;
-}
 
 
 .xx{

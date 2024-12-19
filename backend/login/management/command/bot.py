@@ -5,8 +5,6 @@ from login.models import Player
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         username = "bot"
-        email = "bot@bot.com"
         password = "bot1234"
-
-        user = Player.objects.create_user(username=username, email=email, password=password)
+        user = Player.objects.create_user(username=username, password=password)
         user.save()

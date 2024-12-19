@@ -4,8 +4,8 @@ networks:
   connexion:
     driver: bridge
 
-# volumes:
-#   db:
+volumes:
+  db:
 
 services:
   postgres:
@@ -18,7 +18,7 @@ services:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
       - .env:/app/.env
     ports:
       - 5432:5432
@@ -28,9 +28,9 @@ services:
       - .env
     restart: on-failure
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: pg_isready -h postgres -U postgres
       interval: 5s
-      timeout: 5s
+      timeout: 30s
       retries: 3
       start_period: 30s
 
@@ -46,29 +46,34 @@ services:
       - ./backend:/app
       - .env:/app/.env
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     networks:
       - connexion
     healthcheck:
-      test: ["CMD", "python3 manage.py check"]
-      interval: 5s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
+      test: ["CMD", "python","manage.py", "check"]
+      interval: 10s # indicates that the health check should run every 5 seconds
+      timeout: 5s # indicates that the health check should time out after 5 seconds
+      retries: 5
     restart: on-failure
 
   front:
     container_name: front
     image: front
     build:
-      context: ./front/docker-front
+      context: ./front
     ports:
       - "5173:5173"
     networks:
       - connexion
     depends_on:
-      - back
+      back :
+        condition: service_healthy
+    healthcheck:
+      test: ["curl", "-f", "http://localhost:5173"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      # start_period: 30s
     volumes:
       - ./front:/app
       - .env:/app/.env
@@ -87,19 +92,22 @@ services:
   #     - front
   #   restart: on-failure
 
-  # nginx:
-  #   image: nginx:alpine
-  #   container_name: nginx
-  #   ports:
-  #     # - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-  #     - ./ssl/:/etc/nginx/ssl/  # Your SSL certificates
-  #     - ./front/dist:/usr/share/nginx/html  # Serve React's build files
-  #   networks:
-  #     - connexion
-  #   depends_on:
-  #     - back
-  #     - front
-  #   restart: on-failure
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      # - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl/:/etc/nginx/ssl/  # Your SSL certificates
+      - ./front/dist:/usr/share/nginx/html  # Serve React's build files
+    networks:
+      - connexion
+    depends_on:
+     front:
+       condition: service_healthy
+     back:
+        condition: service_healthy
+    # command: [sleep, "10"] 
+    restart: on-failure

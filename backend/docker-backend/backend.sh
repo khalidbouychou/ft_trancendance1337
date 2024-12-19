@@ -1,4 +1,5 @@
 #!bin/bash
+# sleep 20
 echo "-------------------------- Starting backend server ------------------------------------"
 
 python3 manage.py makemigrations login chat matches notification pongame xo_game

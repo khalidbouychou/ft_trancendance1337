@@ -27,9 +27,9 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1', 
     'http://localhost',
     'https://localhost',
-    'http://localhost:8000', 
+    'https://localhost', 
     'https://127.0.0.1:5173',
-    "http://localhost:5173",
+    "https://localhost",
 ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -222,7 +222,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1',
     'http://localhost',
     'https://localhost',
-    "http://localhost:5173", 
+    "https://localhost", 
     ]
 
 DATABASES = {
@@ -237,10 +237,10 @@ DATABASES = {
 }
 
 # Set secure cookies and headers for HTTPS
-# SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Tells Django that the request is secure
-# CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
-# SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
+SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Tells Django that the request is secure
+CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
 
 # # Use the X-Forwarded-For header to get the real client IP address
 # USE_X_FORWARDED_HOST = True
