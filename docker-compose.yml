@@ -105,8 +105,8 @@ services:
     networks:
       - connexion
     depends_on:
-     front:
-       condition: service_healthy
+    #  front:
+    #    condition: service_healthy
      back:
         condition: service_healthy
     # command: [sleep, "10"] 
