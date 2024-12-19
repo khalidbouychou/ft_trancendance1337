@@ -8,53 +8,53 @@ volumes:
   db:
 
 services:
-  postgres:
-    container_name: postgres
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-    volumes:
-      - db:/var/lib/postgresql/data
-      - .env:/app/.env
-    ports:
-      - 5432:5432
-    networks:
-      - connexion
-    env_file:
-      - .env
-    restart: on-failure
-    healthcheck:
-      test: pg_isready -h postgres -U postgres
-      interval: 5s
-      timeout: 30s
-      retries: 3
-      start_period: 30s
+  # postgres:
+  #   container_name: postgres
+  #   image: postgres:17-alpine
+  #   environment:
+  #     POSTGRES_DB: ${POSTGRES_DB}
+  #     POSTGRES_USER: ${POSTGRES_USER}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #     POSTGRES_HOST: ${POSTGRES_HOST}
+  #     POSTGRES_PORT: ${POSTGRES_PORT}
+  #   volumes:
+  #     - db:/var/lib/postgresql/data
+  #     - .env:/app/.env
+  #   ports:
+  #     - 5432:5432
+  #   networks:
+  #     - connexion
+  #   env_file:
+  #     - .env
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: pg_isready -h postgres -U postgres
+  #     interval: 5s
+  #     timeout: 30s
+  #     retries: 3
+  #     start_period: 30s
 
-  back:
-    container_name: back
-    image: back
-    build: backend/docker-backend
-    env_file:
-      - .env
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./backend:/app
-      - .env:/app/.env
-    depends_on:
-      - postgres
-    networks:
-      - connexion
-    healthcheck:
-      test: ["CMD", "python","manage.py", "check"]
-      interval: 10s # indicates that the health check should run every 5 seconds
-      timeout: 5s # indicates that the health check should time out after 5 seconds
-      retries: 5
-    restart: on-failure
+  # back:
+  #   container_name: back
+  #   image: back
+  #   build: backend/docker-backend
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./backend:/app
+  #     - .env:/app/.env
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - connexion
+  #   healthcheck:
+  #     test: ["CMD", "python","manage.py", "check"]
+  #     interval: 10s # indicates that the health check should run every 5 seconds
+  #     timeout: 5s # indicates that the health check should time out after 5 seconds
+  #     retries: 5
+  #   restart: on-failure
 
   front:
     container_name: front
@@ -65,9 +65,9 @@ services:
       - "5173:5173"
     networks:
       - connexion
-    depends_on:
-      back :
-        condition: service_healthy
+    # depends_on:
+    #   back :
+    #     condition: service_healthy
     healthcheck:
       test: ["curl", "-f", "http://localhost:5173"]
       interval: 10s
@@ -75,8 +75,8 @@ services:
       retries: 3
       # start_period: 30s
     volumes:
-      - ./front:/app
-      - .env:/app/.env
+      - ./front:/khbouych
+      - .env:/khbouych/.env
     restart: on-failure
 
 
@@ -92,22 +92,22 @@ services:
   #     - front
   #   restart: on-failure
 
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    ports:
-      # - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./ssl/:/etc/nginx/ssl/  # Your SSL certificates
-      - ./front/dist:/usr/share/nginx/html  # Serve React's build files
-    networks:
-      - connexion
-    depends_on:
-    #  front:
-    #    condition: service_healthy
-     back:
-        condition: service_healthy
-    # command: [sleep, "10"] 
-    restart: on-failure
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: nginx
+  #   ports:
+  #     # - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./ssl/:/etc/nginx/ssl/  # Your SSL certificates
+  #     - ./front/dist:/usr/share/nginx/html  # Serve React's build files
+  #   networks:
+  #     - connexion
+  #   depends_on:
+  #   #  front:
+  #   #    condition: service_healthy
+  #    back:
+  #       condition: service_healthy
+  #   # command: [sleep, "10"] 
+  #   restart: on-failure

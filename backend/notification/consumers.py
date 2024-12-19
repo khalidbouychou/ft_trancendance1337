@@ -7,21 +7,15 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from login.models import Player
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 
 class NotificationConsumer(AsyncWebsocketConsumer):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     async def connect(self):
-        self.notification_group_name = f'_'
-        self.token = self.scope['session'].get('token')
-        if self.token:
-            self.scope['user'] = await self.auth_user(self.token)
-            if self.scope['user'] == AnonymousUser():
-                await self.close()
-                return
-        else:
-            print("Notifcation consumer: No token found in cookies")
-            await self.close()
-            return
-        self.user_id = self.scope['user'].id
+        self.user = self.scope['user']
+        self.user_id = self.user.id
         self.notification_group_name = f'user_{self.user_id}_NOTIF'
 
         await self.channel_layer.group_add(
@@ -200,13 +194,4 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'operation': operation,
             'error': str(error)
         }))
-
-    @database_sync_to_async
-    def auth_user(self, token):
-        try:
-            access_token = AccessToken(token)
-            user_id = access_token['user_id']
-            return Player.objects.get(id=user_id)
-        except (InvalidToken, TokenError, Player.DoesNotExist):
-            return AnonymousUser()
 

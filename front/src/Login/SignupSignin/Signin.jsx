@@ -37,6 +37,7 @@ const Signin = () => {
         }
       );
       if (response.status === 200) {
+        localStorage.setItem("token", response.data.user.token);
         setUser(response.data.user);
         toast.success("login success", {
           style: {

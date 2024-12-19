@@ -48,6 +48,7 @@ export default function AuthProvider({ children }) {
         );
         if (res.status === 200) {
           setUser(res.data);
+          localStorage.setItem("token", res.data.token);
           setLoading(true);
           setTimeout(() => {
             setLoading(false);
@@ -76,6 +77,7 @@ export default function AuthProvider({ children }) {
       });
 
       if (res.status === 200) {
+        
         setUser(res.data);
         !res.data.user.bool_login &&
           res.data.user.two_factor &&

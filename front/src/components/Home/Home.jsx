@@ -7,19 +7,25 @@ import { useState, useEffect, useContext } from "react";
 import Tmp2 from "./components/Tmp2/Tmp2";
 import SearchCard from "./components/SearchCard/SearchCard";
 import { AuthContext } from "../../UserContext/Context";
-// import Cookies from "js-cookie";
+import CurveChart from "./components/CurveChart/CurveChart";
+import CurveLevel from "./components/CurveLevel/CurveLevel";
+import Statistic from "../Profile/components/statistc/Statistic";
+import { FaChartArea } from "react-icons/fa";
+import { FaMedal } from "react-icons/fa6";
+import { ImFontSize } from "react-icons/im";
+import { fontString } from "chart.js/helpers";
+import { GiCrossMark } from "react-icons/gi";
+import { PiGameControllerFill } from "react-icons/pi";
 
 const Home = () => {
   const { user } = useContext(AuthContext);
-  const username = user?.user?.username;
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const navigate = useNavigate();
+  const profile_name = user?.user?.profile_name;
   const [filteredPingData, setFilteredPingData] = useState(null);
-  const [filteredTicData, setFilteredTicData] = useState(null);
+  // const [filteredTicData, setFilteredTicData] = useState(null);
   const [pingRes, setPingRes] = useState(null);
   const [error, setError] = useState(null);
   const [pingData, setPingData] = useState([]);
-  const [ticData, setTicData] = useState([]);
+  // const [ticData, setTicData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const handleClick = () => {
@@ -95,25 +101,35 @@ const Home = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
         const data = await response.json();
+        const sortedData = data
+          .sort((a, b) => {
+            if (b.level === a.level) {
+              return b.wins - a.wins;
+            }
+            return b.level - a.level;
+          })
+          .slice(0, 3);
+
+        setFilteredPingData(sortedData);
+        const userSpecificData = data.find(item => item.profile_name === profile_name);
+        setUserData(userSpecificData);
+        console.log("ppppll+++>>>", data);
         setPingData(data);
         const userData = data.find((item) => item.username === username);
         setFilteredPingData(userData);
-        const ticData = await fetch(`https://localhost/api/ticdata/`);
-        const ticDataJson = await ticData.json();
-        setTicData(ticDataJson);
-        const ticUserData = ticDataJson.find((item) => item.username === username);
-        setFilteredTicData(ticUserData);
+        // const ticData = await fetch(`https://localhost/api/ticdata/`);
+        // const ticDataJson = await ticData.json();
+        // setTicData(ticDataJson);
+        // const ticUserData = ticDataJson.find((item) => item.username === username);
+        // setFilteredTicData(ticUserData);
       } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching data:", error.message);
       }
     };
 
     fetchDataResults();
-  }, [username]);
+  }, [profile_name]);
 
   return (
     <div className={styl.Home}>
@@ -121,60 +137,70 @@ const Home = () => {
         <div className={styl.head}>
           <h2>HOME</h2>
         </div>
-        {/* <div className={styl.search}>
-          <div className={styl.extFrame}>
-            <div className={styl.innerFrame}>
-              <input
-                type="text"
-                placeholder="search..."
-                name="search"
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-            </div>
-            <button className={styl.searchBut} onClick={handleSearch}>
-              <FaSearchengin style={{ width: "70%", height: "70%" }} />
-            </button>
-          </div>
-          <div className={styl.searchResult}>
-            {searchResults.length > 0 && (
-              <div className={styl.searchResult}>
-                {searchResults.map((user) => (
-                  <SearchCard key={user.id} user={user} />
-                ))}
-              </div>
-            )}
-            {searchResults.length === 0 && searchQuery.trim() !== "" && (
-              <div className={styl.noResult}>
-                <p>No results found</p>
-              </div>
-            )}
-          </div>
-        </div> */}
         <div className={styl.first}>
-          <div className={styl.intro}>
-            <p className={styl.str}>
-              Gear up for epic battles as you challenge your friends to
-              thrilling matches in Ping Pong Legends and Tic Tac Toe ! Who will
-              rise to the top and prove their dominance on the table?
-            </p>
+          <div className={styl.result}>
+            <div className={styl.card}>
+              <p>
+                WINS
+                <FaMedal />
+              </p>
+              {/* <p id={styl.sm}>{userData?.data[0]?.wins ?? -5}</p> */}
+            </div>
+            <div className={styl.card}>
+              <p>
+                LOSE
+                <GiCrossMark />
+              </p>
+              {/* <p id={styl.sm}>{userData?.data[0]?.losses ?? -5}</p> */}
+            </div>
+            <div className={styl.card}>
+              <p>
+                GAMES
+                <PiGameControllerFill />
+              </p>
+              <p id={styl.sm}>
+                {/* {(userData?.data[0]?.losses + userData?.data[0]?.wins) ?? -5} */}
+              </p>
+            </div>
           </div>
-          <div className={styl.play}>
-            <button onClick={handleClick}>
-              <p>Play Now</p>
-            </button>
+
+          <div className={styl.top3}>
+            {filteredPingData?.map((user, index) => (
+              <div
+                key={user.profile_name}
+                className={index === 1 ? styl.cardRankMd : styl.cardRank}
+              >
+                <div className={styl.extImg}>
+                  <div className={styl.intImg}>
+                    <img src={user.avatar} alt={user.profile_name} />
+                  </div>
+                </div>
+                <p>
+                  {user.profile_name.length > 8
+                    ? user.profile_name.substring(0, 8) + "."
+                    : user.profile_name.toUpperCase()}
+                </p>
+
+                <div
+                  className={styl.nbRank}
+                  style={{
+                    border: index === 1 ? "gold 4px solid" : "silver 4px solid",
+                  }}
+                >
+                  <p>{index + 1}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         <div className={styl.last}>
-          {pingData.length > 0 && filteredPingData && filteredTicData ? (
-            isMobile ? (
-              <Tmp2 Data={{ ping: pingData, tic: ticData }} myData={{ping : filteredPingData, tic: filteredTicData}} />
-            ) : (
-              <Tmp1 Data={{ ping: pingData, tic: ticData }} myData={{Ping : filteredPingData, Tic: filteredTicData}} />
-            )
-          ) : (
-            <p>Loading data...</p>
-          )}
+          <p className={styl.dachHead}>
+            <FaChartArea
+              style={{ width: "30px", height: "30px", color: "gold" }}
+            />{" "}
+            Dashboard
+          </p>
+          <Statistic />
         </div>
       </div>
     </div>

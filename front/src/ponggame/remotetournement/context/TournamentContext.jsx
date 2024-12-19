@@ -5,11 +5,18 @@ export const AppContext = createContext();
 
 // Create the provider component
 export const ContextProvider = ({ children }) => {
-  const [player1Name, setPlayer1Name] = useState('Player 1');
-  const [player2Name, setPlayer2Name] = useState('Player 2');
-  const [player3Name, setPlayer3Name] = useState('Player 3');
-  const [player4Name, setPlayer4Name] = useState('Player 4');
+  const [PlayerAliasName, setPlayerAliasName] = useState('');
+  const [RoomName, setRoomName] = useState('');
+
+  const [player1Name, setPlayer1Name] = useState('Unknown');
+  const [player2Name, setPlayer2Name] = useState('Unknown');
+  const [player3Name, setPlayer3Name] = useState('Unknown');
+  const [player4Name, setPlayer4Name] = useState('Unknown');
   const [player5Name, setPlayer5Name] = useState('Unknown');
+  const [player1Avatar, setPlayer1Avatar] = useState('/assets/unknown.png');
+  const [player2Avatar, setPlayer2Avatar] = useState('/assets/unknown.png');
+  const [player3Avatar, setPlayer3Avatar] = useState('/assets/unknown.png');
+  const [player4Avatar, setPlayer4Avatar] = useState('/assets/unknown.png');
   const [player5Avatar, setPlayer5Avatar] = useState('/assets/unknown.png');
   const [player6Name, setPlayer6Name] = useState('Unknown');
   const [player6Avatar, setPlayer6Avatar] = useState('/assets/unknown.png');
@@ -21,12 +28,18 @@ export const ContextProvider = ({ children }) => {
   const [player3Score, setPlayer3Score] = useState(0);
   const [player4Score, setPlayer4Score] = useState(0);
   
-  const [TournamentStart, setTournamentStart] = useState('no');
+  const [Aliasname, setAliasName] = useState(false);
   const [gameStatus, setGameStatus] = useState(false);
+  const [TournamentStart, setTournamentStart] = useState('no');
+  const [matchstart, setMatchStart] = useState(false);
 
   return (
     <AppContext.Provider // Fixed this part to use AppContext.Provider
       value={{
+        PlayerAliasName,
+        setPlayerAliasName,
+        RoomName,
+        setRoomName,
         player1Name,
         setPlayer1Name,
         player2Name,
@@ -37,6 +50,14 @@ export const ContextProvider = ({ children }) => {
         setPlayer4Name,
         player5Name,
         setPlayer5Name,
+        player1Avatar,
+        setPlayer1Avatar,
+        player2Avatar,
+        setPlayer2Avatar,
+        player3Avatar,
+        setPlayer3Avatar,
+        player4Avatar,
+        setPlayer4Avatar,
         player5Avatar,
         setPlayer5Avatar,
         player6Name,
@@ -57,8 +78,12 @@ export const ContextProvider = ({ children }) => {
         setPlayer4Score,
         TournamentStart,
         setTournamentStart,
+        Aliasname,
+        setAliasName,
         gameStatus,
         setGameStatus,
+        matchstart,
+        setMatchStart
       }}
     >
       {children}

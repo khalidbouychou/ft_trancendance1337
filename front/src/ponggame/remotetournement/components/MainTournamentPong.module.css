@@ -1,0 +1,155 @@
+/* --------------------------------match making start */
+.matchmaking {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    height: 250px;
+    border: solid 2px black;
+    border-radius: 30px;
+    overflow: hidden;
+    background-color: white;
+}
+
+.holderx {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    h4 {
+        display: flex;
+        position: relative;
+        top: 20px;
+    }
+}
+
+.player {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    img {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+    }
+}
+
+.userImg {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.buttoncontainer {
+    margin-top: auto;
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Button {
+    width: 50%;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button {
+        background-color: aqua;
+        width: 150px;
+        height: 50px;
+        border: none;
+        border-radius: 20px;
+    }
+    &:hover button {
+        background-color: rgb(233, 29, 195);
+    }
+}
+
+/* --------------------------------match making end */
+
+.top_container {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+    /* align-items: center; */
+}
+
+.create_button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #a01680;
+    width: 250px;
+    height: 50px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+                      
+.create_button:hover {
+    background-color: #218838;
+}
+
+.tournament_list {
+    margin: 60px 0 0 0; /* Add margin to avoid overlap with the button */
+}
+
+.tournament_card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+    position: relative;
+}
+
+.tournament_card button {
+    margin: 5px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tournament_card button:hover {
+    background-color: #0056b3;
+}
+
+.no_tournaments {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px 0;
+    color: #333;
+    text-align: center; /* Center the text */
+}

@@ -46,7 +46,7 @@ export default function LocalGame() {
         };
 
         const drawLeftRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -54,7 +54,7 @@ export default function LocalGame() {
         }
 
         const drawRightRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -99,7 +99,7 @@ export default function LocalGame() {
                 balldirectionY = Math.random() * 2 - 1;
                 setLeftScore(prevScore => prevScore + 1);
                 left_score++;
-                if (left_score >= 3){
+                if (left_score >= 5){
                     setCondition('S');
                     mycondition = 'S';
                     document.getElementById('result').style.display = "block";
@@ -113,7 +113,7 @@ export default function LocalGame() {
                 balldirectionY = Math.random() * 2 - 1;
                 setRightScore(prevScore => prevScore + 1);
                 right_score++;
-                if (right_score >= 3){
+                if (right_score >= 5){
                     setCondition('S');
                     mycondition = 'S';
                     document.getElementById('result').style.display = "block";
@@ -200,19 +200,18 @@ export default function LocalGame() {
     
             <div className={styles.gameContainer}>
                 <div className={styles.topgame}>
-                    <div className={styles.player}>
-                        <img src="/assets/superior.png" className={styles.userImg}/>
-                        <div className={styles.playerInfo}>
-                            <h2>Left Player</h2>
-                            <h3>score: {leftScore}</h3>
-                        </div>
+                    <div className={styles.side}>
+                        <img src="/assets/superior.png" className={styles.Img}/>
+                        <p >Left Player</p>
                     </div>
-                    <div className={styles.player}>
-                        <img src="/assets/battlebeast.png" className={styles.userImg}/>
-                        <div className={styles.playerInfo}>
-                            <h2>Right Player</h2>
-                            <h3>score: {rightScore}</h3>
-                        </div>
+                    <div className={styles.side} style={{justifyContent: 'end'}}>
+                        <p >Right Player</p>
+                        <img src="/assets/battlebeast.png" className={styles.Img}/>
+                    </div>
+                    <div className={styles.score}>
+                        <p >{leftScore}</p>
+                        <p >:</p>
+                        <p >{rightScore}</p>
                     </div>
                 </div>
                 <canvas id="canvas" className={styles.canvass}></canvas>

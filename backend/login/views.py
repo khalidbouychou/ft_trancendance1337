@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 import requests
 from django.contrib.auth.models import User
-from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer , PingDataSerializer , TicDataSerializer
-from .models import Player as Player , PingData , TicData
+from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer , PingDataSerializer
+from .models import Player as Player , PingData
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken ,TokenError
 from django.http import JsonResponse
@@ -48,11 +48,11 @@ class PlayerViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'No search query provided'}, status=status.HTTP_400_BAD_REQUEST)
  
-    def get_user_by_profile_name(self, request, username):
+    def get_user_by_profile_name(self, request, profile_name):
         try:
-            print('username ==>', username)
-            user = Player.objects.get(username=username)
-            serializer = PlayerSerializer(user)
+            print('profile_name ==>', profile_name)
+            user = Player.objects.get(profile_name=profile_name)
+            serializer = self.get_serializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Player.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -82,7 +82,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
         )
         user.save()
         PingData.objects.create(player=user)
-        TicData.objects.create(player=user)
         return user
 
     def auth_intra(self, request):
@@ -422,10 +421,10 @@ class UpdateProfile (APIView):
         return Response({'msg': 'Profile updated' , "new data" : PlayerSerializer(user).data}, status=status.HTTP_200_OK)
 #-----------------------------------2FA-------------------------------------------------------------
 
-def get_ping_data_by_username(request, username):
+def get_ping_data_by_profile_name(request, profile_name):
     Player = get_user_model()
     try:
-        player = Player.objects.get(username=username)
+        player = Player.objects.get(profile_name=profile_name)
     except Player.DoesNotExist:
         return JsonResponse({'error': 'Player not found'}, status=404)
     pingdata = PingData.objects.filter(player=player)
@@ -447,35 +446,3 @@ def get_all_ping_data(request):
         })
 
     return JsonResponse(all_ping_data, safe=False)
-
-def get_all_tic_data(request):
-    players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game')
-
-    all_tic_data = []
-
-    for player in players:
-        ticdata = TicData.objects.filter(player=player)
-        serializer = TicDataSerializer(ticdata, many=True)
-        
-        sorted_data = sorted(serializer.data, key=lambda x: (-x['exp_game'], -x['wins']))
-
-        all_tic_data.append({
-            'username': player.username,
-            'profile_name': player.profile_name,
-            'avatar': player.avatar,
-            'data': sorted_data,
-        })
-
-    return JsonResponse(all_tic_data, safe=False)
-
-def get_tic_data_by_username(request, username):
-    Player = get_user_model()
-    try:
-        player = Player.objects.get(username=username)
-    except Player.DoesNotExist:
-        return JsonResponse({'error': 'Player not found'}, status=404)	
-    ticdata = TicData.objects.filter(player=player)
-    serializer = TicDataSerializer(ticdata, many=True)
-    data = serializer.data
-    print("--------->", data)
-    return JsonResponse(data, safe=False)

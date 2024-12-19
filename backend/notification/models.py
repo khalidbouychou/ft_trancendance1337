@@ -26,13 +26,13 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     is_read = models.BooleanField(default=False)
-    game_room = models.CharField(max_length=255, default='')
+    game_room = models.CharField(max_length=255, blank=True, default='')
 
     class Meta:
         ordering = ['-created_at']
         constraints = [
             models.UniqueConstraint(
-                fields=['from_user', 'to_user', 'notif_type', 'game_type', 'game_room'],
+                fields=['from_user', 'to_user', 'notif_type', 'game_type'],
                 condition=models.Q(status='pending'),
                 name='unique_pending_notification'
             )

@@ -328,23 +328,22 @@ ul:last-of-type li {
 		50% 100%, 
 		0% 75%, 
 		0% 25%
-        );
-        img {
-            display: flex;
-            width: 50px;
-            height: 50px;
-        }
-    }
-    
-    
-    .notifIcon {
+    );
+    img {
         display: flex;
-        width: 100px;
-        height: 100%;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        border: none;
+        width: 50px;
+        height: 50px;
+    }
+}
+    
+.notifIcon {
+    display: flex;
+    width: 100px;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: none;
     background: none;
     /* cursor: pointer; */
     position: relative;
@@ -355,7 +354,6 @@ ul:last-of-type li {
     position: absolute;
     width: 350px;
     height: 280px;
-    background-color: aquamarine;
     top: 100%;
     right: 20%;
     overflow: auto;
@@ -403,6 +401,9 @@ ul:last-of-type li {
     border: none;
     background: none;
     cursor: pointer;
+    img  {
+        width: 50px;
+    }
 }
 
 .choose {
@@ -468,7 +469,7 @@ ul:last-of-type li {
     width: 150px;
     position: absolute;
     top: 100%;
-    right: 25%;
+    /* right: 25%; */
     padding: 15px 2px;
     gap: 20px;
     background-color:#660da5;
@@ -568,8 +569,8 @@ ul:last-of-type li {
 
 .logo {
     display: flex;
-    width: 250px;
-    min-width: 250px;
+    width: 100%;
+    /* min-width: 250px; */
     height: 100%;
     justify-content: center;
     align-items: center;
@@ -590,6 +591,10 @@ ul:last-of-type li {
     img:hover {
         transform: scale(1.1);
     }
+    img {
+        width: 70px;
+        height: 70px;
+    }
 }
 
 @media (max-width: 900px) {
@@ -607,6 +612,14 @@ ul:last-of-type li {
     width: 100%;
     height: 100%;
     position: relative;
+    input {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 16px;
+        position: relative;
+        /* left: 10px; */
+    }
 }
 
 .end {

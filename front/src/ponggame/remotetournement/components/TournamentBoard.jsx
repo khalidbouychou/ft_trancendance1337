@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useEffect, useRef, useContext } from 'react'
 import styles from './TournamentBoard.module.css'
-import { useGlobalContext } from '../context/RemoteTournamentContext.jsx';
+import { AuthContext } from '../../../UserContext/Context';
+import { useGlobalContext } from '../context/TournamentContext.jsx';
 
 const TournamentBoard = () => {
-
-    const { player1Name, player2Name, player3Name, player4Name, player5Name,player5Avatar, player6Name,player6Avatar, player7Name, player7Avatar } = useGlobalContext();
+    const socket = useRef(null);
+    const { user } = useContext(AuthContext);
+    const { RoomName, player1Name, setPlayer1Name, player2Name, setPlayer2Name, player3Name,
+            setPlayer3Name, player4Name, setPlayer4Name, player5Name, setPlayer5Name,
+            player6Name, setPlayer6Name, player7Name, setPlayer7Name,
+            player1Avatar, setPlayer1Avatar, player2Avatar, setPlayer2Avatar, player3Avatar,
+            setPlayer3Avatar, player4Avatar, setPlayer4Avatar, player5Avatar, setPlayer5Avatar,
+            player6Avatar, setPlayer6Avatar, player7Avatar, setPlayer7Avatar } = useGlobalContext();
+    
     
   return (
     <div className={styles.first}>
@@ -12,7 +20,7 @@ const TournamentBoard = () => {
             <div className={styles.gameCard}>
                 <div className={styles.player}>
                     <div className={styles.userImage}>
-                        <img src="/assets/battlebeast.png"/>
+                        <img src={player1Avatar}/>
                     </div>
                     <div className={styles.userName}>
                         <p > {player1Name} </p>
@@ -23,7 +31,7 @@ const TournamentBoard = () => {
                 </div>
                 <div className={styles.player}>
                     <div className={styles.userImage}>
-                        <img src="/assets/homelander.png"/>
+                        <img src={player2Avatar}/>
                     </div>
                     <div className={styles.userName}>
                         <p > {player2Name} </p>
@@ -33,7 +41,7 @@ const TournamentBoard = () => {
             <div className={styles.gameCard}>
                 <div className={styles.player}>
                     <div className={styles.userImage}>
-                        <img src="/assets/superman.png"/>
+                        <img src={player3Avatar}/>
                     </div>
                     <div className={styles.userName}>
                         <p > {player3Name} </p>
@@ -44,7 +52,7 @@ const TournamentBoard = () => {
                 </div>
                 <div className={styles.player}>
                     <div className={styles.userImage}>
-                        <img src="/assets/superior.png"/>
+                        <img src={player4Avatar}/>
                     </div>
                     <div className={styles.userName}>
                         <p > {player4Name} </p>

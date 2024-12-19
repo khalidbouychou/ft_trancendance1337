@@ -43,18 +43,18 @@ const MainTournament = () => {
                 <div className={styles.starting}>
                     <div className={styles.cnt}>
                         <div className={styles.inp}>
-                            <input type="text" placeholder="Player 1"  onChange={(e) => setPlayer1Input(e.target.value)}/>
+                            <input type="text" placeholder="Player 1" onChange={(e) => setPlayer1Input(e.target.value)}/>
                         </div>
                         <div className={styles.inp}>
-                            <input type="text" placeholder="Player 2"  onChange={(e) => setPlayer2Input(e.target.value)}/>
+                            <input type="text" placeholder="Player 2" onChange={(e) => setPlayer2Input(e.target.value)}/>
                         </div>
                     </div>
                     <div className={styles.cnt}>
                         <div className={styles.inp}>
-                            <input type="text" placeholder="Player 3"  onChange={(e) => setPlayer3Input(e.target.value)}/>
+                            <input type="text" placeholder="Player 3" onChange={(e) => setPlayer3Input(e.target.value)}/>
                         </div>
                         <div className={styles.inp}>
-                            <input type="text" placeholder="Player 4"  onChange={(e) => setPlayer4Input(e.target.value)}/>
+                            <input type="text" placeholder="Player 4" onChange={(e) => setPlayer4Input(e.target.value)}/>
                         </div>
                     </div>
                 </div>

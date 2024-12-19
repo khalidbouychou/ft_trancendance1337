@@ -8,7 +8,9 @@ import { AuthContext } from "./UserContext/Context";
 
 import { GridLoader } from "react-spinners";
 import { useState } from "react";
-
+import Notification from "./notification/notification.jsx";
+import { NotificationWebSocketProvider } from "./contexts/NotifWSContext.jsx";
+import { LocationProvider } from "./contexts/LocationContext.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -28,7 +30,7 @@ const Layout = () => {
 }, [location.pathname]);
 
   return (
-
+    
     loading ?   <div 
     style={{
       display: "flex",
@@ -40,8 +42,13 @@ const Layout = () => {
     <GridLoader color="#fff" loading={loading} size={20} />
   </div> :
     <div className={style.EntirePage}>
-          {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> }
-           <Outlet />
+      {user && <Notification />}
+          {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> } 
+          <NotificationWebSocketProvider>
+            <LocationProvider>
+              <Outlet />
+            </LocationProvider>
+          </NotificationWebSocketProvider>
     </div>
   );
 };
