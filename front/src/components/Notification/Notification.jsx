@@ -26,11 +26,8 @@ const Notification = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/api/notif/', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+        const response = await axios('http://localhost:8000/api/notif/',{
+            withCredentials: true,
         });
         const notifications = response.data;
         setFR_notif_received(notifications.FR_notif_received);

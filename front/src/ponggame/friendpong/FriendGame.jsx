@@ -81,8 +81,10 @@ export default function FriendGame() {
     useEffect(() => {
         // console.log("im here");
         const fetchData = async () => {
-            const response = await axios('http//localhost:8000/api/pingpong/');
-            // console.log('response:', response);
+            const response = await axios('http://localhost:8000/api/pong_data/',{
+                withCredentials: true,
+            });
+            console.log('response:', response.data);
             if (response.status === 200) {
                 setUsername(response.data.user);
                 setLeftPlayerAvatar(response.data.avatar);
@@ -319,7 +321,7 @@ export default function FriendGame() {
     }, [gamestarted, condition]);
 
     const handleExitClick = () => {
-        navigate('/pingpong-games');
+        navigate('/games');
     };
 
     return (

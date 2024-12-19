@@ -21,6 +21,7 @@ export default function AuthProvider({ children }) {
     try {
       if (response.status === 200) {
         setUrl(response.data.url);
+        
       }
     } catch (error) {
       console.log("auth_intra42", error);
@@ -60,7 +61,7 @@ export default function AuthProvider({ children }) {
               closeOnClick: true
             });
           }
-          navigate(`/profile/${res.data.user.profile_name}`);
+          navigate(`/`);
         }
       }
     } catch (error) {
@@ -68,7 +69,7 @@ export default function AuthProvider({ children }) {
         position: "top-right",
         autoClose: 1000
       });
-      navigate(`/profile/${res.data.user.profile_name}`);
+      navigate(`/`);
     } finally {
       setLoading(false);
     }
@@ -89,7 +90,7 @@ export default function AuthProvider({ children }) {
           navigate("/otp");
         if (window.location.pathname === "/login") {
           // navigate("/home");
-          navigate(`/profile/${res.data.user.profile_name}`);
+          navigate(`/`);
         }
       }
     } catch (error) {
@@ -116,12 +117,17 @@ export default function AuthProvider({ children }) {
   }
 
   useEffect(() => {
+    auth_intra42();
+}, []);
+
+  useEffect(() => {
+    console.log("-------------- useEffect login");
     Login()
     
   }, []);
   useEffect(
     () => {
-      !user && get_auth_user();
+       !user && get_auth_user();
     },
     [location.pathname]
   );

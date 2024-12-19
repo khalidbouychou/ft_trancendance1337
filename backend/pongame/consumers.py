@@ -11,6 +11,8 @@ from django.utils import timezone
 from channels.layers import get_channel_layer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
+from chat.models import ChatRoom, Message
+
 channel_layer = get_channel_layer()
  
 class GameStateManager: 
@@ -301,7 +303,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.right_score += 1
             self.bonus = 0
-            if (self.right_score >= 5000):
+            if (self.right_score >= 5):
                 self.game_loop = False
                 data = {
                     'winner': '2',
@@ -360,7 +362,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.left_score += 1
             self.bonus = 0
-            if (self.left_score >= 5000):
+            if (self.left_score >= 5):
                 self.game_loop = False
                 data = {
                     'winner': '1',
@@ -411,7 +413,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await sync_to_async(match.save)()
         await self.pack_data_to_send()
 
-
+ 
 class inviteConsumer(AsyncWebsocketConsumer):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -458,10 +460,8 @@ class inviteConsumer(AsyncWebsocketConsumer):
                     self.room_group_name,
                     self.channel_name
                 )
-        # print('game_id:', self.room_group_name, 'in_queue:', self.inqueue)
         if self.inqueue:
             if inviteConsumer.game_queue.get(self.room_group_name) is not None:
-                print('kherj fi 7alatek')
                 del inviteConsumer.game_queue[self.room_group_name]
 
     async def receive(self, text_data):
@@ -829,8 +829,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
     async def remove_all_from_group(self, group_name):
         channel_layer = get_channel_layer()
-        # Fetch channels from your custom storage or tracking
-        channels = await get_channels_in_group(group_name)  # Implement this method
+        channels = await channel_layer.group_channels(group_name)
         for channel_name in channels:
             await channel_layer.group_discard(group_name, channel_name)
 
@@ -949,6 +948,20 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'message': data,
                     })
                     if tournament['connected'] == 4:
+                        sender_id = 1
+                        reciever1_id = await Player.objects.get(username=tournament['player1_name']).id
+                        reciever2_id = await Player.objects.get(username=tournament['player2_name']).id
+                        reciever3_id = await Player.objects.get(username=tournament['player3_name']).id
+                        reciever4_id = await Player.objects.get(username=tournament['player4_name']).id
+                        msg = "the tournament! has started"
+                        room1 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever1_id)
+                        room2 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever2_id)
+                        room3 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever3_id)
+                        room4 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever4_id)
+                        Message.objects.create(chat_room=room1, sender=sender_id, content=msg)
+                        Message.objects.create(chat_room=room2, sender=sender_id, content=msg)
+                        Message.objects.create(chat_room=room3, sender=sender_id, content=msg)
+                        Message.objects.create(chat_room=room4, sender=sender_id, content=msg)
                         data = {
                             'message': 'tournament_started',
                         }

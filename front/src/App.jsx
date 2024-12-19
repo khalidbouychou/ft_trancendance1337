@@ -38,7 +38,7 @@ function App() {
               <Route path="games/localpong" element={<LocalGame />} />
               <Route path="games/onlinepong" element={<OnlineGame />} />
               <Route path="games/localteampong" element={<LocalTeamGame />} />
-              <Route path="friend-game" element={<FriendGame />} />
+              <Route path="friendgame" element={<FriendGame />} />
               <Route path="games/localtournament" element={<LocalTournament />} />
               <Route path="games/remotetournament" element={<RemoteTournament />} />
               <Route path="games/pong3d" element={<Newpong />} />

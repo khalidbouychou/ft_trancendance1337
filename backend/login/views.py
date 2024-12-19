@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 import requests
 from django.contrib.auth.models import User
-from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer , PingDataSerializer
+from .serializers import *
 from .models import Player as Player , PingData
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken ,TokenError
@@ -87,6 +87,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
     def auth_intra(self, request):
         CID = os.environ.get('C_ID')
         REDIRECT_URI = os.environ.get('REDIRECT_URI')
+        print("---------------CID", CID,flush=True)
+        print("---------------REDIRECT_URI", REDIRECT_URI,flush=True) 
         try:
             response = Response(
                 {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
@@ -441,3 +443,36 @@ def get_all_ping_data(request):
         })
 
     return JsonResponse(all_ping_data, safe=False)
+
+class UserNameFriendList(APIView):
+    authentication_classes = [SessionAuthentication] 
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request, username):
+        try :
+            user = Player.objects.get(username=username)
+            # if not user :
+            #     return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
+            friends = PlayerSerializer.get_friends(self,user)
+            return Response({'friend list':friends , 'user':user.username}, status=status.HTTP_200_OK)
+        except Exception as e:
+            e = 'No user found'
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    
+class UserNameBlockedList (APIView):
+    authentication_classes = [SessionAuthentication] 
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request, username):
+        try :
+            user = Player.objects.get(username=username)
+            # if not user :
+            #     return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
+            friends = PlayerSerializer.get_blocked_users(self,user)
+            return Response({'blocked list':friends , 'user':user.username}, status=status.HTTP_200_OK)
+        except Exception as e:
+            e = 'No user found'
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    

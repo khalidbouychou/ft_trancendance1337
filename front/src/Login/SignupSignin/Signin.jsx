@@ -5,14 +5,16 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRef } from "react";
+import { use } from "react";
 
 const Signin = () => {
-  const {  auth_intra42, setUser } = useContext(AuthContext);
+  const {  url,auth_intra42, setUser } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const loggedIntra = useRef(false);
-  const url = `https://api.intra.42.fr/oauth/authorize?client_id=${import.meta.env.VITE_APP_CID}&redirect_uri=${import.meta.env.VITE_APP_REDIRECT_URI}&response_type=code`
+
+
   const handelogin = async (e) => {
     e.preventDefault();
     try {

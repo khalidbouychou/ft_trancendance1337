@@ -37,12 +37,10 @@ class UserDataView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        print("--------user:", request.user ,flush=True)   
         context = {
             'user': request.user.username,
             'avatar': request.user.avatar,
             'exp_game': PingData.objects.get(player=request.user).exp_game,
         }
-        print("exp_game:", context.get('exp_game'), "user:", context.get('user'), "avatar:", context.get('avatar'))
         return JsonResponse(context)
     
