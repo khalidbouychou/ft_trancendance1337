@@ -1,7 +1,8 @@
 FROM node:20-alpine
 
-WORKDIR /khbouych
-RUN npm install -g vite@5.4.9
+RUN apk update && apk add curl
+WORKDIR /app
+# RUN npm install vite@5.4.9
 COPY package*.json ./
 RUN npm install
 
