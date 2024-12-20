@@ -9,6 +9,13 @@ import CardFriend from "./components/History/components/CardFriend/CardFriend";
 import { FaMedal } from "react-icons/fa";
 import { PiGameControllerFill } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
+import { MdOutlineFormatListBulleted } from "react-icons/md";
+import { IoIosPersonAdd } from "react-icons/io";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { TbLock } from "react-icons/tb";
+
+
+
 
 const Profile = ({ me }) => {
   let { profile_name } = useParams();
@@ -24,15 +31,27 @@ const Profile = ({ me }) => {
   const [maxPingExp, setMaxPingExp] = useState("0");
   const [pingPercentage, setPingPercentage] = useState("");
   const [profileName, setProfileName] = useState(profile_name);
+  const [wins, setWins] = useState('');
+  const [lose, setLose] = useState('');
+  const [setting, setSetting] = useState('none');
 
   const handelClick = (section) => {
     setActiveSection(section);
   };
 
+  const openSettings = () => {
+    setSetting(setting == 'none' ? 'flex' : 'none');
+  }
+
 
   // if (!profile_name)
   //     profile_name = user.user.profile_name
   console.log('check prf == ', profileName)
+
+  useEffect(() => {
+    setProfileName(profile_name);
+  }, [profile_name]);
+
   useEffect(() => {
     const fetchData = async () => {
       if (!profile_name) return;
@@ -67,6 +86,7 @@ const Profile = ({ me }) => {
         }
 
         const pingData = await pingResponse.json();
+        console.log('++++>> == ', pingData)
         if (pingData && pingData.length > 0) {
           const { exp_game } = pingData[0];
           const calculatedLevel = Math.floor(exp_game / 100);
@@ -78,6 +98,8 @@ const Profile = ({ me }) => {
           setPingLevel(calculatedLevel);
           setNextPingLevel(calculatedNextLevel);
           setPingPercentage(Math.floor((exp_game / maxExperience) * 100));
+          setLose(pingData[0].losses)
+          setWins(pingData[0].wins)
         } else {
           throw new Error("Ping data is invalid or empty");
         }
@@ -90,7 +112,6 @@ const Profile = ({ me }) => {
 
     fetchData();
   }, [profile_name, user]);
-  console.log("userDDDDDaata", userData)
   
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
@@ -114,6 +135,23 @@ const Profile = ({ me }) => {
         <div className={styl.userPrf}>
           <div className={styl.side1}>
             <div className={styl.userInfo}>
+              <button className={styl.settingsBt} onClick={openSettings}>
+                <MdOutlineFormatListBulleted />
+                <div className={styl.settings} style={{display: setting}}>
+                  <button className={styl.Button}>
+                      <IoIosPersonAdd className={styl.icons}/>
+                      <p >Add</p>
+                  </button>
+                  <button className={styl.Button}>
+                    <IoChatbubbleEllipsesOutline className={styl.icons}/>
+                    <p >Chat</p>
+                  </button>
+                  <button className={styl.Button}>
+                    <TbLock className={styl.icons}/>
+                    <p >Block</p>
+                  </button>
+                </div>
+              </button>
               <div className={styl.userDis}>
                 <div className={styl.extImg}>
                   <div className={styl.intImg}>
@@ -146,7 +184,7 @@ const Profile = ({ me }) => {
                       <FaMedal className={styl.icon} />
                     </div>
                     <div className={styl.resName}>Wins</div>
-                    <div className={styl.Side}>4</div>
+                    <div className={styl.Side}>{wins}</div>
                   </div>
                   <hr />
                   <div className={styl.rs}>
@@ -154,7 +192,7 @@ const Profile = ({ me }) => {
                       <GiCrossMark className={styl.icon} />
                     </div>
                     <div className={styl.resName}>Lose</div>
-                    <div className={styl.Side}>2</div>
+                    <div className={styl.Side}>{lose}</div>
                   </div>
                   <hr />
                   <div className={styl.rs}>
@@ -162,7 +200,7 @@ const Profile = ({ me }) => {
                       <PiGameControllerFill className={styl.icon} />
                     </div>
                     <div className={styl.resName}>Games</div>
-                    <div className={styl.Side}>4</div>
+                    <div className={styl.Side}>{wins + lose}</div>
                   </div>
                 </div>
                 <div className={styl.level}>

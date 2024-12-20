@@ -66,6 +66,64 @@
 	border-radius: 10px;
 }
 
+.settingsBt {
+	display: flex;
+    width: 25px;
+    height: 25px;
+	/* background-color: yellow; */
+	position: absolute;
+	right: 1%;
+	top: 2%;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	cursor: pointer;
+	border: none;
+	background: none;
+}
+
+.settings {
+	display: flex;
+	/* width: 200px; */
+	gap: 5px;
+	position: absolute;
+	background-color: rgb(90, 4, 90);
+	top: 100%;
+	right: 50%;
+	z-index: 1;
+	flex-direction: column;
+	border-radius: 10px 0 10px 10px;
+	overflow: hidden;
+}
+
+.Button {
+	display: flex;
+	width: 150px;
+	height: 40px;
+	background: none;
+	align-items: center;
+	gap: 30px;
+	border: none;
+	cursor: pointer;
+	transition: 0.5s;
+	&:hover {
+		transition: 0.5s;
+		background-color: rgba(0, 0, 0, 0.7);
+	}
+	p {
+		font-size: 16px;
+		font-weight: 500;
+		letter-spacing: 1px;
+	}
+}
+
+.icons {
+	display: flex;
+	width: 25px;
+	height: 25px;
+	color: white;
+}
+
 .userDis {
 	display: flex;
 	width: 40%;
