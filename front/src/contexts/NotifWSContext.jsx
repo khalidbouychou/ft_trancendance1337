@@ -49,9 +49,8 @@ export function NotificationWebSocketProvider({ children }) {
       }
       else
         console.log("socket is closed or not ready of notif WebSocket");
-      console.log("Reconnecting to notif WebSocket...");
       setIsConnected(true);
-    }, 1000);
+    }, 2500);
 
     connect();
 
