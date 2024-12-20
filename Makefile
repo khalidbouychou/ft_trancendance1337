@@ -13,7 +13,7 @@ s :
 	@./ssl.sh
 
 up: s uploads_dir
-	@docker-compose up --build -d
+	@docker-compose up --build
 
 down :
 	@docker-compose stop
