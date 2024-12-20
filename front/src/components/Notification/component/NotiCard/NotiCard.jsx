@@ -67,32 +67,9 @@ const NotiCard = ({request}) => {
 				game_type: request.game_type
 			});
 			if (request.notif_type === 'GR') {
-				if (request.game_type == "PONG" || request.game_type == "Pong"
-					|| request.game_type == "pong")
-					navigate('/friend-game');
-				else if (request.game_type.length) {
-					var	token = localStorage.getItem("token"), xo_invite_socket,
-						room_id = request.game_room;
-					if (token && room_id && room_id.length) {
-						try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`); }
-						catch (err) {}
-						xo_invite_socket.onopen = () => {
-							xo_invite_socket.send(JSON.stringify({
-								message: "register_second",
-								me: request.from_user.id,
-								other: request.to_user.id,
-								room_id: room_id,
-								role: "guest"
-							}));
-							xo_invite_socket.close();
-							navigate("/xo_with_invitation", { state: {
-								room_id: room_id,
-								name: request.to_user.username,
-								other_name: request.from_user.username,
-								role: "guest"
-							}});
-						}
-					}
+				if (request.game_type == "PG"){
+					const game_key = `${request.from_user.username}vs${request.to_user.username}`;
+					navigate('/friendgame', { state: { game_key } });
 				}
 			}
 		} else {
@@ -108,25 +85,6 @@ const NotiCard = ({request}) => {
 				from_user_id: request.from_user.id,
 				game_type: request.game_type
 			});
-			if (request.notif_type === 'GR' && request.game_type == "TICTACTOE") {
-				var	token = localStorage.getItem("token"),
-					xo_invite_socket;
-				if (token) {
-					try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`); }
-					catch (err) {}
-					console.log("handling decline");
-					xo_invite_socket.onopen = () => {
-						xo_invite_socket.send(JSON.stringify({
-							message: "unregister",
-							me: request.from_user.id,
-							other: request.to_user.id,
-							room_id: request.game_room,
-							role: "guest",
-						}));
-						xo_invite_socket.close();
-					}
-				}
-			}
 		}
 		setIsVisible(false);
 	};

@@ -183,7 +183,7 @@ export default function FriendGame() {
                         setMessage("Opponent left the game");
                     }
                     else if (data.message === 'Leave') {
-                        navigate('/home');
+                        navigate('/');
                     }
                 }
                 if (data.hasOwnProperty('winner')) {
@@ -278,7 +278,7 @@ export default function FriendGame() {
             drawLeftRacket();
             drawRightRacket();
             const currentPath = window.location.pathname;
-            if (currentPath === '/friend-game' && condition === 'N')
+            if (currentPath === '/friendgame' && condition === 'N')
                 return requestAnimationFrame(draw);
             else
                 return cancelAnimationFrame(myReq);

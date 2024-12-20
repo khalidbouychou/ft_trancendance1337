@@ -57,6 +57,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             elif message_type == 'SEARCH_USERS':
                 query = text_data_json.get('query')
                 user_list = await self.get_users(query)
+                print("user_list:", user_list)
                 await self.send(text_data=json.dumps({
                     'type': 'USERS_LIST',
                     'users': user_list
@@ -71,9 +72,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     }
                 )
             elif message_type == 'SELECT_USER':
-                username = text_data_json.get('username')
+                profile_name = text_data_json.get('profile_name')
                 try:
-                    user1 = await self.get_user_by_username(username)
+                    user1 = await self.get_user_by_profile_name(profile_name)
                     user2 = self.scope['user']
                     if user2 == None or user1 == None:
                         return
@@ -165,7 +166,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         room = ChatRoom.objects.get(id=chat_room)
         sender_id = Player.objects.get(id=sender)
         receiver_id = room.user1 if room.user1 != sender_id else room.user2
-        if Player.are_enemies(sender_id, receiver_id):
+        if Player.are_enemies(sender_id, receiver_id) or receiver_id.username == 'ke3ki3a':
             return None
         return Message.objects.create(chat_room=room, sender=sender_id, content=content)
 

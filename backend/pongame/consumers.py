@@ -948,20 +948,20 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'message': data,
                     })
                     if tournament['connected'] == 4:
-                        sender_id = 1
-                        reciever1_id = await Player.objects.get(username=tournament['player1_name']).id
-                        reciever2_id = await Player.objects.get(username=tournament['player2_name']).id
-                        reciever3_id = await Player.objects.get(username=tournament['player3_name']).id
-                        reciever4_id = await Player.objects.get(username=tournament['player4_name']).id
+                        sender_id =  await sync_to_async(Player.objects.get)(username='ke3ki3a')
+                        reciever1_id = await sync_to_async(Player.objects.get)(username=tournament['player1_name'])
+                        reciever2_id = await sync_to_async(Player.objects.get)(username=tournament['player2_name'])
+                        reciever3_id = await sync_to_async(Player.objects.get)(username=tournament['player3_name'])
+                        reciever4_id = await sync_to_async(Player.objects.get)(username=tournament['player4_name'])
                         msg = "the tournament! has started"
-                        room1 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever1_id)
-                        room2 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever2_id)
-                        room3 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever3_id)
-                        room4 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever4_id)
-                        Message.objects.create(chat_room=room1, sender=sender_id, content=msg)
-                        Message.objects.create(chat_room=room2, sender=sender_id, content=msg)
-                        Message.objects.create(chat_room=room3, sender=sender_id, content=msg)
-                        Message.objects.create(chat_room=room4, sender=sender_id, content=msg)
+                        room1, _ = await sync_to_async(ChatRoom.objects.get_or_create)(user1=sender_id, user2=reciever1_id)
+                        room2, _ = await sync_to_async(ChatRoom.objects.get_or_create)(user1=sender_id, user2=reciever2_id)
+                        room3, _ = await sync_to_async(ChatRoom.objects.get_or_create)(user1=sender_id, user2=reciever3_id)
+                        room4, _ = await sync_to_async(ChatRoom.objects.get_or_create)(user1=sender_id, user2=reciever4_id)
+                        await sync_to_async(Message.objects.create)(chat_room=room1, sender=sender_id, content=msg)
+                        await sync_to_async(Message.objects.create)(chat_room=room2, sender=sender_id, content=msg)
+                        await sync_to_async(Message.objects.create)(chat_room=room3, sender=sender_id, content=msg)
+                        await sync_to_async(Message.objects.create)(chat_room=room4, sender=sender_id, content=msg)
                         data = {
                             'message': 'tournament_started',
                         }

@@ -11,7 +11,7 @@ function ContactItem({ contact, currentUser, onClick, unreadMessages }) {
             <div className="contact-info">
             <div className="contact-avatar-container">
                     {otherUser.avatar ? (
-                        <img src={otherUser.avatar} alt={otherUser.username} className="contact-avatar" />
+                        <img src={otherUser.avatar} alt={otherUser.profile_name} className="contact-avatar" />
                     ) : (
                         <div className="contact-avatar default-avatar">
                             <FontAwesomeIcon icon={faUser} />
@@ -19,7 +19,7 @@ function ContactItem({ contact, currentUser, onClick, unreadMessages }) {
                     )}
                 </div>
                 <div className="contact-details">
-                    <span className="contact-name">{otherUser.username}</span>
+                    <span className="contact-name">{otherUser.profile_name}</span>
                     <div className="contact-metadata">
                         <span className="contact-last-message">
                             {new Date(contact.modified_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}

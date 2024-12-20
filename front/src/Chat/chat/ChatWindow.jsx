@@ -66,7 +66,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             console.log('Connected');
             sendNotifMessage({
                 type: 'SEND_GR',
-                game_type: 'PONG',
+                game_type: 'PG',
                 to_user_id: otherUser.id
             });
             //testing
@@ -121,14 +121,14 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                     <div className="chat-header">
                         <div className="current-contact">
                             {otherUser.avatar ? (
-                                <img src={otherUser.avatar} alt={otherUser.username} className="contact-avatar" />
+                                <img src={otherUser.avatar} alt={otherUser.profile_name} className="contact-avatar" />
                             ) : (
                                 <div className="contact-avatar default-avatar">
                                     <FontAwesomeIcon icon={faUser} />
                                 </div>
                             )}
                             <span className="contact-name">
-                                {otherUser.username}
+                                {otherUser.profile_name}
                             </span>
                             {isTyping && (
                                 <div className="typing-indicator">
