@@ -171,12 +171,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_users(self, query):
-        players = Player.objects.filter(username__icontains=query).exclude(id=self.scope["user"].id)
+        players = Player.objects.filter(profile_name__icontains=query).exclude(id=self.scope["user"].id)
         return PlayerSerializer(players, many=True).data
 
     @database_sync_to_async
-    def get_user_by_username(self, username):
-        player = Player.objects.get(username=username)
+    def get_user_by_profile_name(self, profile_name):
+        player = Player.objects.get(profile_name=profile_name)
         if player == self.scope["user"]:
             return None
         return player
