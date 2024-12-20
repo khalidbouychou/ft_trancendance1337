@@ -12,15 +12,9 @@ export function NotificationWebSocketProvider({ children }) {
     let reconnectTimeout;
 
     const connect = () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        handleReconnect();
-        return;
-      }
-
       let ws;
       try {
-        ws = new WebSocket(`ws://localhost:8000/ws/notif/?token=${token}`);
+        ws = new WebSocket(`ws://localhost:8000/ws/notif/`);
       } catch (error) {
         handleReconnect();
         return;

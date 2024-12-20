@@ -112,16 +112,17 @@ const Sidebar = () => {
           <button style={{ color: buttonColors.chat }}>Chat</button>
         </Link>
       </div>
-      <hr />
       <div className={styl.end}>
         <button
           className={styl.notifIcon}
           onClick={toggleNotif}
           ref={notifRef}
         >
-          <MdNotifications id={styl.listicon} />
+          <MdNotifications id={styl.listicon} onClick={
+            () => navigate("/notification")
+          }/>
         </button>
-        {notifOpen && (
+        {/* {notifOpen && (
           <div className={styl.notification}>
             <div className={styl.inviteCard}>
               <button className={styl.userImg}>
@@ -141,7 +142,7 @@ const Sidebar = () => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <button
           className={styl.intImg}
           onClick={toggleMenu}

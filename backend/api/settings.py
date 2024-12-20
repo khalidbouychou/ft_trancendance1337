@@ -7,7 +7,7 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/4.2/ref/settings/
+https://docs.djangoproject.com/en/4.2/ref/settings/ 
 """
 
 from pathlib import Path 
@@ -54,14 +54,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt.token_blacklist',  
     'rest_framework',
     'login',
     'pongame',
     'matches',
     'chat',
     'notification',
-    'xo_game'
+    # 'xo_game'
 ]
 
 MIDDLEWARE = [
@@ -73,12 +73,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
- 
+
 ASGI_APPLICATION = 'api.asgi.application'
 
 CHANNEL_LAYERS = {
@@ -113,6 +109,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'api.wsgi.application'
+
+# Database configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql', 
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"), 
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"), 
+        'HOST': os.getenv("POSTGRES_HOST"),
+        'PORT': os.getenv("POSTGRES_PORT"),
+    }
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

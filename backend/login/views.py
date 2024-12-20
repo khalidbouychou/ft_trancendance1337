@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 import requests
 from django.contrib.auth.models import User
-from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer , PingDataSerializer , TicDataSerializer
-from .models import Player as Player , PingData , TicData
+from .serializers import *
+from .models import Player as Player , PingData
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken ,TokenError
 from django.http import JsonResponse
@@ -82,12 +82,13 @@ class PlayerViewSet(viewsets.ModelViewSet):
         )
         user.save()
         PingData.objects.create(player=user)
-        TicData.objects.create(player=user)
         return user
 
     def auth_intra(self, request):
         CID = os.environ.get('C_ID')
         REDIRECT_URI = os.environ.get('REDIRECT_URI')
+        print("---------------CID", CID,flush=True)
+        print("---------------REDIRECT_URI", REDIRECT_URI,flush=True) 
         try:
             response = Response(
                 {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
@@ -443,34 +444,35 @@ def get_all_ping_data(request):
 
     return JsonResponse(all_ping_data, safe=False)
 
-def get_all_tic_data(request):
-    players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game')
+class UserNameFriendList(APIView):
+    authentication_classes = [SessionAuthentication] 
+    permission_classes = [IsAuthenticated]
 
-    all_tic_data = []
-
-    for player in players:
-        ticdata = TicData.objects.filter(player=player)
-        serializer = TicDataSerializer(ticdata, many=True)
+    def get(self,request, username):
+        try :
+            user = Player.objects.get(username=username)
+            # if not user :
+            #     return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
+            friends = PlayerSerializer.get_friends(self,user)
+            return Response({'friend list':friends , 'user':user.username}, status=status.HTTP_200_OK)
+        except Exception as e:
+            e = 'No user found'
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
-        sorted_data = sorted(serializer.data, key=lambda x: (-x['exp_game'], -x['wins']))
+    
+class UserNameBlockedList (APIView):
+    authentication_classes = [SessionAuthentication] 
+    permission_classes = [IsAuthenticated]
 
-        all_tic_data.append({
-            'username': player.username,
-            'profile_name': player.profile_name,
-            'avatar': player.avatar,
-            'data': sorted_data,
-        })
-
-    return JsonResponse(all_tic_data, safe=False)
-
-def get_tic_data_by_username(request, username):
-    Player = get_user_model()
-    try:
-        player = Player.objects.get(username=username)
-    except Player.DoesNotExist:
-        return JsonResponse({'error': 'Player not found'}, status=404)	
-    ticdata = TicData.objects.filter(player=player)
-    serializer = TicDataSerializer(ticdata, many=True)
-    data = serializer.data
-    print("--------->", data)
-    return JsonResponse(data, safe=False)
+    def get(self,request, username):
+        try :
+            user = Player.objects.get(username=username)
+            # if not user :
+            #     return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
+            friends = PlayerSerializer.get_blocked_users(self,user)
+            return Response({'blocked list':friends , 'user':user.username}, status=status.HTTP_200_OK)
+        except Exception as e:
+            e = 'No user found'
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    

@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as styles from './LocalTeamGame.module.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,13 +42,13 @@ export default function LocalGame() {
             ballspeed = canvas.width / (6 * 60) + bonus;
             ctx.fillStyle = 'white';
             ctx.arc(centerX, centerY, 15, 0, Math.PI * 2);
-            ctx.fillRect(canvas.clientWidth / 2-3,0, 6, canvas.height);
+            ctx.fillRect(canvas.clientWidth / 2 - 3, 0, 6, canvas.height);
             ctx.fill();
             racketHeight = (canvas.height * 15 / 100);
         };
 
         const drawLeftRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -56,7 +56,7 @@ export default function LocalGame() {
         }
 
         const drawbottomleftRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -64,19 +64,19 @@ export default function LocalGame() {
         }
 
         const drawRightRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
-            ctx.fillRect(canvas.width-racketWidth, rightRacketY, racketWidth, racketHeight);
+            ctx.fillRect(canvas.width - racketWidth, rightRacketY, racketWidth, racketHeight);
         }
 
         const drawbottomrightRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
-            ctx.fillRect(canvas.width-racketWidth, bottonrightRacketY, racketWidth, racketHeight);
+            ctx.fillRect(canvas.width - racketWidth, bottonrightRacketY, racketWidth, racketHeight);
         }
 
         const gamelogic = () => {
@@ -85,7 +85,7 @@ export default function LocalGame() {
             if ((rightRacketY <= ((canvas.height / 2) + bally + 15) && rightRacketY + racketHeight >= ((canvas.height / 2) + bally - 15) && ((canvas.width / 2) + ballx + 15) >= (canvas.width - racketWidth))) {
                 let offset = ((canvas.height / 2) + bally) - (rightRacketY + racketHeight / 2);
                 offset = offset / (racketHeight / 2);
-                ballx = (canvas.width / 2 ) - racketWidth - 15 - 1;
+                ballx = (canvas.width / 2) - racketWidth - 15 - 1;
                 balldirectionX *= -1;
                 balldirectionY = offset;
                 if (bonus > 2)
@@ -95,7 +95,7 @@ export default function LocalGame() {
             else if (bottonrightRacketY <= ((canvas.height / 2) + bally + 15) && bottonrightRacketY + racketHeight >= ((canvas.height / 2) + bally - 15) && ((canvas.width / 2) + ballx + 15) >= (canvas.width - racketWidth)) {
                 let offset = ((canvas.height / 2) + bally) - (bottonrightRacketY + racketHeight / 2);
                 offset = offset / (racketHeight / 2);
-                ballx = (canvas.width / 2 ) - racketWidth - 15 - 1;
+                ballx = (canvas.width / 2) - racketWidth - 15 - 1;
                 balldirectionX *= -1;
                 balldirectionY = offset;
                 if (bonus > 2)
@@ -105,7 +105,7 @@ export default function LocalGame() {
             else if ((leftRacketY <= ((canvas.height / 2) + bally + 15) && leftRacketY + racketHeight >= ((canvas.height / 2) + bally - 15) && ((canvas.width / 2) + ballx - 15) <= (0 + racketWidth))) {
                 let offset = ((canvas.height / 2) + bally) - (leftRacketY + racketHeight / 2);
                 offset = offset / (racketHeight / 2);
-                ballx = -(canvas.width / 2 ) + racketWidth + 15;
+                ballx = -(canvas.width / 2) + racketWidth + 15;
                 balldirectionX *= -1;
                 balldirectionY = offset;
                 if (bonus > 2)
@@ -115,7 +115,7 @@ export default function LocalGame() {
             else if (bottonleftRacketY <= ((canvas.height / 2) + bally + 15) && bottonleftRacketY + racketHeight >= ((canvas.height / 2) + bally - 15) && ((canvas.width / 2) + ballx - 15) <= (0 + racketWidth)) {
                 let offset = ((canvas.height / 2) + bally) - (bottonleftRacketY + racketHeight / 2);
                 offset = offset / (racketHeight / 2);
-                ballx = -(canvas.width / 2 ) + racketWidth + 15;
+                ballx = -(canvas.width / 2) + racketWidth + 15;
                 balldirectionX *= -1;
                 balldirectionY = offset;
                 if (bonus > 2)
@@ -126,7 +126,7 @@ export default function LocalGame() {
                 bally = -(canvas.height / 2) - -16;
                 balldirectionY *= -1;
             }
-            else if (((canvas.height / 2) + bally + 15) >= canvas.height){
+            else if (((canvas.height / 2) + bally + 15) >= canvas.height) {
                 bally = (canvas.height / 2) - 16;
                 balldirectionY *= -1;
             }
@@ -137,7 +137,7 @@ export default function LocalGame() {
                 balldirectionY = Math.random() * 2 - 1;
                 setLeftScore(prevScore => prevScore + 1);
                 left_score++;
-                if (left_score >= 3){
+                if (left_score >= 5) {
                     setCondition('S');
                     mycondition = 'S';
                     document.getElementById('result').style.display = "block";
@@ -151,7 +151,7 @@ export default function LocalGame() {
                 balldirectionY = Math.random() * 2 - 1;
                 setRightScore(prevScore => prevScore + 1);
                 right_score++;
-                if (right_score >= 3){
+                if (right_score >= 5) {
                     setCondition('S');
                     mycondition = 'S';
                     document.getElementById('result').style.display = "block";
@@ -200,11 +200,9 @@ export default function LocalGame() {
             drawbottomrightRacket();
             gamelogic();
             const currentPath = window.location.pathname;
-            if (currentPath === '/games/localteampong' && condition === 'R')
-            {
+            if (currentPath === '/games/localteampong' && condition === 'R') {
                 return requestAnimationFrame(draw);
-            }else
-            {
+            } else {
                 return cancelAnimationFrame(myReq);
             }
         };
@@ -231,7 +229,7 @@ export default function LocalGame() {
     const navigate = useNavigate();
 
     const handleExitClick = () => {
-        navigate('/pingpong-games');
+        navigate('/games');
     };
     return (
         <>
@@ -249,22 +247,21 @@ export default function LocalGame() {
                     </div>
                 </div>
             </div>
-    
+
             <div className={styles.gameContainer}>
                 <div className={styles.topgame}>
-                    <div className={styles.player}>
-                        <img src="/assets/superior.png" className={styles.userImg}/>
-                        <div className={styles.playerInfo}>
-                            <h2>Left Team</h2>
-                            <h3>score: {leftScore}</h3>
-                        </div>
+                    <div className={styles.side}>
+                        <img src="/assets/superior.png" className={styles.Img} />
+                        <p >Left Player</p>
                     </div>
-                    <div className={styles.player}>
-                        <img src="/assets/battlebeast.png" className={styles.userImg}/>
-                        <div className={styles.playerInfo}>
-                            <h2>Right Team</h2>
-                            <h3>score: {rightScore}</h3>
-                        </div>
+                    <div className={styles.side} style={{ justifyContent: 'end' }}>
+                        <p >Right Player</p>
+                        <img src="/assets/battlebeast.png" className={styles.Img} />
+                    </div>
+                    <div className={styles.score}>
+                        <p >{leftScore}</p>
+                        <p >:</p>
+                        <p >{rightScore}</p>
                     </div>
                 </div>
                 <canvas id="canvas" className={styles.canvass}></canvas>

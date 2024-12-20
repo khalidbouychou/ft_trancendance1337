@@ -72,7 +72,7 @@ export default function GameComponent({ type }) {
         };
 
         const drawLeftRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -80,7 +80,7 @@ export default function GameComponent({ type }) {
         }
 
         const drawRightRacket = () => {
-            ctx.fillStyle = '#00FF00';
+            ctx.fillStyle = '#7667D9';
             racketWidth = (canvas.width * 2.5 / 100);
             if (racketWidth > 16)
                 racketWidth = 16;
@@ -96,8 +96,8 @@ export default function GameComponent({ type }) {
                 ballx = (canvas.width / 2 ) - racketWidth - 15 - 1;
                 balldirectionX *= -1;
                 balldirectionY = offset;
-                if (bonus > 2)
-                    bonus = 2;
+                if (bonus > 3)
+                    bonus = 3;
                 bonus++;
             }
             else if (leftRacketY <= ((canvas.height / 2) + bally + 15) && leftRacketY + racketHeight >= ((canvas.height / 2) + bally - 15) && ((canvas.width / 2) + ballx - 15) <= (0 + racketWidth)) {
@@ -106,8 +106,8 @@ export default function GameComponent({ type }) {
                 ballx = -(canvas.width / 2 ) + racketWidth + 15;
                 balldirectionX *= -1;
                 balldirectionY = offset;
-                if (bonus > 2)
-                    bonus = 2;
+                if (bonus > 3)
+                    bonus = 3;
                 bonus++;
             }
             else if (((canvas.height / 2) + bally - 15) <= 0) {
@@ -125,7 +125,8 @@ export default function GameComponent({ type }) {
                 balldirectionY = Math.random() * 2 - 1;
                 setLeftScore(prevScore => prevScore + 1);
                 left_score++;
-                if (left_score >= 3){
+                bonus = 0;
+                if (left_score >= 5){
                     setCondition('S');
                     mycondition = 'S';
                     if (type === "left"){
@@ -149,7 +150,8 @@ export default function GameComponent({ type }) {
                 balldirectionY = Math.random() * 2 - 1;
                 setRightScore(prevScore => prevScore + 1);
                 right_score++;
-                if (right_score >= 3){
+                bonus = 0;
+                if (right_score >= 5){
                     setCondition('S');
                     mycondition = 'S';
                     if (type === "left"){
@@ -194,7 +196,7 @@ export default function GameComponent({ type }) {
             drawRightRacket();
             gamelogic();
             const currentPath = window.location.pathname;
-            if (currentPath === '/games/tournament' && condition === 'R')
+            if (currentPath === '/games/localtournament' && condition === 'R')
             {
                 return requestAnimationFrame(draw);
             }else
@@ -227,27 +229,25 @@ export default function GameComponent({ type }) {
                 <div className={styles.centered}>
                     <div className={styles.gameContainer}>
                         <div className={styles.topgame}>
-                            <div className={styles.player}>
-                                <img src={leftAvatar} className={styles.userImg}/>
-                                <div className={styles.playerInfo}>
-                                    <h2>{leftplayer}</h2>
-                                    <h3>score: {leftScore}</h3>
-                                </div>
+                            
+                            <div className={styles.side}>
+                                <img src={leftAvatar} className={styles.Img} />
+                                <p >{leftplayer}</p>
                             </div>
-                            <div className={styles.player}>
-                                <img src={rightAvatar} className={styles.userImg}/>
-                                <div className={styles.playerInfo}>
-                                    <h2>{rightplayer}</h2>
-                                    <h3>score: {rightScore}</h3>
-                                </div>
+                            <div className={styles.side} style={{ justifyContent: 'end' }}>
+                                <p >{rightplayer}</p>
+                                <img src={rightAvatar} className={styles.Img} />
+                            </div>
+                            <div className={styles.score}>
+                                <p >{leftScore}</p>
+                                <p >:</p>
+                                <p >{rightScore}</p>
                             </div>
                         </div>
                         <canvas id="canvas" className={styles.canvass}></canvas>
                     </div>
                 </div>
             </div>
-    
-            
         </>
     );
 }

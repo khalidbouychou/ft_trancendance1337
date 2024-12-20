@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import api from '../auth/api';
 import './ChatPage.css';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
-// import Cookies from 'js-cookie';
-// import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function ChatPage() {
 	const navigate = useNavigate();
@@ -39,7 +37,9 @@ function ChatPage() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get('/chat/');
+				const response = await axios('http://localhost:8000/api/chat/',{
+					withCredentials: true,
+				});
 				setData(response.data);
 				setupSocket(1);
 				setupNotificationSocket();
@@ -47,7 +47,7 @@ function ChatPage() {
 				console.log('Current User:', response.data.user);
 			} catch (error) {
 				console.warn('Chat page inaccessible:', error);
-				navigate('/login');
+				// navigate('/login');
 			}
 		};
 		
@@ -83,8 +83,7 @@ function ChatPage() {
 	};
 
 	const setupNotificationSocket = () => {
-		const token = localStorage.getItem('token');
-		const socket = new WebSocket(`ws://localhost:8000/ws/notification/?token=${token}`);
+		const socket = new WebSocket(`ws://localhost:8000/ws/notification/`);
 	
 		socket.onopen = () => {
 			console.log('Connected to notification socket');
@@ -214,8 +213,7 @@ function ChatPage() {
 				return;
 			}
 		
-			const token = localStorage.getItem('token');
-			const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room_id}/?token=${token}`)
+			const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room_id}/`)
 
 			newSocket.onopen = () => {
 				setSockets(prev => ({

@@ -101,6 +101,7 @@ export default function LocalNewGame() {
       }
       else if (ball.position.z >= 10) {
         setLeftScore(prevScore => prevScore + 1);
+        left_score++;
         ball.position.x = 0;
         ball.position.z = 0;
         balldirectionZ = numbers[Math.floor(Math.random() * numbers.length)];

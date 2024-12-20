@@ -47,18 +47,18 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-    // const handleBlockUser = (e) => {
-    //     if (!otherUser) {
-    //         return;
-    //     }
-    //     if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
-    //         sockets[currentContact.id].send(JSON.stringify({
-    //             type: 'BLOCK_USER',
-    //             event: e ? 'BLOCK' : 'UNBLOCK',
-    //             user_id: otherUser.id
-    //         }));
-    //     }
-    // };
+    const handleBlockUser = (e) => {
+        if (!otherUser) {
+            return;
+        }
+        if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
+            sockets[currentContact.id].send(JSON.stringify({
+                type: 'BLOCK_USER',
+                event: e ? 'BLOCK' : 'UNBLOCK',
+                user_id: otherUser.id
+            }));
+        }
+    };
 
     const handlePlayPong = () => {
         console.log('Play Pong');
@@ -70,8 +70,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                 to_user_id: otherUser.id
             });
             //testing
-            const token = localStorage.getItem('token');
-            const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
+            const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/`);
             pong_socket.onopen = () => {
                 const data2 = {
                     action: 'friend_game',
@@ -81,9 +80,9 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                     avatar2: otherUser.avatar,
                     game_id: `${currentUser.username+'vs'+otherUser.username}`,
                 }
-                pong_socket.send(JSON.stringify(data));
+                pong_socket.send(JSON.stringify(data2));
                 const game_key = `${currentUser.username}vs${otherUser.username}`;
-                navigate('/friend-game', { state: { game_key } });
+                navigate('/friendgame', { state: { game_key } });
             }
         }
         else {
@@ -98,41 +97,6 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 	var	rand_str = () => {
 		return Math.random().toString(36).substr(2);
 	}
-
-	const handlePlayTicTacToe = () => {
-		if (isConnected) {
-			var xo_invite_socket, token = localStorage.getItem("token"),
-				room_id = data.user.username + "_VS_" + otherUser.username + "_" + rand_str() + rand_str() + rand_str();
-			if (!token)	return;
-			try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`) }
-			catch (err) { return }
-			xo_invite_socket.onopen = () => {
-				xo_invite_socket.send(JSON.stringify({
-					message: "register_first",
-					me: data.user.username,
-					other: otherUser.username,
-					room_id: room_id,
-					role: "host"
-				}))
-				xo_invite_socket.close();
-				navigate("/xo_with_invitation", { state: { 
-					room_id: room_id,
-					name: data.user.username,
-					other_name: otherUser.username,
-					role: "host"
-				}});
-			}
-
-			sendNotifMessage({
-	     			type: 'SEND_GR',
-	      			game_type: 'TICTACTOE',
-	      			to_user_id: otherUser.id,
-				game_room: room_id
-			});
-
-		}
-		else	console.log("not connected");
-	};
 
     const viewProfile = () => {
         console.log('View Profile');
@@ -173,9 +137,8 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                             )}
                         </div>
                         <ChatOptionsMenu
-                            // onBlockUser={handleBlockUser}
+                            onBlockUser={handleBlockUser}
                             onPlayPong={handlePlayPong}
-                            onPlayTicTacToe={handlePlayTicTacToe}
                             otherUser={otherUser}
                             currentUser={currentUser}
                             viewProfile={viewProfile}

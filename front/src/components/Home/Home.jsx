@@ -54,6 +54,8 @@ const Home = () => {
     fetchDataResults();
   }, [profile_name]);
 
+  console.log("Fetching data", userData)
+
   return (
     <div className={styl.Home}>
       <div className={styl.cont}>
@@ -158,7 +160,7 @@ const Home = () => {
             />{" "}
             Dashboard
           </p>
-          <Statistic />
+          <Statistic userData={userData}/>
         </div>
       </div>
     </div>

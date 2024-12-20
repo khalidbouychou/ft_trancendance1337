@@ -23,6 +23,7 @@ const Profile = ({ me }) => {
   const [pingExp, setPingExp] = useState("0");
   const [maxPingExp, setMaxPingExp] = useState("0");
   const [pingPercentage, setPingPercentage] = useState("");
+  const [profileName, setProfileName] = useState(profile_name);
 
   const handelClick = (section) => {
     setActiveSection(section);
@@ -31,6 +32,7 @@ const Profile = ({ me }) => {
 
   // if (!profile_name)
   //     profile_name = user.user.profile_name
+  console.log('check prf == ', profileName)
   useEffect(() => {
     const fetchData = async () => {
       if (!profile_name) return;
@@ -133,7 +135,7 @@ const Profile = ({ me }) => {
                         }}
                       ></div>
                     </div>
-                    online
+                    {userData.status_network}
                   </p>
                 </p>
               </div>
@@ -231,9 +233,9 @@ const Profile = ({ me }) => {
               </div>
             </div>
             <div className={styl.userData}>
-              {activeSection === "Statistic" && <Statistic />}
+              {activeSection === "Statistic" && <Statistic/>}
               {activeSection === "Leaderboard" && <Leaderboard />}
-              {activeSection === "MatchHistory" && <MatchHistory />}
+              {activeSection === "MatchHistory" && <MatchHistory profileName={profileName}/>}
             </div>
           </div>
           <div className={styl.side2}>

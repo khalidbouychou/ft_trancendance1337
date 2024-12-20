@@ -3,10 +3,10 @@ import styl from './Statistic.module.css'
 import CurveChart from '../../../Home/components/CurveChart/CurveChart'
 import CurveLevel from '../../../Home/components/CurveLevel/CurveLevel'
 
-const Statistic = () => {
-    const total = 15 + 10;
-    const winPercentage = (15 / total) * 100;
-    const lossPercentage = (10 / total) * 100;
+const Statistic = ({userData}) => {
+    const total = userData?.data[0]?.wins + userData?.data[0]?.losses;
+    const winPercentage = (userData?.data[0]?.wins / total) * 100;
+    const lossPercentage = (userData?.data[0]?.losses / total) * 100;
     const data = [
       { time: 'Jan', wins: 5, losses: 3 },
       { time: 'Feb', wins: 8, losses: 2 },
@@ -19,6 +19,7 @@ const Statistic = () => {
       { level: 3, time: 20 },
       { level: 4, time: 25 },
     ];
+    // console.log("==__++>>> userdata == ", userData.data[0].wins)
     return (
       <div className={styl.statistic}>
       <div className={styl.upperPart}>
@@ -31,8 +32,8 @@ const Statistic = () => {
               }}>
               </div>
               <div className={styl.chartText}>
-                  <p>Wins: 5</p>
-                  <p>Losses: 4</p>
+                  <p>Wins: {userData?.data[0]?.wins}</p>
+                  <p>Losses: {userData?.data[0]?.losses}</p>
               </div>
           </div>
           <div className={styl.CurveChart}>

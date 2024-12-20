@@ -15,20 +15,10 @@ const Game = () => {
       <div className={styl.Game}>
         <div className={styl.content}>
           <div className={styl.head}>
-            <h1>GAME</h1>
+            <h1>GAMES</h1>
           </div>
           <div className={styl.cont}>
             <div className={styl.chouseGame}>
-              <div className={styl.cardGame}>
-                <div className={styl.game}>
-                  <div className={styl.gameName}>
-                    <p>Tic Tac Toe</p>
-                  </div>
-                  <Link to={"/xo"}><button className={styl.image} >
-                    <img src={tic} alt="Tic Tac Toe" />
-                  </button></Link>
-                </div>
-              </div>
               <div className={styl.cardGame}>
                 <div className={styl.game}>
                   <div className={styl.gameName}>

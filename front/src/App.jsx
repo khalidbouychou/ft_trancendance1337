@@ -9,8 +9,7 @@ import PingPongGames from "./components/Game/components/PingGame/PingGame.jsx";
 import LocalGame from "./ponggame/localpong/LocalGame.jsx";
 import LocalTeamGame from "./ponggame/teampong/LocalTeamGame.jsx";
 import OnlineGame from "./ponggame/onlinepong/OnlineGame.jsx";
-import XO from "./xo_game/online.jsx";
-import Chat from "./components/chat/Chat.jsx";
+import Chat from "./Chat/Chat.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import Setting from "./Setting/Setting.jsx";
 import Notificationz from "./components/Notification/Notification.jsx";
@@ -20,6 +19,9 @@ import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
 import Twofa from "./Login/2fa/twofa.jsx";
 import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
 import { AuthContext } from "./UserContext/Context.jsx";
+import LocalTournament from "./ponggame/tournamentpong/Tournament.jsx";
+import RemoteTournament from "./ponggame/remotetournement/RemoteTournament.jsx";
+import Newpong from "./ponggame/pong3d/newpong.jsx";
 
 function App() {
   return (
@@ -31,22 +33,23 @@ function App() {
               <Route path="" element={<Home />} />
               <Route path="profile" element={<RedirectToMyProfile />} />
               <Route path="profile/:profile_name" element={<Profile />} />
-              <Route path="games" element={<Games />} />
-              <Route path="pingpong-games" element={<PingPongGames />} />
-              <Route path="xo" element={<XO invite={false} />} />
-              <Route path="xo_with_invitation" element={<XO invite={true} />} />
+              {/* <Route path="games" element={<Games />} /> */}
+              <Route path="games" element={<PingPongGames />} />
               <Route path="games/localpong" element={<LocalGame />} />
-              <Route path="friend-game" element={<FriendGame />} />
-              <Route path="games/localteampong" element={<LocalTeamGame />} />
               <Route path="games/onlinepong" element={<OnlineGame />} />
+              <Route path="games/localteampong" element={<LocalTeamGame />} />
+              <Route path="friendgame" element={<FriendGame />} />
+              <Route path="games/localtournament" element={<LocalTournament />} />
+              <Route path="games/remotetournament" element={<RemoteTournament />} />
+              <Route path="games/pong3d" element={<Newpong />} />
               <Route path="chat" element={<Chat />} />
               <Route path="setting" element={<Setting />} />
               <Route path="notification" element={<Notificationz />} />
               <Route path="twofa" element={<Twofa />} />
               <Route path="otp" element={<Otplogin />} />
             </Route>
-            <Route path="/login" element={<LoginSignup />} />
-            <Route path="/*" element={<PageNotFound />} />
+              <Route path="/login" element={<LoginSignup />} />
+              <Route path="/*" element={<PageNotFound />} />
           </Routes>
         </div>
       </div>

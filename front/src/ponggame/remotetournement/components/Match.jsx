@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState } from 'react';
 import * as styles from './Match.module.css';
-import { useGlobalContext } from '../context/RemoteTournamentContext.jsx';
+import { useGlobalContext } from '../context/TournamentContext.jsx';
 
 export default function GameComponent({ type }) {
 
@@ -149,7 +149,7 @@ export default function GameComponent({ type }) {
                 balldirectionY = Math.random() * 2 - 1;
                 setRightScore(prevScore => prevScore + 1);
                 right_score++;
-                if (right_score >= 5000){
+                if (right_score >= 5){
                     setCondition('S');
                     mycondition = 'S';
                     if (type === "left"){
