@@ -34,6 +34,7 @@ const Profile = ({ me }) => {
   const [wins, setWins] = useState('');
   const [lose, setLose] = useState('');
   const [setting, setSetting] = useState('none');
+  const [displayBt, setDisplayBt] = useState()
 
   const handelClick = (section) => {
     setActiveSection(section);
@@ -75,8 +76,10 @@ const Profile = ({ me }) => {
         
         if (data.profile_name === user?.user?.profile_name) {
           setIsMyProfil(1);
+          setDisplayBt('none')
         } else {
           setIsMyProfil(0);
+          setDisplayBt('flex')
         }
         
         const pingResponse = await fetch(`http://localhost:8000/api/pingdata/${profile_name}/`);
@@ -135,7 +138,7 @@ const Profile = ({ me }) => {
         <div className={styl.userPrf}>
           <div className={styl.side1}>
             <div className={styl.userInfo}>
-              <button className={styl.settingsBt} onClick={openSettings}>
+              <button className={styl.settingsBt} onClick={openSettings} style={{display: displayBt}}>
                 <MdOutlineFormatListBulleted />
                 <div className={styl.settings} style={{display: setting}}>
                   <button className={styl.Button}>
