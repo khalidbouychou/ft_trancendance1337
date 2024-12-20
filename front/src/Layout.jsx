@@ -42,13 +42,15 @@ const Layout = () => {
     <GridLoader color="#fff" loading={loading} size={20} />
   </div> :
     <div className={style.EntirePage}>
-      {user && <Notification />}
           {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> } 
+      {user &&
+
           <NotificationWebSocketProvider>
             <LocationProvider>
               <Outlet />
             </LocationProvider>
           </NotificationWebSocketProvider>
+      }
     </div>
   );
 };

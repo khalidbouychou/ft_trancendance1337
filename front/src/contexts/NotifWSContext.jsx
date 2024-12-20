@@ -6,58 +6,62 @@ export function NotificationWebSocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [notif, setNotif] = useState(null);
-  const [reconnectAttempts, setReconnectAttempts] = useState(0);
+  let Interval = null;
+  let ws = null;
 
   useEffect(() => {
-    let reconnectTimeout;
 
     const connect = () => {
-      let ws;
       try {
         ws = new WebSocket(`ws://localhost:8000/ws/notif/`);
       } catch (error) {
-        handleReconnect();
+        console.log("Failed to connect to WebSocket:", error);
         return;
       }
 
       ws.onopen = () => {
-        // console.log('Notification WebSocket connected');
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'CONNECTED' }));
+          console.log("Connected to notif WebSocket");
+        }
         setSocket(ws);
         setIsConnected(true);
-        setReconnectAttempts(0);
       };
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        // console.log(data.type, ':', data.notification);
         setNotif(data.notification);
       };
 
-      ws.onclose = handleReconnect;
+      ws.onclose = () => {
+        setIsConnected(false);
+      }
 
-      ws.onerror = (error) => {
-        handleReconnect();
+      ws.onerror = () => {
+        console.log("WebSocket error. Attempting to reconnect...");
+        setIsConnected(false);
       };
     };
 
-    const handleReconnect = () => {
-      // console.log('Notification WebSocket disconnected or encountered an error');
-      setSocket(null);
-      setIsConnected(false);
-      clearTimeout(reconnectTimeout);
-      reconnectTimeout = setTimeout(() => {
-        // console.log('Attempting to reconnect...');
-        setReconnectAttempts((attempts) => attempts + 1);
-        connect();
-      }, 1000);
-    };
+    Interval = setInterval(() => {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'CONNECTED' }));
+      }
+      else
+        console.log("socket is closed or not ready of notif WebSocket");
+      console.log("Reconnecting to notif WebSocket...");
+      setIsConnected(true);
+    }, 1000);
 
     connect();
 
     return () => {
-      clearTimeout(reconnectTimeout);
-      if (socket) {
-        socket.close();
+      if (Interval) {
+        clearInterval(Interval);
+        Interval = null;
+      }
+      if (ws) {
+        ws.close();
       }
     };
   }, []);
