@@ -5,6 +5,7 @@ from .views import *
 from rest_framework import routers
 router = routers.DefaultRouter()
 router.register('Player', PlayerViewSet)
+# router.register('Player', PlayerViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -34,4 +35,4 @@ urlpatterns = [
     path('update/',UpdateProfile.as_view() , name='UpdateProfile'), 
     path('friends/<str:username>/', UserNameFriendList.as_view()), 
     path('blocked/<str:username>/', UserNameBlockedList.as_view()), 
-    ]
+]

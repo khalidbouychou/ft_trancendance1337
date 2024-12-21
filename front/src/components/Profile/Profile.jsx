@@ -35,6 +35,7 @@ const Profile = ({ me }) => {
   const [lose, setLose] = useState('');
   const [setting, setSetting] = useState('none');
   const [displayBt, setDisplayBt] = useState()
+  const [blockedOpen, setBlockedOpen] = useState('none');
 
   const handelClick = (section) => {
     setActiveSection(section);
@@ -44,9 +45,10 @@ const Profile = ({ me }) => {
     setSetting(setting == 'none' ? 'flex' : 'none');
   }
 
+  const handleBlockedOpen = () => {
+    setBlockedOpen(blockedOpen === 'none' ? 'flex' : 'none')
+  }
 
-  // if (!profile_name)
-  //     profile_name = user.user.profile_name
   console.log('check prf == ', profileName)
 
   useEffect(() => {
@@ -106,6 +108,17 @@ const Profile = ({ me }) => {
         } else {
           throw new Error("Ping data is invalid or empty");
         }
+        
+        console.log('name ==', profile_name)
+        
+        // const friendResponse = await fetch('http://localhost:8000/api/friends/ayoubayoub/');
+        // if (!friendResponse.ok) {
+        //   console.log('Failed to fetch friend data');
+        //   throw new Error("Failed to fetch friend data");
+        // }
+        // const friendData = await friendResponse.json();
+        // console.log('Friend Data:', friendData);
+
       } catch (error) {
         setError(error.message);
       } finally {
@@ -280,9 +293,16 @@ const Profile = ({ me }) => {
             </div>
           </div>
           <div className={styl.side2}>
-            <div className={styl.headBut}>
-              <button>My Friends</button>
-              <button style={{ display: "none" }}>Blocked Friends</button>
+            <div className={styl.headFr}>
+              <p>Friends</p>
+              <button onClick={handleBlockedOpen}>
+                <p >...</p>
+                <div className={styl.userBlocked} style={{display: blockedOpen}}>
+                  <button>
+                    Blocked
+                  </button>
+                </div>
+              </button>
             </div>
             <div className={styl.displayFr}>
               <CardFriend />

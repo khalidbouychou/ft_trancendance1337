@@ -1,19 +1,11 @@
 import styl from "./Home.module.css";
 import { useNavigate } from "react-router-dom";
-import { FaSearchengin } from "react-icons/fa6";
 import "react-circular-progressbar/dist/styles.css";
-import Tmp1 from "./components/Tmp1/Tmp1";
 import { useState, useEffect, useContext } from "react";
-import Tmp2 from "./components/Tmp2/Tmp2";
-import SearchCard from "./components/SearchCard/SearchCard";
 import { AuthContext } from "../../UserContext/Context";
-import CurveChart from "./components/CurveChart/CurveChart";
-import CurveLevel from "./components/CurveLevel/CurveLevel";
 import Statistic from "../Profile/components/statistc/Statistic";
 import { FaChartArea } from "react-icons/fa";
 import { FaMedal } from "react-icons/fa6";
-import { ImFontSize } from "react-icons/im";
-import { fontString } from "chart.js/helpers";
 import { GiCrossMark } from "react-icons/gi";
 import { PiGameControllerFill } from "react-icons/pi";
 
@@ -22,6 +14,11 @@ const Home = () => {
   const profile_name = user?.user?.profile_name;
   const [filteredPingData, setFilteredPingData] = useState(null);
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
+
+  const handleClick = (name) => {
+    navigate(`/profile/${name}`);
+  };
 
   useEffect(() => {
     const fetchDataResults = async () => {
@@ -54,7 +51,7 @@ const Home = () => {
     fetchDataResults();
   }, [profile_name]);
 
-  console.log("Fetching data", userData)
+  console.log("Fetching data", userData);
 
   return (
     <div className={styl.Home}>
@@ -84,12 +81,15 @@ const Home = () => {
                 <PiGameControllerFill />
               </p>
               <p id={styl.sm}>
-                {userData?.data[0]?.losses + userData?.data[0]?.wins ?? -5}
+                {/* {userData?.data[0]?.losses + userData?.data[0]?.wins ?? -5} */}
               </p>
             </div>
           </div>
           <div className={styl.top3}>
-            <div className={styl.cardRank}>
+            <button
+              className={styl.cardRank}
+              onClick={() => handleClick(filteredPingData?.[1]?.profile_name)}
+            >
               <div className={styl.extImg}>
                 <div className={styl.intImg}>
                   <img
@@ -109,9 +109,12 @@ const Home = () => {
               >
                 <p>2</p>
               </div>
-            </div>
+            </button>
 
-            <div className={styl.cardRankMd}>
+            <button
+              className={styl.cardRankMd}
+              onClick={() => handleClick(filteredPingData?.[0]?.profile_name)}
+            >
               <div className={styl.extImg}>
                 <div className={styl.intImg}>
                   <img
@@ -128,9 +131,12 @@ const Home = () => {
               <div className={styl.nbRank} style={{ border: "gold 4px solid" }}>
                 <p>1</p>
               </div>
-            </div>
+            </button>
 
-            <div className={styl.cardRank}>
+            <button
+              className={styl.cardRank}
+              onClick={() => handleClick(filteredPingData?.[2]?.profile_name)}
+            >
               <div className={styl.extImg}>
                 <div className={styl.intImg}>
                   <img
@@ -150,7 +156,7 @@ const Home = () => {
               >
                 <p>3</p>
               </div>
-            </div>
+            </button>
           </div>
         </div>
         <div className={styl.last}>
@@ -160,7 +166,7 @@ const Home = () => {
             />{" "}
             Dashboard
           </p>
-          <Statistic userData={userData}/>
+          <Statistic userData={userData} />
         </div>
       </div>
     </div>

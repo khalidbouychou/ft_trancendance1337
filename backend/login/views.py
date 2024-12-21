@@ -388,7 +388,6 @@ class ClearQrcode (APIView):
         return response 
 
 
-
 class UpdateProfile (APIView):
     authentication_classes = [SessionAuthentication] 
     permission_classes = [IsAuthenticated]
