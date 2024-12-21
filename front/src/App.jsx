@@ -26,6 +26,7 @@ import i18n from "./i18n.js";
 import { ToastContainer } from "react-toastify";
 import Network from "./Login/Network/Network.jsx";  
 
+import Anonymized from "./Anonymizeds/Anonymized.jsx";
 function App() {
   const {t} = useTranslation();
 
@@ -39,6 +40,9 @@ function App() {
     <AuthProvider>
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
+            <Routes>
+            <Route path="/anonymized" element={<Anonymized />} />
+            </Routes>
             <Routes>
             <Route path="/" element={<Layout />}>
                 {/* <Route path="home" element={<Profile />} /> */} 
@@ -131,6 +135,7 @@ function App() {
                 <Route path="otp" element={< Otplogin/>} />
                 <Route path="network" element={< Network/>} />
               </Route>
+              
               <Route path="/login" element={<LoginSignup />} />
           <Route path="/*" element={<PageNotFound />} />
             </Routes>

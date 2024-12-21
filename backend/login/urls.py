@@ -1,18 +1,13 @@
 
 from django.urls import path, include
-# from .views import PlayerViewSet, SignupForm, SigninForm , GenerateQRcode ,DesableTwoFactor , LogoutView , UserStatus ,VerifyOtp ,ClearQrcode , UpdateProfile
 from .views import *
 from rest_framework import routers
-# from .views import get_ping_data_by_username ,get_all_ping_data, get_all_tic_data, get_tic_data_by_username ,AuthUser
-# from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView
-
-from .views import PlayerViewSet, SignupForm, SigninForm , GenerateQRcode ,DesableTwoFactor , LogoutView , UserStatus ,VerifyOtp ,ClearQrcode
 from rest_framework import routers
-router = routers.DefaultRouter()
-router.register('Player', PlayerViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('anonymize/', AnonymizeAccount.as_view(), name='anonymize'),
+    path('list_anonymized/', ListAnonymizeAccount.as_view(), name='list_anonimized'),
+    path('delete/', DeleteAccount.as_view(), name='delete'),
     path('token_status/',PlayerViewSet.as_view({'get': 'token_status'})), 
     path('check2fa/',PlayerViewSet.as_view({'post': 'check_2fa'})),
     path ('verifytoken/', PlayerViewSet.as_view({'post': 'verifytoken'})),
@@ -39,5 +34,5 @@ urlpatterns = [
     path('d_2fa/',DesableTwoFactor.as_view(), name='disabletwofactor'),
     path('otpverify/',VerifyOtp.as_view(), name='VerifyOtp'),
     path('clearqrcode/',ClearQrcode.as_view() , name='ClearQrcode'),
-    path('update/',UpdateProfile.as_view() , name='UpdateProfile'), 
+    path('update/',UpdateProfile.as_view() , name='UpdateProfile'),
     ]

@@ -10,7 +10,7 @@ networks:
 services:
   postgres:
     container_name: postgres
-    image: postgres:17-alpine
+    image: postgres:17-alpine 
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -32,7 +32,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-      start_period: 30s
+      start_period: 1s
 
   back:
     container_name: back
@@ -51,11 +51,11 @@ services:
     networks:
       - connexion
     healthcheck:
-      test: ["CMD", "python3 manage.py check"]
+      test: python3 manage.py check
       interval: 5s
       timeout: 5s
       retries: 3
-      start_period: 30s
+      start_period: 1s
     restart: on-failure
 
   front:
@@ -65,13 +65,14 @@ services:
       context: ./front/docker-front
     ports:
       - "5173:5173"
-    networks:
-      - connexion
-    depends_on:
-      - back
     volumes:
       - ./front:/app
       - .env:/app/.env
+    networks:
+      - connexion
+    depends_on:
+      back :
+        condition: service_healthy
     restart: on-failure
 
 

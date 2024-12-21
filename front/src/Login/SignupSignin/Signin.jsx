@@ -38,7 +38,7 @@ const Signin = () => {
       );
       if (response.status === 200) {
         setUser(response.data.user);
-        toast.success("login success", {
+        toast.success(`Welcome ${response.data.user.username}`, {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
             color: 'white'
@@ -49,10 +49,11 @@ const Signin = () => {
         }, 1300);
       }
     } catch (err) {
-      toast.error("login failed", {
+      console.log(err);
+      toast.error(err.response.data.error, {
         style: {
           backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
+          color: 'white',
         }
       });
     }

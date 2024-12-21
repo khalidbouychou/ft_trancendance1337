@@ -1,10 +1,8 @@
  
 from rest_framework import serializers
 from django.db.models import Q
-from .models import Player, Friend, PingData, TicData
+from .models import *
 
-from .models import Player, Friend, PingData, TicData
-from .models import Player
 from django.contrib.auth.hashers import make_password
 
 
@@ -14,7 +12,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Player
-        fields = ['id', 'username', 'profile_name', 'avatar','email', 'status_network', 'two_factor', 'otp_verified', 'blocked_users', 'friends', 'ping_data' , 'tic_data' , 'bool_login', 'qrcode_path']
+        fields = ['id', 'username', 'profile_name', 'avatar','email', 'status_network', 'two_factor', 'otp_verified', 'blocked_users', 'friends', 'ping_data' , 'tic_data' , 'bool_login', 'qrcode_path','is_anonimized']
 
     def get_blocked_users(self, obj):
         return [{'profile_name': user.profile_name, 'avatar': user.avatar} for user in obj.blocked_users.all()]
@@ -139,6 +137,12 @@ class TicDataSerializer(serializers.ModelSerializer):
         model = TicData
         fields = ['wins', 'losses', 'exp_game', 'timestamp']
 
+class AnonymizedAccountSerializer(serializers.ModelSerializer):
+    player =serializers.CharField(read_only=True)
+    # data = 
+    class Meta:
+        model = AnonymizedAccount
+        fields = ['player', 'profile_name', 'avatar','status_network']
 # class TwoFASerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Player
