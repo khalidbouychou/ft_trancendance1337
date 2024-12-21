@@ -88,10 +88,6 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
         else {
             console.log('Not connected');
         }
-        // return () => {
-        //     if (pong_socket && pong_socket.readyState === WebSocket.OPEN) {
-        //         pong_socket.close();
-        // };
     };
 	
 	var	rand_str = () => {
@@ -99,18 +95,23 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 	}
 
     const viewProfile = () => {
-        console.log('View Profile');
-        // navigate(`/profile/${otherUser.id}`);
+        navigate(`/profile/${otherUser.profile_name}`);
     };
 
-    const onFriendRequest = () => {
+    const onFriendRequest = (e) => {
         console.log('Friend Request:', otherUser.username);
         if (isConnected) {
             sendNotifMessage({
                 type: 'SEND_FR',
                 to_user_id: otherUser.id
             });
-            
+        }
+        if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
+            sockets[currentContact.id].send(JSON.stringify({
+                type: 'UNFRIEND_USER',
+                event: e ? 'nothing' : 'UNFRIEND_USER',
+                user_id: otherUser.id
+            }));
         }
     }
 

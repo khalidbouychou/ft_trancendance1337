@@ -11,8 +11,14 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   useEffect(() => {
     const checkBlockStatus = () => {
       if (currentUser && otherUser) {
-        const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
-        setIsBlocked(isOtherUserBlocked);
+        for (let i = 0; i < currentUser.blocked_users.length; i++) {
+          if (currentUser.blocked_users[i]['profile_name'] === otherUser.profile_name) {
+            console.log("we find it in blocked list");
+            setIsBlocked(true);
+            return;
+          }
+        }
+        setIsBlocked(false);
       }
     };
     checkBlockStatus();
@@ -25,7 +31,7 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
       } else {
         setIsFriend('None');
       }
-  }, [otherUser, currentUser])
+  }, [otherUser, currentUser, isBlocked])
 
   const handleMouseEnter = () => setIsOpen(true);
   const handleMouseLeave = () => setIsOpen(false);
@@ -61,10 +67,10 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
       <button className="menu-toggle">⋮</button>
       {isOpen && (
         <ul className="menu-list">
-          {isFriend === 'None' && (
+          {(isFriend === 'None' && isBlocked === false) && (
             <li onClick={handleFriendClick}>
               <FontAwesomeIcon icon={faUserCheck} />
-              Send Friend Request
+              {isFriend ? "Unfriend" : "Add Friend"}
             </li>
           )}
           <li onClick={handleBlockClick}>

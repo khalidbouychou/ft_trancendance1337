@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { ToastContainer, toast } from "react-toastify";
 
 const NotifWSContext = createContext();
 
@@ -31,6 +32,11 @@ export function NotificationWebSocketProvider({ children }) {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         setNotif(data.notification);
+        toast.success("notification socket recieved something", {
+          position: "top-left",
+          autoClose: 1000,
+          closeOnClick: true
+        });
       };
 
       ws.onclose = () => {
@@ -74,9 +80,13 @@ export function NotificationWebSocketProvider({ children }) {
   }, [socket]);
 
   return (
-    <NotifWSContext.Provider value={{ sendMessage, isConnected, notif }}>
-      {children}
-    </NotifWSContext.Provider>
+    <>
+      <ToastContainer />
+      <NotifWSContext.Provider value={{ sendMessage, isConnected, notif }}>
+        {children}
+      </NotifWSContext.Provider>
+    </>
+    
   );
 }
 

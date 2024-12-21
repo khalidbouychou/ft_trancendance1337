@@ -319,7 +319,7 @@ export default function OnlineGame() {
     }, [gamestarted, condition]);
 
     const handleExitClick = () => {
-        navigate('/pingpong-games');
+        navigate('/games');
     };
 
     return (

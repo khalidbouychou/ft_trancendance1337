@@ -107,6 +107,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'user_id': user_to_block,
                     'event': event
                 }))
+            elif message_type == 'UNFRIEND_USER':
+                user_to_unfriend = text_data_json.get('user_id')
+                await self.unfriend_user(user_to_unfriend)
+                await self.send(text_data=json.dumps({
+                    'type': 'UNFRIEND_USER',
+                    'user_id': user_to_unfriend
+                }))
+
         except ObjectDoesNotExist as e:
             print(f"Error: {e}", file=sys.stderr)
 
@@ -116,6 +124,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
             current_user = self.scope["user"]
             user_to_block = Player.objects.get(id=user_to_block_id)
             current_user.block_user(user_to_block)
+            current_user.unfriend_user(user_to_block)
+            return True
+        except Player.DoesNotExist:
+            return False 
+        
+    @database_sync_to_async
+    def unfriend_user(self, user_to_unfriend_id):
+        try:
+            current_user = self.scope["user"]
+            user_user_to_unfriend = Player.objects.get(id=user_to_unfriend_id)
+            current_user.unfriend_user(user_user_to_unfriend)
             return True
         except Player.DoesNotExist:
             return False

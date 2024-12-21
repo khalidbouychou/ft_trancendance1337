@@ -227,7 +227,7 @@ function ChatPage() {
 				console.error('WebSocket error:', error);
 				reject(error);
 			}
-
+			// reda add unfriend at saturday 10:43pm and i need to add the case where i send unfriend request here to update the data for the client in real time
 			newSocket.onmessage = (event) => {
 				const data_re = JSON.parse(event.data)
 				switch (data_re.type) {

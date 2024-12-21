@@ -43,7 +43,10 @@ class Player(AbstractUser):
         self.blocked_users.remove(user_to_unblock)
 
     def is_blocked(self, user):
-        return self.blocked_users.filter(id=user.id).exists() 
+        return self.blocked_users.filter(id=user.id).exists()
+    
+    def unfriend_user(self, user_to_unfriend):
+        self.friends.remove(user_to_unfriend)
 
     @staticmethod
     def are_enemies(user1, user2):
