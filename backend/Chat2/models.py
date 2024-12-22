@@ -1,25 +1,26 @@
 from django.db import models
-from login.models import Player
-from django.utils import timezone
-# Create your models here.
+from django.utils.translation import gettext_lazy as _
+from .models import Player
 
-class Room(models.Model):
+
+class ChatRoom(models.Model):
     id = models.AutoField(primary_key=True)
-    user1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='room_user1')
-    user2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='room_user2')
-    created_time = models.DateTimeField(default=timezone.now)
-    modified_time = models.DateTimeField(auto_now=True)
+    user1 = models.ForeignKey(Player, related_name="chat_rooms_as_user1", on_delete=models.CASCADE)
+    user2 = models.ForeignKey(Player, related_name="chat_rooms_as_user2", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['modified_time']
-        unique_together = ['user1', 'user2']
+        db_table = "chat_room"
+        unique_together = ["user1", "user2"]
 
-    def other_user(self, user):
-        if user == self.user1:
-            return self.user2
-        if user == self.user2:
-            return self.user1
-        raise ValueError("User is not part of this chat room.")
-    
+
 class Message(models.Model):
-    
+    chat_room = models.ForeignKey(ChatRoom, related_name="messages", on_delete=models.CASCADE)
+    sender = models.ForeignKey(Player, related_name="sent_messages", on_delete=models.CASCADE)
+    content = models.TextField()
+    is_read = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "message"
+        ordering = ["timestamp"]

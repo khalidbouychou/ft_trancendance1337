@@ -1,3 +1,4 @@
+# views.py
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -41,4 +42,3 @@ class list_chat(APIView):
             'contacts': contacts,
         }
         return Response(context)
-

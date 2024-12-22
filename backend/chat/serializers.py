@@ -1,3 +1,4 @@
+# serializers.py
 from rest_framework import serializers
 from .models import ChatRoom, Message
 from login.serializers import PlayerSerializer
