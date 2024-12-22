@@ -13,9 +13,8 @@ import { MdOutlineFormatListBulleted } from "react-icons/md";
 import { IoIosPersonAdd } from "react-icons/io";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { TbLock } from "react-icons/tb";
-
-
-
+import axios from "axios";
+import CardBlocked from "./components/cardBlocked/CardBlocked";
 
 const Profile = ({ me }) => {
   let { profile_name } = useParams();
@@ -31,25 +30,37 @@ const Profile = ({ me }) => {
   const [maxPingExp, setMaxPingExp] = useState("0");
   const [pingPercentage, setPingPercentage] = useState("");
   const [profileName, setProfileName] = useState(profile_name);
-  const [wins, setWins] = useState('');
-  const [lose, setLose] = useState('');
-  const [setting, setSetting] = useState('none');
-  const [displayBt, setDisplayBt] = useState()
-  const [blockedOpen, setBlockedOpen] = useState('none');
+  const [wins, setWins] = useState("");
+  const [lose, setLose] = useState("");
+  const [setting, setSetting] = useState("none");
+  const [displayBt, setDisplayBt] = useState();
+  const [blockedOpen, setBlockedOpen] = useState("none");
+  const [userList, setUserList] = useState("");
+  const [tmp, setTmp] = useState("friends");
+  const [showUserBlocked, setShowUserBlocked] = useState(false);
+  const [status, setStatus] = useState('Friends');
+  // const [nameBt, setNameBt] = useState('blocked users');
+
+  const handleBlockClick = () => {
+    setShowUserBlocked((prev) => !prev);
+    setTmp(tmp === "friends" ? "blocked" : "friends");
+    setStatus(status === "Friends" ? "User Blocked" : "Friends");
+    // setNameBt(nameBt === "Friends" ? "User Blocked" : "Friends")
+  };
 
   const handelClick = (section) => {
     setActiveSection(section);
   };
 
   const openSettings = () => {
-    setSetting(setting == 'none' ? 'flex' : 'none');
-  }
+    setSetting(setting == "none" ? "flex" : "none");
+  };
 
   const handleBlockedOpen = () => {
-    setBlockedOpen(blockedOpen === 'none' ? 'flex' : 'none')
-  }
+    setBlockedOpen(blockedOpen === "none" ? "flex" : "none");
+  };
 
-  console.log('check prf == ', profileName)
+  console.log("check prf == ", profileName);
 
   useEffect(() => {
     setProfileName(profile_name);
@@ -60,75 +71,72 @@ const Profile = ({ me }) => {
       if (!profile_name) return;
       setIsLoading(true);
       setError(null);
-      
-      console.log("=====>>> ppppppPPPPP", profile_name)
+  
       try {
-        const response = await fetch(`http://localhost:8000/api/getuser/${profile_name}/`);
+        const response = await fetch(
+          `http://localhost:8000/api/getuser/${profile_name}/`
+        );
         if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error("User not found");
-          } else {
-            console.log("checkkk")
-            throw new Error("Failed to fetch user data");
-          }
+          throw new Error(
+            response.status === 404 ? "User not found" : "Failed to fetch user data"
+          );
         }
-
+  
         const data = await response.json();
         setUserData(data);
-        
+  
         if (data.profile_name === user?.user?.profile_name) {
           setIsMyProfil(1);
-          setDisplayBt('none')
+          setDisplayBt("none");
         } else {
           setIsMyProfil(0);
-          setDisplayBt('flex')
+          setDisplayBt("flex");
         }
-        
-        const pingResponse = await fetch(`http://localhost:8000/api/pingdata/${profile_name}/`);
-        if (!pingResponse.ok) {
-          console.log('Failed to')
-          throw new Error("Failed to fetch ping data");
-        }
-
+  
+        const pingResponse = await fetch(
+          `http://localhost:8000/api/pingdata/${profile_name}/`
+        );
+        if (!pingResponse.ok) throw new Error("Failed to fetch ping data");
+  
         const pingData = await pingResponse.json();
-        console.log('++++>> == ', pingData)
         if (pingData && pingData.length > 0) {
-          const { exp_game } = pingData[0];
+          const { exp_game, wins, losses } = pingData[0];
           const calculatedLevel = Math.floor(exp_game / 100);
-          const calculatedNextLevel = calculatedLevel + 1;
-          const maxExperience = calculatedNextLevel * 100;
-          
+          const maxExperience = (calculatedLevel + 1) * 100;
+  
           setPingExp(exp_game);
           setMaxPingExp(maxExperience);
           setPingLevel(calculatedLevel);
-          setNextPingLevel(calculatedNextLevel);
+          setNextPingLevel(calculatedLevel + 1);
           setPingPercentage(Math.floor((exp_game / maxExperience) * 100));
-          setLose(pingData[0].losses)
-          setWins(pingData[0].wins)
+          setWins(wins);
+          setLose(losses);
         } else {
           throw new Error("Ping data is invalid or empty");
         }
-        
-        console.log('name ==', profile_name)
-        
-        // const friendResponse = await fetch('http://localhost:8000/api/friends/ayoubayoub/');
-        // if (!friendResponse.ok) {
-        //   console.log('Failed to fetch friend data');
-        //   throw new Error("Failed to fetch friend data");
-        // }
-        // const friendData = await friendResponse.json();
-        // console.log('Friend Data:', friendData);
-
+  
+        const userResponse = await axios.get(
+          `http://localhost:8000/api/${tmp}/${profile_name}/`,
+          { withCredentials: true }
+        );
+        setUserList(userResponse.data);
       } catch (error) {
         setError(error.message);
       } finally {
         setIsLoading(false);
       }
     };
-
-    fetchData();
-  }, [profile_name, user]);
   
+    fetchData();
+  }, [profile_name, tmp]);
+  
+
+  useEffect(() => {
+    setProfileName(profile_name);
+  }, [profile_name]);
+
+  console.log("user list", userList);
+
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
   }
@@ -151,20 +159,24 @@ const Profile = ({ me }) => {
         <div className={styl.userPrf}>
           <div className={styl.side1}>
             <div className={styl.userInfo}>
-              <button className={styl.settingsBt} onClick={openSettings} style={{display: displayBt}}>
+              <button
+                className={styl.settingsBt}
+                onClick={openSettings}
+                style={{ display: displayBt }}
+              >
                 <MdOutlineFormatListBulleted />
-                <div className={styl.settings} style={{display: setting}}>
+                <div className={styl.settings} style={{ display: setting }}>
                   <button className={styl.Button}>
-                      <IoIosPersonAdd className={styl.icons}/>
-                      <p >Add</p>
+                    <IoIosPersonAdd className={styl.icons} />
+                    <p>Add</p>
                   </button>
                   <button className={styl.Button}>
-                    <IoChatbubbleEllipsesOutline className={styl.icons}/>
-                    <p >Chat</p>
+                    <IoChatbubbleEllipsesOutline className={styl.icons} />
+                    <p>Chat</p>
                   </button>
                   <button className={styl.Button}>
-                    <TbLock className={styl.icons}/>
-                    <p >Block</p>
+                    <TbLock className={styl.icons} />
+                    <p>Block</p>
                   </button>
                 </div>
               </button>
@@ -175,9 +187,9 @@ const Profile = ({ me }) => {
                   </div>
                 </div>
                 <p className={styl.userName}>
-                  {userData.profile_name.length > 8 
-                      ? userData.profile_name.toUpperCase().slice(0, 8) + '.' 
-                      : userData.profile_name.toUpperCase()}
+                  {userData.profile_name.length > 8
+                    ? userData.profile_name.toUpperCase().slice(0, 8) + "."
+                    : userData.profile_name.toUpperCase()}
                   <p style={{ color: "rgba(255, 255, 255, 0.4)" }}>
                     <div className={styl.ongline}>
                       <div
@@ -287,26 +299,37 @@ const Profile = ({ me }) => {
               </div>
             </div>
             <div className={styl.userData}>
-              {activeSection === "Statistic" && <Statistic/>}
+              {activeSection === "Statistic" && <Statistic />}
               {activeSection === "Leaderboard" && <Leaderboard />}
-              {activeSection === "MatchHistory" && <MatchHistory profileName={profileName}/>}
+              {activeSection === "MatchHistory" && (
+                <MatchHistory profileName={profileName} />
+              )}
             </div>
           </div>
+          {/* side2 */}
           <div className={styl.side2}>
             <div className={styl.headFr}>
-              <p>Friends</p>
+              <p>{status}</p>
               <button onClick={handleBlockedOpen}>
-                <p >...</p>
-                <div className={styl.userBlocked} style={{display: blockedOpen}}>
-                  <button>
-                    Blocked
+                <p>...</p>
+                <div
+                  className={styl.userBlocked}
+                  style={{ display: blockedOpen }}
+                >
+                  <button onClick={handleBlockClick}>
+                    {showUserBlocked ? "Friends" : "Blocked"}
                   </button>
                 </div>
               </button>
             </div>
-            <div className={styl.displayFr}>
-              <CardFriend />
-              <CardFriend />
+            <div className={styl.displayUser}>
+              {showUserBlocked
+                ? userList?.["blocked list"]?.map((user, index) => (
+                    <CardBlocked key={index} user={user} />
+                  ))
+                : userList?.["friend list"]?.map((user, index) => (
+                    <CardFriend key={index} friend={user} />
+                  ))}
             </div>
             <div className={styl.searchFr}>
               <input type="text" placeholder="Search" />
