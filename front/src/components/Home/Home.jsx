@@ -8,6 +8,7 @@ import { FaChartArea } from "react-icons/fa";
 import { FaMedal } from "react-icons/fa6";
 import { GiCrossMark } from "react-icons/gi";
 import { PiGameControllerFill } from "react-icons/pi";
+import Chart from "./components/test/Chart";
 
 const Home = () => {
   const { user } = useContext(AuthContext);
@@ -51,7 +52,14 @@ const Home = () => {
     fetchDataResults();
   }, [profile_name]);
 
-  console.log("Fetching data", userData);
+  // console.log("Fetching data", userData);
+
+  const playerData = {
+    wins: 500,
+    losses: 200,
+    exp_game: 500,
+    timestamp: "2024-12-22T12:37:05.581806Z",
+  };
 
   return (
     <div className={styl.Home}>
@@ -81,7 +89,7 @@ const Home = () => {
                 <PiGameControllerFill />
               </p>
               <p id={styl.sm}>
-                {/* {userData?.data[0]?.losses + userData?.data[0]?.wins ?? -5} */}
+                {(userData?.data[0]?.losses + userData?.data[0]?.wins) ?? -5}
               </p>
             </div>
           </div>
@@ -166,7 +174,7 @@ const Home = () => {
             />{" "}
             Dashboard
           </p>
-          <Statistic userData={userData} />
+          <Statistic userData={userData} profileName={profile_name}/>
         </div>
       </div>
     </div>
