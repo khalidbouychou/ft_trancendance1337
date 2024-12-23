@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserSlash, faUserCheck, faTableTennis, faGamepad } from '@fortawesome/free-solid-svg-icons';
+import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
 
 function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, viewProfile, onFriendRequest }) {
+  const { notif } = useNotificationWS();
+
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
   const [isFriend, setIsFriend] = useState('None');
@@ -22,15 +25,16 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
       }
     };
     checkBlockStatus();
-      const areFriends = currentUser.friends.find(friend => 
-        (friend.user1 === otherUser.username || friend.user2 === otherUser.username)
-      );
-      if (areFriends) {
-        console.log('areFriends:', areFriends.status);
-        setIsFriend(areFriends.status);
-      } else {
-        setIsFriend('None');
+    if (isFriend){
+      for (let i = 0; i < currentUser.friends.length; i++) {
+        if (currentUser.friends[i]['profile_name'] === otherUser.profile_name) {
+          setIsFriend('friends');
+          return;
+        }
       }
+    }
+    console.log("friend will become none");
+    setIsFriend('None');
   }, [otherUser, currentUser, isBlocked])
 
   const handleMouseEnter = () => setIsOpen(true);
@@ -56,9 +60,17 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   };
 
   const handleFriendClick = () => {
-    if (isFriend) {
-      setIsFriend(false);
+    console.log("u clicked friend:",isFriend);
+    if (isFriend && isFriend == 'friends') {
+      setIsFriend('None');
       onFriendRequest(false);
+    }else {
+      //need to check if the user is already in the friend request list
+      // console.log("notif:",notif);
+      // console.log("notification:",notif.notification);
+      if (notif && notif.notification.id === otherUser.id && notif.type === "NOTIFICATION_ACCEPTED") {
+        onFriendRequest(true);
+      }
     }
   }
   
@@ -67,10 +79,10 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
       <button className="menu-toggle">⋮</button>
       {isOpen && (
         <ul className="menu-list">
-          {(isFriend === 'None' && isBlocked === false) && (
+          {(!isBlocked) && (
             <li onClick={handleFriendClick}>
               <FontAwesomeIcon icon={faUserCheck} />
-              {isFriend ? "Unfriend" : "Add Friend"}
+              {isFriend === 'friends'? "Unfriend" : "Add Friend"}
             </li>
           )}
           <li onClick={handleBlockClick}>

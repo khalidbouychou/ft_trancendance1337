@@ -47,19 +47,6 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-    const handleBlockUser = (e) => {
-        if (!otherUser) {
-            return;
-        }
-        if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
-            sockets[currentContact.id].send(JSON.stringify({
-                type: 'BLOCK_USER',
-                event: e ? 'BLOCK' : 'UNBLOCK',
-                user_id: otherUser.id
-            }));
-        }
-    };
-
     const handlePlayPong = () => {
         console.log('Play Pong');
         if (isConnected) {
@@ -89,29 +76,41 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             console.log('Not connected');
         }
     };
-	
-	var	rand_str = () => {
-		return Math.random().toString(36).substr(2);
-	}
 
     const viewProfile = () => {
         navigate(`/profile/${otherUser.profile_name}`);
     };
 
-    const onFriendRequest = (e) => {
-        console.log('Friend Request:', otherUser.username);
-        if (isConnected) {
-            sendNotifMessage({
-                type: 'SEND_FR',
-                to_user_id: otherUser.id
-            });
+    const handleBlockUser = (e) => {
+        if (!otherUser) {
+            return;
         }
         if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
             sockets[currentContact.id].send(JSON.stringify({
-                type: 'UNFRIEND_USER',
-                event: e ? 'nothing' : 'UNFRIEND_USER',
+                type: 'BLOCK_USER',
+                event: e ? 'BLOCK' : 'UNBLOCK',
                 user_id: otherUser.id
             }));
+        }
+    };
+
+    const onFriendRequest = (e) => {
+        console.log('Friend Request:', otherUser.username);
+        if (e === true) {
+            if (isConnected) {
+                sendNotifMessage({
+                    type: 'SEND_FR',
+                    to_user_id: otherUser.id
+                });
+            }}
+        else {
+            if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
+                sockets[currentContact.id].send(JSON.stringify({
+                    type: 'UNFRIEND_USER',
+                    event: e ? 'nothing' : 'UNFRIEND_USER',
+                    user_id: otherUser.id
+                }));
+            }
         }
     }
 

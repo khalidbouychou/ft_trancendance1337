@@ -31,7 +31,9 @@ export function NotificationWebSocketProvider({ children }) {
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log("notif socket recieved something: ", data);
         setNotif(data.notification);
+
         toast.success("notification socket recieved something", {
           position: "top-left",
           autoClose: 1000,
@@ -72,6 +74,7 @@ export function NotificationWebSocketProvider({ children }) {
   }, []);
 
   const sendMessage = useCallback((message) => {
+    console.log("message: ", message);
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(message));
     } else {

@@ -127,7 +127,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             current_user.unfriend_user(user_to_block)
             return True
         except Player.DoesNotExist:
-            return False 
+            return False
         
     @database_sync_to_async
     def unfriend_user(self, user_to_unfriend_id):

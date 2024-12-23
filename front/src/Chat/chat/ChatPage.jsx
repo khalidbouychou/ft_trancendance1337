@@ -274,7 +274,6 @@ function ChatPage() {
 								}
 							}));
 						}
-						break
 					default:
 						console.log('Unknown message type:', data_re.type)
 						break
