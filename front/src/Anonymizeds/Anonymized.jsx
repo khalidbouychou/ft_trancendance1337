@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../Anonymizeds/Anonymized.css';
+import { AuthContext } from '../UserContext/Context';
 
 const Anonymizeds = () => {
   const [anonymizeds, setAnonymizeds] = useState([]);
   const [loading, setLoading] = useState(true);
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
     const fetchAnonymizeds = async () => {
@@ -46,10 +48,10 @@ const Anonymizeds = () => {
                 <h3>{account.profile_name}</h3>
                 <p>Player: {account.player}</p>
                 <p>Status: {account.status_network}</p>
-                {/* <Link to={`/anonymizeds/${account.player}`} className="view-btn">
-                  View Details
-                </Link> */}
               </div>
+                <Link to={`/profile/khbouych`} className="view-btn">
+                  Back Home
+                </Link>
             </div>
           ))
         )}

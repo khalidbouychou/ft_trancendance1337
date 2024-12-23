@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import './AnonymizeDelete.css';
+import { AuthContext } from '../UserContext/Context';
 
 const AnonymizeDelete = ({ isOpen, message, onConfirm, onCancel }) => {
+  const {t} = useContext(AuthContext);
   const confirmButtonRef = useRef(null);
 
   useEffect(() => {
@@ -26,10 +28,10 @@ const AnonymizeDelete = ({ isOpen, message, onConfirm, onCancel }) => {
             aria-label="Confirm action"
             ref={confirmButtonRef}
           >
-            Confirm
+            {t("Confirm")}
           </button>
           <button onClick={onCancel} className="btn-cancel" aria-label="Cancel action">
-            Cancel
+            {t("Cancel")}
           </button>
         </div>
       </div>

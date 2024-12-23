@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../../UserContext/Context";
 const Signup = ({ isLogin, setIsLogin }) => {
+  const {t} = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [displayname, setDisplayname] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +19,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
         password
       });
       if (res.status === 201) {
-        toast.success("Account created successfully", {
+        toast.success(t("Account created successfully"), {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
             color: 'white'
@@ -30,7 +32,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
       }
     } catch (err) {
       console.log('--------------------------->',err);
-      let errmsg = err.response?.data?.error || "player with this username already exists."; 
+      let errmsg = t(err.response?.data?.error) || t("player with this username already exists."); 
       toast.error(errmsg, {
         style: {
           backgroundColor: 'rgb(255, 0, 0)',
@@ -47,7 +49,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
           type="text"
           required
           name="username"
-          placeholder="Username"
+          placeholder={t("Username")}
           onChange={(e) => setUsername(e.target.value)}
           value={username}
           className="input signup-input"
@@ -56,7 +58,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
           type="text"
           required
           name="displayname"
-          placeholder="Display Name"
+          placeholder={t("Display Name")}
           className="input signup-input"
           onChange={(e) => setDisplayname(e.target.value)}
           value={displayname}
@@ -65,13 +67,13 @@ const Signup = ({ isLogin, setIsLogin }) => {
           type="password"
           required
           name="password"
-          placeholder="Password"
+          placeholder={t("Password")}
           className="input signup-input"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
         />
         <button type="submit" className="button sign-up">
-          SIGN UP
+          {t("SIGN UP")}
         </button>
         <div className="separator">
           <hr />

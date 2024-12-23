@@ -9,20 +9,13 @@ import AnonymizeDelete from './AnonymizeDelete'; // Modal component
 import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
-  const { user, get_auth_user } = useContext(AuthContext);
+  const { t,user, get_auth_user } = useContext(AuthContext);
   const [updated, setUpdated] = useState(false);
   const [NewProfileName, setNewProfileName] = useState(null);
   const { navigate } = useNavigate();
   const {setUser} = useContext(AuthContext);
-
-  // Modal states and action handler
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionToPerform, setActionToPerform] = useState(null);
-
-  // Focus ref for confirmation button
-  const confirmButtonRef = useRef(null);
-
-  // Profile Name Update Handler
   const handleProfileNameUpdate = async () => {
     try {
       const response = await axios.put(
@@ -41,7 +34,7 @@ const Settings = () => {
       );
       if (response.status == 200) {
         setUpdated(true);
-        toast.success('Profile name updated successfully', {
+        toast.success(t('Profile name updated successfully'), {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
             color: 'white',
@@ -49,7 +42,7 @@ const Settings = () => {
         });
       }
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Profile name update failed', {
+      toast.error(t(err.response?.data?.error) || t('Profile name update failed'), {
         style: {
           backgroundColor: 'rgb(255, 0, 0)',
           color: 'white',
@@ -129,7 +122,7 @@ const Settings = () => {
         withCredentials: true,
     });
       if (response.status === 200) {
-        toast.success(`Account successfully ${actionToPerform}d.`, {
+        toast.success(t(`Account successfully ${actionToPerform}d.`), {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
             color: 'white',
@@ -171,7 +164,7 @@ const Settings = () => {
                 disabled={!NewProfileName}
                 onClick={handleProfileNameUpdate}
               >
-                Update
+                {t("Update")}
               </button>
             </div>
 
@@ -194,21 +187,22 @@ const Settings = () => {
             <div className={styl.data}>
               <button
                 className={styl.anonymize}
-                onClick={() => openModal('anonymize')}
+                onClick={() => openModal(t("anonymize"))}
               >
-                Data Anonymization
+                {t("Data Anonymization")}
               </button>
               <button
                 className={styl.deletebtn}
-                onClick={() => openModal('delete')}
+                onClick={() => openModal(t('delete'))}
               >
-                Delete Account
+                {t("Delete Account")}
+                
               </button>
 
               {/* Modal for confirmation */}
               <AnonymizeDelete
                 isOpen={isModalOpen}
-                message={`Are you sure you want to ${actionToPerform} your account?`}
+                message={t(`Are you sure you want to ${actionToPerform} your account?`)}
                 onConfirm={handleConfirm}
                 onCancel={closeModal}
               />

@@ -98,6 +98,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
         CID = os.environ.get('C_ID')
         print('CID ==>', CID, flush=True)
         REDIRECT_URI = os.environ.get('REDIRECT_URI')
+        print('REDIRECT_URI ==>', REDIRECT_URI, flush=True)
         try:
             response = Response(
                 {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
