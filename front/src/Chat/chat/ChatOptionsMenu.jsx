@@ -60,17 +60,12 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   };
 
   const handleFriendClick = () => {
-    console.log("u clicked friend:",isFriend);
+    console.log("u clicked friend:", isFriend);
     if (isFriend && isFriend == 'friends') {
       setIsFriend('None');
       onFriendRequest(false);
     }else {
-      //need to check if the user is already in the friend request list
-      // console.log("notif:",notif);
-      // console.log("notification:",notif.notification);
-      if (notif && notif.notification.id === otherUser.id && notif.type === "NOTIFICATION_ACCEPTED") {
-        onFriendRequest(true);
-      }
+      onFriendRequest(true);
     }
   }
   
