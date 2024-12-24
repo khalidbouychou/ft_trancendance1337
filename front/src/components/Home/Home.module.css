@@ -176,6 +176,7 @@
     padding: 2%;
     flex-direction: column;
     gap: 3%;
+    cursor: pointer;
     clip-path: polygon(
         0% 0%, 
         100% 0%, 

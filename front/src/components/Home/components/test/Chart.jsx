@@ -11,54 +11,56 @@ import {
   Legend,
 } from 'chart.js';
 
-// Register necessary components for Chart.js
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
 const Chart = ({ matches = [], profileName }) => {
-  // Format date to 'dd-mm-yyyy'
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
   };
 
-  // Prepare data for the chart
   const matchData = matches.map((match) => {
     const formattedDate = formatDate(match.date);
-
-    // Determine if the user is the winner or loser
+    let userScore = 0
+    let opponentScore = 0
+    if (match.winner_profile_name === profileName) {
+      if (match.left_score > match.right_score) {
+        userScore = match.left_score
+        opponentScore = match.right_score
+      } else {
+        userScore = match.right_score;
+        opponentScore = match.left_score;
+      }
+    }
+    else {
+      if (match.left_score < match.right_score) {
+        userScore = match.left_score
+        opponentScore = match.right_score
+      } else {
+        userScore = match.right_score;
+        opponentScore = match.left_score;
+      }
+    }
     const isWinner = match.winner_profile_name === profileName;
     const isLoser = match.loser_profile_name === profileName;
-
-    // Determine scores for both the user and the opponent
-    const userScore = isWinner
-      ? match.left_score // User's score as the winner
-      : isLoser
-      ? match.right_score // User's score as the loser
-      : 0;
-
-    const opponentScore = isWinner
-      ? match.right_score // Opponent's score when user is the winner
-      : isLoser
-      ? match.left_score // Opponent's score when user is the loser
-      : 0;
-
     return { date: formattedDate, userScore, opponentScore };
   });
 
-  // Extract labels (dates) and data (scores)
   const labels = matchData.map((match) => match.date);
   const userScores = matchData.map((match) => match.userScore);
   const opponentScores = matchData.map((match) => match.opponentScore);
 
   const chartData = {
-    labels, // Dates
+    labels,
     datasets: [
       {
         label: 'Your Score',
-        data: userScores, // User scores
+        data: userScores,
         borderColor: 'rgba(255, 99, 132, 1)',
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         fill: true,
@@ -68,7 +70,7 @@ const Chart = ({ matches = [], profileName }) => {
       },
       {
         label: 'Opponent Score',
-        data: opponentScores, // Opponent scores
+        data: opponentScores,
         borderColor: 'rgba(54, 162, 235, 1)',
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         fill: true,
@@ -79,7 +81,6 @@ const Chart = ({ matches = [], profileName }) => {
     ],
   };
 
-  // Chart options
   const options = {
     responsive: true,
     plugins: {
@@ -91,12 +92,22 @@ const Chart = ({ matches = [], profileName }) => {
         display: true,
         position: 'top',
       },
+      tooltip: {
+        callbacks: {
+          title: (tooltipItems) => {
+            const item = tooltipItems[0];
+            return item.label;
+          },
+        },
+      },
     },
     scales: {
       x: {
-        title: {
-          display: true,
-          text: 'Date',
+        ticks: {
+          display: false,
+        },
+        grid: {
+          display: false,
         },
       },
       y: {
@@ -108,6 +119,7 @@ const Chart = ({ matches = [], profileName }) => {
       },
     },
   };
+  
 
   return <Line data={chartData} options={options} />;
 };

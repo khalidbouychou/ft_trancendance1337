@@ -64,7 +64,7 @@ const Statistic = ({ userData, profileName }) => {
         </div>
       </div>
       <div className={styl.bottom}>
-        <CurveLevel data={levelData} />
+        <CurveLevel data={daTa} playerName={profileName}/>
       </div>
     </div>
   );

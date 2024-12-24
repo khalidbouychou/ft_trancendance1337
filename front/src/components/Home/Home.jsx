@@ -51,16 +51,7 @@ const Home = () => {
 
     fetchDataResults();
   }, [profile_name]);
-
-  // console.log("Fetching data", userData);
-
-  const playerData = {
-    wins: 500,
-    losses: 200,
-    exp_game: 500,
-    timestamp: "2024-12-22T12:37:05.581806Z",
-  };
-
+  console.log('----->>>', filteredPingData)
   return (
     <div className={styl.Home}>
       <div className={styl.cont}>
