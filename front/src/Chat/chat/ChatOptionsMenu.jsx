@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserSlash, faUserCheck, faTableTennis, faGamepad } from '@fortawesome/free-solid-svg-icons';
+import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
 
 function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, viewProfile, onFriendRequest }) {
+  const { notif } = useNotificationWS();
+
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
   const [isFriend, setIsFriend] = useState('None');
@@ -11,21 +14,28 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   useEffect(() => {
     const checkBlockStatus = () => {
       if (currentUser && otherUser) {
-        const isOtherUserBlocked = currentUser.blocked_users.includes(otherUser.id);
-        setIsBlocked(isOtherUserBlocked);
+        for (let i = 0; i < currentUser.blocked_users.length; i++) {
+          if (currentUser.blocked_users[i]['profile_name'] === otherUser.profile_name) {
+            console.log("we find it in blocked list");
+            setIsBlocked(true);
+            return;
+          }
+        }
+        setIsBlocked(false);
       }
     };
     checkBlockStatus();
-      const areFriends = currentUser.friends.find(friend => 
-        (friend.user1 === otherUser.username || friend.user2 === otherUser.username)
-      );
-      if (areFriends) {
-        console.log('areFriends:', areFriends.status);
-        setIsFriend(areFriends.status);
-      } else {
-        setIsFriend('None');
+    if (isFriend){
+      for (let i = 0; i < currentUser.friends.length; i++) {
+        if (currentUser.friends[i]['profile_name'] === otherUser.profile_name) {
+          setIsFriend('friends');
+          return;
+        }
       }
-  }, [otherUser, currentUser])
+    }
+    console.log("friend will become none");
+    setIsFriend('None');
+  }, [otherUser, currentUser, isBlocked])
 
   const handleMouseEnter = () => setIsOpen(true);
   const handleMouseLeave = () => setIsOpen(false);
@@ -50,9 +60,12 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   };
 
   const handleFriendClick = () => {
-    if (isFriend) {
-      setIsFriend(false);
+    console.log("u clicked friend:", isFriend);
+    if (isFriend && isFriend == 'friends') {
+      setIsFriend('None');
       onFriendRequest(false);
+    }else {
+      onFriendRequest(true);
     }
   }
   
@@ -61,10 +74,10 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
       <button className="menu-toggle">⋮</button>
       {isOpen && (
         <ul className="menu-list">
-          {isFriend === 'None' && (
+          {(!isBlocked) && (
             <li onClick={handleFriendClick}>
               <FontAwesomeIcon icon={faUserCheck} />
-              Send Friend Request
+              {isFriend === 'friends'? "Unfriend" : "Add Friend"}
             </li>
           )}
           <li onClick={handleBlockClick}>

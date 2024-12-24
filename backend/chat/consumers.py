@@ -57,6 +57,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             elif message_type == 'SEARCH_USERS':
                 query = text_data_json.get('query')
                 user_list = await self.get_users(query)
+                print("user_list:", user_list)
                 await self.send(text_data=json.dumps({
                     'type': 'USERS_LIST',
                     'users': user_list
@@ -71,9 +72,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     }
                 )
             elif message_type == 'SELECT_USER':
-                username = text_data_json.get('username')
+                profile_name = text_data_json.get('profile_name')
                 try:
-                    user1 = await self.get_user_by_username(username)
+                    user1 = await self.get_user_by_profile_name(profile_name)
                     user2 = self.scope['user']
                     if user2 == None or user1 == None:
                         return
@@ -106,6 +107,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'user_id': user_to_block,
                     'event': event
                 }))
+            elif message_type == 'UNFRIEND_USER':
+                user_to_unfriend = text_data_json.get('user_id')
+                await self.unfriend_user(user_to_unfriend)
+                await self.send(text_data=json.dumps({
+                    'type': 'UNFRIEND_USER',
+                    'user_id': user_to_unfriend
+                }))
+
         except ObjectDoesNotExist as e:
             print(f"Error: {e}", file=sys.stderr)
 
@@ -115,6 +124,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
             current_user = self.scope["user"]
             user_to_block = Player.objects.get(id=user_to_block_id)
             current_user.block_user(user_to_block)
+            current_user.unfriend_user(user_to_block)
+            return True
+        except Player.DoesNotExist:
+            return False
+        
+    @database_sync_to_async
+    def unfriend_user(self, user_to_unfriend_id):
+        try:
+            current_user = self.scope["user"]
+            user_user_to_unfriend = Player.objects.get(id=user_to_unfriend_id)
+            current_user.unfriend_user(user_user_to_unfriend)
             return True
         except Player.DoesNotExist:
             return False
@@ -165,18 +185,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
         room = ChatRoom.objects.get(id=chat_room)
         sender_id = Player.objects.get(id=sender)
         receiver_id = room.user1 if room.user1 != sender_id else room.user2
-        if Player.are_enemies(sender_id, receiver_id):
+        if Player.are_enemies(sender_id, receiver_id) or receiver_id.username == 'ke3ki3a':
             return None
         return Message.objects.create(chat_room=room, sender=sender_id, content=content)
 
     @database_sync_to_async
     def get_users(self, query):
-        players = Player.objects.filter(username__icontains=query).exclude(id=self.scope["user"].id)
+        players = Player.objects.filter(profile_name__icontains=query).exclude(id=self.scope["user"].id)
         return PlayerSerializer(players, many=True).data
 
     @database_sync_to_async
-    def get_user_by_username(self, username):
-        player = Player.objects.get(username=username)
+    def get_user_by_profile_name(self, profile_name):
+        player = Player.objects.get(profile_name=profile_name)
         if player == self.scope["user"]:
             return None
         return player

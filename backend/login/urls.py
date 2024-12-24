@@ -35,4 +35,4 @@ urlpatterns = [
     path('update/',UpdateProfile.as_view() , name='UpdateProfile'), 
     path('friends/<str:username>/', UserNameFriendList.as_view()), 
     path('blocked/<str:username>/', UserNameBlockedList.as_view()), 
-]
+    ]

@@ -10,10 +10,14 @@ from login.models import Player
 from rest_framework.decorators import permission_classes , authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
+from login.models import Player
+from asgiref.sync import sync_to_async
+import asyncio
 
 class NotificationConsumer(AsyncWebsocketConsumer):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
+    time = 0
     async def connect(self):
         self.user = self.scope['user']
         self.user_id = self.user.id
@@ -31,6 +35,9 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             self.notification_group_name,
             self.channel_name
         )
+        user = self.scope['user']
+        user.status_network = 'offline'
+        await sync_to_async(user.save)()
     
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -54,8 +61,11 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             await self.decline_GR(text_data_json, game_type)
         elif message_type == 'SEND_GR':
             await self.send_GR(text_data_json, game_type)
-        # except DatabaseError as e:
-        #     await self.failed_operation(message_type, e)
+        elif message_type == 'CONNECTED':
+            self.time = 10
+            user = self.scope['user']
+            user.status_network = 'online'
+            await sync_to_async(user.save)()
 
     @database_sync_to_async
     def cancel_FR(self, event):

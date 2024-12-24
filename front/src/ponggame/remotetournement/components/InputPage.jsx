@@ -11,11 +11,11 @@ const MainTournament = () => {
     const [PlayerAliasName, setPlayerAliasName] = useState('');
     const { Aliasname, setAliasName } = useGlobalContext();
     const { RoomName, player1Name, setPlayer1Name, player2Name, setPlayer2Name, player3Name,
-        setPlayer3Name, player4Name, setPlayer4Name, player5Name, setPlayer5Name,
-        player6Name, setPlayer6Name, player7Name, setPlayer7Name,
-        player1Avatar, setPlayer1Avatar, player2Avatar, setPlayer2Avatar, player3Avatar,
-        setPlayer3Avatar, player4Avatar, setPlayer4Avatar, player5Avatar, setPlayer5Avatar,
-        player6Avatar, setPlayer6Avatar, player7Avatar, setPlayer7Avatar , setMatchStart, matchstart} = useGlobalContext();
+    setPlayer3Name, player4Name, setPlayer4Name, player5Name, setPlayer5Name,
+    player6Name, setPlayer6Name, player7Name, setPlayer7Name,
+    player1Avatar, setPlayer1Avatar, player2Avatar, setPlayer2Avatar, player3Avatar,
+    setPlayer3Avatar, player4Avatar, setPlayer4Avatar, player5Avatar, setPlayer5Avatar,
+    player6Avatar, setPlayer6Avatar, player7Avatar, setPlayer7Avatar , setMatchStart, matchstart} = useGlobalContext();
     const [start, setStart] = useState(true);
     const [condition, setCondition] = useState('N');
     const [leftplayer, setLeftPlayerName] = useState('');
@@ -30,16 +30,31 @@ const MainTournament = () => {
         socket.current = new WebSocket(`ws://localhost:8000/ws/tournament-game/`);
 
         socket.current.onopen = () => {
+
             console.log("name:", user.user.username);
             if (socket.current.readyState === WebSocket.OPEN) {
-                const message = {
-                    action: 'connected',
-                    name: user.user.username,
-                    avatar: user.user.avatar,
-                    room: RoomName,
-                };
-                socket.current.send(JSON.stringify(message));
-                console.log('tournaments socket.current is open now');
+                if (!matchstart && !Aliasname) {
+                    console.log("im in the page to update my alias name");
+                    const message = {
+                        action: 'connect',
+                        name: user.user.username,
+                        avatar: user.user.avatar,
+                        room: RoomName,
+                    };
+                    socket.current.send(JSON.stringify(message));
+                    console.log('socket.current is open now');
+                }
+                else {
+                    console.log("first time connecting to tournament");
+                    const message = {
+                        action: 'connected',
+                        name: user.user.username,
+                        avatar: user.user.avatar,
+                        room: RoomName,
+                    };
+                    socket.current.send(JSON.stringify(message));
+                    console.log('tournaments socket.current is open now');
+                }
             } else {
                 console.error('tournaments socket.current is not readyState:');
             }
@@ -54,8 +69,8 @@ const MainTournament = () => {
         };
 
         return () => {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                socket.close();
+            if (socket.current && socket.current.readyState === WebSocket.OPEN) {
+                socket.current.close();
             }
         };
     },[]);
@@ -77,6 +92,7 @@ const MainTournament = () => {
 
         socket.current.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            console.log("---------------data:", data);
             if (data.message === 'update_players') {
                 console.log('update_players:', data);
                     setPlayer1Name(data.player1_alias);
@@ -87,6 +103,13 @@ const MainTournament = () => {
                     setPlayer3Avatar(data.player3_avatar);
                     setPlayer4Name(data.player4_alias);
                     setPlayer4Avatar(data.player4_avatar);
+            }
+            else if (data.message === 'disconnected') {
+                console.log("one of the players disconnected");
+                setCondition('D');
+                localcondition = 'D';
+                socket.current.close();
+                setMessage("Tournament was canceled because one of the players disconnected");
             }
             else if (data.message === 'first_winner') {
                 console.log('first_winner:', data);
@@ -190,12 +213,6 @@ const MainTournament = () => {
                     setRightPlayerAvatar(data.player2_avatar);
                 }
             }
-            // else if (data.message === 'disconnected') {
-            //     setCondition('D');
-            //     socket.close();
-            //     setMessage("Opponent left the game");
-            // }
-
         };
 
         if (matchstart && condition === 'N') {
@@ -340,7 +357,7 @@ const MainTournament = () => {
     }, [Aliasname]);
 
     const handleExitClick = () => {
-        navigate('/pingpong-games');
+        navigate('/games');
     };
 
     return (
@@ -357,12 +374,16 @@ const MainTournament = () => {
             <div className={styles.Button}>
             <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'grey' : 'green'}}>Start</button>
             </div>
-        </div>) : (
+        </div>) : ( condition === 'N' ?(
             <div className={styles.last}>
                 <div className={styles.waiting}>
                     <h2>Waiting for other players...</h2>
                 </div>
+            </div>) : (
+            <div className={styles.subContainer}>
+                <h2>{MESSAGE}</h2>
             </div>
+        )
         ) ) : (
             condition === 'N' ? (
             <div className={styles.gameContainer}>

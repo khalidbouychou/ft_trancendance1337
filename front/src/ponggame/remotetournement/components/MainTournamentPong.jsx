@@ -16,8 +16,7 @@ const MainTournamentPong = () => {
     }, [tournaments]);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        socket.current = new WebSocket(`ws://localhost:8000/ws/tournament-game/?token=${token}`);
+        socket.current = new WebSocket(`ws://localhost:8000/ws/tournament-game/`);
 
         socket.current.onopen = () => {
             console.log("name:", user.user.username);
@@ -96,6 +95,8 @@ const MainTournamentPong = () => {
     };
 
     const joinTournament = (index) => {
+        console.log("room im trying to join its name is:", tournaments[index].name);
+        console.log("im:", user.user.username); 
         if (socket.current && socket.current.readyState === WebSocket.OPEN) {
             const message = {
                 action: 'join_tournament',

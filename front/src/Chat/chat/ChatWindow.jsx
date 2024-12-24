@@ -47,26 +47,13 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-    const handleBlockUser = (e) => {
-        if (!otherUser) {
-            return;
-        }
-        if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
-            sockets[currentContact.id].send(JSON.stringify({
-                type: 'BLOCK_USER',
-                event: e ? 'BLOCK' : 'UNBLOCK',
-                user_id: otherUser.id
-            }));
-        }
-    };
-
     const handlePlayPong = () => {
         console.log('Play Pong');
         if (isConnected) {
             console.log('Connected');
             sendNotifMessage({
                 type: 'SEND_GR',
-                game_type: 'PONG',
+                game_type: 'PG',
                 to_user_id: otherUser.id
             });
             //testing
@@ -88,29 +75,42 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
         else {
             console.log('Not connected');
         }
-        // return () => {
-        //     if (pong_socket && pong_socket.readyState === WebSocket.OPEN) {
-        //         pong_socket.close();
-        // };
     };
-	
-	var	rand_str = () => {
-		return Math.random().toString(36).substr(2);
-	}
 
     const viewProfile = () => {
-        console.log('View Profile');
-        // navigate(`/profile/${otherUser.id}`);
+        navigate(`/profile/${otherUser.profile_name}`);
     };
 
-    const onFriendRequest = () => {
+    const handleBlockUser = (e) => {
+        if (!otherUser) {
+            return;
+        }
+        if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
+            sockets[currentContact.id].send(JSON.stringify({
+                type: 'BLOCK_USER',
+                event: e ? 'BLOCK' : 'UNBLOCK',
+                user_id: otherUser.id
+            }));
+        }
+    };
+
+    const onFriendRequest = (e) => {
         console.log('Friend Request:', otherUser.username);
-        if (isConnected) {
-            sendNotifMessage({
-                type: 'SEND_FR',
-                to_user_id: otherUser.id
-            });
-            
+        if (e === true) {
+            if (isConnected) {
+                sendNotifMessage({
+                    type: 'SEND_FR',
+                    to_user_id: otherUser.id
+                });
+            }}
+        else {
+            if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
+                sockets[currentContact.id].send(JSON.stringify({
+                    type: 'UNFRIEND_USER',
+                    event: e ? 'nothing' : 'UNFRIEND_USER',
+                    user_id: otherUser.id
+                }));
+            }
         }
     }
 
@@ -121,14 +121,14 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                     <div className="chat-header">
                         <div className="current-contact">
                             {otherUser.avatar ? (
-                                <img src={otherUser.avatar} alt={otherUser.username} className="contact-avatar" />
+                                <img src={otherUser.avatar} alt={otherUser.profile_name} className="contact-avatar" />
                             ) : (
                                 <div className="contact-avatar default-avatar">
                                     <FontAwesomeIcon icon={faUser} />
                                 </div>
                             )}
                             <span className="contact-name">
-                                {otherUser.username}
+                                {otherUser.profile_name}
                             </span>
                             {isTyping && (
                                 <div className="typing-indicator">

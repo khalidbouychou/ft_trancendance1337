@@ -6,7 +6,7 @@ export const AppContext = createContext();
 // Create the provider component
 export const ContextProvider = ({ children }) => {
   const [PlayerAliasName, setPlayerAliasName] = useState('');
-  const [RoomName, setRoomName] = useState('');
+  const [RoomName, setRoomName] = useState('VIP');
 
   const [player1Name, setPlayer1Name] = useState('Unknown');
   const [player2Name, setPlayer2Name] = useState('Unknown');

@@ -75,6 +75,10 @@ class GameConsumer(AsyncWebsocketConsumer):
             )
             self.admin.game_loop = False
             GameStateManager.remove_state(self.room_group_name)
+            self.channel_layer.group_discard(
+                    self.room_group_name,
+                    self.channel_name
+                )
         if self.name in GameConsumer.queue:
             del GameConsumer.queue[self.name]
 
@@ -793,39 +797,93 @@ class TournamentConsumer(AsyncWebsocketConsumer):
     bonus = 0
     ball_speed = 800 / (2 * 60) + bonus
     room_group_name = ''
+    waiting = False
     async def connect(self):
         await self.accept()
         
     async def disconnect(self, close_code):
         # print(f"disconnect, it could be {self.name}")
-        if self.name in TournamentConsumer.tournaments:
-            del TournamentConsumer.tournaments[self.name]
-        else:
+        print(f'someone disconnected {self.name} self.waiting: {self.waiting} self.ingame: {self.ingame}')     
+        if self.waiting == False:
+            if self.name in TournamentConsumer.tournaments:
+                print(f"waiting is {self.waiting}") 
+                self.channel_layer.group_discard(
+                    self.name,
+                    self.channel_name
+                )
+                tournament = TournamentConsumer.tournaments[self.name]
+                if tournament['player1_name'] != None:
+                    self.channel_layer.group_discard(
+                        self.name,
+                        tournament['player1_instance']
+                    )
+                if tournament['player2_name'] != None:
+                    self.channel_layer.group_discard(
+                        self.name,
+                        tournament['player2_instance']
+                    )
+                if tournament['player3_name'] != None:
+                    self.channel_layer.group_discard(
+                        self.name,
+                        tournament['player3_instance']
+                    )
+                if tournament['player4_name'] != None:
+                    self.channel_layer.group_discard(
+                        self.name,
+                        tournament['player4_instance']
+                    )
+                del TournamentConsumer.tournaments[self.name]
             for tournament in TournamentConsumer.tournaments.values():
                 if self.name in tournament.values():
                     tournament['players'] -= 1
+                    x = 0
                     if tournament['player1_name'] == self.name:
                         tournament['player1_name'] = None
                         tournament['player1_instance'] = None
+                        x = 1
                     elif tournament['player2_name'] == self.name:
                         tournament['player2_name'] = None
                         tournament['player2_instance'] = None
+                        x = 1
                     elif tournament['player3_name'] == self.name:
                         tournament['player3_name'] = None
                         tournament['player3_instance'] = None
+                        x = 1
                     elif tournament['player4_name'] == self.name:
                         tournament['player4_name'] = None
                         tournament['player4_instance'] = None
-        data = {
-            'message': 'tournament_page',
-            'data': list(TournamentConsumer.tournaments.values()) 
-        }
-        await self.channel_layer.group_send(
-        "tournament",
-        {
-            'type': 'tournament_message',
-            'message': data,
-        })
+                        x = 1
+                    if x > 0:
+                        self.channel_layer.group_discard(
+                            tournament['name'],
+                            self.channel_name
+                        )
+            self.channel_layer.group_discard(
+                "tournament",
+                self.channel_name
+            )         
+            data = {
+                'message': 'tournament_page',
+                'data': list(TournamentConsumer.tournaments.values()) 
+            }
+            await self.channel_layer.group_send(
+            "tournament",
+            {
+                'type': 'tournament_message',
+                'message': data,
+            }) 
+        if self.ingame or self.waiting:
+            print(f"{self.name} should disconnect from {self.room_group_name}")
+            data = {
+                'message': 'disconnected',
+            }
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'tournament_message',
+                    'message': data,
+                }
+            ) 
 
     async def remove_all_from_group(self, group_name):
         channel_layer = get_channel_layer()
@@ -867,7 +925,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
             )
             data = {
                 'message': 'tournament_page',
-                'data': list(TournamentConsumer.tournaments.values()) 
+                'data': TournamentConsumer.tournaments
             }
             await self.channel_layer.group_send(
             "tournament",
@@ -884,12 +942,14 @@ class TournamentConsumer(AsyncWebsocketConsumer):
             )
         elif action == 'update_alias':
             tournament_name = data.get('room')
+            self.room_group_name = tournament_name
             if tournament_name in TournamentConsumer.game:
                 tournament = TournamentConsumer.game[tournament_name]
                 if tournament['connected'] < 4 and data.get('name') in [tournament.get(f'player{i}_name') for i in range(1, 5)]:
                     aliasname = data.get('aliasname')
                     avatar = data.get('avatar')
                     name = data.get('name')
+                    self.room_group_name = tournament_name
                     if aliasname in [tournament.get(f'player{i}_alias') for i in range(1, 5)]:
                         message = "alias_exists"
                         await self.send(text_data=json.dumps({'message': message}))
@@ -948,20 +1008,20 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'message': data,
                     })
                     if tournament['connected'] == 4:
-                        sender_id = 1
-                        reciever1_id = await Player.objects.get(username=tournament['player1_name']).id
-                        reciever2_id = await Player.objects.get(username=tournament['player2_name']).id
-                        reciever3_id = await Player.objects.get(username=tournament['player3_name']).id
-                        reciever4_id = await Player.objects.get(username=tournament['player4_name']).id
+                        sender_id =  await sync_to_async(Player.objects.get)(username='ke3ki3a')
+                        reciever1_id = await sync_to_async(Player.objects.get)(username=tournament['player1_name'])
+                        reciever2_id = await sync_to_async(Player.objects.get)(username=tournament['player2_name'])
+                        reciever3_id = await sync_to_async(Player.objects.get)(username=tournament['player3_name'])
+                        reciever4_id = await sync_to_async(Player.objects.get)(username=tournament['player4_name'])
                         msg = "the tournament! has started"
-                        room1 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever1_id)
-                        room2 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever2_id)
-                        room3 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever3_id)
-                        room4 = await ChatRoom.objects.get_or_create(user1=sender_id, user2=reciever4_id)
-                        Message.objects.create(chat_room=room1, sender=sender_id, content=msg)
-                        Message.objects.create(chat_room=room2, sender=sender_id, content=msg)
-                        Message.objects.create(chat_room=room3, sender=sender_id, content=msg)
-                        Message.objects.create(chat_room=room4, sender=sender_id, content=msg)
+                        room1, _ = await sync_to_async(ChatRoom.objects.get_or_create)(user1=sender_id, user2=reciever1_id)
+                        room2, _ = await sync_to_async(ChatRoom.objects.get_or_create)(user1=sender_id, user2=reciever2_id)
+                        room3, _ = await sync_to_async(ChatRoom.objects.get_or_create)(user1=sender_id, user2=reciever3_id)
+                        room4, _ = await sync_to_async(ChatRoom.objects.get_or_create)(user1=sender_id, user2=reciever4_id)
+                        await sync_to_async(Message.objects.create)(chat_room=room1, sender=sender_id, content=msg)
+                        await sync_to_async(Message.objects.create)(chat_room=room2, sender=sender_id, content=msg)
+                        await sync_to_async(Message.objects.create)(chat_room=room3, sender=sender_id, content=msg)
+                        await sync_to_async(Message.objects.create)(chat_room=room4, sender=sender_id, content=msg)
                         data = {
                             'message': 'tournament_started',
                         }
@@ -1051,12 +1111,16 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                     name = data.get('name')
                     if tournament['player1_name'] is None:
                         tournament['player1_name'] = name
+                        tournament['player1_instance'] = self.channel_name
                     elif tournament['player2_name'] is None:
                         tournament['player2_name'] = name
+                        tournament['player2_instance'] = self.channel_name
                     elif tournament['player3_name'] is None:
                         tournament['player3_name'] = name
+                        tournament['player3_instance'] = self.channel_name
                     elif tournament['player4_name'] is None:
                         tournament['player4_name'] = name
+                        tournament['player4_instance'] = self.channel_name
 
                     await self.channel_layer.group_add(
                         tournament_name,
@@ -1064,13 +1128,13 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                     )
                     data = {
                         'message': 'join_tournament',
-                        'tournament': TournamentConsumer.tournaments
+                        'tournament':  TournamentConsumer.tournaments
                     }
                     await self.channel_layer.group_send(
                     "tournament",
                     {
                         'type': 'tournament_message',
-                        'message': data,
+                        'message': data, 
                     })
                     #now i will check if the tournament should start
                     if tournament['players'] == 4:
@@ -1078,7 +1142,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                             'message': 'tournament_about_to_start',
                             'RoomName': tournament_name,
                         }
-                        # asyncio.create_task(self.start_countdown(tournament_name)) we will need to start the countdown
                         TournamentConsumer.game[tournament_name] = {
                             'room': tournament_name,
                             'connected': 0,
@@ -1161,6 +1224,15 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'type': 'tournament_message',
                         'message': data,
                     })
+        elif action == 'connect':
+            print("time to enter alias name")
+            self.waiting = True
+            self.name = data.get('name')
+            self.room_group_name = data.get('room')
+            await self.channel_layer.group_add(
+                self.room_group_name,
+                self.channel_name
+            )
 
     async def tournament_message(self, event):
         data = event['message']

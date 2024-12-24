@@ -8,6 +8,7 @@ import { FaSearchengin } from "react-icons/fa";
 import SearchCard from "./components/searchCard/SearchCard.jsx";
 import userImage from "./assets/nouahidi.jpeg";
 import { CiSettings, CiLogout } from "react-icons/ci";
+import { use } from "react";
 
 const Sidebar = () => {
   const { user } = useContext(AuthContext);
@@ -21,6 +22,7 @@ const Sidebar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("home");
+  const [colornotif, setcolornotif] = useState("red");
 
   const buttonColors = {
     home: activeTab === "home" ? "yellow" : "white",
@@ -31,6 +33,7 @@ const Sidebar = () => {
 
   const toggleNotif = () => setNotifOpen(!notifOpen);
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
   useEffect(() => {
     const fetchSearchResults = async () => {
       if (searchQuery.trim()) {
