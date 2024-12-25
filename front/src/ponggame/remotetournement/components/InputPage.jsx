@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import styles from './InputPage.module.css'
 import { useGlobalContext } from '../context/TournamentContext.jsx';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../UserContext/Context';
-import { use } from 'react';
 
 const MainTournament = () => {
     const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
     const socket = useRef(null);
     const pressedKeys = useRef(new Set());
     const [PlayerAliasName, setPlayerAliasName] = useState('');
@@ -92,7 +93,7 @@ const MainTournament = () => {
 
         socket.current.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log("---------------data:", data);
+            // console.log("---------------data:", data);
             if (data.message === 'update_players') {
                 console.log('update_players:', data);
                     setPlayer1Name(data.player1_alias);
@@ -143,7 +144,6 @@ const MainTournament = () => {
             else if (data.message === 'match_result1'){
                 console.log("data:", data);
                 console.log("PlayerAliasName:", PlayerAliasName);
-                // wait for match screen 
                 if (data.winner === PlayerAliasName){
                     console.log("u win");
                     setMessage("You won the match and you are qualified to the next round");
@@ -153,15 +153,13 @@ const MainTournament = () => {
                 else{
                     console.log("u lost");
                     setMessage("You lost the match");
-                    localcondition = 'L';
-                    setCondition('L');
-                    socket.current.close();
+                    localcondition = 'D';
+                    setCondition('D');
                 }
             }
             else if (data.message === 'match_result2'){
                 console.log("data:", data);
                 console.log("PlayerAliasName:", PlayerAliasName);
-                // wait for match screen 
                 if (data.winner === PlayerAliasName){
                     console.log("u win");
                     setMessage("You won the final match and you are tournament winner");
@@ -173,16 +171,14 @@ const MainTournament = () => {
                 else{
                     console.log("u lost");
                     setMessage("You lost the match");
-                    localcondition = 'L';
-                    setCondition('L');
+                    localcondition = 'D';
+                    setCondition('D');
                 }
             }
             else if (data.message === 'game_data') {
                 console.log("data:", data);
                 ballx = (data.ballx / game_width) * canvas.width
-                // console.log("after update ballx:", ballx);
                 bally = (data.bally / game_height) * canvas.height
-                // console.log("after update bally:", bally);
                 rightRacketY = (data.right_paddleY / game_height) * canvas.height
                 leftRacketY = (data.left_paddleY / game_height) * canvas.height
                 setRightScore(data.right_score)
@@ -221,11 +217,9 @@ const MainTournament = () => {
             const ctx = canvas.getContext('2d');
 
             const drawball = () => {
-                // console.log("drawball");
                 canvas.width = canvas.clientWidth;
                 canvas.height = canvas.clientHeight;
                 ctx.fillStyle = 'white';
-                // console.log("ballx:", ballx, "bally:", bally);
                 ctx.arc(ballx, bally, ball_radius, 0, Math.PI * 2);
                 ctx.fillRect(canvas.clientWidth / 2 - 3, 0, 6, canvas.height);
                 ctx.fill();
@@ -292,7 +286,6 @@ const MainTournament = () => {
                 drawLeftRacket();
                 drawRightRacket();
                 const currentPath = window.location.pathname;
-                console.log("localcondition:", localcondition);
                 if (currentPath === '/games/remotetournament' && localcondition === 'N'){
                     return requestAnimationFrame(draw);
                 }
@@ -362,54 +355,65 @@ const MainTournament = () => {
 
     return (
         !matchstart ? (
-        !Aliasname ? (
-        <div className={styles.last}>
-            <div className={styles.play}>
-                <div className={styles.starting}>
-                    <div className={styles.inp}>
-                        <input type="text" placeholder="Alias Name" onChange={(e) => setPlayerAliasName(e.target.value)}/>
+            !Aliasname ? (
+                <div className={styles.last}>
+                    <div className={styles.play}>
+                        <div className={styles.starting}>
+                            <div className={styles.inp}>
+                                <input type="text" placeholder="Alias Name" onChange={(e) => setPlayerAliasName(e.target.value)}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.Button}>
+                        <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'grey' : 'green'}}>Start</button>
                     </div>
                 </div>
-            </div>
-            <div className={styles.Button}>
-            <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'grey' : 'green'}}>Start</button>
-            </div>
-        </div>) : ( condition === 'N' ?(
-            <div className={styles.last}>
-                <div className={styles.waiting}>
-                    <h2>Waiting for other players...</h2>
-                </div>
-            </div>) : (
-            <div className={styles.subContainer}>
-                <h2>{MESSAGE}</h2>
-            </div>
-        )
-        ) ) : (
-            condition === 'N' ? (
-            <div className={styles.gameContainer}>
-                <div className={styles.topgame}>  
-                    <div className={styles.side}>
-                        <img src={leftAvatar} className={styles.Img} />
-                        <p >{leftplayer}</p>
+            ) : ( condition === 'N' ? (
+                <div className={styles.last}>
+                    <div className={styles.waiting}>
+                        <h2>Waiting for other players...</h2>
                     </div>
-                    <div className={styles.side} style={{ justifyContent: 'end' }}>
-                        <p >{rightplayer}</p>
-                        <img src={rightAvatar} className={styles.Img} />
-                    </div>
-                    <div className={styles.score}>
-                        <p >{leftScore}</p>
-                        <p >:</p>
-                        <p >{rightScore}</p>
-                    </div>
-                </div>
-                <canvas id="canvas" className={styles.canvass}></canvas>
-            </div> ) : (
+                </div>) : (
                 <div className={styles.subContainer}>
                     <h2>{MESSAGE}</h2>
                 </div>
             )
-        )
-    )
+            ) ) : (
+                condition === 'D' ? (
+                    <div className={styles.subContainer}>
+                        <h2 className={styles.message} >{MESSAGE}</h2>
+                        <div className={styles.Button}>
+                            <button onClick={handleExitClick}>Exit</button>
+                        </div>
+                    </div>
+                ) : (
+                    condition === 'N' ? (
+                        <div className={styles.gameContainer}>
+                            <div className={styles.topgame}>  
+                                <div className={styles.side}>
+                                    <img src={leftAvatar} className={styles.Img} />
+                                    <p >{leftplayer}</p>
+                                </div>
+                                <div className={styles.side} style={{ justifyContent: 'end' }}>
+                                    <p >{rightplayer}</p>
+                                    <img src={rightAvatar} className={styles.Img} />
+                                </div>
+                                <div className={styles.score}>
+                                    <p >{leftScore}</p>
+                                    <p >:</p>
+                                    <p >{rightScore}</p>
+                                </div>
+                            </div>
+                            <canvas id="canvas" className={styles.canvass}></canvas>
+                        </div> 
+                    ) : (
+                        <div className={styles.subContainer}>
+                            <h2>{MESSAGE}</h2>
+                        </div>
+                    )
+                )
+            )
+        )    
 }
 
 export default MainTournament

@@ -47,7 +47,6 @@ clean:
 	@rm -rf front/node_modules front/package-lock.json
 	@docker-compose down
 	@docker system prune -af
-	@rm -rf db
 	@rm -rf ./frontd/certs
 	@rm -rf ./backend/certs
 	@rm -rf nginx/ssl.*
