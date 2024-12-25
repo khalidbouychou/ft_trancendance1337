@@ -7,6 +7,7 @@ const CardMatch = ({ match, profileName, animationDelay }) => {
   const opponent = match.winner === profileName ? match.loser : match.winner;
   const status = match.winner === profileName ? "Victory" : "Defeat";
   const score = `${match.left_score} - ${match.right_score}`;
+  const color = match.winner === profileName ? "linear-gradient(to right, #006437, #00b378)" : "linear-gradient(to right, #64000e, #8b0000)";
   const [date, time] = match.date.split("T");
   const formattedTime = time.slice(0, 5);
   const image =
@@ -20,7 +21,7 @@ const CardMatch = ({ match, profileName, animationDelay }) => {
     <button
       className={styl.cardMatch}
       onClick={handleClick}
-      style={{ animationDelay }}
+      style={{ animationDelay, background: color }}
     >
       <div className={styl.opponent}>
         <div className={styl.extImgOpp}>

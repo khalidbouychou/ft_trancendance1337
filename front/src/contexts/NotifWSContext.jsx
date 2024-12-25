@@ -7,9 +7,9 @@ export function NotificationWebSocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [notif, setNotif] = useState(null);
+  const [profilesocket, setProfileSocket] = useState(null);
   let Interval = null;
   let ws = null;
-
   useEffect(() => {
 
     const connect = () => {
@@ -31,7 +31,9 @@ export function NotificationWebSocketProvider({ children }) {
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log("notif socket recieved something: ", data);
+        // console.log("notif socket recieved something: ", data);
+        // console.log("+++++++++++++++++++++++++ received data: ", data.message);
+        setProfileSocket(data);
         setNotif(data.notification);
 
         toast.success("notification socket recieved something", {
@@ -82,10 +84,14 @@ export function NotificationWebSocketProvider({ children }) {
     }
   }, [socket]);
 
+
+  useEffect(() => {
+    console.log("----------------------------- 1337  ",notif);
+  });
   return (
     <>
       <ToastContainer />
-      <NotifWSContext.Provider value={{ sendMessage, isConnected, notif }}>
+      <NotifWSContext.Provider value={{ sendMessage, isConnected, notif, profilesocket}}>
         {children}
       </NotifWSContext.Provider>
     </>

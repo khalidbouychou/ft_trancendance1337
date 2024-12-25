@@ -15,8 +15,11 @@ import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { TbLock } from "react-icons/tb";
 import axios from "axios";
 import CardBlocked from "./components/cardBlocked/CardBlocked";
+import { useNotificationWS } from '../../contexts/NotifWSContext'
 
 const Profile = ({ me }) => {
+  const { profilesocket , sendMessage, isConnected} = useNotificationWS();
+
   let { profile_name } = useParams();
   const { user } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
@@ -39,7 +42,11 @@ const Profile = ({ me }) => {
   const [tmp, setTmp] = useState("friends");
   const [showUserBlocked, setShowUserBlocked] = useState(false);
   const [status, setStatus] = useState('Friends');
+  const [isfriended, setsfriended] = useState(false);
+
   // const [nameBt, setNameBt] = useState('blocked users');
+
+  
 
   const handleBlockClick = () => {
     setShowUserBlocked((prev) => !prev);
@@ -83,8 +90,14 @@ const Profile = ({ me }) => {
         }
   
         const data = await response.json();
+        for (let i = 0; i < data.friends.length;i++){
+          if (data.friends[i].profile_name === user.user.profile_name){
+            setsfriended(true)
+            setStatus('Friends')
+            break
+          }
+        }
         setUserData(data);
-  
         if (data.profile_name === user?.user?.profile_name) {
           setIsMyProfil(1);
           setDisplayBt("none");
@@ -108,17 +121,19 @@ const Profile = ({ me }) => {
           setMaxPingExp(maxExperience);
           setPingLevel(calculatedLevel);
           setNextPingLevel(calculatedLevel + 1);
-          setPingPercentage(Math.floor((exp_game / maxExperience) * 100));
+          setPingPercentage(exp_game % 100);
           setWins(wins);
           setLose(losses);
         } else {
           throw new Error("Ping data is invalid or empty");
+
         }
   
         const userResponse = await axios.get(
           `http://localhost:8000/api/${tmp}/${profile_name}/`,
           { withCredentials: true }
         );
+        // userResponse
         setUserList(userResponse.data);
       } catch (error) {
         setError(error.message);
@@ -128,14 +143,51 @@ const Profile = ({ me }) => {
     };
   
     fetchData();
-  }, [profile_name, tmp]);
+  }, [profile_name, tmp, userData?.status_network]);
   
+  const onFriendRequest = () => {
+    console.log('Friend Request:', userData?.username);
+    if (isConnected) {
+      if (!isfriended){
+        console.log('send friend request');
+        sendMessage({
+              type: 'SEND_FR',
+              to_user_id: userData?.id
+          });
+      }
+      else{
+        console.log('unfriend');
+        sendMessage({
+              type: 'UN_FRIEND',
+              to_user_id: userData?.id
+          });
+        setsfriended(false)
+      }
+    }
+  }
 
   useEffect(() => {
     setProfileName(profile_name);
   }, [profile_name]);
 
   console.log("user list", userList);
+
+  useEffect(() => {
+    console.log("-------------->>",profilesocket);
+    console.log("user data ->>>>>", userData)
+    if (profilesocket && profilesocket.type == "NOTIFICATION_ACCEPTED"){
+      console.log("profilesocket:", profilesocket.notification);
+      console.log("from_user id:", profilesocket.notification.from_user.id);
+      console.log("to_user id:", profilesocket.notification.to_user.id);
+      console.log("userData", userData)
+      console.log("current login user id", userData.id)
+      // console.log("id", userData.user.id)
+      if (profilesocket.notification.from_user.id == user.user.id && profilesocket.notification.to_user.id == userData.id){
+        setsfriended(true)
+      }
+    }
+
+  }, [profilesocket, userData]);
 
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
@@ -153,9 +205,6 @@ const Profile = ({ me }) => {
   return (
     <div className={styl.profile}>
       <div className={styl.content}>
-        <div className={styl.head}>
-          <h2>PROFILE</h2>
-        </div>
         <div className={styl.userPrf}>
           <div className={styl.side1}>
             <div className={styl.userInfo}>
@@ -166,17 +215,9 @@ const Profile = ({ me }) => {
               >
                 <MdOutlineFormatListBulleted />
                 <div className={styl.settings} style={{ display: setting }}>
-                  <button className={styl.Button}>
+                  <button className={styl.Button} onClick={(onFriendRequest)}>
                     <IoIosPersonAdd className={styl.icons} />
-                    <p>Add</p>
-                  </button>
-                  <button className={styl.Button}>
-                    <IoChatbubbleEllipsesOutline className={styl.icons} />
-                    <p>Chat</p>
-                  </button>
-                  <button className={styl.Button}>
-                    <TbLock className={styl.icons} />
-                    <p>Block</p>
+                    {isfriended ? <p>Unfriend</p> : <p>Add Friend</p>} 
                   </button>
                 </div>
               </button>
@@ -187,9 +228,10 @@ const Profile = ({ me }) => {
                   </div>
                 </div>
                 <p className={styl.userName}>
-                  {userData.profile_name.length > 8
+                  {/* {userData.profile_name.length > 8
                     ? userData.profile_name.toUpperCase().slice(0, 8) + "."
-                    : userData.profile_name.toUpperCase()}
+                    : userData.profile_name.toUpperCase()} */}
+                    {userData.profile_name.toUpperCase()}
                   <p style={{ color: "rgba(255, 255, 255, 0.4)" }}>
                     <div className={styl.ongline}>
                       <div
@@ -197,11 +239,11 @@ const Profile = ({ me }) => {
                         style={{
                           width: "11px",
                           height: "11px",
-                          backgroundColor: "rgb(7, 118, 174)",
+                          backgroundColor: userData?.status_network === "online" ? "green" : "red" ,
                         }}
                       ></div>
                     </div>
-                    {userData.status_network}
+                    {userData?.status_network}
                   </p>
                 </p>
               </div>
@@ -231,6 +273,9 @@ const Profile = ({ me }) => {
                     <div className={styl.Side}>{wins + lose}</div>
                   </div>
                 </div>
+
+
+
                 <div className={styl.level}>
                   <div className={styl.tmp}>
                     <p>Level {pingLevel}</p>
@@ -242,7 +287,7 @@ const Profile = ({ me }) => {
                           left: "2px",
                         }}
                       >
-                        {maxPingExp}
+                        {maxPingExp} xp
                       </p>
                     </p>
                   </div>
@@ -286,20 +331,9 @@ const Profile = ({ me }) => {
                     Match History
                   </p>
                 </button>
-                <button onClick={() => handelClick("Statistic")}>
-                  <p
-                    style={{
-                      textDecorationColor:
-                        activeSection === "Statistic" ? "red" : "white",
-                    }}
-                  >
-                    Statistic
-                  </p>
-                </button>
               </div>
             </div>
             <div className={styl.userData}>
-              {activeSection === "Statistic" && <Statistic />}
               {activeSection === "Leaderboard" && <Leaderboard />}
               {activeSection === "MatchHistory" && (
                 <MatchHistory profileName={profileName} />

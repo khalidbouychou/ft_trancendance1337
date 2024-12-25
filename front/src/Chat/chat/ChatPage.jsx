@@ -331,7 +331,6 @@ function ChatPage() {
 
 	return (
 		<div className="chat-app">
-				<h1 className="chat-header-h1">Chat</h1>
 				<div className="chat-layout">
 					<Sidebar
 						setupChatRoom={setupChatRoom}

@@ -46,8 +46,8 @@ const Chart = ({ matches = [], profileName }) => {
         opponentScore = match.left_score;
       }
     }
-    const isWinner = match.winner_profile_name === profileName;
-    const isLoser = match.loser_profile_name === profileName;
+    // const isWinner = match.winner_profile_name === profileName;
+    // const isLoser = match.loser_profile_name === profileName;
     return { date: formattedDate, userScore, opponentScore };
   });
 
@@ -87,10 +87,14 @@ const Chart = ({ matches = [], profileName }) => {
       title: {
         display: true,
         text: 'Match History (Your Scores vs Opponent)',
+        color: '#FFFFFF',
       },
       legend: {
         display: true,
         position: 'top',
+        labels : {
+          color: 'white',
+        }
       },
       tooltip: {
         callbacks: {
@@ -109,13 +113,32 @@ const Chart = ({ matches = [], profileName }) => {
         grid: {
           display: false,
         },
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.6)', // X-axis ticks color
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.6)', // X-axis grid lines color
+        },
+        border: {
+          color: 'rgba(255, 255, 255, 0.6)', // X-axis border color
+        },
       },
       y: {
         title: {
           display: true,
           text: 'Score',
+          color: 'white',
         },
         min: 0,
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.6)', // X-axis ticks color
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.6)', // X-axis grid lines color
+        },
+        border: {
+          color: 'rgba(255, 255, 255, 0.6)', // X-axis border color
+        },
       },
     },
   };

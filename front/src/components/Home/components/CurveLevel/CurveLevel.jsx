@@ -46,8 +46,8 @@ const ExpChart = ({ data, playerName }) => {
       {
         label: 'EXP',
         data: expData.exp,
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)', // Line color
+        backgroundColor: 'rgba(75, 192, 192, 0.4)', // Fill color
         borderWidth: 2,
         tension: 0, // Stepped line
         stepped: true,
@@ -63,10 +63,14 @@ const ExpChart = ({ data, playerName }) => {
       title: {
         display: true,
         text: `EXP Progression for ${playerName}`,
+        color: 'white',
       },
       legend: {
         display: true,
         position: 'top',
+        labels: {
+          color: 'white', // Legend text color
+        },
       },
       tooltip: {
         callbacks: {
@@ -85,20 +89,39 @@ const ExpChart = ({ data, playerName }) => {
         title: {
           display: true,
           text: 'Matches',
+          color: 'white', // X-axis title color
+        },
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.6)', // X-axis ticks color
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.6)', // X-axis grid lines color
+        },
+        border: {
+          color: 'rgba(255, 255, 255, 0.6)', // X-axis border color
         },
       },
       y: {
         title: {
           display: true,
           text: 'EXP',
+          color: 'white', // Y-axis title color
+        },
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.6)', // Y-axis ticks color
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.6)', // Y-axis grid lines color
+        },
+        border: {
+          color: 'rgba(255, 255, 255, 0.6)', // Y-axis border color
         },
         min: 0,
       },
     },
   };
 
-  return <Line data={chartData} options={options} style={{width: '100%' , height: '100%'}}/>;
+  return <Line data={chartData} options={options} style={{ width: '100%', height: '100%' }} />;
 };
 
 export default ExpChart;
-

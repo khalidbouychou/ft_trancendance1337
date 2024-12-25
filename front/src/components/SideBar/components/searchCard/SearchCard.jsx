@@ -1,10 +1,17 @@
 import React from "react";
 import styl from "./SearchCard.module.css";
 import userImage from "../../assets/nouahidi.jpeg";
+import { useNavigate } from "react-router-dom";
 
 const SearchCard = ({ user }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/profile/${user.profile_name}`);
+  };
+
   return (
-    <button className={styl.searchCard}>
+    <button className={styl.searchCard} onClick={handleClick}>
       <div className={styl.userImage}>
         <div className={styl.intImg}>
           <div
@@ -15,7 +22,7 @@ const SearchCard = ({ user }) => {
           </div>
         </div>
       </div>
-      <p className={styl.userName}>{user.username}</p>
+      <p className={styl.userName}>{user.profile_name}</p>
     </button>
   );
 };

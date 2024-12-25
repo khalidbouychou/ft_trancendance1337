@@ -44,18 +44,31 @@ const Notification = () => {
   return (
     <div className={styl.Notification}>
         <div className={styl.content}>
-            <div className={styl.head}><h1>NOTIFICATION</h1></div>
             <div className={styl.cont}>
-                <hr className={styl.line}/>
                 <div className={styl.noti}>
                     <div className={styl.Request}>
                         <div className={styl.title}>
                             <h3 >Pending request</h3>
                         </div>
                         <div className={styl.card}>
-                            {FR_notif_received.map((notif) => (
+                            {
+                                FR_notif_received.length === 0 ? <div style={{
+                                    alignContent: 'center',
+                                    justifyContent: 'center',
+                                    height: '200px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    
+                                }}>
+                                    <p style={{
+                                       fontSize: '16px',
+                                       letterSpacing : '3px'
+                                    }}> ---------- No Pending Request ---------- </p>
+                                </div>:
+                            FR_notif_received.map((notif) => (
                                 <NotiCard key={notif.id} request={notif}/>
-                            ))}
+                            ))
+                            }
                         </div>
                     </div>
                     <div className={styl.Request}>
@@ -63,9 +76,24 @@ const Notification = () => {
                             <h3 >Game request</h3>
                         </div>
                         <div className={styl.card}>
-                            {GR_notif_received.map((notif) => (
+                           {
+                                GR_notif_received.length === 0 ? <div style={{
+                                    alignContent: 'center',
+                                    justifyContent: 'center',
+                                    height: '200px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    
+                                }}>
+                                    <p style={{
+                                       fontSize: '16px',
+                                       letterSpacing : '3px'
+                                    }}> ---------- No Game Request ---------- </p>
+                                </div>:
+                            GR_notif_received.map((notif) => (
                                 <NotiCard key={notif.id} request={notif}/>
-                            ))}
+                            ))
+                            }
                         </div>
                     </div>
                     <div className={styl.Request}>
@@ -73,12 +101,43 @@ const Notification = () => {
                             <h3>Sent requests</h3>
                         </div>
                         <div className={styl.card}>
-                            {FR_notif_sent.map((notif) => (
-                                <NotiCardSent key={notif.id} request={notif}/>
-                            ))}
-                            {GR_notif_sent.map((notif) => (
-                                <NotiCardSent key={notif.id} request={notif}/>
-                            ))}
+                            { (FR_notif_sent.length === 0) ? 
+                            
+                            <div style={{
+                                alignContent: 'center',
+                                justifyContent: 'center',
+                                height: '200px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                
+                            }}>
+                                <p style={{
+                                   fontSize: '16px',
+                                   letterSpacing : '3px'
+                                }}> ---------- No Sent Friend Requests ---------- </p>
+                            </div>
+                            : FR_notif_sent.map((notif) => (<NotiCardSent key={notif.id} request={notif}/>))}
+                           {
+                            (GR_notif_sent.length === 0) ? 
+                            
+                            <div style={{
+                                alignContent: 'center',
+                                justifyContent: 'center',
+                                height: '200px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                
+                            }}>
+                                <p style={{
+                                   fontSize: '16px',
+                                   letterSpacing : '3px'
+                                }}> ---------- No Sent Game Requests ---------- </p>
+                            </div>
+                           :
+                           GR_notif_sent.map((notif) => (<NotiCardSent key={notif.id} request={notif}/>))
+                           
+                           }
+
                         </div>
                     </div>
                 </div>

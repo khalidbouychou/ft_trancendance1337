@@ -41,7 +41,13 @@ const Sidebar = () => {
           `http://localhost:8000/api/search/?q=${searchQuery}`
         );
         const data = await response.json();
-        setSearchResults(data);
+        // Filter out 'ke3ki3a' and your own profile
+        const filteredData = data.filter(
+          (result) =>
+            result.profile_name !== "ke3ki3a" &&
+            result.profile_name !== user?.user?.profile_name
+        );
+        setSearchResults(filteredData);
       } else {
         setSearchResults([]);
       }
@@ -49,7 +55,9 @@ const Sidebar = () => {
 
     const debounceFetch = setTimeout(fetchSearchResults, 300);
     return () => clearTimeout(debounceFetch);
-  }, [searchQuery]);
+  }, [searchQuery, user]);
+
+  console.log("profile_name =|= ", searchResults);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -66,7 +74,6 @@ const Sidebar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter" && searchResults.length > 0) {
@@ -116,41 +123,13 @@ const Sidebar = () => {
         </Link>
       </div>
       <div className={styl.end}>
-        <button
-          className={styl.notifIcon}
-          onClick={toggleNotif}
-          ref={notifRef}
-        >
-          <MdNotifications id={styl.listicon} onClick={
-            () => navigate("/notification")
-          }/>
+        <button className={styl.notifIcon} onClick={toggleNotif} ref={notifRef}>
+          <MdNotifications
+            id={styl.listicon}
+            onClick={() => navigate("/notification")}
+          />
         </button>
-        {/* {notifOpen && (
-          <div className={styl.notification}>
-            <div className={styl.inviteCard}>
-              <button className={styl.userImg}>
-                <img src={userImage} alt="User" />
-              </button>
-              <div className={styl.choose}>
-                <div className={styl.Sender}>
-                  <button>NOUAHIDI</button>
-                  <p>sends you an invitation</p>
-                </div>
-                <div className={styl.butChoose}>
-                  <button>Accept</button>
-                  <button style={{ backgroundColor: "#660da56a" }}>
-                    Remove
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )} */}
-        <button
-          className={styl.intImg}
-          onClick={toggleMenu}
-          ref={settRef}
-        >
+        <button className={styl.intImg} onClick={toggleMenu} ref={settRef}>
           <img src={user?.user?.avatar} alt="User Avatar" />
         </button>
         {menuOpen && (

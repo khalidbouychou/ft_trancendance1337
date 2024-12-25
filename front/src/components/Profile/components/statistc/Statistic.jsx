@@ -5,31 +5,19 @@ import CurveLevel from "../../../Home/components/CurveLevel/CurveLevel";
 // import Chart from '../../../Home/components/test/Chart';
 import Chart from "../../../Home/components/test/Chart";
 import axios from "axios";
+import CircularLevel from "./CirculeLevel/CercleLevel";
 
 const Statistic = ({ userData, profileName }) => {
   const total = userData?.data[0]?.wins + userData?.data[0]?.losses;
-  const winPercentage = (userData?.data[0]?.wins / total) * 100;
-  const lossPercentage = (userData?.data[0]?.losses / total) * 100;
+  let winPercentage = (userData?.data[0]?.wins / total) * 100;
+  let lossPercentage = (userData?.data[0]?.losses / total) * 100;
   const [daTa, setDaTa] = useState([]);
-  const data = [
-    { time: "Jan", wins: 5, losses: 3 },
-    { time: "Feb", wins: 8, losses: 2 },
-    { time: "Mar", wins: 4, losses: 5 },
-  ];
+  const [level, setLevel] = useState(50);
+  if (!winPercentage && !lossPercentage) {
+    winPercentage = 50
+    lossPercentage = 50
+  }
 
-  const levelData = [
-    { level: 1, time: 5 },
-    { level: 2, time: 12 },
-    { level: 3, time: 20 },
-    { level: 4, time: 25 },
-  ];
-  console.log("profile_name == ", profileName);
-  const playerData = {
-    wins: 100,
-    losses: 200,
-    exp_game: 500,
-    timestamp: "2024-12-22T12:37:05.581806Z",
-  };
   useEffect(() => {
     const fetchData = async () => {
       const data = await axios.get(
@@ -39,7 +27,8 @@ const Statistic = ({ userData, profileName }) => {
     };
     fetchData();
   }, [profileName]);
-  console.log("response == ", daTa);
+
+  console.log("response == ", (userData?.data[0]?.exp_game % 100));
   return (
     <div className={styl.statistic}>
       <div className={styl.upperPart}>
@@ -54,17 +43,22 @@ const Statistic = ({ userData, profileName }) => {
             }}
           ></div>
           <div className={styl.chartText}>
-            <p>Wins: {userData?.data[0]?.wins}</p>
-            <p>Losses: {userData?.data[0]?.losses}</p>
+            <p>Wins: {winPercentage}%</p>
+            <p>Losses: {lossPercentage}%</p>
           </div>
         </div>
         <div className={styl.CurveChart}>
-          <Chart matches={daTa}  profileName={profileName}/>
-          {/* <CurveChart data={data} /> */}
+          <Chart matches={daTa} profileName={profileName} />
         </div>
       </div>
       <div className={styl.bottom}>
-        <CurveLevel data={daTa} playerName={profileName}/>
+        <div className={styl.cirLevel}>
+          {/* <div className={styl.circle}> */}
+            <CircularLevel percentage={userData?.data[0]?.exp_game % 100} color="#660da5" width={250} height={250} />
+        </div>
+        <div className={styl.level_exp}>
+          <CurveLevel data={daTa} playerName={profileName} style={{width: '50%'}}/>
+        </div>
       </div>
     </div>
   );

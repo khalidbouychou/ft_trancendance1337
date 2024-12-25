@@ -17,9 +17,9 @@ const Leaderboard = () => {
         const fetchedData = await response.json();
         console.log("Fetched Data:", fetchedData);
 
-        const sortedData = fetchedData.sort(
-          (a, b) => b.data[0]?.wins - a.data[0]?.wins
-        );
+        const sortedData = fetchedData
+          .filter((data) => data.profile_name !== "ke3ki3a")
+          .sort((a, b) => b.data[0]?.wins - a.data[0]?.wins);
         setData(sortedData);
       } catch (error) {
         console.error("Fetch error:", error);

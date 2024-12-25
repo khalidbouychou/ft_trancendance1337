@@ -1,0 +1,21 @@
+.circular-progress {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: conic-gradient(
+      var(--progress-color, #4caf50) calc(var(--progress, 0) * 1%),
+      var(--background-color, #ddd) 0
+    );
+  }
+  
+  .circular-progress .level-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--label-color, #000);
+  }
+  

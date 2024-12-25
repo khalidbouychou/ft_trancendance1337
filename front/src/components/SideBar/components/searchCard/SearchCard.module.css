@@ -6,6 +6,7 @@
     transition: 0.5s;
     background: none;
     border: none;
+    cursor: pointer;
     &:hover {
         transition: 0.5s;
         background-color: rgba(255, 255, 255, 0.1);

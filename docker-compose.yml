@@ -32,7 +32,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-      start_period: 30s
+      start_period: 3s
 
   back:
     container_name: back
@@ -54,7 +54,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-      start_period: 30s
+      start_period: 3s
     restart: on-failure
 
   front:

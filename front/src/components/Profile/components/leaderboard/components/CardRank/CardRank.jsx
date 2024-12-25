@@ -35,7 +35,7 @@ const CardRank = ({ player, index, handleCardClick }) => {
         <p>{playerData.losses ?? "N/A"}</p>
       </div>
       <div className={styl.lvl}>
-        <p>{playerData.exp_game ?? "N/A"}</p>
+        <p>{Math.floor(playerData.exp_game / 100) ?? "N/A"}</p>
       </div>
     </button>
   );

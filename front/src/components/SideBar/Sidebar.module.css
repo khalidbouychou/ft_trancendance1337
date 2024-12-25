@@ -246,6 +246,7 @@ ul:last-of-type li {
     width: 95%;
     height: 100%;
     position: relative;
+    outline: none;
     input {
         width: 100%;
         height: 100%;
@@ -261,11 +262,11 @@ ul:last-of-type li {
 .searchResult {
     display: flex;
     position: absolute;
-    width: 98%;
-    background-color: #660da5;
+    background-color: rgb(19, 19, 46);
     top: 100%;
     flex-direction: column;
     gap: 10px;
+    left: 10%;
 }
 
 .searchCard {
