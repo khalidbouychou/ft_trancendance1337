@@ -73,7 +73,9 @@ class ChatConsumers(AsyncWebsocketConsumer):
 
     async def handle_search_users(self, data):
         query = data.get('query')
+        print("query", query)
         users = await sync_to_async(self.get_users)(query)
+        print("--users--: ", users)
         await self.send(text_data=json.dumps({'type': 'USERS_LIST', 'users': users}))
 
     async def handle_typing(self, data):
@@ -97,7 +99,8 @@ class ChatConsumers(AsyncWebsocketConsumer):
                 return
 
             chat_room = await sync_to_async(self.get_or_create_chat_room)(user1, user2)
-            chat_room_data = await sync_to_async(ChatRoomSerializer(chat_room).data)
+            chat_room_serializer = ChatRoomSerializer(chat_room)
+            chat_room_data = await sync_to_async(chat_room_serializer.data)
             await self.send(text_data=json.dumps({'type': 'USER_SELECTED', 'chat_room': chat_room_data}))
         except ObjectDoesNotExist:
             await self.send_error_response("User not found.")
@@ -137,11 +140,30 @@ class ChatConsumers(AsyncWebsocketConsumer):
         players = Player.objects.filter(profile_name__icontains=query).exclude(id=self.scope['user'].id)
         return PlayerSerializer(players, many=True).data
 
+    # def get_or_create_chat_room(self, user1, user2):
+    #     chat_room, _ = ChatRoom.objects.get_or_create(
+    #         Q(user1=user1, user2=user2) | Q(user1=user2, user2=user1),
+    #         defaults={'user1': user1, 'user2': user2}
+    #     )
+    #     return chat_room
+
     def get_or_create_chat_room(self, user1, user2):
-        chat_room, _ = ChatRoom.objects.get_or_create(
-            Q(user1=user1, user2=user2) | Q(user1=user2, user2=user1),
-            defaults={'user1': user1, 'user2': user2}
-        )
+        # Define the query filters
+        filters = Q(user1=user1, user2=user2) | Q(user1=user2, user2=user1)
+        
+        # Use `get_or_create` properly
+        try:
+            chat_room, created = ChatRoom.objects.get_or_create(
+                filters,
+                defaults={'user1': user1, 'user2': user2}
+            )
+        except TypeError:
+            # Explicitly filter before calling `get_or_create` due to `filters`
+            chat_room = ChatRoom.objects.filter(filters).first()
+            if not chat_room:
+                chat_room = ChatRoom.objects.create(user1=user1, user2=user2)
+            created = True
+        
         return chat_room
 
     def mark_messages_as_read(self, room_id, user_id):
