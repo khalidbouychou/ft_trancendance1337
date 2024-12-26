@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'login',
     'pongame',
     'matches',
-    'chat',
+    # 'chat',
     'Chat2',
     'notification',
     # 'xo_game'

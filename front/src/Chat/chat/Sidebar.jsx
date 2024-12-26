@@ -49,13 +49,15 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
 		setSortedRooms(filteredAndSortedRooms);
 	}, [data.chat_rooms]);
 
-	const sendSelectUserRequest = async (username) => {
+	const sendSelectUserRequest = async (profile_name) => {
+        console.log("sendSelectUserRequest");
         try {
             const socket = await setupSocket(1);
             socket.send(JSON.stringify({
                 type: 'SELECT_USER',
-                username: username,
+                profile_name: profile_name,
             }));
+            console.log("it was send++++");
         } catch (error) {
             console.error('Error sending SELECT_USER request:', error);
         }
@@ -75,7 +77,7 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
     }
 
 	const handleSelectUser = async (user) => {
-        await sendSelectUserRequest(user.username);
+        await sendSelectUserRequest(user.profile_name);
         setShowResults(false);
     }
 
@@ -98,13 +100,13 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
                         {matchedUsers.map((user, index) => (
                             <div key={index} className="search-result-item" onClick={() => handleSelectUser(user)}>
                                 {user.avatar ? (
-                                    <img src={user.avatar} alt={user.username} className="search-result-avatar" />
+                                    <img src={user.avatar} alt={user.profile_name} className="search-result-avatar" />
                                 ) : (
                                     <div className="search-result-avatar default-avatar">
                                         <FontAwesomeIcon icon={faUser} />
                                     </div>
                                 )}
-                                <span className="search-result-username">{user.username}</span>
+                                <span className="search-result-username">{user.profile_name}</span>
                             </div>
                         ))}
                     </div>

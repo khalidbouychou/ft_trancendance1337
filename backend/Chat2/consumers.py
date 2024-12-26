@@ -6,15 +6,24 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from .models import ChatRoom, Message, Player
 from .serializers import MessageSerializer, PlayerSerializer, ChatRoomSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 
 
-class ChatConsumer(AsyncWebsocketConsumer):
+class ChatConsumers(AsyncWebsocketConsumer):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     async def connect(self):
-        self.room_group_name = f"chat_{self.scope['user'].id}"
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        # Extract room_pk from URL
+        self.room_name = self.scope['url_route']['kwargs']['room_pk']
+        self.room_group_name = f'chat_room_{self.room_name}'
+        self.user = self.scope['user']
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -23,8 +32,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message_type = text_data_json.get('type')
-
+        print("message_type:", message_type)
         try:
+            # profile_name = text_data_json.get('profile_name')
+            # print("Profile_name: ", profile_name)
             if message_type == 'MESSAGE':
                 await self.handle_message(text_data_json)
             elif message_type == 'SEARCH_USERS':
@@ -41,7 +52,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 await self.send_error_response(f"Unknown message type: {message_type}")
         except ObjectDoesNotExist as e:
             print(f"Error: {e}", file=sys.stderr)
-
+ 
     # Message type handlers
 
     async def handle_message(self, data):
@@ -74,8 +85,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'room_id': room_pk
         })
 
-    async def handle_select_user(self, data):
+    async def handle_select_user(self, data): 
         profile_name = data.get('profile_name')
+        print("im at handle_select_user with", profile_name)
         try:
             user1 = await sync_to_async(Player.objects.get)(profile_name=profile_name)
             user2 = self.scope['user']
@@ -159,3 +171,35 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def typing_notification(self, event):
         await self.send(text_data=json.dumps({'type': 'TYPING', 'sender': event['sender'], 'room_id': event['room_id']}))
+
+class UserNotificationConsumer(AsyncWebsocketConsumer):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    async def connect(self): 
+        self.user = self.scope['user']
+        self.user_id = self.user.id
+        self.notification_group_name = f'user_{self.user_id}_notification'
+
+        await self.channel_layer.group_add(
+            self.notification_group_name,
+            self.channel_name
+        )
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.notification_group_name,
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        pass
+
+    async def new_room_notification(self, event):
+        room_data = event['room_data']
+
+        await self.send(text_data=json.dumps({
+            'type': 'NEW_ROOM',
+            'room_data': room_data
+        }))
+    

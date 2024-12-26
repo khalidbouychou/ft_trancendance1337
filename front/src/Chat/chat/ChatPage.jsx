@@ -83,8 +83,11 @@ function ChatPage() {
 	};
 
 	const setupNotificationSocket = () => {
-		const token = localStorage.getItem('token');
-		const socket = new WebSocket(`ws://localhost:8000/ws/notification/?token=${token}`);
+		const socket = new WebSocket(`ws://localhost:8000/ws/notification/`,
+			{
+				withCredentials: true
+			}
+		);
 	
 		socket.onopen = () => {
 			console.log('Connected to notification socket');
@@ -214,8 +217,7 @@ function ChatPage() {
 				return;
 			}
 		
-			const token = localStorage.getItem('token');
-			const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room_id}/?token=${token}`)
+			const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room_id}/`)
 
 			newSocket.onopen = () => {
 				setSockets(prev => ({
@@ -232,6 +234,7 @@ function ChatPage() {
 
 			newSocket.onmessage = (event) => {
 				const data_re = JSON.parse(event.data)
+				console.log("-------data=",data_re)
 				switch (data_re.type) {
 					case 'USERS_LIST':
 						console.log('Received users list:', data_re)
@@ -327,6 +330,7 @@ function ChatPage() {
 	}
 
 	const setupChatRoom = (contact) => {
+		console.log("contact:", contact);
 		setCurrentContact(contact)
 		setRoomId(contact.id)
 		setChat(contact.messages)

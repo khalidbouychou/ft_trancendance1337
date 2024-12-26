@@ -9,7 +9,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register('Player', PlayerViewSet)
 
-urlpatterns = [
+urlpatterns = [ 
     path('', include(router.urls)),
     path('token_status/',PlayerViewSet.as_view({'get': 'token_status'})),
     path('check2fa/',PlayerViewSet.as_view({'post': 'check_2fa'})),
