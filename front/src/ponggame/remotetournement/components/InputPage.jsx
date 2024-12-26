@@ -108,6 +108,7 @@ const MainTournament = () => {
             else if (data.message === 'disconnected') {
                 console.log("one of the players disconnected");
                 setCondition('D');
+                setMatchStart(true);
                 localcondition = 'D';
                 socket.current.close();
                 setMessage("Tournament was canceled because one of the players disconnected");

@@ -872,7 +872,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                 'type': 'tournament_message',
                 'message': data,
             }) 
-        if self.ingame or self.waiting and not self.lost:
+        if (self.ingame or self.waiting) and self.lost == False:
             print(f"{self.name} should disconnect from {self.room_group_name}")
             data = {
                 'message': 'disconnected',
@@ -1302,7 +1302,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'type': 'tournament_message',
                         'message': data1,
                     })
-                    print("we update the board for game 1")
                     data = {
                         'message': 'match_result1',
                         'winner': tournament['player2_alias'],
@@ -1310,6 +1309,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'loser': tournament['player1_alias'],
                         'right_score': self.right_score,
                     }
+                    tournament['player1_instance'].lost = True
                     await self.channel_layer.group_send(
                         tournament['group1'],
                         { 
@@ -1379,7 +1379,8 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'left_score': self.left_score,
                         'loser': tournament['player3_alias'],
                         'right_score': self.right_score,
-                    } 
+                    }
+                    tournament['player3_instance'].lost = True
                     await self.channel_layer.group_send(
                         tournament['group2'],
                         {
@@ -1439,6 +1440,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'loser': tournament['winner1_alias'],
                         'right_score': self.right_score
                     }
+                    tournament['winner1_instance'].lost = True
                     await self.channel_layer.group_send(
                         tournament['group3'],
                         {
@@ -1474,6 +1476,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'loser': tournament['player2_alias'],
                         'right_score': self.right_score,
                     }
+                    tournament['player2_instance'].lost = True
                     await self.channel_layer.group_send(
                         tournament['group1'],
                         {
@@ -1604,6 +1607,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'loser': tournament['winner2_alias'],
                         'right_score': self.right_score
                     }
+                    tournament['winner2_instance'].lost = True
                     await self.channel_layer.group_send(
                         tournament['group3'],
                         {
