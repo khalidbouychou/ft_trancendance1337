@@ -36,11 +36,11 @@ export function NotificationWebSocketProvider({ children }) {
         setProfileSocket(data);
         setNotif(data.notification);
 
-        toast.success("notification socket recieved something", {
-          position: "top-left",
-          autoClose: 1000,
-          closeOnClick: true
-        });
+        // toast.success("notification socket recieved something", {
+        //   position: "top-left",
+        //   autoClose: 1000,
+        //   closeOnClick: true
+        // });
       };
 
       ws.onclose = () => {
@@ -90,7 +90,6 @@ export function NotificationWebSocketProvider({ children }) {
   });
   return (
     <>
-      <ToastContainer />
       <NotifWSContext.Provider value={{ sendMessage, isConnected, notif, profilesocket}}>
         {children}
       </NotifWSContext.Provider>

@@ -43,8 +43,8 @@ const Statistic = ({ userData, profileName }) => {
             }}
           ></div>
           <div className={styl.chartText}>
-            <p>Wins: {winPercentage}%</p>
-            <p>Losses: {lossPercentage}%</p>
+            <p>Wins: {Math.floor(winPercentage)}%</p>
+            <p>Losses: {Math.floor(lossPercentage)}%</p>
           </div>
         </div>
         <div className={styl.CurveChart}>
@@ -53,8 +53,7 @@ const Statistic = ({ userData, profileName }) => {
       </div>
       <div className={styl.bottom}>
         <div className={styl.cirLevel}>
-          {/* <div className={styl.circle}> */}
-            <CircularLevel percentage={userData?.data[0]?.exp_game % 100} color="#660da5" width={250} height={250} />
+          <CircularLevel percentage={userData?.data[0]?.exp_game % 100} color="#660da5" width={250} height={250} />
         </div>
         <div className={styl.level_exp}>
           <CurveLevel data={daTa} playerName={profileName} style={{width: '50%'}}/>

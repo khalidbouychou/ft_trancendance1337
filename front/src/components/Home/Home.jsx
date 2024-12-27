@@ -60,9 +60,6 @@ const Home = () => {
   return (
     <div className={styl.Home}>
       <div className={styl.cont}>
-        {/* <div className={styl.head}>
-          <h2>HOME</h2>
-        </div> */}
         <div className={styl.first}>
           <div className={styl.result}>
             <div className={styl.card}>
@@ -164,12 +161,6 @@ const Home = () => {
           </div>
         </div>
         <div className={styl.last}>
-          {/* <p className={styl.dachHead}>
-            <FaChartArea
-              style={{ width: "30px", height: "30px", color: "gold" }}
-            />{" "}
-            Dashboard
-          </p> */}
           <Statistic userData={userData} profileName={profile_name}/>
         </div>
       </div>

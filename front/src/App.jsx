@@ -25,7 +25,7 @@ import Newpong from "./ponggame/pong3d/newpong.jsx";
 
 function App() {
   return (
-    <AuthProvider>
+
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
           <Routes>
@@ -53,7 +53,6 @@ function App() {
           </Routes>
         </div>
       </div>
-    </AuthProvider>
   );
 }
 

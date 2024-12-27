@@ -46,8 +46,6 @@ const Chart = ({ matches = [], profileName }) => {
         opponentScore = match.left_score;
       }
     }
-    // const isWinner = match.winner_profile_name === profileName;
-    // const isLoser = match.loser_profile_name === profileName;
     return { date: formattedDate, userScore, opponentScore };
   });
 
@@ -92,15 +90,15 @@ const Chart = ({ matches = [], profileName }) => {
       legend: {
         display: true,
         position: 'top',
-        labels : {
+        labels: {
           color: 'white',
-        }
+        },
       },
       tooltip: {
         callbacks: {
           title: (tooltipItems) => {
             const item = tooltipItems[0];
-            return item.label;
+            return item.raw.date; // Use the full date from the raw data
           },
         },
       },
@@ -109,18 +107,13 @@ const Chart = ({ matches = [], profileName }) => {
       x: {
         ticks: {
           display: false,
+          color: 'rgba(255, 255, 255, 0.6)',
         },
         grid: {
-          display: false,
-        },
-        ticks: {
-          color: 'rgba(255, 255, 255, 0.6)', // X-axis ticks color
-        },
-        grid: {
-          color: 'rgba(255, 255, 255, 0.6)', // X-axis grid lines color
+          color: 'rgba(255, 255, 255, 0.6)',
         },
         border: {
-          color: 'rgba(255, 255, 255, 0.6)', // X-axis border color
+          color: 'rgba(255, 255, 255, 0.6)',
         },
       },
       y: {
@@ -130,18 +123,21 @@ const Chart = ({ matches = [], profileName }) => {
           color: 'white',
         },
         min: 0,
+        max: 5,
         ticks: {
-          color: 'rgba(255, 255, 255, 0.6)', // X-axis ticks color
+          stepSize: 1,
+          color: 'rgba(255, 255, 255, 0.6)',
         },
         grid: {
-          color: 'rgba(255, 255, 255, 0.6)', // X-axis grid lines color
+          color: 'rgba(255, 255, 255, 0.6)',
         },
         border: {
-          color: 'rgba(255, 255, 255, 0.6)', // X-axis border color
+          color: 'rgba(255, 255, 255, 0.6)',
         },
       },
     },
   };
+  
   
 
   return <Line data={chartData} options={options} />;

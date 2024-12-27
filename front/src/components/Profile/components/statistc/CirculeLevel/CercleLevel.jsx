@@ -23,7 +23,7 @@ const Text = ({ percentage }) => {
 
 const Circle = ({ color, pct, radius = 90, strokeWidth = 10 }) => {
   const circumference = 2 * Math.PI * radius;
-  const offset = pct ? ((100 - pct) / 100) * circumference : 0;
+  const offset = pct === 0 ? circumference : ((100 - pct) / 100) * circumference;
 
   return (
     <circle

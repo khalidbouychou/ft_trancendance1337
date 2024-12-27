@@ -34,7 +34,7 @@ const ExpChart = ({ data, playerName }) => {
 
       const newExp = prevExp + expChange;
       acc.exp.push(newExp);
-      acc.labels.push(`Match ${index + 1}`);
+      acc.labels.push(`M.${index + 1}`);
       return acc;
     },
     { exp: [], labels: [] }
@@ -62,8 +62,6 @@ const ExpChart = ({ data, playerName }) => {
     plugins: {
       title: {
         display: true,
-        text: `EXP Progression for ${playerName}`,
-        color: 'white',
       },
       legend: {
         display: true,
@@ -116,7 +114,7 @@ const ExpChart = ({ data, playerName }) => {
         border: {
           color: 'rgba(255, 255, 255, 0.6)', // Y-axis border color
         },
-        min: 0,
+        min: 100,
       },
     },
   };

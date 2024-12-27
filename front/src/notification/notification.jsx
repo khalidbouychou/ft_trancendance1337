@@ -10,11 +10,11 @@ const Notification = () => {
 
         socket.onopen = () => {
             console.log('Notification socket connected');
-            toast.success("notification socket is opened", {
-                position: "top-left",
-                autoClose: 1000,
-                closeOnClick: true
-              });
+            // toast.success("notification socket is opened", {
+            //     position: "top-left",
+            //     autoClose: 1000,
+            //     closeOnClick: true
+            //   });
         };
     
         socket.onmessage = (event) => {
