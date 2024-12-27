@@ -107,6 +107,17 @@
 	animation: slideFrame 0.5s ease-in-out forwards, fadeIn 0.5s ease-in-out forwards;
 }
 
+.emptyMatches {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 16px;
+	letter-spacing: 1px;
+	color: white;
+}
+
 @media (max-width: 768px) {
 	.circ {
 		width: 40%;

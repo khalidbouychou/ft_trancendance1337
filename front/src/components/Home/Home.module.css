@@ -22,23 +22,6 @@
     }
 }
 
-.head h2
-{
-	text-align: center;
-    font-size:40px;
-	font-weight:300;
-	letter-spacing:10px;
-    text-transform: uppercase;
-    display: grid;
-    align-items: center;
-    color: white;
-    @media (max-width: 768px) {
-        font-size:30px;
-        font-weight:100;
-        letter-spacing:4px;
-    }
-}
-
 .extFrame {
     width: 80%;
     height: 50px;
@@ -83,6 +66,7 @@
     background-color: #8c266f1a;
     border-radius: 10px;
     border: 1px solid #e10361;
+    /* background-color: #660da5; */
 }
 
 .result {

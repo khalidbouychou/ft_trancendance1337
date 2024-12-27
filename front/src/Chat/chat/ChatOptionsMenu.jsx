@@ -74,12 +74,6 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
       <button className="menu-toggle">⋮</button>
       {isOpen && (
         <ul className="menu-list">
-          {(!isBlocked) && (
-            <li onClick={handleFriendClick}>
-              <FontAwesomeIcon icon={faUserCheck} />
-              {isFriend === 'friends'? "Unfriend" : "Add Friend"}
-            </li>
-          )}
           <li onClick={handleBlockClick}>
             <FontAwesomeIcon icon={isBlocked ? faUserSlash : faUserCheck} />
             {isBlocked ? "Unblock User" : "Block User"}

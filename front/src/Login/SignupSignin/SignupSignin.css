@@ -126,11 +126,11 @@
   }
 
 
-  .message {
+  /* .message {
       background-color: #60186d;
       text-align: center;
       color: #ffffff;
-    }
+    } */
 
     .error {
       background-color: red;

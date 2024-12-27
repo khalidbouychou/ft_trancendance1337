@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styl from "./Profile.module.css";
 import { AuthContext } from "../../UserContext/Context";
 import MatchHistory from "./components/matchHistory/MatchHistory";
@@ -15,10 +15,10 @@ import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { TbLock } from "react-icons/tb";
 import axios from "axios";
 import CardBlocked from "./components/cardBlocked/CardBlocked";
-import { useNotificationWS } from '../../contexts/NotifWSContext'
+import { useNotificationWS } from "../../contexts/NotifWSContext";
 
 const Profile = ({ me }) => {
-  const { profilesocket , sendMessage, isConnected} = useNotificationWS();
+  const { profilesocket, sendMessage, isConnected } = useNotificationWS();
 
   let { profile_name } = useParams();
   const { user } = useContext(AuthContext);
@@ -41,12 +41,10 @@ const Profile = ({ me }) => {
   const [userList, setUserList] = useState("");
   const [tmp, setTmp] = useState("friends");
   const [showUserBlocked, setShowUserBlocked] = useState(false);
-  const [status, setStatus] = useState('Friends');
+  const [status, setStatus] = useState("Friends");
   const [isfriended, setsfriended] = useState(false);
 
   // const [nameBt, setNameBt] = useState('blocked users');
-
-  
 
   const handleBlockClick = () => {
     setShowUserBlocked((prev) => !prev);
@@ -78,23 +76,25 @@ const Profile = ({ me }) => {
       if (!profile_name) return;
       setIsLoading(true);
       setError(null);
-  
+
       try {
         const response = await fetch(
           `http://localhost:8000/api/getuser/${profile_name}/`
         );
         if (!response.ok) {
           throw new Error(
-            response.status === 404 ? "User not found" : "Failed to fetch user data"
+            response.status === 404
+              ? "User not found"
+              : "Failed to fetch user data"
           );
         }
-  
+
         const data = await response.json();
-        for (let i = 0; i < data.friends.length;i++){
-          if (data.friends[i].profile_name === user.user.profile_name){
-            setsfriended(true)
-            setStatus('Friends')
-            break
+        for (let i = 0; i < data.friends.length; i++) {
+          if (data.friends[i].profile_name === user.user.profile_name) {
+            setsfriended(true);
+            setStatus("Friends");
+            break;
           }
         }
         setUserData(data);
@@ -105,18 +105,18 @@ const Profile = ({ me }) => {
           setIsMyProfil(0);
           setDisplayBt("flex");
         }
-  
+
         const pingResponse = await fetch(
           `http://localhost:8000/api/pingdata/${profile_name}/`
         );
         if (!pingResponse.ok) throw new Error("Failed to fetch ping data");
-  
+
         const pingData = await pingResponse.json();
         if (pingData && pingData.length > 0) {
           const { exp_game, wins, losses } = pingData[0];
           const calculatedLevel = Math.floor(exp_game / 100);
           const maxExperience = (calculatedLevel + 1) * 100;
-  
+
           setPingExp(exp_game);
           setMaxPingExp(maxExperience);
           setPingLevel(calculatedLevel);
@@ -126,9 +126,8 @@ const Profile = ({ me }) => {
           setLose(losses);
         } else {
           throw new Error("Ping data is invalid or empty");
-
         }
-  
+
         const userResponse = await axios.get(
           `http://localhost:8000/api/${tmp}/${profile_name}/`,
           { withCredentials: true }
@@ -141,30 +140,29 @@ const Profile = ({ me }) => {
         setIsLoading(false);
       }
     };
-  
+
     fetchData();
-  }, [profile_name, tmp, userData?.status_network]);
-  
+  }, [profile_name, tmp, userData?.status_network, isfriended]);
+
   const onFriendRequest = () => {
-    console.log('Friend Request:', userData?.username);
+    console.log("Friend Request:", userData?.username);
     if (isConnected) {
-      if (!isfriended){
-        console.log('send friend request');
+      if (!isfriended) {
+        console.log("send friend request");
         sendMessage({
-              type: 'SEND_FR',
-              to_user_id: userData?.id
-          });
-      }
-      else{
-        console.log('unfriend');
+          type: "SEND_FR",
+          to_user_id: userData?.id,
+        });
+      } else {
+        console.log("unfriend");
         sendMessage({
-              type: 'UN_FRIEND',
-              to_user_id: userData?.id
-          });
-        setsfriended(false)
+          type: "UN_FRIEND",
+          to_user_id: userData?.id,
+        });
+        setsfriended(false);
       }
     }
-  }
+  };
 
   useEffect(() => {
     setProfileName(profile_name);
@@ -173,20 +171,23 @@ const Profile = ({ me }) => {
   console.log("user list", userList);
 
   useEffect(() => {
-    console.log("-------------->>",profilesocket);
-    console.log("user data ->>>>>", userData)
-    if (profilesocket && profilesocket.type == "NOTIFICATION_ACCEPTED"){
+    console.log("-------------->>", profilesocket);
+    console.log("user data ->>>>>", userData);
+    //error in this ---- userData &&
+    if (profilesocket && profilesocket.type == "NOTIFICATION_ACCEPTED") {
       console.log("profilesocket:", profilesocket.notification);
       console.log("from_user id:", profilesocket.notification.from_user.id);
       console.log("to_user id:", profilesocket.notification.to_user.id);
-      console.log("userData", userData)
-      console.log("current login user id", userData.id)
+      console.log("userData", userData);
+      console.log("current login user id", userData.id);
       // console.log("id", userData.user.id)
-      if (profilesocket.notification.from_user.id == user.user.id && profilesocket.notification.to_user.id == userData.id){
-        setsfriended(true)
+      if (
+        profilesocket.notification.from_user.id == user.user.id &&
+        profilesocket.notification.to_user.id == userData.id
+      ) {
+        setsfriended(true);
       }
     }
-
   }, [profilesocket, userData]);
 
   if (isLoading) {
@@ -196,8 +197,8 @@ const Profile = ({ me }) => {
   if (error) {
     return (
       <div className={styl.error}>
-        <h2>Error</h2>
         <p>{error}</p>
+        <Link to="/"> back to home</Link>
       </div>
     );
   }
@@ -215,9 +216,9 @@ const Profile = ({ me }) => {
               >
                 <MdOutlineFormatListBulleted />
                 <div className={styl.settings} style={{ display: setting }}>
-                  <button className={styl.Button} onClick={(onFriendRequest)}>
+                  <button className={styl.Button} onClick={onFriendRequest}>
                     <IoIosPersonAdd className={styl.icons} />
-                    {isfriended ? <p>Unfriend</p> : <p>Add Friend</p>} 
+                    {isfriended ? <p>Unfriend</p> : <p>Add Friend</p>}
                   </button>
                 </div>
               </button>
@@ -231,7 +232,7 @@ const Profile = ({ me }) => {
                   {/* {userData.profile_name.length > 8
                     ? userData.profile_name.toUpperCase().slice(0, 8) + "."
                     : userData.profile_name.toUpperCase()} */}
-                    {userData.profile_name.toUpperCase()}
+                  {userData.profile_name.toUpperCase()}
                   <p style={{ color: "rgba(255, 255, 255, 0.4)" }}>
                     <div className={styl.ongline}>
                       <div
@@ -239,7 +240,10 @@ const Profile = ({ me }) => {
                         style={{
                           width: "11px",
                           height: "11px",
-                          backgroundColor: userData?.status_network === "online" ? "green" : "red" ,
+                          backgroundColor:
+                            userData?.status_network === "online"
+                              ? "green"
+                              : "red",
                         }}
                       ></div>
                     </div>
@@ -273,8 +277,6 @@ const Profile = ({ me }) => {
                     <div className={styl.Side}>{wins + lose}</div>
                   </div>
                 </div>
-
-
 
                 <div className={styl.level}>
                   <div className={styl.tmp}>

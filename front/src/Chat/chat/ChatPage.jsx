@@ -330,8 +330,9 @@ function ChatPage() {
 	}
 
 	return (
-		<div className="chat-app">
+		// <div className="chat-app">
 				<div className="chat-layout">
+					<div className="container-chat">
 					<Sidebar
 						setupChatRoom={setupChatRoom}
 						setupSocket={setupSocket}
@@ -350,8 +351,9 @@ function ChatPage() {
 						sockets={sockets}
 						typingUser={typingUser}
 						/>
+					</div>
 				</div>
-        </div>
+        // </div>
     );
 }
 

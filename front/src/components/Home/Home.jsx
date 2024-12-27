@@ -56,7 +56,6 @@ const Home = () => {
 
     fetchDataResults();
   }, [profile_name]);
-  console.log('----->>>', filteredPingData)
   return (
     <div className={styl.Home}>
       <div className={styl.cont}>
@@ -67,14 +66,14 @@ const Home = () => {
                 WINS
                 <FaMedal />
               </p>
-              <p id={styl.sm}>{userData?.data[0]?.wins ?? -5}</p>
+              <p id={styl.sm}>{userData?.data[0]?.wins}</p>
             </div>
             <div className={styl.card}>
               <p>
                 LOSE
                 <GiCrossMark />
               </p>
-              <p id={styl.sm}>{userData?.data[0]?.losses ?? -5}</p>
+              <p id={styl.sm}>{userData?.data[0]?.losses}</p>
             </div>
             <div className={styl.card}>
               <p>
@@ -82,7 +81,7 @@ const Home = () => {
                 <PiGameControllerFill />
               </p>
               <p id={styl.sm}>
-                {(userData?.data[0]?.losses + userData?.data[0]?.wins) ?? -5}
+                {userData?.data[0]?.losses + userData?.data[0]?.wins}
               </p>
             </div>
           </div>

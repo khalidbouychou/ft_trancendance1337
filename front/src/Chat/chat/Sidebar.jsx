@@ -88,9 +88,6 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
                     onChange={handleSearch}
 					maxLength={50}
                 />
-                <button type="submit" className="search-button">
-                    Search
-                </button>
 				{showResults && (
                     <div className="search-results">
                         {matchedUsers.map((user, index) => (

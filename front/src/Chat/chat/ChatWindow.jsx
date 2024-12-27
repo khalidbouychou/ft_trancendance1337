@@ -160,7 +160,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                                 placeholder="Type a message"
                                 maxLength={1000}
                             />
-                            <button type="submit">Send</button>
+                            {/* <button type="submit">end</button> */}
                         </form>
                     </div>
                 </>
