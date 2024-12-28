@@ -38,7 +38,8 @@ class UserDataView(APIView):
 
     def get(self, request):
         context = {
-            'user': request.user.username,
+            'username': request.user.username,
+            'profile_name': request.user.profile_name,
             'avatar': request.user.avatar,
             'exp_game': PingData.objects.get(player=request.user).exp_game,
         }

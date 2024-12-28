@@ -32,16 +32,17 @@ class GameStateManager:
             del cls._game_states[room_name]
 
 class GameConsumer(AsyncWebsocketConsumer):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated] 
-    name = ''
+    # authentication_classes = [SessionAuthentication]
+    # permission_classes = [IsAuthenticated] 
+    profile_name = ''
+    username = ''
     avatar = ''
     room_group_name = ''
     ingame = False
     admin = None
-    game = {}
+    players_ingame = []
     queue = {}
-    instances = {}
+    side = 'none'
     game_loop = False 
     game_width = 800
     game_height = 500
@@ -57,66 +58,77 @@ class GameConsumer(AsyncWebsocketConsumer):
     ball_radius = 15
     right_score = 0
     left_score = 0
+    left_player = ''
+    left_player_username = ''
+    right_player = ''
+    right_player_username = ''
     bonus = 0
     ball_speed = 800 / (2 * 60) + bonus
-
-
+ 
     async def connect(self):
-        await self.accept()
-        
-    async def disconnect(self, close_code):
+        if self.scope['user'].is_authenticated:
+            await self.accept()
+            await self.send(text_data=json.dumps({
+                'message': 'You are connected to the Pong server. Send us {"action": "connect", "level": *} to join the queue.'
+            }))
+        else:
+            print("Unauthenticated user:", self.scope['user'])
+            await self.close()
+            return
+        self.profile_name = self.scope['user'].profile_name
+        self.username = self.scope['user'].username
+        if self.profile_name in GameConsumer.queue or self.profile_name in GameConsumer.players_ingame:
+            await self.send(text_data=json.dumps({
+                'message': 'You are already in the queue.'
+            }))
+            await self.close()
+            return
+        self.avatar = self.scope['user'].avatar 
+        GameConsumer.queue[self.username] = {
+            'profile_name': self.profile_name,
+            'username': self.username,
+            'level': 0,
+            'avatar': self.avatar,
+            'channel_name': self.channel_name,
+            'group_name': '',
+            'instance': self,
+        }
+
+    async def disconnect(self, close_code): 
         if self.ingame:
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'game_message',
-                    'message': 'disconnected',
-                }
-            )
+            if self.lost == False:
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'game_message',
+                        'message': 'disconnected',
+                    }
+                )
             self.admin.game_loop = False
             GameStateManager.remove_state(self.room_group_name)
-            self.channel_layer.group_discard(
-                    self.room_group_name,
-                    self.channel_name
-                )
-        if self.name in GameConsumer.queue:
-            del GameConsumer.queue[self.name]
+            await self.channel_layer.group_discard(
+                self.room_group_name,
+                self.channel_name
+            )
+        if self.username in GameConsumer.queue:
+            del GameConsumer.queue[self.username]
 
     async def receive(self, text_data):
-        print('Received:', text_data)
         if not text_data.strip():
             print('Received empty message')
             return
-        
         try:
             data = json.loads(text_data)
         except json.JSONDecodeError:
             print('Received malformed JSON')
             return
-
         action = data.get('action')
-        value = data.get('value', 0)
-
         if action == 'connect':
-            if (data.get('username') in GameConsumer.queue):
-                self.close()
-            GameConsumer.queue[data.get('username')] = {
-                'username': data.get('username'),
-                'level': data.get('level'),
-                'avatar': data.get('avatar'),
-                'channel_name': self.channel_name,
-                'group_name': ''
-            }
-            self.name = data.get('username')
-            self.avatar = data.get('avatar')
-            GameConsumer.instances[self.name] = self
-
-            print("len:", len(GameConsumer.queue)), "username:", data.get('username'), "avatar:", data.get('avatar'); 
+            GameConsumer.queue[self.username]['level'] = data.get('level')
             if len(GameConsumer.queue) >= 2:
                 match_found = False
                 matched_players = []
                 players_list = list(GameConsumer.queue.items())
-                
                 for i, (player1, data1) in enumerate(players_list):
                     for j, (player2, data2) in enumerate(players_list):
                         if i != j:
@@ -127,11 +139,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     if match_found:
                         break
                 if match_found:
-                    self.ingame = True
-                    self.admin = self
-
                     group_name = f'game{matched_players[0]}vs{matched_players[1]}'
-                    print("group_name=",group_name)
                     game_state = {
                         'ballx': 400,
                         'bally': 250,
@@ -139,33 +147,28 @@ class GameConsumer(AsyncWebsocketConsumer):
                         'right_paddle_y': 0,
                         'left_score': 0,
                         'right_score': 0,
-                        'left_player': GameConsumer.queue[matched_players[0]]['username'],
-                        'right_player': GameConsumer.queue[matched_players[1]]['username']
+                        'left_player': GameConsumer.queue[matched_players[0]]['profile_name'],
+                        'right_player': GameConsumer.queue[matched_players[1]]['profile_name']
                     }
                     GameStateManager.set_state(group_name, game_state)
-
-                    self.game[matched_players[0]] = {
-                        'username': GameConsumer.queue[matched_players[0]]['username'],
-                        'avatar': GameConsumer.queue[matched_players[0]]['avatar'],
-                        'level': GameConsumer.queue[matched_players[0]]['level'],
-                        'player_id': 1,
-                    }
-                    self.game[matched_players[1]] = {
-                        'username': GameConsumer.queue[matched_players[1]]['username'],
-                        'avatar': GameConsumer.queue[matched_players[1]]['avatar'],
-                        'level': GameConsumer.queue[matched_players[1]]['level'],
-                        'player_id': 2,
-                    }
-                    if (self.name == matched_players[0]):
-                        myenemy = matched_players[1]
-                    else:
-                        myenemy = matched_players[0]
-                    if myenemy in GameConsumer.instances:
-                        GameConsumer.instances[myenemy].game = self.game
-                        GameConsumer.instances[myenemy].ingame = True
-                        GameConsumer.instances[myenemy].room_group_name = group_name
-                        GameConsumer.instances[myenemy].admin = self
-
+                    GameConsumer.players_ingame.append(GameConsumer.queue[matched_players[0]]['username'])
+                    GameConsumer.players_ingame.append(GameConsumer.queue[matched_players[1]]['username'])
+                    GameConsumer.queue[matched_players[0]]['instance'].admin = self
+                    GameConsumer.queue[matched_players[0]]['instance'].ingame = True
+                    GameConsumer.queue[matched_players[0]]['instance'].side = 'left'
+                    GameConsumer.queue[matched_players[0]]['instance'].left_player = GameConsumer.queue[matched_players[0]]['profile_name']
+                    GameConsumer.queue[matched_players[0]]['instance'].right_player = GameConsumer.queue[matched_players[1]]['profile_name']
+                    GameConsumer.queue[matched_players[0]]['instance'].left_player_username = GameConsumer.queue[matched_players[0]]['username']
+                    GameConsumer.queue[matched_players[0]]['instance'].right_player_username = GameConsumer.queue[matched_players[1]]['username']
+                    GameConsumer.queue[matched_players[0]]['instance'].room_group_name = group_name
+                    GameConsumer.queue[matched_players[1]]['instance'].admin = self
+                    GameConsumer.queue[matched_players[1]]['instance'].ingame = True
+                    GameConsumer.queue[matched_players[1]]['instance'].side = 'right'
+                    GameConsumer.queue[matched_players[1]]['instance'].left_player = GameConsumer.queue[matched_players[0]]['profile_name']
+                    GameConsumer.queue[matched_players[1]]['instance'].right_player = GameConsumer.queue[matched_players[1]]['profile_name']
+                    GameConsumer.queue[matched_players[1]]['instance'].left_player_username = GameConsumer.queue[matched_players[0]]['username']
+                    GameConsumer.queue[matched_players[1]]['instance'].right_player_username = GameConsumer.queue[matched_players[1]]['username']
+                    GameConsumer.queue[matched_players[1]]['instance'].room_group_name = group_name
                     await self.channel_layer.group_add(
                         group_name,
                         GameConsumer.queue[matched_players[0]]['channel_name']
@@ -174,13 +177,12 @@ class GameConsumer(AsyncWebsocketConsumer):
                         group_name,
                         GameConsumer.queue[matched_players[1]]['channel_name']
                     )
-                    self.room_group_name = group_name
                     data = {
                         'message': 'game_started',
-                        'player_id1': matched_players[0],
-                        'player_1_avatar': self.game[matched_players[0]]['avatar'],
-                        'player_id2': matched_players[1],
-                        'player_2_avatar': self.game[matched_players[1]]['avatar'],
+                        'left_player': GameConsumer.queue[matched_players[0]]['profile_name'],
+                        'left_avatar': GameConsumer.queue[matched_players[0]]['avatar'],
+                        'right_player': GameConsumer.queue[matched_players[1]]['profile_name'],
+                        'right_avatar': GameConsumer.queue[matched_players[1]]['avatar'],
                         'group_name': group_name,
                     }
                     await self.channel_layer.group_send(
@@ -192,23 +194,21 @@ class GameConsumer(AsyncWebsocketConsumer):
                     )
                     self.game_loop = True
                     asyncio.create_task(self.run_60_times_per_second())
-
                     for player in matched_players:
                         del GameConsumer.queue[player]
-
         if self.ingame:
-            if action == 'ArrowDown':
+            if action == 'ArrowDown' and self.side == 'right':
                 if self.admin.right_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
-                    self.admin.right_paddleY += value
-            elif action == 'ArrowUp':
+                    self.admin.right_paddleY += 10
+            elif action == 'ArrowUp' and self.side == 'right':
                 if self.admin.right_paddleY >= 10:
-                    self.admin.right_paddleY -= value
-            if action == 's':
+                    self.admin.right_paddleY -= 10
+            if action == 's' and self.side == 'left':
                 if self.admin.left_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
-                    self.admin.left_paddleY += value
-            elif action == 'w':
+                    self.admin.left_paddleY += 10
+            elif action == 'w' and self.side == 'left':
                 if self.admin.left_paddleY >= 10:
-                    self.admin.left_paddleY -= value
+                    self.admin.left_paddleY -= 10
 
     async def pack_data_to_send(self):
         data = {
@@ -222,8 +222,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             'game_width': self.game_width,
             'game_height': self.game_height,
             'ball_radius': 15,
+            'left_player': self.left_player,
+            'right_player': self.right_player
         }
-
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -242,6 +243,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             'left_score': self.left_score,
             'game_width': self.game_width,
             'game_height': self.game_height,
+            'left_player': self.left_player,
+            'right_player': self.right_player
         }
         GameStateManager.set_state(self.room_group_name, packet)
     
@@ -307,12 +310,13 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.right_score += 1
             self.bonus = 0
-            if (self.right_score >= 5):
+            if (self.right_score >= 5000):
                 self.game_loop = False
                 data = {
-                    'winner': '2',
+                    'message': 'game_over',
+                    'winner': self.left_player,
+                    'loser': self.right_player,
                     'left_score': self.left_score,
-                    'loser': '1',
                     'right_score': self.right_score
                 }
                 await self.channel_layer.group_send(
@@ -324,15 +328,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                 )
 
                 GameStateManager.remove_state(self.room_group_name)
-
-                values = list(self.game.values())
-
-                first_element = values[0]
-                second_element = values[1]
-
-                first_player = await sync_to_async(Player.objects.get)(username=first_element['username'])
+                first_player = await sync_to_async(Player.objects.get)(username=self.left_player_username)
                 first_player_data = await sync_to_async(PingData.objects.get)(player=first_player.id)
-                second_player = await sync_to_async(Player.objects.get)(username=second_element['username'])
+                second_player = await sync_to_async(Player.objects.get)(username=self.right_player_username)
                 second_player_data = await sync_to_async(PingData.objects.get)(player=second_player.id)
 
                 first_player_data.losses += 1
@@ -357,8 +355,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                     right_score=self.right_score
                 )
                 await sync_to_async(match.save)()
-
-
+                GameConsumer.players_ingame.remove(self.left_player_username)
+                GameConsumer.players_ingame.remove(self.right_player_username)
         elif self.ballx >= self.game_width - 15:
             self.ballx = 400
             self.bally = 250
@@ -366,12 +364,13 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.balldirectionY = random.uniform(-1, 1)
             self.left_score += 1
             self.bonus = 0
-            if (self.left_score >= 5):
+            if (self.left_score >= 5000):
                 self.game_loop = False
                 data = {
-                    'winner': '1',
+                    'message': 'game_over',
+                    'winner': self.left_player,
+                    'loser': self.right_player,
                     'left_score': self.left_score,
-                    'loser': '2',
                     'right_score': self.right_score
                 }
                 await self.channel_layer.group_send(
@@ -382,15 +381,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                 })
 
                 GameStateManager.remove_state(self.room_group_name)
-
-                values = list(self.game.values())
-
-                first_element = values[0]
-                second_element = values[1]
-                
-                first_player = await sync_to_async(Player.objects.get)(username=first_element['username'])
+                first_player = await sync_to_async(Player.objects.get)(username=self.left_player_username)
                 first_player_data = await sync_to_async(PingData.objects.get)(player=first_player.id)
-                second_player = await sync_to_async(Player.objects.get)(username=second_element['username'])
+                second_player = await sync_to_async(Player.objects.get)(username=self.right_player_username)
                 second_player_data = await sync_to_async(PingData.objects.get)(player=second_player.id)
 
                 first_player_data.wins += 1
@@ -415,7 +408,10 @@ class GameConsumer(AsyncWebsocketConsumer):
                     right_score=self.right_score
                 )
                 await sync_to_async(match.save)()
-        await self.pack_data_to_send()
+                GameConsumer.players_ingame.remove(self.left_player_username)
+                GameConsumer.players_ingame.remove(self.right_player_username)
+        if self.game_loop:
+            await self.pack_data_to_send()
 
  
 class inviteConsumer(AsyncWebsocketConsumer):
@@ -1224,7 +1220,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         'message': data,
                     })
         elif action == 'connect':
-            print("time to enter alias name")
             self.waiting = True
             self.name = data.get('name')
             self.room_group_name = data.get('room')

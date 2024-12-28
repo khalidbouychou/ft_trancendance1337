@@ -22,16 +22,14 @@ export default function OnlineGame() {
     const [username, setUsername] = useState('');
     const [avatar, setAvatar] = useState('');
     const [level, setLevel] = useState(0);
-    const [player_idx, setPlayerId] = useState(0);
     const hasFetchedData = useRef(false);
     const [FetchedData, setFetchedData] = useState(false);
     let socket = null;
 
     const leftup = () => {
-        if (player_idx === 1 && socket && socket.readyState === WebSocket.OPEN) {
+        if (socket && socket.readyState === WebSocket.OPEN) {
             const message = {
                 action: 'w',
-                value: 10,
             };
             socket.send(JSON.stringify(message));
         } else {
@@ -40,10 +38,9 @@ export default function OnlineGame() {
     };
 
     const leftdown = () => {
-        if (player_idx === 1 && socket && socket.readyState === WebSocket.OPEN) {
+        if (socket && socket.readyState === WebSocket.OPEN) {
             const message = {
                 action: 's',
-                value: 10,
             };
             socket.send(JSON.stringify(message));
         } else {
@@ -52,10 +49,9 @@ export default function OnlineGame() {
     };
 
     const rightup = () => {
-        if (player_idx === 2 && socket && socket.readyState === WebSocket.OPEN) {
+        if (socket && socket.readyState === WebSocket.OPEN) {
             const message = {
                 action: 'ArrowUp',
-                value: 10,
             };
             socket.send(JSON.stringify(message));
         } else {
@@ -64,10 +60,9 @@ export default function OnlineGame() {
     };
 
     const rightdown = () => {
-        if (player_idx === 2 && socket && socket.readyState === WebSocket.OPEN) {
+        if (socket && socket.readyState === WebSocket.OPEN) {
             const message = {
                 action: 'ArrowDown',
-                value: 10,
             };
             socket.send(JSON.stringify(message));
         } else {
@@ -83,15 +78,12 @@ export default function OnlineGame() {
             if (response.status === 200) {
                 console.log('response: ', response);
             }
-            console.log('response: ',response.data);
-            console.log('username:', response.data.user);
-            console.log('avatar:', response.data.avatar);
-            console.log('exp_game:', response.data.exp_game);
             if (response.status === 200) {
                 // setUser(response.data);
-                setUsername(response.data.user);
+                console.log(response.data);
+                setUsername(response.data.profile_name);
                 setLeftPlayerAvatar(response.data.avatar); 
-                setLeftPlayerName(response.data.user);
+                setLeftPlayerName(response.data.profile_name);
                 setAvatar(response.data.avatar);
                 setLevel(response.data.exp_game);
             } else {
@@ -118,18 +110,14 @@ export default function OnlineGame() {
         let racketWidth = 0;
         let leftRacketY = 0;
         let rightRacketY = 0;
-        let player_id = 0;
         let myReq;
         if (FetchedData)
             socket = new WebSocket(`ws://localhost:8000/ws/remote-game/`);
-
         if (socket) {
             socket.onopen = () => {
                 if (socket.readyState === WebSocket.OPEN) {
                     const message = {
                         action: 'connect',
-                        username: username,
-                        avatar: avatar,
                         level: level,
                     };
                     socket.send(JSON.stringify(message));
@@ -161,21 +149,17 @@ export default function OnlineGame() {
                 }
                 if (data.message) {
                     if (data.message === 'game_started') {
-                        if (data.player_id1 === username) {
-                            player_id = 1;
-                            setPlayerId(1);
-                            setLeftPlayerName(data.player_id1);
-                            setRightPlayerName(data.player_id2);
-                            setLeftPlayerAvatar(data.player_1_avatar);
-                            setRightPlayerAvatar(data.player_2_avatar);
+                        if (data.left_player === username) {
+                            setLeftPlayerName(data.left_player);
+                            setLeftPlayerAvatar(data.left_avatar);
+                            setRightPlayerName(data.right_player);
+                            setRightPlayerAvatar(data.right_avatar);
                         }
-                        else if (data.player_id2 === username) {
-                            player_id = 2;
-                            setPlayerId(2);
-                            setLeftPlayerName(data.player_id1);
-                            setRightPlayerName(data.player_id2);
-                            setLeftPlayerAvatar(data.player_1_avatar);
-                            setRightPlayerAvatar(data.player_2_avatar);
+                        else if (data.right_player === username) {
+                            setLeftPlayerName(data.left_player);
+                            setLeftPlayerAvatar(data.left_avatar);
+                            setRightPlayerName(data.right_player);
+                            setRightPlayerAvatar(data.right_avatar);
                         }
                         setGameStarted(true);
                     }
@@ -185,15 +169,12 @@ export default function OnlineGame() {
                         setMessage("Opponent left the game");
                     }
                 }
-                if (data.hasOwnProperty('winner')) {
-                    if (data.winner == player_id) {
+                if (data.hasOwnProperty('game_over')) {
+                    if (data.winner == username) {
                         setCondition('W');
                         setMessage("You won the game");
                     }
-                    socket.close();
-                }
-                if (data.hasOwnProperty('loser')) {
-                    if (data.loser == player_id) {
+                    else {
                         setCondition('L');
                         setMessage("You lost the game");
                     }
@@ -238,38 +219,34 @@ export default function OnlineGame() {
         const draw = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (pressedKeys.current.has('w') && player_id === 1) {
+            if (pressedKeys.current.has('w')) {
                 if (socket && socket.readyState === WebSocket.OPEN) {
                     const message = {
                         action: 'w',
-                        value: 10,
                     };
                     socket.send(JSON.stringify(message));
                 }
             }
-            else if (pressedKeys.current.has('s') && player_id === 1) {
+            else if (pressedKeys.current.has('s')) {
                 if (socket && socket.readyState === WebSocket.OPEN) {
                     const message = {
                         action: 's',
-                        value: 10,
                     };
                     socket.send(JSON.stringify(message));
                 }
             }
-            if (pressedKeys.current.has('ArrowUp') && player_id === 2) {
+            if (pressedKeys.current.has('ArrowUp')) {
                 if (socket && socket.readyState === WebSocket.OPEN) {
                     const message = {
                         action: 'ArrowUp',
-                        value: 10,
                     };
                     socket.send(JSON.stringify(message));
                 }
             }
-            else if (pressedKeys.current.has('ArrowDown') && player_id === 2) {
+            else if (pressedKeys.current.has('ArrowDown')) {
                 if (socket && socket.readyState === WebSocket.OPEN) {
                     const message = {
                         action: 'ArrowDown',
-                        value: 10,
                     };
                     socket.send(JSON.stringify(message));
                 }
