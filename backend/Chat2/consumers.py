@@ -99,7 +99,9 @@ class ChatConsumers(AsyncWebsocketConsumer):
                 return
 
             chat_room = await sync_to_async(self.get_or_create_chat_room)(user1, user2)
+            # print("++chat_room++: ", chat_room)
             chat_room_serializer = ChatRoomSerializer(chat_room)
+            # print("++chat_room_serializer++: ", chat_room_serializer)
             chat_room_data = await sync_to_async(chat_room_serializer.data)
             await self.send(text_data=json.dumps({'type': 'USER_SELECTED', 'chat_room': chat_room_data}))
         except ObjectDoesNotExist:

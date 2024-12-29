@@ -72,14 +72,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     }
                 )
             elif message_type == 'SELECT_USER':
-                username = text_data_json.get('username')
+                profile_name = text_data_json.get('profile_name')
                 try:
-                    user1 = await self.get_user_by_username(username)
+                    user1 = await self.get_user_by_profile_name(profile_name)
                     user2 = self.scope['user']
                     if user2 == None or user1 == None:
                         return
                     chat_room = await self.create_or_get_chat_room(user1, user2)
                     chat_room_serializer = await self.get_chat_room_serializer(chat_room)
+                    print("--chat_room_serializer--: ", chat_room_serializer)
                     await self.send(text_data=json.dumps({
                         'type': 'USER_SELECTED',
                         'status': 'OK',
@@ -158,8 +159,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return PlayerSerializer(user).data
     
     @database_sync_to_async
-    def get_user_serializer_by_username(self, username):
-        return PlayerSerializer(Player.objects.get(username=username)).data
+    def get_user_serializer_by_profile_name(self, profile_name):
+        return PlayerSerializer(Player.objects.get(profile_name=profile_name)).data
     
     @database_sync_to_async
     def create_message(self, chat_room, sender, content):
@@ -172,12 +173,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_users(self, query):
-        players = Player.objects.filter(username__icontains=query).exclude(id=self.scope["user"].id)
+        players = Player.objects.filter(profile_name__icontains=query).exclude(id=self.scope["user"].id)
         return PlayerSerializer(players, many=True).data
 
     @database_sync_to_async
-    def get_user_by_username(self, username):
-        player = Player.objects.get(username=username)
+    def get_user_by_profile_name(self, profile_name):
+        player = Player.objects.get(profile_name=profile_name)
         if player == self.scope["user"]:
             return None
         return player
