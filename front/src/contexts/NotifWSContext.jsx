@@ -23,7 +23,6 @@ export function NotificationWebSocketProvider({ children }) {
       ws.onopen = () => {
         if (ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify({ type: 'CONNECTED' }));
-          console.log("Connected to notif WebSocket");
         }
         setSocket(ws);
         setIsConnected(true);
@@ -85,9 +84,9 @@ export function NotificationWebSocketProvider({ children }) {
   }, [socket]);
 
 
-  useEffect(() => {
-    console.log("----------------------------- 1337  ",notif);
-  });
+  // useEffect(() => {
+  //   console.log("----------------------------- 1337  ",notif);
+  // });
   return (
     <>
       <NotifWSContext.Provider value={{ sendMessage, isConnected, notif, profilesocket}}>

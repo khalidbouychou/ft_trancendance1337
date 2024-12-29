@@ -57,8 +57,6 @@ const Sidebar = () => {
     return () => clearTimeout(debounceFetch);
   }, [searchQuery, user]);
 
-  console.log("profile_name =|= ", searchResults);
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -74,7 +72,7 @@ const Sidebar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  
   const handleKeyPress = (event) => {
     if (event.key === "Enter" && searchResults.length > 0) {
       navigate(`/profile/${searchResults[0].profile_name}`);

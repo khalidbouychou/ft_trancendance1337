@@ -22,7 +22,7 @@ const Profile = ({ me }) => {
 
   let { profile_name } = useParams();
   const { user } = useContext(AuthContext);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({});
   const [error, setError] = useState(null);
   const [ismyprofil, setIsMyProfil] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,9 +42,13 @@ const Profile = ({ me }) => {
   const [tmp, setTmp] = useState("friends");
   const [showUserBlocked, setShowUserBlocked] = useState(false);
   const [status, setStatus] = useState("Friends");
-  const [isfriended, setsfriended] = useState(false);
+  const [isfriended, setIsfriended] = useState(false);
 
   // const [nameBt, setNameBt] = useState('blocked users');
+
+useEffect(() => {
+  console.log('anaaa', isfriended)
+},)
 
   const handleBlockClick = () => {
     setShowUserBlocked((prev) => !prev);
@@ -65,130 +69,137 @@ const Profile = ({ me }) => {
     setBlockedOpen(blockedOpen === "none" ? "flex" : "none");
   };
 
-  console.log("check prf == ", profileName);
-
   useEffect(() => {
     setProfileName(profile_name);
-  }, [profile_name]);
+  }, [profile_name, isfriended]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!profile_name) return;
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(
-          `http://localhost:8000/api/getuser/${profile_name}/`
+  
+  const fetchData = async () => {
+    if (!profile_name) return;
+  
+    setIsLoading(true);
+    setError(null);
+  
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/getuser/${profile_name}/`
+      );
+      if (!response.ok) {
+        throw new Error(
+          response.status === 404
+            ? "User not found"
+            : "Failed to fetch user data"
         );
-        if (!response.ok) {
-          throw new Error(
-            response.status === 404
-              ? "User not found"
-              : "Failed to fetch user data"
-          );
-        }
-
-        const data = await response.json();
-        for (let i = 0; i < data.friends.length; i++) {
-          if (data.friends[i].profile_name === user.user.profile_name) {
-            setsfriended(true);
-            setStatus("Friends");
-            break;
-          }
-        }
-        setUserData(data);
-        if (data.profile_name === user?.user?.profile_name) {
-          setIsMyProfil(1);
-          setDisplayBt("none");
-        } else {
-          setIsMyProfil(0);
-          setDisplayBt("flex");
-        }
-
-        const pingResponse = await fetch(
-          `http://localhost:8000/api/pingdata/${profile_name}/`
-        );
-        if (!pingResponse.ok) throw new Error("Failed to fetch ping data");
-
-        const pingData = await pingResponse.json();
-        if (pingData && pingData.length > 0) {
-          const { exp_game, wins, losses } = pingData[0];
-          const calculatedLevel = Math.floor(exp_game / 100);
-          const maxExperience = (calculatedLevel + 1) * 100;
-
-          setPingExp(exp_game);
-          setMaxPingExp(maxExperience);
-          setPingLevel(calculatedLevel);
-          setNextPingLevel(calculatedLevel + 1);
-          setPingPercentage(exp_game % 100);
-          setWins(wins);
-          setLose(losses);
-        } else {
-          throw new Error("Ping data is invalid or empty");
-        }
-
-        const userResponse = await axios.get(
-          `http://localhost:8000/api/${tmp}/${profile_name}/`,
-          { withCredentials: true }
-        );
-        // userResponse
-        setUserList(userResponse.data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
       }
-    };
+  
+      const data = await response.json();
+      setUserData(data);
 
+      const isFriend = data.friends.some(
+        (friend) => friend.profile_name === user?.user?.profile_name
+      );
+      // setIsfriended(isFriend);
+      if (data.profile_name === user?.user?.profile_name) {
+        setIsMyProfil(1);
+        setDisplayBt("none");
+      } else {
+        setIsMyProfil(0);
+        setDisplayBt("flex");
+      }
+  
+      const pingResponse = await fetch(
+        `http://localhost:8000/api/pingdata/${profile_name}/`
+      );
+      if (!pingResponse.ok) throw new Error("Failed to fetch ping data");
+  
+      const pingData = await pingResponse.json();
+      if (pingData.length > 0) {
+        const { exp_game, wins, losses } = pingData[0];
+        const calculatedLevel = Math.floor(exp_game / 100);
+        const maxExperience = (calculatedLevel + 1) * 100;
+  
+        setPingExp(exp_game);
+        setMaxPingExp(maxExperience);
+        setPingLevel(calculatedLevel);
+        setNextPingLevel(calculatedLevel + 1);
+        setPingPercentage(exp_game % 100);
+        setWins(wins);
+        setLose(losses);
+      }
+  
+      const userResponse = await axios.get(
+        `http://localhost:8000/api/${tmp}/${profile_name}/`,
+        { withCredentials: true }
+      );
+      setUserList(userResponse.data);
+    } catch (error) {
+      setError(error.message);
+      setUserData({});
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    setShowUserBlocked(false);
+    setActiveSection("Leaderboard");
     fetchData();
-  }, [profile_name, tmp, userData?.status_network, isfriended]);
+  }, [profile_name, tmp]);
 
-  const onFriendRequest = () => {
-    console.log("Friend Request:", userData?.username);
+  const onFriendRequest = async () => {
     if (isConnected) {
       if (!isfriended) {
-        console.log("send friend request");
         sendMessage({
           type: "SEND_FR",
           to_user_id: userData?.id,
         });
       } else {
-        console.log("unfriend");
         sendMessage({
           type: "UN_FRIEND",
           to_user_id: userData?.id,
         });
-        setsfriended(false);
+  
+        // try {
+        //   await new Promise((resolve) => setTimeout(resolve, 500));
+        //   setIsfriended(false);
+        // } catch (error) {
+        // }
       }
     }
   };
+  
 
   useEffect(() => {
     setProfileName(profile_name);
   }, [profile_name]);
 
-  console.log("user list", userList);
-
   useEffect(() => {
-    console.log("-------------->>", profilesocket);
-    console.log("user data ->>>>>", userData);
-    //error in this ---- userData &&
-    if (profilesocket && profilesocket.type == "NOTIFICATION_ACCEPTED") {
-      console.log("profilesocket:", profilesocket.notification);
-      console.log("from_user id:", profilesocket.notification.from_user.id);
-      console.log("to_user id:", profilesocket.notification.to_user.id);
-      console.log("userData", userData);
-      console.log("current login user id", userData.id);
-      // console.log("id", userData.user.id)
-      if (
-        profilesocket.notification.from_user.id == user.user.id &&
-        profilesocket.notification.to_user.id == userData.id
-      ) {
-        setsfriended(true);
-      }
+
+    console.log("+++++++++++++++++++++ type socket " ,profilesocket)
+    console.log("+++++++++++++++++++++ friend " ,isfriended)
+    console.log("+++++++++++++++++++++ userdata " ,userData.username)
+    if (
+      profilesocket?.type === "NOTIFICATION_ACCEPTED" &&
+      userData &&
+      profilesocket.notification.from_user.id === user?.user?.id &&
+      profilesocket.notification.to_user.id === userData?.id
+    ) {
+      setIsfriended(true)
     }
-  }, [profilesocket, userData]);
+    setIsfriended (false);
+  },[isfriended]);
+
+  // if (profile_name !== user?.user?.profile_name) {
+  //   // console.log("list friend == ", userList);
+  
+  //   const friendList = userList['friend list']; // Access the friend list
+  //   if (Array.isArray(friendList)) {
+  //     setIsfriended(friendList.includes(profile_name)); // Check if the profile name is in the list
+  //     // console.log("Is this profile my friend?", isFriend);
+  //   } else {
+  //     console.log("Friend list is not an array or is undefined");
+  //   }
+  // }
 
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
