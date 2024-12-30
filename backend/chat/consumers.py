@@ -12,7 +12,10 @@ from login.serializers import PlayerSerializer
 import sys
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
- 
+from rest_framework.views import APIView
+
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated]) 
 class ChatConsumer(AsyncWebsocketConsumer):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
