@@ -83,11 +83,7 @@ function ChatPage() {
 	};
 
 	const setupNotificationSocket = () => {
-		const socket = new WebSocket(`ws://localhost:8000/ws/notification/`,
-			{
-				withCredentials: true
-			}
-		);
+		const socket = new WebSocket(`ws://localhost:8000/ws/notification/`);
 	
 		socket.onopen = () => {
 			console.log('Connected to notification socket');
@@ -208,6 +204,7 @@ function ChatPage() {
 	}
 
 	const setupSocket = (room_id) => {
+		console.log(`Setting up WebSocket for room: ${room_id}`);
 		return new Promise((resolve, reject) => {
 			if (!room_id) {
 				return reject(new Error('No room ID provided'));
@@ -231,10 +228,9 @@ function ChatPage() {
 				console.error('WebSocket error:', error);
 				reject(error);
 			}
-
+			// reda add unfriend at saturday 10:43pm and i need to add the case where i send unfriend request here to update the data for the client in real time
 			newSocket.onmessage = (event) => {
 				const data_re = JSON.parse(event.data)
-				console.log("-------data=",data_re)
 				switch (data_re.type) {
 					case 'USERS_LIST':
 						console.log('Received users list:', data_re)
@@ -279,7 +275,6 @@ function ChatPage() {
 								}
 							}));
 						}
-						break
 					default:
 						console.log('Unknown message type:', data_re.type)
 						break
@@ -308,15 +303,19 @@ function ChatPage() {
 		console.log('roomId:', roomId)
 		console.log('Current contact id:', currentContact.id)
 		if (message) {
-			sockets[roomId].send(JSON.stringify({
-				type: 'MESSAGE',
-				room_id: roomId,
-				sender: data.user.id,
-				content: message,
-			}))
-			setMessage('')
+			if (sockets[roomId] && sockets[roomId].readyState === WebSocket.OPEN) {
+				sockets[roomId].send(JSON.stringify({
+					type: 'MESSAGE',
+					room_id: roomId,
+					sender: data.user.id,
+					content: message,
+				}));
+				setMessage('');
+			} else {
+				console.warn('Cannot send message, WebSocket not ready.');
+			}
 		}
-	}
+	};
 
 	const handleTyping = (e) => {
 		setMessage(e.target.value)
@@ -329,11 +328,12 @@ function ChatPage() {
 		}
 	}
 
-	const setupChatRoom = (contact) => {
-		console.log("contact:", contact);
+	const setupChatRoom = async (contact) => {
 		setCurrentContact(contact)
 		setRoomId(contact.id)
 		setChat(contact.messages)
+
+		await setupSocket(contact.id);
 	}
 
 	return (

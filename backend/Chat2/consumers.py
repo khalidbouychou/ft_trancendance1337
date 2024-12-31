@@ -56,18 +56,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.send_error(f'An error occurred: {str(e)}')
 
     async def handle_mark_as_read(self, data):
-        try:
+        # try:
             room_id = data.get('room_id')
 
             await self.mark_messages_as_read(room_id, self.user.id)
-        except Exception as e:
-            await self.send_error(f'Failed to mark messages as read: {str(e)}')
+        # except Exception as e:
+        #     await self.send_error(f'Failed to mark messages as read: {str(e)}')
 
     async def handle_message(self, data):
-        try:
+        # try:
             room_pk = data.get('room_id')
             content = data.get('content')
-            if not content or not content.strip():
+            if not content:
                 await self.send_error('Message content cannot be empty')
                 return
 
@@ -85,17 +85,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'message': message_data
                 }
             )
-        except Exception as e:
-            await self.send_error(f'Failed to send message: {str(e)}')
+        # except Exception as e:
+        #     await self.send_error(f'Failed to send message: {str(e)}')
 
     async def handle_search_users(self, data):
-        query = data.get('query', '').strip()
-        if not query:
-            await self.send_json({
-                'type': 'USERS_LIST',
-                'users': []
-            })
-            return
+        query = data.get('query')
+
 
         users = await self.search_users(query)
         await self.send_json({
@@ -152,7 +147,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def create_message(self, room_id, sender_id, content):
-        try:
+        # try:
             room = ChatRoom.objects.get(id=room_id)
             sender = Player.objects.get(id=sender_id)
             receiver = room.get_other_user(sender)
@@ -165,8 +160,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 sender=sender,
                 content=content
             )
-        except (ChatRoom.DoesNotExist, Player.DoesNotExist):
-            return None
+        # except (ChatRoom.DoesNotExist, Player.DoesNotExist):
+        #     return None
 
     @database_sync_to_async
     def search_users(self, query):
