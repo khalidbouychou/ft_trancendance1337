@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./SignupSignin.css";
 import Signup from "./Signup";
 import Signin from "./Signin";
 import { useTranslation } from "react-i18next";
+import { AuthContext } from "../../UserContext/Context";
 export default function LoginSignup() {
   const [isLogin, setIsLogin] = useState(true);
+  const { t } = useContext(AuthContext);
 
   return (
         <>
@@ -17,13 +19,13 @@ export default function LoginSignup() {
             className={`switch-option ${isLogin ? "active" : ""}`}
             onClick={() => setIsLogin(true)}
             >
-            Login
+            {t("Login")}
           </button>
           <button
             className={`switch-option ${!isLogin ? "active" : ""}`}
             onClick={() => setIsLogin(false)}
             >
-            Sign Up
+            {t("Sign Up")}
           </button>
         </div>
 

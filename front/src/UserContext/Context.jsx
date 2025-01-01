@@ -1,9 +1,9 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import i18n from "../i18n";
 import { toast } from "react-toastify";
-
+import { useTranslation } from "react-i18next";
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
@@ -12,7 +12,12 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const [loggedIntra, setLoggedIntra] = useState(false);
+  const {t} = useTranslation();
+
+  useEffect(() => {
+    i18n.changeLanguage(localStorage.getItem('lang') || 'en')
+  }
+  , [localStorage.getItem('lang')])
 
   async function auth_intra42() {
     const response = await axios.get("https://localhost/api/auth_intra/", {
@@ -124,14 +129,12 @@ export default function AuthProvider({ children }) {
       value={{
         loading,
         user,
-        url,
         Logout,
         setUser,
         Login,
         auth_intra42,
         get_auth_user,
-        setLoggedIntra,
-        loggedIntra
+        t
       }}
     >
       {children}

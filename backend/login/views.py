@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 import requests
 from django.contrib.auth.models import User
-from .serializers import PlayerSerializer , SignupSerializer ,SigninSerializer , PingDataSerializer
-from .models import Player as Player , PingData
+from .serializers import *
+from .models import *
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken ,TokenError
 from django.http import JsonResponse
@@ -31,6 +31,15 @@ from django.db.models import Sum
 
 def health_check(request):
     return HttpResponse("OK", status=200)
+
+def DeleteCookies(response: Response) -> Response:
+    response.delete_cookie('csrftoken')
+    response.delete_cookie('token')
+    response.delete_cookie('refresh')
+    response.delete_cookie('sessionid')
+
+    return response
+
 #---------------------------------CHECK HEALTH OF THE BACKEND-----------------------------------------------------------
 
 #------------------------------------LOGIN INTRA------------------------------------------------------------
@@ -88,6 +97,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
         CID = os.environ.get('C_ID')
         print('CID ==>', CID, flush=True)
         REDIRECT_URI = os.environ.get('REDIRECT_URI')
+        print('REDIRECT_URI ==>', REDIRECT_URI, flush=True)
         try:
             response = Response(
                 {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
@@ -196,12 +206,8 @@ class LogoutView(APIView):
             user.status_network = 'offline'
             user.save()
             django_logout(request)
-            response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK) 
-            response.delete_cookie('token')
-            response.delete_cookie('refresh')
-            response.delete_cookie('sessionid')
-            response.delete_cookie('csrftoken')
-            return response
+            response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK)
+            return DeleteCookies(response)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -218,11 +224,7 @@ class AuthUser(APIView):
             if not token or token == 'null':
                 response = Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
                 django_logout(request)
-                response.delete_cookie('token')
-                response.delete_cookie('refresh')
-                response.delete_cookie('sessionid')
-                response.delete_cookie('csrftoken')
-                return response
+                return DeleteCookies(response)
 
             try:
                 AccessToken(token) # Check if the token is valid
@@ -265,7 +267,7 @@ class SigninForm(generics.CreateAPIView):
             getuser = Player.objects.filter(username=username)
             getuser = authenticate(username=username, password=password)
             if not getuser:
-                return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': f'No user found with {username}'}, status=status.HTTP_400_BAD_REQUEST)
             login(request, getuser)
             getuser.bool_login = True
             getuser.status_network = 'online'
@@ -274,11 +276,11 @@ class SigninForm(generics.CreateAPIView):
             access = str(refresh.access_token)
             # Check if the request is secure (HTTPS)
             is_secure = request.is_secure()
-            response = Response(status=status.HTTP_200_OK) 
+            response = Response({'msg': f'Welcome -- {username}'}, status=status.HTTP_200_OK)
             response.set_cookie(key='token', value=access , secure=is_secure, httponly=True ,samesite='Lax')
             response.set_cookie(key='refresh', value=refresh , secure=is_secure, httponly=True ,samesite='Lax')
             response.data = {
-                'user' : SigninSerializer(getuser).data,
+                'user' : PlayerSerializer(getuser).data,
                 'token': access,
             }               
             return response
@@ -301,10 +303,10 @@ class UserStatus(APIView):
 
 # Configuration       
 cloudinary.config( 
-    cloud_name = "dkfrrfxa1", 
-    api_key = "575644558498264", 
-    api_secret = "tIbvrejZjv7e2M6WVMTRcL0ZDYw", # Click 'View API Keys' above to copy your API secret
-    secure=True
+    cloud_name = os.environ.get('CLOUD_NAME'),
+    api_key = os.environ.get('API_KEY'),
+    api_secret = os.environ.get('API_SECRET'),
+    secure=os.environ.get('SECURE'),
 )
 
 class GenerateQRcode(APIView):
@@ -420,6 +422,47 @@ class UpdateProfile (APIView):
             user.save()
         return Response({'msg': 'Profile updated' , "new data" : PlayerSerializer(user).data}, status=status.HTTP_200_OK)
 #-----------------------------------2FA-------------------------------------------------------------
+#-----------------------------------AnnonimizedAccount-------------------------------------------------------------
+class AnonymizeAccount(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        user.is_active = False
+        user.is_anonimized = True
+        id = random.randint(1, 1000000)
+        user.profile_name = f'Anonimized_{id}'
+        user.avatar = 'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Aneka'
+        user.status_network = 'offline'
+        user.status_game = 'offline'
+        user.save()
+        anonymizeaccount = AnonymizedAccount.objects.create(player=user)
+        if not anonymizeaccount:
+            return Response({'error': 'Anonymized account not created'}, status=status.HTTP_400_BAD_REQUEST)
+        anonymizeaccount.save()
+        response = Response({'msg': '************** Account anonymized ***************'}, status=status.HTTP_200_OK)
+        return DeleteCookies(response)
+#-----------------------------------AnnonimizedAccount-------------------------------------------------------------
+#-----------------------------------DeleteAccount-------------------------------------------------------------
+class DeleteAccount(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        user = request.user
+        user.delete()
+        response = Response({'msg': '----------------- Account deleted --------------'}, status=status.HTTP_200_OK)
+        return DeleteCookies(response)
+#-----------------------------------DeleteAccount-------------------------------------------------------------
+#-----------------------------------List AnonymizeAccount -------------------------------------------------------------
+class ListAnonymizeAccount(APIView):
+    # authentication_classes = [SessionAuthentication]
+    # permission_classes = [IsAuthenticated]
+    def get(self,request):
+        anonymizeaccount = AnonymizedAccount.objects.all()
+        data = AnonymizedAccountSerializer(anonymizeaccount, many=True)
+        return Response(data.data, status=status.HTTP_200_OK)
+#-----------------------------------List AnonymizeAccount -------------------------------------------------------------
 
 def get_ping_data_by_profile_name(request, profile_name):
     Player = get_user_model()

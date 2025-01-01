@@ -149,6 +149,8 @@
   background-color: #470059;
   color: #ffffff;
   width: 470px;
+  /* height: 500px; */
+  padding: 15px;
   border: none;
 }
 

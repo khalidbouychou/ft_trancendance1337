@@ -14,7 +14,7 @@ import { CiSettings, CiLogout } from "react-icons/ci";
 import i18n from "../../i18n";
 
 const Sidebar = () => {
-  const { user, Logout } = useContext(AuthContext);
+  const { t,user ,Logout} = useContext(AuthContext);
   const navigate = useNavigate();
   const searchRef = useRef(null);
   const notifRef = useRef(null);
@@ -22,19 +22,32 @@ const Sidebar = () => {
 
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [openNotf, setOpenNotf] = useState('none');
-  const [openSet, setOpenSet] = useState('none');
-  const [gameColor, setGameColor] = useState('white');
-  const [chatColor, setChatColor] = useState('white');
-  const [profileColor, setProfileColor] = useState('yellow');
-  const [menu, setMenu] = useState(false);
+  const[openNotf, setOpenNotf] = useState('none');
+  const[openSet, setOpenSet] = useState('none');
+  const [gameColor, setGameColor] = useState('white')
+  const [chatColor, setChatColor] = useState('white')
+  const [profileColor, setProfileColor] = useState('yellow')
+  const [menu, setMenu] = useState(false)
 
-  // Translation functions
-  const French = () => i18n.changeLanguage("fr");
-  const English = () => i18n.changeLanguage("en");
-  const Italian = () => i18n.changeLanguage("it");
 
-  const handelNotifOpen = () => setOpenNotf(openNotf === "none" ? "flex" : "none");
+
+  //------------Translation----------------
+  const French = () => {
+    localStorage.setItem("lang", "fr");
+    i18n.changeLanguage(localStorage.getItem("lang"));
+  }
+  const English = () => {
+      localStorage.setItem("lang", "en");
+      i18n.changeLanguage(localStorage.getItem("lang"));
+  }
+  const Italian = () => {
+    localStorage.setItem("lang", "it");
+    i18n.changeLanguage(localStorage.getItem("lang"));
+  }
+  //------------Translation----------------
+  const handelNotifOpen = () => {
+    setOpenNotf(openNotf === "none" ? "flex" : "none");
+  }
 
   const handlGameColor = () => {
     setProfileColor("white");
@@ -118,41 +131,29 @@ const Sidebar = () => {
         <div className={styl.iconSearch}>
           <FaSearchengin style={{ width: "50%", height: "50%" }} />
         </div>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
-          className={styl.inputSearch}
-        />
-        <div className={styl.searchResult}>
-          {searchResults.slice(0, 5).map((user) => (
-            <SearchCard key={user.id} user={user} />
-          ))}
+        <div className={styl.inputSearch}>
+          <input
+            type="text"
+            placeholder={t("Search...")}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+          <div className={styl.searchResult}>
+              {searchResults.slice(0, 5).map((user) => (
+                <SearchCard key={user.id} user={user} />
+              ))}
+          </div>
         </div>
       </div>
-      <div className={styl.components}>
-        <Link to="/home" onClick={() => setActiveTab("home")}>
-          <button style={{ color: buttonColors.home }}>Home</button>
-        </Link>
-        <Link to={`/profile/${user?.user?.profile_name}`} onClick={() => setActiveTab("profile")}>
-          <button style={{ color: buttonColors.profile }}>Profile</button>
-        </Link>
-        <Link to="/lang">
-          <button style={{ color: buttonColors.profile }}>Lang</button>
-        </Link>
-        <Link to="/network">
-          <button style={{ color: profileColor }}>User Status</button>
-        </Link>
-        <Link to={'/pingpong-games'} onClick={() => setActiveTab("game")}>
-          <button style={{ color: buttonColors.game }}>Game</button>
-        </Link>
-        <Link to={'/chat'} onClick={() => setActiveTab("chat")}>
-          <button style={{ color: buttonColors.chat }}>Chat</button>
-        </Link>
-      </div>
-      <hr />
+        <div className={styl.components}>
+        <Link to={`/profile/${user?.user?.profile_name}`} onClick={handlProfileColor}><button style={{color: profileColor}}>Profile</button></Link>
+        <Link to={`/anonymized`} onClick={handlProfileColor}><button style={{color: profileColor}}>List Anonymized</button></Link>
+        <Link to="/lang"><button style={{color: profileColor}}>Lang</button></Link>
+        <Link to="/network"><button style={{color: profileColor}}>User Status</button></Link>
+        <Link to={'/pingpong-games'} onClick={handlGameColor}><button style={{color: gameColor}}>Game</button></Link>
+        <Link to={'/chat'} onClick={handlChatColor}><button style={{color: chatColor}}>Chat</button></Link>
+        </div>
+        <hr />
       <div className={styl.end}>
         <button className={styl.notifIcon} onClick={toggleNotif} ref={notifRef}>
           <MdNotifications id={styl.listicon} />
@@ -177,23 +178,35 @@ const Sidebar = () => {
           </div>
         )}
         <div className={styl.sett}>
-          <button className={styl.intImg} onClick={() => setMenu(true)} ref={settRef}>
-            <div className={styl.extImg}>
-              <img src={user?.user?.avatar} alt="User Avatar" />
-            </div>
+          <button className={styl.intImg}
+          onClick={()=>
+            {setMenu(true)}
+          }
+          ref={settRef}
+          >
+              <div className={styl.extImg}>
+              <img src={user?.user?.avatar}/>
+              </div>
           </button>
-          {menu && (
-            <div id='menu' className={styl.settings}>
-              <div className={styl.links} onClick={() => navigate('/setting')}>
-                <CiSettings style={{ width: '20px', height: '20px' }} />
-                settings
-              </div>
-              <div onClick={Logout} className={styl.links}>
-                <CiLogout style={{ width: '20px', height: '20px' }} />
-                logout
-              </div>
+          {menu &&
+          <div id='menu' className={styl.settings}>
+            <div className="links-container">
+            <div className={styl.links} onClick={
+              ()=> {
+                // setMenu(false)
+                navigate('/setting')
+              }
+            }>
+              <CiSettings style={{width: '20px', height: '20px'}}/> 
+              {t("Setting")}
             </div>
-          )}
+            <div onClick={Logout} className={styl.links}>
+              <CiLogout style={{width: '20px', height: '20px'}} />
+              {t("Logout")}
+            </div>
+          </div>
+            </div>
+          }
         </div>
       </div>
     </div>

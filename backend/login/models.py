@@ -1,3 +1,4 @@
+from typing import Any
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -16,7 +17,7 @@ class Player(AbstractUser):
     )
     username = models.CharField(max_length=255, default='default_username', unique=True, blank=False)
     profile_name = models.CharField(max_length=200, default='default_username')
-    avatar = models.URLField(max_length=200, default='https://upload.wikimedia.org/wikipedia/commons/1/1e/Default-avatar.jpg')
+    avatar = models.URLField(max_length=200, default='https://i.pinimg.com/originals/5d/b5/b4/5db5b469edf32bb41f002482b784b894.png')
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
     status_game = models.CharField(max_length=10, choices=GAME_STATUS, default='offline')
     two_factor = models.BooleanField(default=False)
@@ -27,6 +28,7 @@ class Player(AbstractUser):
     qrcode_path = models.CharField(max_length=255, default='', blank=False, null=False) 
     bool_login = models.BooleanField(default=False)
     mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False)
+    is_anonimized = models.BooleanField(default=False)
     
     class Meta: 
         db_table = 'player' 

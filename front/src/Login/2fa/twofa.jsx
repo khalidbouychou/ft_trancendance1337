@@ -10,7 +10,7 @@ import BounceLoader from "react-spinners/BounceLoader";
 const Twofa = () => {
   const [twofa, setTwofa] = useState(false);
   const [qrcode, setQrcode] = useState("");
-  const { user, get_auth_user ,setUser } = useContext(AuthContext);
+  const { t,user, get_auth_user ,setUser } = useContext(AuthContext);
   const [isEnable, setEnable] = useState("Off");
   const [verified, setVerified] = useState(false);
 
@@ -53,7 +53,7 @@ useEffect(() => {
 
 }, [isEnable])
   const handleSwitch = async (e) => {
-    const isOn = e.target.value === "On";
+    const isOn = e.target.value === t("On");
     setEnable(isOn);
     const url = isOn && QR_CODE_URL;
 
@@ -118,7 +118,7 @@ useEffect(() => {
       );
       if (res.status === 200) {
         setVerified(true);
-        toast.success("2FA verified", {
+        toast.success(t("2FA verified"), {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
             color: 'white'
@@ -126,7 +126,7 @@ useEffect(() => {
         });
       }
     } catch (error) {
-      toast.error("OTP code is not correct", {
+      toast.error(t("OTP code is not correct"), {
         style: {
           backgroundColor: 'rgb(255, 0, 0)',
           color: 'white'
@@ -141,23 +141,23 @@ useEffect(() => {
         <div className="qrcode-container">
           <div className="switch-container">
             <div className="on">
-              <label htmlFor="qrcode-on">ON</label>
+              <label htmlFor="qrcode-on">{t("ON")}</label>
               <input
                 type="radio"
                 id="qrcode-on"
                 name="qrcode"
-                value="On"
+                value={t("On")}
                 checked={isEnable}
                 onClick={handleSwitch}
               />
             </div>
             <div className="off">
-              <label htmlFor="qrcode-off">OFF</label>
+              <label htmlFor="qrcode-off">{t("OFF")}</label>
               <input
                 type="radio"
                 id="qrcode-off"
                 name="qrcode"
-                value="Off"
+                value={t("Off")}
                 onClick={handleSwitch}
                 checked={!isEnable}
               />
@@ -169,15 +169,15 @@ useEffect(() => {
               setVerified={setVerified}
               setEnable={setEnable}
               isEnable={twofa}
-              message="If you want to desable 2fa entre OTP code"
+              message={t("If you want to desable 2fa entre OTP code")}
             />
           ) : (
             <>
               {verified ? (
-                <h1> 2fa enabled </h1>
+                <h1> {t("2fa enabled")} </h1>
               ) : (
                 <>
-                  <h1>Scan the QR code</h1>
+                  <h1>{t("Scan the QR code")}</h1>
                   <div className="content">
                     <div className="cont">
                       <div className="qr">
@@ -190,24 +190,24 @@ useEffect(() => {
                         ) : (
                           <img src={qrcode} alt="QR Code" />
                         )}
-                        <h1>Enter the OTP code</h1>
+                        <h1>{t("Enter the OTP code")}</h1>
                         <div className="inputs-container">{renderInputs()}</div>
                         <div className="btns">
                           <button
                             className="btn btn-verify"
                             onClick={handlverify}
                           >
-                            Verify
+                            {t("Verify")}
                           </button>
                         </div>
                       </div>
                       <div className="instructions">
                         <p>
-                          1. Open your authenticator app and scan the QR code.
+                          {t("1. Open your authenticator app and scan the QR code.")}
                           <br />
-                          2. Enter the 6-digit code displayed on the app.
+                          {t("2. Enter the 6-digit code displayed on the app.")}
                           <br />
-                          3. Click on Verify.
+                          {t("3. Click on Verify.")}
                         </p>
                       </div>
                     </div>

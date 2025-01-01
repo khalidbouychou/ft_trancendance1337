@@ -10,7 +10,7 @@ volumes:
 services:
   postgres:
     container_name: postgres
-    image: postgres:17-alpine
+    image: postgres:17-alpine 
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}

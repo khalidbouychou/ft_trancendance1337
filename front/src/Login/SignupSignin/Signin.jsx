@@ -4,21 +4,17 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import { useRef } from "react";
 
 const Signin = () => {
-  const {  auth_intra42, setUser } = useContext(AuthContext);
+  const { t, auth_intra42, setUser } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const REDIRECT_URI="https://localhost/api/callback"
-  const C_ID="u-s4t2ud-c3d3ca71aba0ce6a6aec57c097d7e1ee156494d86b9f05b7dd64b975a19d3149"
-  const url = `https://api.intra.42.fr/oauth/authorize?client_id=${C_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`
   const handelogin = async (e) => {
     e.preventDefault();
     try {
       if (!username || !password) {
-        toast.error("Please fill all the fields", {
+        toast.error(t("Please fill all the fields"), {
           style: {
             backgroundColor: 'rgb(255, 0, 0)',
             color: 'white'
@@ -39,7 +35,7 @@ const Signin = () => {
       if (response.status === 200) {
         localStorage.setItem("token", response.data.user.token);
         setUser(response.data.user);
-        toast.success("login success", {
+        toast.success(t(`Welcome ${response.data.user.username}`), {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
             color: 'white'
@@ -50,10 +46,11 @@ const Signin = () => {
         }, 1300);
       }
     } catch (err) {
-      toast.error("login failed", {
+      console.log(err);
+      toast.error(err.response.data.error, {
         style: {
           backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
+          color: 'white',
         }
       });
     }
@@ -64,7 +61,7 @@ const Signin = () => {
       <form className="form login-form" onSubmit={handelogin}>
         <input
           type="text"
-          placeholder="Username"
+          placeholder={t("Username")}
           className="input"
           value={username}
           required
@@ -72,24 +69,24 @@ const Signin = () => {
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t("Password")}
           className="input"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit" className="button sign-in">
-          SIGN IN
+          {t("SIGN IN")}
         </button>
         <div className="separator">
           <hr />
-          <span>OR</span>
+          <span>{t("OR")}</span>
         </div>
         <button
           className="button intra"
           onClick={auth_intra42}
         >
-          INTRA 42
+          {t("INTRA 42")}
         </button>
       </form>
 

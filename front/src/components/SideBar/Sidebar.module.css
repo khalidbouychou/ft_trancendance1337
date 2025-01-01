@@ -466,7 +466,7 @@ ul:last-of-type li {
     border-radius: 5px;
     color: white;
     display: flex;
-    width: 150px;
+    width: 200px;
     position: absolute;
     top: 100%;
     /* right: 25%; */
@@ -479,27 +479,34 @@ ul:last-of-type li {
     
 }
 
-/* .settings a:hover {
-    background-color: rgba(255, 0, 0, 0.47);
-    padding: 10px 2px;
-} */
+.links-container {
+    display: flex;
+    /* width: 100%;
+    height: 100%; */
+    /* flex-direction: column; */
+    /* gap: 10px; */
+    padding: 40px;
+    background-color: black;
+    border: 1px solid rgba(218, 251, 0, 0.4);
+}
 .links{
     cursor: pointer;
-    display: flex;
+    /* display: flex; */
+    flex-direction: column;
     width: 100%;
     height: 100%;
     justify-content: center;
     align-items: center;
-    gap: 25px;
+    gap: 20px;
 }
 .links:hover {
     background-color: rgba(255, 255, 255, 0.47);
     /* padding: 10px 2px; */
 }
 .icons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
     width: 70px;
     height: 100%;
     border: none;
