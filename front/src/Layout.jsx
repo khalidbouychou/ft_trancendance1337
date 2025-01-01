@@ -8,6 +8,8 @@ import { AuthContext } from "./UserContext/Context";
 
 import { GridLoader } from "react-spinners";
 import { useState } from "react";
+import { NotificationWebSocketProvider } from "./contexts/NotifWSContext.jsx";
+import { LocationProvider } from "./contexts/LocationContext.jsx";
 
 
 const Layout = () => {
@@ -15,7 +17,7 @@ const Layout = () => {
  const {user,get_auth_user} = useContext(AuthContext);
  const [loading, setLoading] = useState(true);
 
- useEffect(() => { 
+ useEffect(() => {
    get_auth_user()
  }
  , [location.pathname])
@@ -40,8 +42,14 @@ const Layout = () => {
     <GridLoader color="#fff" loading={loading} size={20} />
   </div> :
     <div className={style.EntirePage}>
-          {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> } 
-           <Outlet />
+          {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> }
+          {user &&
+            <NotificationWebSocketProvider>
+              <LocationProvider>
+                <Outlet />
+              </LocationProvider>
+            </NotificationWebSocketProvider>
+          }
     </div>
   );
 };

@@ -60,7 +60,7 @@ const NotiCard = ({request}) => {
 
 	const handleAccept = () => {
 		if (isConnected) {
-			console.log('Connected');
+		
 			sendNotifMessage({
 				type: request.notif_type === 'FR' ? 'ACCEPT_FR' : 'ACCEPT_GR',
 				from_user_id: request.from_user.id,
@@ -87,17 +87,15 @@ const NotiCard = ({request}) => {
 							xo_invite_socket.close();
 							navigate("/xo_with_invitation", { state: {
 								room_id: room_id,
-								name: request.to_user.username,
-								other_name: request.from_user.username,
+								name: request.to_user?.username,
+								other_name: request.from_user?.username,
 								role: "guest"
 							}});
 						}
 					}
 				}
 			}
-		} else {
-			console.log('Not connected');
-		}
+		} 
 		setIsVisible(false);
 	};
 
@@ -114,7 +112,7 @@ const NotiCard = ({request}) => {
 				if (token) {
 					try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`); }
 					catch (err) {}
-					console.log("handling decline");
+				
 					xo_invite_socket.onopen = () => {
 						xo_invite_socket.send(JSON.stringify({
 							message: "unregister",
@@ -138,8 +136,8 @@ const NotiCard = ({request}) => {
 	return (
 		<div className={styl.notiCard}> 
 		<div className={styl.userimage}>
-		{request.from_user.avatar ? (
-			<img src={request.from_user.avatar} alt={request.from_user.username} className="contact-avatar" />
+		{request?.from_user?.avatar ? (
+			<img src={request?.from_user?.avatar} alt={request?.from_user?.username} className="contact-avatar" />
 		) : (
 			<div className="contact-avatar default-avatar">
 			<FontAwesomeIcon icon={faUser} />
@@ -148,7 +146,7 @@ const NotiCard = ({request}) => {
 		</div>
 		<div className={styl.Sender}>
 		<p >
-		{request.from_user.username}
+		{request?.from_user?.username}
 		{request.notif_type === 'FR' ? (
 			' sent you a friend request'
 		) : (

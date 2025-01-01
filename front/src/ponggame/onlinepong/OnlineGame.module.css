@@ -42,7 +42,8 @@
     display: flex;
     flex-direction: column;
     width: 350px;
-    height: 250px;
+    height: max-content;
+    padding: 10px;
     border: solid 2px black;
     border-radius: 30px;
     overflow: hidden;

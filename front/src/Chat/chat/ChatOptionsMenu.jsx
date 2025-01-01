@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserSlash, faUserCheck, faTableTennis, faGamepad } from '@fortawesome/free-solid-svg-icons';
 
-function ChatOptionsMenu({ onPlayPong, onPlayTicTacToe, otherUser, currentUser, viewProfile, onFriendRequest }) {
+function ChatOptionsMenu({ onPlayPong, otherUser, currentUser, viewProfile, onFriendRequest }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
   const [isFriend, setIsFriend] = useState('None');
@@ -16,6 +16,7 @@ function ChatOptionsMenu({ onPlayPong, onPlayTicTacToe, otherUser, currentUser, 
     //   }
     // };
     // checkBlockStatus();
+    console.log("currentUser", currentUser);
       const areFriends = currentUser.friends.find(friend => 
         (friend.user1 === otherUser.username || friend.user2 === otherUser.username)
       );
@@ -74,10 +75,6 @@ function ChatOptionsMenu({ onPlayPong, onPlayTicTacToe, otherUser, currentUser, 
           <li onClick={onPlayPong}>
             <FontAwesomeIcon icon={faTableTennis} />
             Play Pong
-          </li>
-          <li onClick={onPlayTicTacToe}>
-            <FontAwesomeIcon icon={faGamepad} />
-            Play Tic-Tac-Toe
           </li>
           <li onClick={viewProfile}>
             <FontAwesomeIcon icon={faUser} />

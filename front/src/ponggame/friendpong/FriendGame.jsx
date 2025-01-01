@@ -81,11 +81,14 @@ export default function FriendGame() {
     useEffect(() => {
         // console.log("im here");
         const fetchData = async () => {
-            const response = await axios('http//localhost:8000/api/pingpong/');
-            // console.log('response:', response);
+            const response = await axios('http://localhost:8000/api/pong_data/',{
+                withCredentials: true,
+            });
+            console.log('response:', response.data);
             if (response.status === 200) {
-                setUsername(response.data.user);
+                setUsername(response.data.profile_name);
                 setLeftPlayerAvatar(response.data.avatar);
+                setLeftPlayerName(response.data.profile_name);
                 setAvatar(response.data.avatar);
                 setLevel(response.data.exp_game);
             } else {
@@ -181,7 +184,7 @@ export default function FriendGame() {
                         setMessage("Opponent left the game");
                     }
                     else if (data.message === 'Leave') {
-                        navigate('/home');
+                        navigate('/');
                     }
                 }
                 if (data.hasOwnProperty('winner')) {
@@ -276,7 +279,7 @@ export default function FriendGame() {
             drawLeftRacket();
             drawRightRacket();
             const currentPath = window.location.pathname;
-            if (currentPath === '/friend-game' && condition === 'N')
+            if (currentPath === '/friendgame' && condition === 'N')
                 return requestAnimationFrame(draw);
             else
                 return cancelAnimationFrame(myReq);
@@ -319,7 +322,7 @@ export default function FriendGame() {
     }, [gamestarted, condition]);
 
     const handleExitClick = () => {
-        navigate('/pingpong-games');
+        navigate('/games');
     };
 
     return (

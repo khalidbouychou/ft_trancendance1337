@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import api from '../../auth/api';
 import './ChatPage.css';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function ChatPage() {
 	const navigate = useNavigate();
@@ -37,7 +37,10 @@ function ChatPage() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get('/chat/');
+				const response = await axios('http://localhost:8000/api/chat/',{
+					withCredentials: true,
+				});
+				console.log("response.data:", response.data);
 				setData(response.data);
 				setupSocket(1);
 				setupNotificationSocket();
@@ -45,7 +48,7 @@ function ChatPage() {
 				console.log('Current User:', response.data.user);
 			} catch (error) {
 				console.warn('Chat page inaccessible:', error);
-				navigate('/login');
+				// navigate('/login');
 			}
 		};
 		
@@ -81,8 +84,7 @@ function ChatPage() {
 	};
 
 	const setupNotificationSocket = () => {
-		const token = localStorage.getItem('token');
-		const socket = new WebSocket(`ws://localhost:8000/ws/notification/?token=${token}`);
+		const socket = new WebSocket(`ws://localhost:8000/ws/notification/`);
 	
 		socket.onopen = () => {
 			console.log('Connected to notification socket');
@@ -203,6 +205,7 @@ function ChatPage() {
 	}
 
 	const setupSocket = (room_id) => {
+		console.log(`Setting up WebSocket for room: ${room_id}`);
 		return new Promise((resolve, reject) => {
 			if (!room_id) {
 				return reject(new Error('No room ID provided'));
@@ -212,8 +215,7 @@ function ChatPage() {
 				return;
 			}
 		
-			const token = localStorage.getItem('token');
-			const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room_id}/?token=${token}`)
+			const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room_id}/`)
 
 			newSocket.onopen = () => {
 				setSockets(prev => ({
@@ -227,7 +229,7 @@ function ChatPage() {
 				console.error('WebSocket error:', error);
 				reject(error);
 			}
-
+			// reda add unfriend at saturday 10:43pm and i need to add the case where i send unfriend request here to update the data for the client in real time
 			newSocket.onmessage = (event) => {
 				const data_re = JSON.parse(event.data)
 				switch (data_re.type) {
@@ -274,7 +276,6 @@ function ChatPage() {
 								}
 							}));
 						}
-						break
 					default:
 						console.log('Unknown message type:', data_re.type)
 						break
@@ -303,15 +304,19 @@ function ChatPage() {
 		console.log('roomId:', roomId)
 		console.log('Current contact id:', currentContact.id)
 		if (message) {
-			sockets[roomId].send(JSON.stringify({
-				type: 'MESSAGE',
-				room_id: roomId,
-				sender: data.user.id,
-				content: message,
-			}))
-			setMessage('')
+			if (sockets[roomId] && sockets[roomId].readyState === WebSocket.OPEN) {
+				sockets[roomId].send(JSON.stringify({
+					type: 'MESSAGE',
+					room_id: roomId,
+					sender: data.user.id,
+					content: message,
+				}));
+				setMessage('');
+			} else {
+				console.warn('Cannot send message, WebSocket not ready.');
+			}
 		}
-	}
+	};
 
 	const handleTyping = (e) => {
 		setMessage(e.target.value)
@@ -324,10 +329,12 @@ function ChatPage() {
 		}
 	}
 
-	const setupChatRoom = (contact) => {
+	const setupChatRoom = async (contact) => {
 		setCurrentContact(contact)
 		setRoomId(contact.id)
 		setChat(contact.messages)
+
+		await setupSocket(contact.id);
 	}
 
 	return (

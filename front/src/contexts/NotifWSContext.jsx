@@ -27,7 +27,7 @@ export function NotificationWebSocketProvider({ children }) {
       }
 
       ws.onopen = () => {
-        // console.log('Notification WebSocket connected');
+
         setSocket(ws);
         setIsConnected(true);
         setReconnectAttempts(0);
@@ -35,7 +35,7 @@ export function NotificationWebSocketProvider({ children }) {
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        // console.log(data.type, ':', data.notification);
+       
         setNotif(data.notification);
       };
 
@@ -47,12 +47,12 @@ export function NotificationWebSocketProvider({ children }) {
     };
 
     const handleReconnect = () => {
-      // console.log('Notification WebSocket disconnected or encountered an error');
+  
       setSocket(null);
       setIsConnected(false);
       clearTimeout(reconnectTimeout);
       reconnectTimeout = setTimeout(() => {
-        // console.log('Attempting to reconnect...');
+ 
         setReconnectAttempts((attempts) => attempts + 1);
         connect();
       }, 1000);

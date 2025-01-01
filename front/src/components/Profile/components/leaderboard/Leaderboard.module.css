@@ -10,7 +10,7 @@
 
 .leaderHead {
 	display: flex;
-	width: 80%;
+	width: 95%;
 	height: 30px;
 	position: relative;
 
@@ -23,7 +23,7 @@
 		width: 20%;
 		height: 100%;
 		margin: 0;
-		color: rgba(255, 255, 255, 0.279);
+		color: rgba(255, 255, 255, 0.4);
 		font-size: 13px;
 		letter-spacing: 0.5px;
 		position: relative;
@@ -78,13 +78,14 @@
 
 .pingRanking {
 	display: flex;
-	width: 80%;
+	width: 95%;
 	height: 100%;
 	flex-direction: column;
 	gap: 25px;
 	overflow: auto;
 	padding: 2%;
 	padding-top: 15px;
+	border-radius: 10px;
 	background-color: rgba(80, 79, 79, 0.4);
 
 	&::-webkit-scrollbar {
@@ -97,12 +98,11 @@
 	display: flex;
 	width: 100%;
 	height: 55px;
-	/* background-color: rgb(59, 58, 58); */
 	background-color: black;
 	border: none;
 	cursor: pointer;
 	border-radius: 10px;
-	opacity: 0;
+	/* opacity: 0; */
 	animation: slideFrame 0.5s ease-in-out forwards, fadeIn 0.5s ease-in-out forwards;
 }
 
@@ -362,6 +362,9 @@
 			font-size: 14px;
 			font-weight: 50;
 		}
+	}
+	.cardRank {
+		height: 45px;
 	}
 }
 

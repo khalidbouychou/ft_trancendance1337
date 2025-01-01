@@ -1,0 +1,64 @@
+.cardBlocked {
+  display: flex;
+  width: 96%;
+  height: 100px;
+  min-height: 100px;
+  background-color: black;
+  align-items: center;
+  border-radius: 20px;
+  margin: 4px;
+  gap: 2%;
+  position: relative;
+}
+
+.extImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 70px;
+  background-color: rgb(130, 130, 5);
+  border: none;
+  position: relative;
+  clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+  position: relative;
+  img {
+    display: flex;
+    width: 70px;
+    height: 70px;
+  }
+}
+
+.name {
+  display: flex;
+  width: 70%;
+  height: 100%;
+  /* background-color: aqua; */
+  position: relative;
+  left: 2%;
+  flex-direction: column;
+  p {
+    display: flex;
+    margin: 0;
+    margin-top: 4%;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding-left: 3%;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.unblock {
+  display: flex;
+  position: absolute;
+  right: 3%;
+  top: 7%;
+  border: none;
+  background: none;
+  color: red;
+  cursor: pointer;
+  &:hover {
+    font-size: 14px;
+  }
+}

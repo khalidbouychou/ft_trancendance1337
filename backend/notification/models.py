@@ -10,7 +10,6 @@ class Notification(models.Model):
     ]
     GAME_TYPES = [
         ('PG', 'Pong'),
-        ('TT', 'TicTacToe'),
     ]
     STATUS_CHOICES = [
         ('pending', 'Pending'),

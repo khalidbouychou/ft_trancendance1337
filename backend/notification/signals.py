@@ -65,4 +65,3 @@ def check_GR_status_change(sender, instance, **kwargs):
                 'notification': notification_serializer.data
             }
         )
-

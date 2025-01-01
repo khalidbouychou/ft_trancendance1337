@@ -229,7 +229,7 @@ export default function LocalGame() {
     const navigate = useNavigate();
 
     const handleExitClick = () => {
-        navigate('/pingpong-games');
+        navigate('/games');
     };
     return (
         <>

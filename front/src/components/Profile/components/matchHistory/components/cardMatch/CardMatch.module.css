@@ -1,0 +1,141 @@
+.cardMatch {
+  display: flex;
+  width: 100%;
+  height: 55px;
+  min-height: 55px;
+  background-color: black;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  animation: slideFrame 0.5s ease-in-out forwards, fadeIn 0.5s ease-in-out forwards;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cardMatch:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.03);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.cardMatch:active {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1);
+  box-shadow: none;
+}
+
+.cardMatch:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+@keyframes slideFrame {
+  from {
+    transform: translateX(-10%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+.opponent {
+  display: flex;
+  width: 30%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 30%;
+
+  p {
+    display: flex;
+    font-size: 14px;
+    color: white;
+    font-weight: 550;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 1024px) {
+    gap: 10%;
+  }
+}
+
+.extImgOpp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 70px;
+  background-color: rgb(130, 130, 5);
+  /* background-color: rgb(68, 68, 68); */
+  border: none;
+  position: relative;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.intImgOpp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 55px;
+  height: 65px;
+  background-color: green;
+  border: none;
+  position: relative;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+
+  img {
+    display: flex;
+    width: 65px;
+    height: 65px;
+  }
+}
+
+.res {
+  display: flex;
+  width: 20%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    color: rgb(190, 190, 7);
+    font-size: 16px;
+  }
+}
+
+.status_date {
+  display: flex;
+  width: 25%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    color: white;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+  }
+}
+
+.date {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  margin-top: 30px;
+
+  p {
+    padding: 0;
+    margin: 0;
+  }
+}

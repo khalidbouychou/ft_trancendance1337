@@ -1,49 +1,74 @@
-import React from 'react'
-import styl from './Statistic.module.css'
-import CurveChart from '../../../Home/components/CurveChart/CurveChart'
-import CurveLevel from '../../../Home/components/CurveLevel/CurveLevel'
+import React, { useEffect, useState } from "react";
+import styl from "./Statistic.module.css";
+// import CurveChart from "../../../Home/components/CurveChart/CurveChart";
+import CurveLevel from "../../../Home/components/CurveLevel/CurveLevel";
+// import Chart from '../../../Home/components/test/Chart';
+import Chart from "../../../Home/components/test/Chart";
+import axios from "axios";
+import CircularLevel from "./CirculeLevel/CercleLevel";
 
-const Statistic = () => {
-    const total = 15 + 10;
-    const winPercentage = (15 / total) * 100;
-    const lossPercentage = (10 / total) * 100;
-    const data = [
-      { time: 'Jan', wins: 5, losses: 3 },
-      { time: 'Feb', wins: 8, losses: 2 },
-      { time: 'Mar', wins: 4, losses: 5 },
-    ]
+const Statistic = ({ userData, profileName }) => {
+  const total = userData?.data[0]?.wins + userData?.data[0]?.losses;
+  let winPercentage = (userData?.data[0]?.wins / total) * 100;
+  let lossPercentage = (userData?.data[0]?.losses / total) * 100;
+  const [daTa, setDaTa] = useState([]);
+  const [level, setLevel] = useState(50);
+  if (!winPercentage && !lossPercentage) {
+    winPercentage = 50
+    lossPercentage = 50
+  }
 
-    const levelData = [
-      { level: 1, time: 5 },
-      { level: 2, time: 12 },
-      { level: 3, time: 20 },
-      { level: 4, time: 25 },
-    ];
-    return (
-      <div className={styl.statistic}>
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await axios.get(
+          `http://localhost:8000/api/matches/${profileName}/`
+        );
+        setDaTa(data.data);
+      } catch (error) {
+        console.error("Error fetching match data:", error);
+      }
+    };
+    fetchData();
+  }, [profileName]);
+
+  console.log("response == ", (userData?.data[0]?.exp_game % 100));
+  if (daTa.length == 0) {
+    return (<div className={styl.emptyMatches}>
+      No match data available to display the Statistic
+  </div>)}
+  return (
+    <div className={styl.statistic}>
       <div className={styl.upperPart}>
-          <div className={styl.circ}>
-              <div className={styl.chartCir} style={{
-                  background: `conic-gradient(
+        <div className={styl.circ}>
+          <div
+            className={styl.chartCir}
+            style={{
+              background: `conic-gradient(
                   #25233C ${winPercentage}%,  
                   #7667D9 0 ${lossPercentage + winPercentage}%
                   )`,
-              }}>
-              </div>
-              <div className={styl.chartText}>
-                  <p>Wins: 5</p>
-                  <p>Losses: 4</p>
-              </div>
+            }}
+          ></div>
+          <div className={styl.chartText}>
+            <p>Wins: {Math.floor(winPercentage)}%</p>
+            <p>Losses: {Math.floor(lossPercentage)}%</p>
           </div>
-          <div className={styl.CurveChart}>
-              <CurveChart data={data} />
-          </div>
+        </div>
+        <div className={styl.CurveChart}>
+          <Chart matches={daTa} profileName={profileName} />
+        </div>
       </div>
       <div className={styl.bottom}>
-          <CurveLevel data={levelData}/>
+        <div className={styl.cirLevel}>
+          <CircularLevel percentage={userData?.data[0]?.exp_game % 100} color="#660da5" width={250} height={250} />
+        </div>
+        <div className={styl.level_exp}>
+          <CurveLevel data={daTa} playerName={profileName} style={{width: '50%'}}/>
+        </div>
       </div>
     </div>
-    )
-}
+  );
+};
 
-export default Statistic
+export default Statistic;

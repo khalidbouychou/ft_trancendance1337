@@ -15,6 +15,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log("currentUser:", currentUser);
         if (currentContact) {
             setOtherUser(currentContact.user1.id === data.user.id ? currentContact.user2 : currentContact.user1);
         } else {
@@ -41,6 +42,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 
     useEffect(() => {
         if (data.user) {
+            console.log("////////////////////////////////////////////////////////////////// im here");
             setCurrentUser(data.user);
         }
     }, [data.user]);
@@ -83,7 +85,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                 }
                 pong_socket.send(JSON.stringify(data));
                 const game_key = `${currentUser.username}vs${otherUser.username}`;
-                navigate('/friend-game', { state: { game_key } });
+                navigate('/friendgame', { state: { game_key } });
             }
         }
         else {
@@ -99,44 +101,9 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 		return Math.random().toString(36).substr(2);
 	}
 
-	const handlePlayTicTacToe = () => {
-		if (isConnected) {
-			var xo_invite_socket, token = localStorage.getItem("token"),
-				room_id = data.user.username + "_VS_" + otherUser.username + "_" + rand_str() + rand_str() + rand_str();
-			if (!token)	return;
-			try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`) }
-			catch (err) { return }
-			xo_invite_socket.onopen = () => {
-				xo_invite_socket.send(JSON.stringify({
-					message: "register_first",
-					me: data.user.username,
-					other: otherUser.username,
-					room_id: room_id,
-					role: "host"
-				}))
-				xo_invite_socket.close();
-				navigate("/xo_with_invitation", { state: { 
-					room_id: room_id,
-					name: data.user.username,
-					other_name: otherUser.username,
-					role: "host"
-				}});
-			}
-
-			sendNotifMessage({
-	     			type: 'SEND_GR',
-	      			game_type: 'TICTACTOE',
-	      			to_user_id: otherUser.id,
-				game_room: room_id
-			});
-
-		}
-		else	console.log("not connected");
-	};
-
     const viewProfile = () => {
         console.log('View Profile');
-        // navigate(`/profile/${otherUser.id}`);
+        navigate(`/profile/${otherUser.id}`);
     };
 
     const onFriendRequest = () => {
@@ -172,10 +139,10 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                                 </div>
                             )}
                         </div>
+                        
                         <ChatOptionsMenu
                             // onBlockUser={handleBlockUser}
                             onPlayPong={handlePlayPong}
-                            onPlayTicTacToe={handlePlayTicTacToe}
                             otherUser={otherUser}
                             currentUser={currentUser}
                             viewProfile={viewProfile}

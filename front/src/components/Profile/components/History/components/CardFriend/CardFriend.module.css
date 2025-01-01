@@ -8,7 +8,7 @@
 	align-items: center;
 	border-radius: 20px;
 	margin: 4px;
-	
+	cursor: pointer;
 }
 
 .userImage {
@@ -33,6 +33,11 @@
     border: none;
 	position: relative;
 	clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+	img {
+		display: flex;
+		width: 70px;
+		height: 70px;
+	}
 }
 
 .userName {
