@@ -4,15 +4,12 @@ import styl from "./Profile.module.css";
 import { AuthContext } from "../../UserContext/Context";
 import MatchHistory from "./components/matchHistory/MatchHistory";
 import Leaderboard from "./components/leaderboard/Leaderboard";
-import Statistic from "./components/statistc/Statistic";
 import CardFriend from "./components/History/components/CardFriend/CardFriend";
 import { FaMedal } from "react-icons/fa";
 import { PiGameControllerFill } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
 import { MdOutlineFormatListBulleted } from "react-icons/md";
 import { IoIosPersonAdd } from "react-icons/io";
-import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
-import { TbLock } from "react-icons/tb";
 import axios from "axios";
 import CardBlocked from "./components/cardBlocked/CardBlocked";
 import { useNotificationWS } from "../../contexts/NotifWSContext";
@@ -36,170 +33,168 @@ const Profile = ({ me }) => {
   const [wins, setWins] = useState("");
   const [lose, setLose] = useState("");
   const [setting, setSetting] = useState("none");
-  const [displayBt, setDisplayBt] = useState();
-  const [blockedOpen, setBlockedOpen] = useState("none");
-  const [userList, setUserList] = useState("");
-  const [tmp, setTmp] = useState("friends");
+  const [displayBt, setDisplayBt] = useState('flex');
   const [showUserBlocked, setShowUserBlocked] = useState(false);
   const [status, setStatus] = useState("Friends");
   const [isfriended, setIsfriended] = useState(false);
-
-  // const [nameBt, setNameBt] = useState('blocked users');
-
-useEffect(() => {
-  console.log('anaaa', isfriended)
-},)
+  const [friendList, setFriendList] = useState([]);
+  const [blockedList, setBlockedList] = useState([]);
+  const [shooseList, setShooseList] = useState('none');
+  const [displayShooseButton, setDisplayShooseButton] = useState('none');
 
   const handleBlockClick = () => {
     setShowUserBlocked((prev) => !prev);
-    setTmp(tmp === "friends" ? "blocked" : "friends");
-    setStatus(status === "Friends" ? "User Blocked" : "Friends");
-    // setNameBt(nameBt === "Friends" ? "User Blocked" : "Friends")
+    setStatus((prev) => (prev === "Friends" ? "User Blocked" : "Friends"));
   };
 
   const handelClick = (section) => {
     setActiveSection(section);
   };
 
+  const handleShooseList = () => {
+    setShooseList(shooseList == "none"? "flex" : "none");
+  }
+
   const openSettings = () => {
     setSetting(setting == "none" ? "flex" : "none");
   };
 
-  const handleBlockedOpen = () => {
-    setBlockedOpen(blockedOpen === "none" ? "flex" : "none");
-  };
+  useEffect(() => {
+    console.log('++++++++++++++++++++ sockets', profilesocket)
+  },[profilesocket])
 
   useEffect(() => {
-    setProfileName(profile_name);
-  }, [profile_name, isfriended]);
-
+    const fetchPingData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/pingdata/${profile_name}/`);
+        const pingData = response.data;
+        console.log("ping data", pingData);
   
-  const fetchData = async () => {
-    if (!profile_name) return;
+        if (pingData.length > 0) {
+          const { exp_game, wins, losses } = pingData[0];
+          const calculatedLevel = Math.floor(exp_game / 100);
+          const maxExperience = (calculatedLevel + 1) * 100;
   
-    setIsLoading(true);
-    setError(null);
-  
-    try {
-      const response = await fetch(
-        `http://localhost:8000/api/getuser/${profile_name}/`
-      );
-      if (!response.ok) {
-        throw new Error(
-          response.status === 404
-            ? "User not found"
-            : "Failed to fetch user data"
-        );
+          setPingExp(exp_game);
+          setMaxPingExp(maxExperience);
+          setPingLevel(calculatedLevel);
+          setNextPingLevel(calculatedLevel + 1);
+          setPingPercentage(exp_game % 100);
+          setWins(wins);
+          setLose(losses);
+        }
+      } catch (error) {
+        console.error("Failed to fetch ping data", error);
       }
+    };
   
-      const data = await response.json();
-      setUserData(data);
-
-      const isFriend = data.friends.some(
-        (friend) => friend.profile_name === user?.user?.profile_name
-      );
-      // setIsfriended(isFriend);
-      if (data.profile_name === user?.user?.profile_name) {
-        setIsMyProfil(1);
-        setDisplayBt("none");
-      } else {
-        setIsMyProfil(0);
-        setDisplayBt("flex");
-      }
-  
-      const pingResponse = await fetch(
-        `http://localhost:8000/api/pingdata/${profile_name}/`
-      );
-      if (!pingResponse.ok) throw new Error("Failed to fetch ping data");
-  
-      const pingData = await pingResponse.json();
-      if (pingData.length > 0) {
-        const { exp_game, wins, losses } = pingData[0];
-        const calculatedLevel = Math.floor(exp_game / 100);
-        const maxExperience = (calculatedLevel + 1) * 100;
-  
-        setPingExp(exp_game);
-        setMaxPingExp(maxExperience);
-        setPingLevel(calculatedLevel);
-        setNextPingLevel(calculatedLevel + 1);
-        setPingPercentage(exp_game % 100);
-        setWins(wins);
-        setLose(losses);
-      }
-  
-      const userResponse = await axios.get(
-        `http://localhost:8000/api/${tmp}/${profile_name}/`,
-        { withCredentials: true }
-      );
-      setUserList(userResponse.data);
-    } catch (error) {
-      setError(error.message);
-      setUserData({});
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  useEffect(() => {
-    setShowUserBlocked(false);
-    setActiveSection("Leaderboard");
-    fetchData();
-  }, [profile_name, tmp]);
-
-  const onFriendRequest = async () => {
-    if (isConnected) {
-      if (!isfriended) {
-        sendMessage({
-          type: "SEND_FR",
-          to_user_id: userData?.id,
-        });
-      } else {
-        sendMessage({
-          type: "UN_FRIEND",
-          to_user_id: userData?.id,
-        });
-  
-        // try {
-        //   await new Promise((resolve) => setTimeout(resolve, 500));
-        //   setIsfriended(false);
-        // } catch (error) {
-        // }
-      }
-    }
-  };
-  
-
-  useEffect(() => {
-    setProfileName(profile_name);
+    fetchPingData();
   }, [profile_name]);
 
   useEffect(() => {
-
-    console.log("+++++++++++++++++++++ type socket " ,profilesocket)
-    console.log("+++++++++++++++++++++ friend " ,isfriended)
-    console.log("+++++++++++++++++++++ userdata " ,userData.username)
-    if (
-      profilesocket?.type === "NOTIFICATION_ACCEPTED" &&
-      userData &&
-      profilesocket.notification.from_user.id === user?.user?.id &&
-      profilesocket.notification.to_user.id === userData?.id
-    ) {
-      setIsfriended(true)
-    }
-    setIsfriended (false);
-  },[isfriended]);
-
-  // if (profile_name !== user?.user?.profile_name) {
-  //   // console.log("list friend == ", userList);
+    console.log('--------------------------------', friendList);
+    const friendsArray = friendList['friend list'] || [];
+    const isFriend = friendsArray.some(
+      (friend) => friend.profile_name === user?.user?.profile_name
+    );
+    setIsfriended(isFriend);
   
-  //   const friendList = userList['friend list']; // Access the friend list
-  //   if (Array.isArray(friendList)) {
-  //     setIsfriended(friendList.includes(profile_name)); // Check if the profile name is in the list
-  //     // console.log("Is this profile my friend?", isFriend);
-  //   } else {
-  //     console.log("Friend list is not an array or is undefined");
-  //   }
-  // }
+    if (userData.profile_name === user?.user?.profile_name) {
+      setIsMyProfil(1);
+      setDisplayBt("none");
+      setDisplayShooseButton('flex')
+    } else {
+      setIsMyProfil(0);
+      setDisplayBt("flex");
+      setDisplayShooseButton('none')
+    }
+  }, [friendList, user?.user?.profile_name, userData.profile_name]);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      const response = await axios.get(
+        `http://localhost:8000/api/friends/${profile_name}/`,
+        { withCredentials: true }
+      );
+      setFriendList(response.data);
+    };
+    fetchFriends();
+    const fromUserId = profilesocket?.notification?.from_user.id;
+    const toUserId = profilesocket?.notification?.to_user.id;
+
+    if (
+      (fromUserId === user?.user?.id && toUserId === userData?.id) ||
+      (fromUserId === userData?.id && toUserId === user?.user?.id)
+    ) {
+      console.log('fiend list == ', friendList)
+      const isFriend = friendList?.["friend list"]?.some(
+        (friend) => friend.profile_name === user?.user?.profile_name
+      );
+      setIsfriended(isFriend);
+    }
+    console.log("friend list", friendList);
+  }, [profileName, isfriended], profilesocket);
+
+  useEffect(() => {
+    const fetchBlocked = async () => {
+      const response = await axios.get(
+        `http://localhost:8000/api/blocked/${profile_name}/`,
+        { withCredentials: true }
+      );
+      setBlockedList(response.data);
+    };
+    fetchBlocked();
+    console.log("blocked list", blockedList);
+  }, [profileName, isfriended, ismyprofil]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!profile_name) return;
+  
+      setIsLoading(true);
+      setError(null);
+  
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/getuser/${profile_name}/`
+        );
+        if (!response.ok) {
+          throw new Error(
+            response.status === 404
+              ? "User not found"
+              : "Failed to fetch user data"
+          );
+        }
+  
+        const data = await response.json();
+        setUserData(data);
+  
+      } catch (error) {
+        setError(error.message);
+        setUserData({});
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    setShowUserBlocked(false);
+    setActiveSection("Leaderboard");
+    fetchData();
+  }, [profile_name]);
+
+
+  const handleAddFriend = () => {
+    if (!isfriended) {
+      sendMessage({
+        type: "SEND_FR",
+        to_user_id: userData?.id,
+      });
+    } else {
+      sendMessage({
+        type: "UN_FRIEND",
+        to_user_id: userData?.id,
+      });
+    }
+  };
 
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
@@ -227,7 +222,7 @@ useEffect(() => {
               >
                 <MdOutlineFormatListBulleted />
                 <div className={styl.settings} style={{ display: setting }}>
-                  <button className={styl.Button} onClick={onFriendRequest}>
+                  <button className={styl.Button} onClick={handleAddFriend}>
                     <IoIosPersonAdd className={styl.icons} />
                     {isfriended ? <p>Unfriend</p> : <p>Add Friend</p>}
                   </button>
@@ -240,9 +235,6 @@ useEffect(() => {
                   </div>
                 </div>
                 <p className={styl.userName}>
-                  {/* {userData.profile_name.length > 8
-                    ? userData.profile_name.toUpperCase().slice(0, 8) + "."
-                    : userData.profile_name.toUpperCase()} */}
                   {userData.profile_name.toUpperCase()}
                   <p style={{ color: "rgba(255, 255, 255, 0.4)" }}>
                     <div className={styl.ongline}>
@@ -357,11 +349,11 @@ useEffect(() => {
           <div className={styl.side2}>
             <div className={styl.headFr}>
               <p>{status}</p>
-              <button onClick={handleBlockedOpen}>
+              <button onClick={handleShooseList} style={{display: displayShooseButton}}>
                 <p>...</p>
                 <div
                   className={styl.userBlocked}
-                  style={{ display: blockedOpen }}
+                  style={{ display: shooseList}}
                 >
                   <button onClick={handleBlockClick}>
                     {showUserBlocked ? "Friends" : "Blocked"}
@@ -371,15 +363,12 @@ useEffect(() => {
             </div>
             <div className={styl.displayUser}>
               {showUserBlocked
-                ? userList?.["blocked list"]?.map((user, index) => (
+                ? blockedList?.["blocked list"]?.map((user, index) => (
                     <CardBlocked key={index} user={user} />
                   ))
-                : userList?.["friend list"]?.map((user, index) => (
+                : friendList?.["friend list"]?.map((user, index) => (
                     <CardFriend key={index} friend={user} />
                   ))}
-            </div>
-            <div className={styl.searchFr}>
-              <input type="text" placeholder="Search" />
             </div>
           </div>
         </div>

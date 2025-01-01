@@ -3,10 +3,12 @@ import styl from "./CardFriend.module.css";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CardFriend = ({friend}) => {
   console.log("CardFriend", friend.profile_name)
   const [pingData, setPingdata] = useState('')
+  const navigate = useNavigate();
 
   useEffect (() => {
     const fectchData = async () => {
@@ -16,8 +18,12 @@ const CardFriend = ({friend}) => {
     fectchData()
   },[friend.profile_name])
 
+  const handleClick = () => {
+    navigate(`/profile/${friend.profile_name}`)
+  }
+
   return (
-    <div className={styl.cardFriend}>
+    <div className={styl.cardFriend} onClick={handleClick}>
       <div className={styl.userImage}>
         <div className={styl.extImg}>
           <div className={styl.extImg} style={{width: '57px', height: '67px'}}>
