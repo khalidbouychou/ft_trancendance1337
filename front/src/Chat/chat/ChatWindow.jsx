@@ -71,9 +71,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                 game_type: 'PONG',
                 to_user_id: otherUser.id
             });
-            //testing
-            const token = localStorage.getItem('token');
-            const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
+            const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/`);
             pong_socket.onopen = () => {
                 const data2 = {
                     action: 'friend_game',
@@ -90,16 +88,16 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
         }
         else {
             console.log('Not connected');
-        }
+        // }
         // return () => {
         //     if (pong_socket && pong_socket.readyState === WebSocket.OPEN) {
         //         pong_socket.close();
         // };
     };
 	
-	var	rand_str = () => {
-		return Math.random().toString(36).substr(2);
-	}
+	// var	rand_str = () => {
+	// 	return Math.random().toString(36).substr(2);
+	// }
 
     const viewProfile = () => {
         console.log('View Profile');
