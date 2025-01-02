@@ -81,8 +81,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message_type = text_data_json.get('type')
         game_type = text_data_json.get('game_type')
-
-        # try:
+        print("receive in notification consumer:", message_type, game_type) 
         if message_type == 'CANCEL_FR':
             await self.cancel_FR(text_data_json)
         elif message_type == 'ACCEPT_FR':
@@ -200,9 +199,11 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def send_GR(self, text_data_json, game_type):
+        print("inside SEND_GR")
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
         game_room = text_data_json.get('game_room', '')
+        print("from_user_id:", from_user_id, "to_user_id:", to_user_id, "game_room:", game_room)
         notifs = Notification.objects.filter(
             from_user_id=from_user_id, 
             to_user_id=to_user_id, 
@@ -214,7 +215,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         for notif in notifs:
             if notif and notif.is_expired():
                 notifs.update(status='expired')
-                break
+                break 
         Notification.objects.get_or_create(
             from_user_id=from_user_id,
             to_user_id=to_user_id,
@@ -222,7 +223,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             game_room=game_room,
             game_type=game_type,
             status='pending'
-        )
+        ) 
     
     async def send_notification(self, event):
         notification = event['notification']

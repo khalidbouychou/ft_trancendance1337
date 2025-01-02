@@ -11,7 +11,9 @@ const MatchHistory = ({ profileName }) => {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/matches/${profileName}/`);
+        const response = await axios.get(`http://localhost:8000/api/matches/${profileName}/` , {
+          withCredentials: true,
+      });
         console.log('response == ', response);
 
         const sortedMatches = response.data.sort(

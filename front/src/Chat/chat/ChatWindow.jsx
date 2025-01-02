@@ -42,7 +42,8 @@ export default function ChatWindow({ currentContact, chat, message, sendMessage,
 
     useEffect(() => {
         if (data.user) {
-            console.log("////////////////////////////////////////////////////////////////// im here");
+            console.log("2 data:", data);
+            console.log("data.user:", data.user);
             setCurrentUser(data.user);
         }
     }, [data.user]);
@@ -68,7 +69,7 @@ export default function ChatWindow({ currentContact, chat, message, sendMessage,
             console.log('Connected');
             sendNotifMessage({
                 type: 'SEND_GR',
-                game_type: 'PONG',
+                game_type: 'PG',
                 to_user_id: otherUser.id
             });
             const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/`);
@@ -81,7 +82,7 @@ export default function ChatWindow({ currentContact, chat, message, sendMessage,
                     avatar2: otherUser.avatar,
                     game_id: `${currentUser.username+'vs'+otherUser.username}`,
                 }
-                pong_socket.send(JSON.stringify(data));
+                pong_socket.send(JSON.stringify(data2));
                 const game_key = `${currentUser.username}vs${otherUser.username}`;
                 navigate('/friendgame', { state: { game_key } });
             }

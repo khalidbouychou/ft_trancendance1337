@@ -40,7 +40,7 @@ function ChatPage() {
 				const response = await axios('http://localhost:8000/api/chat/',{
 					withCredentials: true,
 				});
-				console.log("response.data:", response.data);
+				console.log("1 data:", response.data);
 				setData(response.data);
 				setupSocket(1);
 				setupNotificationSocket();
@@ -129,15 +129,15 @@ function ChatPage() {
 		}
 	}, [currentContact]);
 
-	// useEffect(() => {
-	// 	Object.entries(unreadMessages).forEach(([userId, count]) => {
-	// 		const user = data.chat_rooms.flatMap(room => [room.user1, room.user2])
-	// 			.find(user => user.id === parseInt(userId));
-	// 		if (user && count > 0) {
-	// 			console.log(`${count} unread messages from ${user.username}`);
-	// 		}
-	// 	});
-	// }, [unreadMessages]);
+	useEffect(() => {
+		Object.entries(unreadMessages).forEach(([userId, count]) => {
+			const user = data.chat_rooms.flatMap(room => [room.user1, room.user2])
+				.find(user => user.id === parseInt(userId));
+			if (user && count > 0) {
+				console.log(`${count} unread messages from ${user.username}`);
+			}
+		});
+	}, [unreadMessages]);
 
 	useEffect(() => {
 		if (!receivedMessage) {
@@ -188,21 +188,21 @@ function ChatPage() {
 		};
 	};
 
-	const handleUnreadMessages = (message) => {
-		if (data.user.id === message.sender.id) {
-			return
-		}
-		if (currentContact) {
-			const currentContactId = currentContact.user1.id === data.user.id ? currentContact.user2.id : currentContact.user1.id
-			if (currentContactId === message.sender.id) {
-				return
-			}
-		}
-		setUnreadMessages({
-			...unreadMessages,
-			[message.sender.id]: (unreadMessages[message.sender.id] || 0) + 1
-		})
-	}
+	// const handleUnreadMessages = (message) => {
+	// 	if (data.user.id === message.sender.id) {
+	// 		return
+	// 	}
+	// 	if (currentContact) {
+	// 		const currentContactId = currentContact.user1.id === data.user.id ? currentContact.user2.id : currentContact.user1.id
+	// 		if (currentContactId === message.sender.id) {
+	// 			return
+	// 		}
+	// 	}
+	// 	setUnreadMessages({
+	// 		...unreadMessages,
+	// 		[message.sender.id]: (unreadMessages[message.sender.id] || 0) + 1
+	// 	})
+	// }
 
 	const setupSocket = (room_id) => {
 		console.log(`Setting up WebSocket for room: ${room_id}`);
