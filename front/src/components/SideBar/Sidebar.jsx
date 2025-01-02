@@ -1,17 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import styl from "./Sidebar.module.css";
 import En from "../../../public/assets/icons/lang-icons/En-lang.png";
 import Fr from "../../../public/assets/icons/lang-icons/Fr-lang.png";
 import It from "../../../public/assets/icons/lang-icons/It-lang.png";
-import { MdNotifications } from "react-icons/md";
-import pinglogo from "./assets/pinglogo.png";
+import { MdNotifications, MdNotificationImportant } from "react-icons/md";
 import { AuthContext } from "../../UserContext/Context";
 import { FaSearchengin } from "react-icons/fa";
 import SearchCard from "./components/searchCard/SearchCard.jsx";
 import userImage from "./assets/nouahidi.jpeg";
-import { CiSettings, CiLogout } from "react-icons/ci";
+import { CiSettings } from "react-icons/ci";
+import { CiLogout } from "react-icons/ci";
+import { use } from "react";
 import i18n from "../../i18n";
+// import { height } from "@mui/system";
+
 
 const Sidebar = () => {
   const { t,user ,Logout} = useContext(AuthContext);
@@ -51,49 +54,35 @@ const Sidebar = () => {
 
   const handlGameColor = () => {
     setProfileColor("white");
-    setGameColor("yellow");
-    setChatColor("white");
-  };
-
+    setGameColor("yellow")
+    setChatColor("white")
+  }
   const handlProfileColor = () => {
     setProfileColor("yellow");
-    setGameColor("white");
-    setChatColor("white");
-  };
-
+    setGameColor("white")
+    setChatColor("white")
+  }
   const handlChatColor = () => {
     setProfileColor("white");
-    setGameColor("white");
-    setChatColor("yellow");
-  };
-
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [notifOpen, setNotifOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("home");
-
-  const buttonColors = {
-    home: activeTab === "home" ? "yellow" : "white",
-    profile: activeTab === "profile" ? "yellow" : "white",
-    game: activeTab === "game" ? "yellow" : "white",
-    chat: activeTab === "chat" ? "yellow" : "white",
-  };
-
-  const toggleNotif = () => setNotifOpen(!notifOpen);
-  const toggleMenu = () => setMenuOpen(!menuOpen);
+    setGameColor("white")
+    setChatColor("yellow")
+  }
 
   useEffect(() => {
     const fetchSearchResults = async () => {
       if (searchQuery.trim()) {
-        const response = await fetch(`https://localhost/api/search/?q=${searchQuery}`);
+        const response = await fetch(
+          `http://localhost:8000/api/search/?q=${searchQuery}`
+        );
         const data = await response.json();
         setSearchResults(data);
       } else {
         setSearchResults([]);
+  
       }
     };
 
-    const debounceFetch = setTimeout(fetchSearchResults, 300);
-    return () => clearTimeout(debounceFetch);
+    fetchSearchResults();
   }, [searchQuery]);
 
   useEffect(() => {
@@ -101,33 +90,45 @@ const Sidebar = () => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setSearchResults([]);
       }
-      if (notifRef.current && !notifRef.current.contains(event.target)) {
-        setNotifOpen(false);
-      }
-      if (settRef.current && !settRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
+      if (notifRef.current && !notifRef.current.contains(event.target))
+        setOpenNotf('none')
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleKeyPress = (event) => {
-    if (event.key === "Enter" && searchResults.length > 0) {
-      navigate(`/profile/${searchResults[0].profile_name}`);
+    if (event.key === "Enter") {
+      if (searchResults.length > 0)
+        navigate(`/profile/${searchResults[0]?.profile_name}`);
     }
   };
 
+  const handelClick = (e) => {
+
+    if (settRef.current && !settRef.current.contains(e.target)) {
+      setMenu(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("click", handelClick);
+    return () => {
+      document.removeEventListener("click", handelClick);
+    };
+  }, []);
+
   return (
     <div className={styl.navBar}>
-       <div className={styl.logo}>
+      <div className={styl.logo}>
         <img src={En} onClick={English}/>
         <img src={Fr} onClick={French}/>
         <img src={It}
         onClick={Italian} 
         />
-         </div>
-      <div className={styl.search} ref={searchRef}>
+      </div>
+      <div className={styl.search}>
         <div className={styl.iconSearch}>
           <FaSearchengin style={{ width: "50%", height: "50%" }} />
         </div>
@@ -150,30 +151,32 @@ const Sidebar = () => {
         <Link to={'/pingpong-games'} onClick={handlGameColor}><button style={{color: gameColor}}>Game</button></Link>
         <Link to={'/chat'} onClick={handlChatColor}><button style={{color: chatColor}}>Chat</button></Link>
         </div>
-        <hr />
       <div className={styl.end}>
-        <button className={styl.notifIcon} onClick={toggleNotif} ref={notifRef}>
-          <MdNotifications id={styl.listicon} />
-        </button>
-        {notifOpen && (
-          <div className={styl.notification}>
+        <button className={styl.notifIcon} onClick={handelNotifOpen} ref={notifRef}>
+          <MdNotifications id={styl.listicon}/>
+          <div className={styl.notification} style={{display: openNotf}}>
             <div className={styl.inviteCard}>
               <button className={styl.userImg}>
-                <img src={userImage} alt="User" />
+                <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
+                  <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
+                    {/* notification image */}
+                  <img src={userImage}/>
+                  </div>
+                </div>
               </button>
               <div className={styl.choose}>
                 <div className={styl.Sender}>
-                  <button>NOUAHIDI</button>
-                  <p>sends you an invitation</p>
+                  <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
+                  <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
                 </div>
                 <div className={styl.butChoose}>
-                  <button>Accept</button>
-                  <button style={{ backgroundColor: "#660da56a" }}>Remove</button>
+                  <button >accept</button>
+                  <button style={{backgroundColor: '#660da56a'}}>remove</button>
                 </div>
               </div>
             </div>
           </div>
-        )}
+        </button>
         <div className={styl.sett}>
           <button className={styl.intImg}
           onClick={()=>
