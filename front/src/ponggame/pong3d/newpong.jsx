@@ -27,6 +27,7 @@ export default function LocalNewGame() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const scene = new THREE.Scene();
+    left_score++;
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
@@ -109,7 +110,7 @@ export default function LocalNewGame() {
           mycondition = 'S';
           document.getElementById('result').style.display = "block";
           setWinner("Left Player");
-          setScore(3);
+          setScore(5);
         }
       }
       else if (ball.position.z <= -10) {
@@ -124,7 +125,7 @@ export default function LocalNewGame() {
           mycondition = 'S';
           document.getElementById('result').style.display = "block";
           setWinner("Right Player");
-          setScore(3);
+          setScore(5);
         }
       }
     }

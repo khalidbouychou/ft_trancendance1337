@@ -30,6 +30,7 @@ const Sidebar = () => {
   const [gameColor, setGameColor] = useState('white')
   const [chatColor, setChatColor] = useState('white')
   const [profileColor, setProfileColor] = useState('yellow')
+  const [notiColor, setNotifColor] = useState('white')
   const [menu, setMenu] = useState(false)
 
 
@@ -53,19 +54,28 @@ const Sidebar = () => {
   }
 
   const handlGameColor = () => {
-    setProfileColor("white");
     setGameColor("yellow")
+    setNotifColor("white")
+    setProfileColor("white")
     setChatColor("white")
   }
   const handlProfileColor = () => {
     setProfileColor("yellow");
+    setNotifColor("white")
     setGameColor("white")
     setChatColor("white")
   }
   const handlChatColor = () => {
-    setProfileColor("white");
-    setGameColor("white")
     setChatColor("yellow")
+    setNotifColor("white")
+    setProfileColor("white")
+    setGameColor("white")
+  }
+  const handlNotifColor = () => {
+    setNotifColor("yellow")
+    setProfileColor("white")
+    setGameColor("white")
+    setChatColor("white")
   }
 
   useEffect(() => {
@@ -150,7 +160,7 @@ const Sidebar = () => {
           <Link to={`/profile/${user?.user?.profile_name}`} onClick={handlProfileColor}><button style={{color: profileColor}}>Profile</button></Link>
           {/* <Link to={`/anonymized`} onClick={handlProfileColor}><button style={{color: profileColor}}>List Anonymized</button></Link> */}
           {/* <Link to="/lang"><button style={{color: profileColor}}>Lang</button></Link> */}
-          {/* <Link to="/network"><button style={{color: profileColor}}>User Status</button></Link> */}
+          <Link to={"/notification"} onClick={handlNotifColor}><button style={{color: notiColor}}>Notification</button></Link>
           <Link to={'/games'} onClick={handlGameColor}><button style={{color: gameColor}}>Games</button></Link>
           <Link to={'/chat'} onClick={handlChatColor}><button style={{color: chatColor}}>Chat</button></Link>
           <div className={styl.sett}>

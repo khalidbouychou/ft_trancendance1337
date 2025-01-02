@@ -70,8 +70,8 @@ export default function LocalGame() {
                 ballx = (canvas.width / 2 ) - racketWidth - 15 - 1;
                 balldirectionX *= -1;
                 balldirectionY = offset;
-                if (bonus > 2)
-                    bonus = 2;
+                if (bonus > 3)
+                    bonus = 3;
                 bonus++;
             }
             else if (leftRacketY <= ((canvas.height / 2) + bally + 15) && leftRacketY + racketHeight >= ((canvas.height / 2) + bally - 15) && ((canvas.width / 2) + ballx - 15) <= (0 + racketWidth)) {
@@ -80,8 +80,8 @@ export default function LocalGame() {
                 ballx = -(canvas.width / 2 ) + racketWidth + 15;
                 balldirectionX *= -1;
                 balldirectionY = offset;
-                if (bonus > 2)
-                    bonus = 2;
+                if (bonus > 3)
+                    bonus = 3;
                 bonus++;
             }
             else if (((canvas.height / 2) + bally - 15) <= 0) {
@@ -99,12 +99,13 @@ export default function LocalGame() {
                 balldirectionY = Math.random() * 2 - 1;
                 setLeftScore(prevScore => prevScore + 1);
                 left_score++;
+                bonus = 0;
                 if (left_score >= 5){
                     setCondition('S');
                     mycondition = 'S';
                     document.getElementById('result').style.display = "block";
                     setWinner("Left Player");
-                    setScore(3);
+                    setScore(5);
                 }
             } else if (-(canvas.width / 2) + 15 > ballx) {
                 ballx = 0;
@@ -113,12 +114,13 @@ export default function LocalGame() {
                 balldirectionY = Math.random() * 2 - 1;
                 setRightScore(prevScore => prevScore + 1);
                 right_score++;
+                bonus = 0;
                 if (right_score >= 5){
                     setCondition('S');
                     mycondition = 'S';
                     document.getElementById('result').style.display = "block";
                     setWinner("Right Player");
-                    setScore(3);
+                    setScore(5);
                 }
             }
         };

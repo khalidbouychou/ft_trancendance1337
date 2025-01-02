@@ -629,8 +629,8 @@ ul:last-of-type li {
 
 .components {
     display: flex;
-    width: 30%;
-    min-width: 250px;
+    width: 100%;
+    /* min-width: 250px; */
     height: 100%;
     gap: 5%;
     /* background-color: aqua; */

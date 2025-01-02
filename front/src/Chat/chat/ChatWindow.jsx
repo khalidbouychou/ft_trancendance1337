@@ -103,7 +103,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 
     const viewProfile = () => {
         console.log('View Profile');
-        navigate(`/profile/${otherUser.id}`);
+        navigate(`/profile/${otherUser.profile_name}`);
     };
 
     const onFriendRequest = () => {
