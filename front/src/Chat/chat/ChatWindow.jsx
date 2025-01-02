@@ -6,7 +6,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
 import { useNavigate } from 'react-router-dom';
     
-function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, data, chatMessagesRef, sockets, typingUser }) {
+export default function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, data, chatMessagesRef, sockets, typingUser }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [otherUser, setOtherUser] = useState(null);
     const [isTyping, setIsTyping] = useState(false);
@@ -47,7 +47,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
         }
     }, [data.user]);
 
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    // const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
     // const handleBlockUser = (e) => {
     //     if (!otherUser) {
@@ -93,6 +93,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
         //     if (pong_socket && pong_socket.readyState === WebSocket.OPEN) {
         //         pong_socket.close();
         // };
+        };
     };
 	
 	// var	rand_str = () => {
@@ -114,7 +115,6 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             
         }
     }
-
     return (
         <div className="chat-container">
             {otherUser ? (
@@ -174,5 +174,3 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
         </div>
     );
 }
-
-export default ChatWindow;
