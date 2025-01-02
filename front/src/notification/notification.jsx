@@ -46,12 +46,6 @@ const Notification = () => {
             }
         };
     }, []);
-
-    return (
-        <div className={styles.notification}>
-            <ToastContainer />
-        </div>
-    );
 };
 
 export default Notification;

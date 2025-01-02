@@ -147,9 +147,6 @@ const Sidebar = () => {
       </div>
         <div className={styl.components}>
         <Link to={`/profile/${user?.user?.profile_name}`} onClick={handlProfileColor}><button style={{color: profileColor}}>Profile</button></Link>
-        <Link to={`/anonymized`} onClick={handlProfileColor}><button style={{color: profileColor}}>List Anonymized</button></Link>
-        <Link to="/lang"><button style={{color: profileColor}}>Lang</button></Link>
-        <Link to="/network"><button style={{color: profileColor}}>User Status</button></Link>
         <Link to={'/pingpong-games'} onClick={handlGameColor}><button style={{color: gameColor}}>Game</button></Link>
         <Link to={'/chat'} onClick={handlChatColor}><button style={{color: chatColor}}>Chat</button></Link>
         </div>

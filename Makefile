@@ -14,7 +14,8 @@ s :
 
 up: s uploads_dir
 	@docker-compose up --build
-
+# up: uploads_dir
+# 	@docker-compose up --build
 down :
 	@docker-compose stop
 	@docker-compose down

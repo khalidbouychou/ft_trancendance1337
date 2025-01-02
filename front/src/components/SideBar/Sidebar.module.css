@@ -582,37 +582,24 @@ ul:last-of-type li {
     justify-content: center;
     align-items: center;
 
-    gap: 10%;
-    /* background: linear-gradient(300deg, #330752, #641688);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease; */
-   /* border:1px solid red; */
-   img {
-         width: 30px;
-         height: 30px;
-         object-fit: cover;
-         cursor: pointer;
-         border-radius: 50%;
-         background-color: rgba(255, 255, 255, 0.2);
-    }
+    gap: 30px;
+    img {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    /* img {
+        width: 70px;
+        height: 70px;
+    } */
     img:hover {
         transform: scale(1.1);
     }
-    img {
-        width: 70px;
-        height: 70px;
-    }
 }
 
-@media (max-width: 900px) {
-    .logo {
-        width: 100px;
-        min-width: 100px;
-        p {
-            display: none;
-        }
-    }
-}
 
 .search {
     display: flex;

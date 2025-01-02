@@ -10,6 +10,11 @@ const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   !user && Login()
+  // }, []);
+
   const handelogin = async (e) => {
     e.preventDefault();
     try {
@@ -43,7 +48,7 @@ const Signin = () => {
         });
         setTimeout(() => {
           navigate("/");
-        }, 1300);
+        }, 1000);
       }
     } catch (err) {
       console.log(err);
