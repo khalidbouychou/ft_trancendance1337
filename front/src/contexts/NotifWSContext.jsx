@@ -16,32 +16,38 @@ export function NotificationWebSocketProvider({ children }) {
       console.log("notif socket opened");
       setSocket(ws);
       setIsConnected(true);
-      toast.success("socket ta3 notif te7elat", {
-        position: "top-left"
-      });
+      // toast.success("socket ta3 notif te7elat", {
+      //   position: "top-left"
+      // });
     };
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("notif data:", data);
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>notif data:", data);
       setNotif(data.notification);
-      toast.success("jatek notification", {
-        position: "top-left"
-      });
+      if (data.notification ) {
+        console.log("we received a notification:", data.notification);
+        if (data.notification.notif_type === "GR" && data.notification.status === "pending") {
+          console.log("it was an invite to a pong game");
+            toast.success("u been invited to a pong game", {
+            position: "top-left"
+          })
+        }
+      }
     };
 
     ws.onerror = (error) => {
       console.error("socket error:", error);
-      toast.error("socket error", {
-        position: "top-left"
-      });
+      // toast.error("socket error", {
+      //   position: "top-left"
+      // });
     }
 
     ws.close = (close_code) => {
       console.log("socket tedat", close_code);
-      toast.success("socket tesedat", {
-        position: "top-left"
-      });
+      // toast.success("socket tesedat", {
+      //   position: "top-left"
+      // });
     };
 
     return () => {

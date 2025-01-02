@@ -89,17 +89,8 @@ export default function ChatWindow({ currentContact, chat, message, sendMessage,
         }
         else {
             console.log('Not connected');
-        // }
-        // return () => {
-        //     if (pong_socket && pong_socket.readyState === WebSocket.OPEN) {
-        //         pong_socket.close();
-        // };
         };
     };
-	
-	// var	rand_str = () => {
-	// 	return Math.random().toString(36).substr(2);
-	// }
 
     const viewProfile = () => {
         console.log('View Profile');
