@@ -18,7 +18,7 @@ def notify_user(sender, instance, created, **kwargs):
                 Friend.objects.create(user1=instance.from_user, user2=instance.to_user, status='pending')
         channel_layer = get_channel_layer()
         notification_serializer = NotificationSerializer(instance)
-        notif_type = instance.notif_type
+        # notif_type = instance.notif_type
         room_group_name = f'user_{instance.to_user.id}_NOTIF'
         async_to_sync(channel_layer.group_send)(
             room_group_name,
@@ -33,6 +33,24 @@ def notify_user(sender, instance, created, **kwargs):
                                             Q(user1=instance.to_user, user2=instance.from_user))
             if friends.exists():
                 friends.update(status='friends' if instance.status == 'accepted' else 'None')
+                data = {
+                    'message': 'friend_status_changed',
+                    'from_user': instance.from_user.profile_name,
+                    'to_user': instance.to_user.profile_name,
+                    'status': 'friends'
+                }
+
+                channel_layer = get_channel_layer()
+                notification_serializer = NotificationSerializer(instance)
+                # notif_type = instance.notif_type
+                room_group_name = f'user_{instance.to_user.id}_NOTIF'
+                async_to_sync(channel_layer.group_send)(
+                    "global_notification",
+                    {
+                        'type': 'send_notification',
+                        'notification': data
+                    }
+                )
 
 @receiver(pre_save, sender=Notification)
 def check_GR_status_change(sender, instance, **kwargs):

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { ToastContainer, toast } from "react-toastify";
 
 const NotifWSContext = createContext();
 
@@ -6,62 +7,50 @@ export function NotificationWebSocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [notif, setNotif] = useState(null);
-  const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
   useEffect(() => {
-    let reconnectTimeout;
+    let ws;
+    ws = new WebSocket(`ws://localhost:8000/ws/notif/`);
 
-    const connect = () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        handleReconnect();
-        return;
-      }
-
-      let ws;
-      try {
-        ws = new WebSocket(`ws://localhost:8000/ws/notif/?token=${token}`);
-      } catch (error) {
-        handleReconnect();
-        return;
-      }
-
-      ws.onopen = () => {
-
-        setSocket(ws);
-        setIsConnected(true);
-        setReconnectAttempts(0);
-      };
-
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-       
-        setNotif(data.notification);
-      };
-
-      ws.onclose = handleReconnect;
-
-      ws.onerror = (error) => {
-        handleReconnect();
-      };
+    ws.onopen = () => {
+      console.log("notif socket opened");
+      setSocket(ws);
+      setIsConnected(true);
+      // toast.success("socket ta3 notif te7elat", {
+      //   position: "top-left"
+      // });
     };
 
-    const handleReconnect = () => {
-  
-      setSocket(null);
-      setIsConnected(false);
-      clearTimeout(reconnectTimeout);
-      reconnectTimeout = setTimeout(() => {
- 
-        setReconnectAttempts((attempts) => attempts + 1);
-        connect();
-      }, 1000);
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>notif data:", data);
+      setNotif(data.notification);
+      if (data.notification ) {
+        console.log("we received a notification:", data.notification);
+        if (data.notification.notif_type === "GR" && data.notification.status === "pending") {
+          console.log("it was an invite to a pong game");
+            toast.success("u been invited to a pong game", {
+            position: "top-left"
+          })
+        }
+      }
     };
 
-    connect();
+    ws.onerror = (error) => {
+      console.error("socket error:", error);
+      // toast.error("socket error", {
+      //   position: "top-left"
+      // });
+    }
+
+    ws.close = (close_code) => {
+      console.log("socket tedat", close_code);
+      // toast.success("socket tesedat", {
+      //   position: "top-left"
+      // });
+    };
 
     return () => {
-      clearTimeout(reconnectTimeout);
       if (socket) {
         socket.close();
       }
@@ -72,13 +61,14 @@ export function NotificationWebSocketProvider({ children }) {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(message));
     } else {
-      // console.error('WebSocket is not connected');
+      console.error('WebSocket is not connected');
     }
   }, [socket]);
 
   return (
-    <NotifWSContext.Provider value={{ sendMessage, isConnected, notif }}>
+    <NotifWSContext.Provider value={{ sendMessage, isConnected, notif ,setNotif}}>
       {children}
+      <ToastContainer />
     </NotifWSContext.Provider>
   );
 }

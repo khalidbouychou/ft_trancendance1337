@@ -7,7 +7,7 @@ import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { t } from 'i18next';
     
-function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, data, chatMessagesRef, sockets, typingUser }) {
+export default function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, data, chatMessagesRef, sockets, typingUser }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [otherUser, setOtherUser] = useState(null);
     const [isTyping, setIsTyping] = useState(false);
@@ -43,12 +43,13 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 
     useEffect(() => {
         if (data.user) {
-            console.log("////////////////////////////////////////////////////////////////// im here");
+            console.log("2 data:", data);
+            console.log("data.user:", data.user);
             setCurrentUser(data.user);
         }
     }, [data.user]);
 
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    // const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
     // const handleBlockUser = (e) => {
     //     if (!otherUser) {
@@ -69,12 +70,10 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             console.log('Connected');
             sendNotifMessage({
                 type: 'SEND_GR',
-                game_type: 'PONG',
+                game_type: 'PG',
                 to_user_id: otherUser.id
             });
-            //testing
-            const token = localStorage.getItem('token');
-            const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/?token=${token}`);
+            const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/`);
             pong_socket.onopen = () => {
                 const data2 = {
                     action: 'friend_game',
@@ -84,23 +83,15 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                     avatar2: otherUser.avatar,
                     game_id: `${currentUser.username+'vs'+otherUser.username}`,
                 }
-                pong_socket.send(JSON.stringify(data));
+                pong_socket.send(JSON.stringify(data2));
                 const game_key = `${currentUser.username}vs${otherUser.username}`;
                 navigate('/friendgame', { state: { game_key } });
             }
         }
         else {
             console.log('Not connected');
-        }
-        // return () => {
-        //     if (pong_socket && pong_socket.readyState === WebSocket.OPEN) {
-        //         pong_socket.close();
-        // };
+        };
     };
-	
-	var	rand_str = () => {
-		return Math.random().toString(36).substr(2);
-	}
 
     const viewProfile = () => {
         console.log('View Profile');
@@ -117,7 +108,6 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
             
         }
     }
-
     return (
         <div className="chat-container">
             {otherUser ? (
@@ -178,5 +168,3 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
         </div>
     );
 }
-
-export default ChatWindow;

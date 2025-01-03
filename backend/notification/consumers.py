@@ -17,18 +17,38 @@ import asyncio
 class NotificationConsumer(AsyncWebsocketConsumer):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
-    time = 0
+    profile_name = ''
+    user_id = 0
     async def connect(self):
         self.user = self.scope['user']
+        self.user.status_network = 'online'
+        await sync_to_async(self.user.save)()
         self.user_id = self.user.id
         self.notification_group_name = f'user_{self.user_id}_NOTIF'
-
+        self.profile_name = self.user.profile_name
         await self.channel_layer.group_add(
             self.notification_group_name,
             self.channel_name
         )
+        await self.channel_layer.group_add(
+            "global_notification",
+            self.channel_name
+        )
 
         await self.accept()
+        data = {
+            'message': 'status',
+            'online': self.profile_name,
+            'id': self.user_id
+        }
+
+        await self.channel_layer.group_send(
+            "global_notification",
+            {
+                'type': 'global_update',
+                'message': data
+            }
+        )
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -38,13 +58,30 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         user = self.scope['user']
         user.status_network = 'offline'
         await sync_to_async(user.save)()
+        
+        data = {
+            'message': 'status',
+            'offline': self.profile_name,
+            'id': self.user_id
+        }
+
+        await self.channel_layer.group_send(
+            "global_notification",
+            {
+                'type': 'global_update',
+                'message': data
+            }
+        )
     
+    async def global_update(self, event):
+        data = event['message']
+        await self.send(text_data=json.dumps(data))
+
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message_type = text_data_json.get('type')
         game_type = text_data_json.get('game_type')
-
-        # try:
+        print("receive in notification consumer:", message_type, game_type)  
         if message_type == 'CANCEL_FR':
             await self.cancel_FR(text_data_json)
         elif message_type == 'ACCEPT_FR':
@@ -61,11 +98,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             await self.decline_GR(text_data_json, game_type)
         elif message_type == 'SEND_GR':
             await self.send_GR(text_data_json, game_type)
-        elif message_type == 'CONNECTED':
-            self.time = 10
-            user = self.scope['user']
-            user.status_network = 'online'
-            await sync_to_async(user.save)()
 
     @database_sync_to_async
     def cancel_FR(self, event):
@@ -181,7 +213,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         for notif in notifs:
             if notif and notif.is_expired():
                 notifs.update(status='expired')
-                break
+                break 
         Notification.objects.get_or_create(
             from_user_id=from_user_id,
             to_user_id=to_user_id,
@@ -189,7 +221,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             game_room=game_room,
             game_type=game_type,
             status='pending'
-        )
+        ) 
     
     async def send_notification(self, event):
         notification = event['notification']

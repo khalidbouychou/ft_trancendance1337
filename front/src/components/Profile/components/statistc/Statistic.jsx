@@ -22,8 +22,9 @@ const Statistic = ({ userData, profileName }) => {
     const fetchData = async () => {
       try {
         const data = await axios.get(
-          `http://localhost:8000/api/matches/${profileName}/`
-        );
+          `http://localhost:8000/api/matches/${profileName}/` , {
+            withCredentials: true,
+        });
         setDaTa(data.data);
       } catch (error) {
         console.error("Error fetching match data:", error);
