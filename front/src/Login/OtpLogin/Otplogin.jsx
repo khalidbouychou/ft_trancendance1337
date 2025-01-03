@@ -6,7 +6,7 @@ import axios from "axios";
 
 const Otplogin = () => {
   const navigate = useNavigate();
-  const { get_auth_user } = useContext(AuthContext);
+  const { t,get_auth_user } = useContext(AuthContext);
   const location = useLocation();
 
   useEffect(
@@ -52,13 +52,13 @@ const Otplogin = () => {
 
   return (
     <div className="container otp-container">
-      <h1> Enter the OTP </h1>
+      <h1> {t("Enter the OTP")}</h1>
       <div className="inputs-container">
         {renderInputs()}
       </div>
       <div className="btns">
         <button className="btn-verify-top" onClick={verifyotp}>
-          Verify
+          {t("Verify")}
         </button>
       </div>
     </div>

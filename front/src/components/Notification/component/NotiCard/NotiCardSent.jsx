@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState,useContext, useEffect } from 'react';
 import styl from './NotiCard.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { useNotificationWS } from '../../../../contexts/NotifWSContext.jsx'
 import False from '../../assets/false.svg'
-
+import AuthContext  from "../../../../UserContext/Context";
 
 const NotiCardSent = ({request}) => {
+  const {t} = useContext(AuthContext);
+
   const [isVisible, setIsVisible] = useState(true);
   const [timeLeft, setTimeLeft] = useState(30);
   const [popupMessage, setPopupMessage] = useState('');
@@ -84,10 +86,10 @@ const NotiCardSent = ({request}) => {
         <div className={styl.Sender}>
             <p>
                 {request.notif_type === 'FR' ? (
-                    `Friend request sent to ${request?.to_user?.username}`
+                    `${t("Friend request sent to")} ${request?.to_user?.username}`
                 ) : (
                     <>
-                    `Game invitation (${request?.game_type}) sent to ${request?.to_user?.username}`
+                    `{t("Game invitation")} (${request?.game_type}) {t("sent to")} ${request?.to_user?.username}`
                     <span className={styl.timeLeft}> {timeLeft}s</span>
                     </>
                 )}

@@ -87,11 +87,13 @@ class PlayerViewSet(viewsets.ModelViewSet):
             username=user_data['username'],
             avatar=user_data['avatar'],
             profile_name=user_data['username'],
-            status_network='online',
+            # status_network='online',
         )
-        user.save()
-        PingData.objects.create(player=user)
+        p = PingData.objects.create(player=user)
+        print('User created' , flush=True)
+        print('data == ', p) 
         TicData.objects.create(player=user)
+        user.save()
         return user
 
     def auth_intra(self, request):

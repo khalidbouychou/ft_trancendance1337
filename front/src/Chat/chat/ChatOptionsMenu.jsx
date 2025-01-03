@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserSlash, faUserCheck, faTableTennis, faGamepad } from '@fortawesome/free-solid-svg-icons';
 
-function ChatOptionsMenu({ onPlayPong, otherUser, currentUser, viewProfile, onFriendRequest }) {
+function ChatOptionsMenu({ onPlayPong, otherUser, currentUser, viewProfile, onFriendRequest ,t}) {
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
   const [isFriend, setIsFriend] = useState('None');
@@ -65,7 +65,7 @@ function ChatOptionsMenu({ onPlayPong, otherUser, currentUser, viewProfile, onFr
           {isFriend === 'None' && (
             <li onClick={handleFriendClick}>
               <FontAwesomeIcon icon={faUserCheck} />
-              Send Friend Request
+              {t("Send Friend Request")}
             </li>
           )}
           {/* <li onClick={handleBlockClick}>
@@ -74,19 +74,20 @@ function ChatOptionsMenu({ onPlayPong, otherUser, currentUser, viewProfile, onFr
           </li> */}
           <li onClick={onPlayPong}>
             <FontAwesomeIcon icon={faTableTennis} />
-            Play Pong
+            {t("Play Pong")}
           </li>
           <li onClick={viewProfile}>
             <FontAwesomeIcon icon={faUser} />
-            View Profile
+            {t("View Profile")}
+            
           </li>
         </ul>
       )}
       {showConfirmation && (
         <div className="confirmation-dialog">
-          <p>Are you sure you want to block this {otherUser.username}?</p>
-          <button onClick={handleConfirmBlock}>Confirm</button>
-          <button onClick={handleCancelBlock}>Cancel</button>
+          <p>{t(`Are you sure you want to block this ${otherUser.username}?`)}</p>
+          <button onClick={handleConfirmBlock}>{t("Confirm")}</button>
+          <button onClick={handleCancelBlock}>{t("Cancel")}</button>
         </div>
       )}
     </div>

@@ -3,7 +3,7 @@ import styl from "./SearchCard.module.css";
 import userImage from "../../assets/nouahidi.jpeg";
 import { useNavigate } from "react-router-dom";
 
-const SearchCard = ({ user }) => {
+const SearchCard = ({ user, isHighlighted }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -11,12 +11,11 @@ const SearchCard = ({ user }) => {
   };
 
   return (
-    <button className={styl.searchCard} onClick={handleClick}>
+    <button className={`${styl.searchCard} ${isHighlighted ? styl.highlighted : ""}`} onClick={handleClick}>
       <div className={styl.userImage}>
-        <div className={styl.intImg}>
+        <div className={styl.extImg}>
           <div
             className={styl.intImg}
-            style={{ width: "50px", height: "55px", backgroundColor: "white" }}
           >
             <img src={user.avatar}></img>
           </div>

@@ -11,7 +11,7 @@ import { PiGameControllerFill } from "react-icons/pi";
 import Chart from "./components/test/Chart";
 
 const Home = () => {
-  const { user } = useContext(AuthContext);
+  const { user, t} = useContext(AuthContext);
   const profile_name = user?.user?.profile_name;
   const [filteredPingData, setFilteredPingData] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -63,21 +63,21 @@ const Home = () => {
           <div className={styl.result}>
             <div className={styl.card}>
               <p>
-                WINS
+                {t("WINS")}
                 <FaMedal />
               </p>
               <p id={styl.sm}>{userData?.data[0]?.wins}</p>
             </div>
             <div className={styl.card}>
               <p>
-                LOSE
+                {t("LOSS")}
                 <GiCrossMark />
               </p>
               <p id={styl.sm}>{userData?.data[0]?.losses}</p>
             </div>
             <div className={styl.card}>
               <p>
-                GAMES
+                {t("GAMES")}
                 <PiGameControllerFill />
               </p>
               <p id={styl.sm}>
@@ -160,7 +160,7 @@ const Home = () => {
           </div>
         </div>
         <div className={styl.last}>
-          <Statistic userData={userData} profileName={profile_name}/>
+          {/* <Statistic userData={userData} profileName={profile_name} t={t}/> */}
         </div>
       </div>
     </div>

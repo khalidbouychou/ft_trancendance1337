@@ -18,7 +18,7 @@ const Profile = ({ me }) => {
   const { profilesocket, sendMessage, isConnected } = useNotificationWS();
 
   let { profile_name } = useParams();
-  const { user } = useContext(AuthContext);
+  const { user, t } = useContext(AuthContext);
   const [userData, setUserData] = useState({});
   const [error, setError] = useState(null);
   const [ismyprofil, setIsMyProfil] = useState(1);
@@ -60,8 +60,8 @@ const Profile = ({ me }) => {
   };
 
   useEffect(() => {
-    console.log('++++++++++++++++++++ sockets', profilesocket)
-  },[profilesocket])
+    console.log('++++++++++++++++++++ userData == ', user)
+  },[])
 
   useEffect(() => {
     const fetchPingData = async () => {
@@ -224,7 +224,7 @@ const Profile = ({ me }) => {
                 <div className={styl.settings} style={{ display: setting }}>
                   <button className={styl.Button} onClick={handleAddFriend}>
                     <IoIosPersonAdd className={styl.icons} />
-                    {isfriended ? <p>Unfriend</p> : <p>Add Friend</p>}
+                    {isfriended ? <p>{t("Unfriend")}</p> : <p>{t("Add Friend")}</p>}
                   </button>
                 </div>
               </button>
@@ -244,13 +244,13 @@ const Profile = ({ me }) => {
                           width: "11px",
                           height: "11px",
                           backgroundColor:
-                            userData?.status_network === "online"
+                            userData.status_network === "online"
                               ? "green"
                               : "red",
                         }}
                       ></div>
                     </div>
-                    {userData?.status_network}
+                    {t(user?.status_network)}
                   </p>
                 </p>
               </div>

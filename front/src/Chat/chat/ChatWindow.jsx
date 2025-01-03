@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import { t } from 'i18next';
     
 function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, data, chatMessagesRef, sockets, typingUser }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -147,6 +148,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                             currentUser={currentUser}
                             viewProfile={viewProfile}
                             onFriendRequest={onFriendRequest}
+                            t={t}
                         />
                     </div>
                     <div className="chat-messages" ref={chatMessagesRef}>

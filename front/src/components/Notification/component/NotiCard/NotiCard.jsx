@@ -148,7 +148,7 @@ const NotiCard = ({request}) => {
 		<p >
 		{request?.from_user?.username}
 		{request.notif_type === 'FR' ? (
-			' sent you a friend request'
+			'sent you a friend request'
 		) : (
 			<>
 			' invited you to play ' + request.game_type

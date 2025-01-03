@@ -5,7 +5,7 @@ import ChatWindow from './ChatWindow';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function ChatPage() {
+function ChatPage({t}) {
 	const navigate = useNavigate();
 	const [sockets, setSockets] = useState({});
 	const [message, setMessage] = useState('');
@@ -339,7 +339,6 @@ function ChatPage() {
 
 	return (
 		<div className="chat-app">
-				<h1 className="chat-header-h1">Chat</h1>
 				<div className="chat-layout">
 					<Sidebar
 						setupChatRoom={setupChatRoom}
@@ -358,6 +357,7 @@ function ChatPage() {
 						chatMessagesRef={chatMessagesRef}
 						sockets={sockets}
 						typingUser={typingUser}
+						t={t}
 						/>
 				</div>
         </div>
