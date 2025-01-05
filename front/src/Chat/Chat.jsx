@@ -1,11 +1,11 @@
 // import LoginPage from './login/LoginPage.jsx'
-import ChatPage from "./chat/ChatPage.jsx";
+// import ChatPage from "./chat/ChatPage.jsx";
 import { AuthContext } from "../UserContext/Context.jsx";
 import { useContext } from "react";
 import React, { useState, useEffect, useRef } from "react";
-import styl from "./chat/ChatPage.module.css";
-import Sidebar from "./chat/Sidebar";
-import ChatWindow from "./chat/ChatWindow";
+import styl from "./Chat.module.css";
+import Sidebar from "./components/sidebar/Sidebar.jsx";
+import ChatWindow from "./components/chatWindow/ChatWindow.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 // import { useNotificationWS } from '../contexts/NotifWSContext.jsx'
@@ -367,27 +367,29 @@ const Chat = () => {
   const { t } = useContext(AuthContext);
   return (
     <div className={styl.chatApp}>
-      <div className={styl.chatLayout}>
-        <Sidebar
-          setupChatRoom={setupChatRoom}
-          setupSocket={setupSocket}
-          data={data}
-          allUsers={allUsers}
-          unreadMessages={unreadMessages}
-          t={t}
-        />
-        <ChatWindow
-          currentContact={currentContact}
-          chat={chat}
-          message={message}
-          sendMessage={sendMessage}
-          handleTyping={handleTyping}
-          data={data}
-          chatMessagesRef={chatMessagesRef}
-          sockets={sockets}
-          typingUser={typingUser}
-          t={t}
-        />
+      <div className={styl.content}>
+        <div className={styl.chatLayout}>
+          <Sidebar
+            setupChatRoom={setupChatRoom}
+            setupSocket={setupSocket}
+            data={data}
+            allUsers={allUsers}
+            unreadMessages={unreadMessages}
+            t={t}
+          />
+          <ChatWindow
+            currentContact={currentContact}
+            chat={chat}
+            message={message}
+            sendMessage={sendMessage}
+            handleTyping={handleTyping}
+            data={data}
+            chatMessagesRef={chatMessagesRef}
+            sockets={sockets}
+            typingUser={typingUser}
+            t={t}
+          />
+        </div>
       </div>
     </div>
   );

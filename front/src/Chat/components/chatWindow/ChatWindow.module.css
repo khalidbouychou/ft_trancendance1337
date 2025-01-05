@@ -1,0 +1,136 @@
+.chatContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    /* padding: 10px 15px; */
+    /* background-color: #141619; */
+    border-bottom: 1px solid #202225;
+}
+
+.currentContact {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.contactAvatarContainer {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.contactAvatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #7289da;
+    color: #ffffff;
+}
+
+.contactAvatar {
+    /* width: 100%; */
+    /* height: 100%; */
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.searchResultAvatar .defaultAvatar {
+    font-size: 18px;
+}
+
+.contactAvatar.defaultAvatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #7289da;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.contactAvatar .defaultAvatar svg {
+    width: 20px;
+    height: 20px;
+}
+
+.contactName {
+    font-weight: bold;
+	margin-top: 5px;
+    font-weight: bold;
+}
+
+.typingIndicator {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 0.8em;
+    padding-left: 10px;
+    padding-top: 5px;
+    color: #38a2a3;
+}
+
+.chatMessages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+	padding: 20px 8%;
+    background-color: rgba(174, 176, 180, 0.3);
+}
+
+.chatFormContainer {
+    display: flex;
+    justify-content: center;
+    background-color: #40444b;
+    padding-bottom: 20px;
+}
+
+.chatFormContainer {
+    display: flex;
+    justify-content: center;
+    background-color: #40444b;
+    padding-bottom: 20px;
+}
+
+.chatForm {
+    display: flex;
+    background-color: #565b66;
+    padding: 10px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 70%;
+    
+}
+
+.chatForm button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #7289da;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.noContactSelected {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-style: italic;
+    color: #72767d;
+    font-size: 1.2em;
+    background-color: rgba(174, 176, 180, 0.3);
+}

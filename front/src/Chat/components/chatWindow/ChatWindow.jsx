@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import MessageItem from './MessageItem';
-import ChatOptionsMenu from './ChatOptionsMenu';
+import MessageItem from './components/messageItem/MessageItem.jsx';
+import ChatOptionsMenu from './components/chatOptionsMenu/ChatOptionsMenu.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
+import { useNotificationWS } from '../../../contexts/NotifWSContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { t } from 'i18next';
-import styl from './ChatPage.module.css';
+import styl from './ChatWindow.module.css';
     
 export default function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, data, chatMessagesRef, sockets, typingUser, t }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

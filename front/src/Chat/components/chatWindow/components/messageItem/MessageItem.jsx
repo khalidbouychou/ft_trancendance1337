@@ -1,5 +1,5 @@
 import React from 'react';
-import styl from './ChatPage.module.css';
+import styl from './MessageItem.module.css';
 
 function MessageItem({ message, currentUser }) {
     if (!currentUser) {

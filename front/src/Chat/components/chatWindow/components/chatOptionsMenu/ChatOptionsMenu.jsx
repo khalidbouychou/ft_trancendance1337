@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import styl from './ChatPage.module.css';
+import styl from './ChatOptionsMenu.module.css';
 import { faUser, faUserSlash, faUserCheck, faTableTennis, faGamepad } from '@fortawesome/free-solid-svg-icons';
 
 function ChatOptionsMenu({ onPlayPong, otherUser, currentUser, viewProfile, onFriendRequest ,t}) {
@@ -60,7 +60,7 @@ function ChatOptionsMenu({ onPlayPong, otherUser, currentUser, viewProfile, onFr
   
   return (
     <div className={styl.chatOptionsMenu} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <button className="menu-toggle">⋮</button>
+      <button className={styl.menuToggle}>⋮</button>
       {isOpen && (
         <ul className={styl.menuList}>
           {isFriend === 'None' && (
