@@ -11,7 +11,7 @@ import { PiGameControllerFill } from "react-icons/pi";
 import Chart from "./components/test/Chart";
 
 const Home = () => {
-  const { user } = useContext(AuthContext);
+  const { user, t } = useContext(AuthContext);
   const profile_name = user?.user?.profile_name;
   const [filteredPingData, setFilteredPingData] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -29,9 +29,10 @@ const Home = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json()
-        console.log("******************",data) 
-        const sortedData = data.filter(data => data.username !== "ke3ki3a")
+        const data = await response.json();
+        console.log("******************", data);
+        const sortedData = data
+          .filter((data) => data.username !== "ke3ki3a")
           .sort((a, b) => {
             if (b.level === a.level) {
               return b.wins - a.wins;
@@ -63,21 +64,21 @@ const Home = () => {
           <div className={styl.result}>
             <div className={styl.card}>
               <p>
-                WINS
+                {t("WINS")}
                 <FaMedal />
               </p>
               <p id={styl.sm}>{userData?.data[0]?.wins}</p>
             </div>
             <div className={styl.card}>
               <p>
-                LOSE
+                {t("LOSS")}
                 <GiCrossMark />
               </p>
               <p id={styl.sm}>{userData?.data[0]?.losses}</p>
             </div>
             <div className={styl.card}>
               <p>
-                GAMES
+                {t("GAMES")}
                 <PiGameControllerFill />
               </p>
               <p id={styl.sm}>
@@ -98,10 +99,12 @@ const Home = () => {
                   />
                 </div>
               </div>
-              <p>
-                {filteredPingData?.[1]?.profile_name.length > 8
-                  ? filteredPingData?.[1]?.profile_name.substring(0, 8) + "."
-                  : filteredPingData?.[1]?.profile_name.toUpperCase()}
+              <p >
+                {filteredPingData?.[1]?.profile_name
+                  ? filteredPingData?.[1]?.profile_name.length > 8
+                    ? filteredPingData?.[1]?.profile_name.substring(0, 8) + "."
+                    : filteredPingData?.[1]?.profile_name.toUpperCase()
+                  : "."}
               </p>
               <div
                 className={styl.nbRank}
@@ -123,12 +126,14 @@ const Home = () => {
                   />
                 </div>
               </div>
-              <p>
-                {filteredPingData?.[0]?.profile_name.length > 8
-                  ? filteredPingData?.[0]?.profile_name.substring(0, 8) + "."
-                  : filteredPingData?.[0]?.profile_name.toUpperCase()}
+              <p >
+                {filteredPingData?.[0]?.profile_name
+                  ? filteredPingData?.[0]?.profile_name.length > 8
+                    ? filteredPingData?.[0]?.profile_name.substring(0, 8) + "."
+                    : filteredPingData?.[0]?.profile_name.toUpperCase()
+                  : "."}
               </p>
-              <div className={styl.nbRank} style={{ border: "gold 4px solid" }}>
+              <div className={styl.nbRank} style={{ border: "gold 4px solid", top: '30%' }}>
                 <p>1</p>
               </div>
             </button>
@@ -145,10 +150,12 @@ const Home = () => {
                   />
                 </div>
               </div>
-              <p>
-                {filteredPingData?.[2]?.profile_name.length > 8
-                  ? filteredPingData?.[2]?.profile_name.substring(0, 8) + "."
-                  : filteredPingData?.[2]?.profile_name.toUpperCase()}
+              <p >
+                {filteredPingData?.[2]?.profile_name
+                  ? filteredPingData?.[2]?.profile_name.length > 8
+                    ? filteredPingData?.[2]?.profile_name.substring(0, 8) + "."
+                    : filteredPingData?.[2]?.profile_name.toUpperCase()
+                  : "."}
               </p>
               <div
                 className={styl.nbRank}
@@ -160,7 +167,7 @@ const Home = () => {
           </div>
         </div>
         <div className={styl.last}>
-          <Statistic userData={userData} profileName={profile_name}/>
+          <Statistic userData={userData} profileName={profile_name} t={t} />
         </div>
       </div>
     </div>

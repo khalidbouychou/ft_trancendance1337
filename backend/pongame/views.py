@@ -8,29 +8,15 @@ from rest_framework.authentication import SessionAuthentication
 
 from rest_framework.views import APIView
 
-# @authentication_classes([SessionAuthentication])
-# @permission_classes([IsAuthenticated])
-# @api_view(['GET'])
-# def game_state_view(request, room_name):
-#     game_state = GameStateManager.get_state(f'{room_name}')
-#     if game_state:
-#         return JsonResponse(game_state)
-#     else:
-#         return JsonResponse({'error': 'Game state not found'}, status=404)
- 
-# @authentication_classes([SessionAuthentication]) 
-# @permission_classes([IsAuthenticated])
-# @api_view(['GET'])
-# def user_data(request):
-#     print("--------user:", request.user ,flush=True)  
-#     context = {
-#         'user': request.user.username,
-#         'avatar': request.user.avatar,
-#         'exp_game': PingData.objects.get(player=request.user).exp_game,
-#     }
-#     print("exp_game:", context.get('exp_game'), "user:", context.get('user'), "avatar:", context.get('avatar'))
-#     return JsonResponse(context) 
-
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def game_state_view(request, room_name):
+    game_state = GameStateManager.get_state(f'{room_name}')
+    if game_state:
+        return JsonResponse(game_state)
+    else:
+        return JsonResponse({'error': 'Game state not found'}, status=404)
 
 class UserDataView(APIView):
     authentication_classes = [SessionAuthentication]
@@ -38,9 +24,9 @@ class UserDataView(APIView):
 
     def get(self, request):
         context = {
-            'user': request.user.username,
+            'username': request.user.username,
+            'profile_name': request.user.profile_name,
             'avatar': request.user.avatar,
             'exp_game': PingData.objects.get(player=request.user).exp_game,
         }
         return JsonResponse(context)
-    

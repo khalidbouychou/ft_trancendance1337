@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import styl from './MatchHistory.module.css';
-import axios from 'axios';
-import CardMatch from './components/cardMatch/CardMatch';
+import React, { useEffect, useState } from "react";
+import styl from "./MatchHistory.module.css";
+import axios from "axios";
+import CardMatch from "./components/cardMatch/CardMatch";
 
-const MatchHistory = ({ profileName }) => {
+const MatchHistory = ({ profileName, t }) => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,8 +11,13 @@ const MatchHistory = ({ profileName }) => {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/matches/${profileName}/`);
-        console.log('response == ', response);
+        const response = await axios.get(
+          `http://localhost:8000/api/matches/${profileName}/`,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("response == ", response);
 
         const sortedMatches = response.data.sort(
           (a, b) => new Date(b.date) - new Date(a.date)
@@ -20,7 +25,7 @@ const MatchHistory = ({ profileName }) => {
 
         setMatches(sortedMatches);
       } catch (error) {
-        setError('Error fetching match data');
+        setError("Error fetching match data");
       } finally {
         setLoading(false);
       }
@@ -40,21 +45,27 @@ const MatchHistory = ({ profileName }) => {
   return (
     <div className={styl.mthistory}>
       <div className={styl.mHead}>
-        <p style={{ width: '30%' }}>Opponent</p>
-        <p style={{ width: '20%' }}>Result</p>
-        <p>Status</p>
-        <p>Date & Time</p>
+        <p style={{ width: "30%" }}>{t("Opponent")}</p>
+        <p style={{ width: "20%" }}>{t("Result")}</p>
+        <p>{t("Status")}</p>
+        <p>{t("Date & Time")}</p>
       </div>
-      <div className={styl.matches}>
-        {matches.map((match, index) => (
-          <CardMatch
-            key={index}
-            match={match}
-            profileName={profileName}
-            animationDelay={`${0.2 * index}s`}
-          />
-        ))}
-      </div>
+      {matches.length > 0 ? (
+        <div className={styl.matches}>
+          {matches.map((match, index) => (
+            <CardMatch
+              key={index}
+              match={match}
+              profileName={profileName}
+              animationDelay={`${0.2 * index}s`}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className={styl.emptyMt}>
+          <p>No match history found</p>
+        </div>
+      )}
     </div>
   );
 };

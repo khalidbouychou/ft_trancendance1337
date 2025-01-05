@@ -1,145 +1,231 @@
-import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useContext, useRef } from "react";
-import styl from "./Sidebar.module.css";
-import pinglogo from "./assets/pinglogo.png";
-import { MdNotifications } from "react-icons/md";
-import { AuthContext } from "../../UserContext/Context";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { IoIosArrowDown } from "react-icons/io";
 import { FaSearchengin } from "react-icons/fa";
-import SearchCard from "./components/searchCard/SearchCard.jsx";
-import userImage from "./assets/nouahidi.jpeg";
 import { CiSettings, CiLogout } from "react-icons/ci";
-import { use } from "react";
+import i18n from "../../i18n";
+import { AuthContext } from "../../UserContext/Context";
+import styl from "./Sidebar.module.css";
+import En from "../../../public/assets/icons/lang-icons/En-lang.png";
+import Fr from "../../../public/assets/icons/lang-icons/Fr-lang.png";
+import It from "../../../public/assets/icons/lang-icons/It-lang.png";
+import SearchCard from "./components/searchCard/SearchCard.jsx";
 
 const Sidebar = () => {
-  const { user } = useContext(AuthContext);
+  const { t, user, Logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  const searchRef = useRef(null);
-  const notifRef = useRef(null);
-  const settRef = useRef(null);
+  const location = useLocation();
+  const [displaySett, setDisplaySett] = useState('none')
 
-  const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [notifOpen, setNotifOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("home");
-  const [colornotif, setcolornotif] = useState("red");
+  const [searchResults, setSearchResults] = useState([]);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [currentLang, setCurrentLang] = useState(
+    localStorage.getItem("lang") || "en"
+  );
+  const [isLangListOpen, setIsLangListOpen] = useState(false);
 
-  const buttonColors = {
-    home: activeTab === "home" ? "yellow" : "white",
-    profile: activeTab === "profile" ? "yellow" : "white",
-    game: activeTab === "game" ? "yellow" : "white",
-    chat: activeTab === "chat" ? "yellow" : "white",
+  const searchRef = useRef(null);
+  const langListRef = useRef(null);
+  const menuRef = useRef(null);
+
+  const langIcons = { en: En, fr: Fr, it: It };
+
+  const changeLanguage = (lang) => {
+    setCurrentLang(lang);
+    localStorage.setItem("lang", lang);
+    i18n.changeLanguage(lang);
+    setIsLangListOpen(false);
   };
 
-  const toggleNotif = () => setNotifOpen(!notifOpen);
-  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const handleToggleLangList = () => {
+    setIsLangListOpen((prev) => !prev);
+  };
+
+  const handleDisplaySettings = () => {
+    setDisplaySett(displaySett === 'none' ? 'flex' : 'none');
+  }
+
+  const handleClickOutside = (event) => {
+    if (langListRef.current && !langListRef.current.contains(event.target)) {
+      setIsLangListOpen(false);
+    }
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      menuRef.current.style.display = "none";
+    }
+    if (searchRef.current && !searchRef.current.contains(event.target)) {
+      setSearchQuery("");
+      setSearchResults([]);
+      setHighlightedIndex(-1);
+    }
+  };
 
   useEffect(() => {
-    const fetchSearchResults = async () => {
-      if (searchQuery.trim()) {
-        const response = await fetch(
-          `http://localhost:8000/api/search/?q=${searchQuery}`
-        );
-        const data = await response.json();
-        // Filter out 'ke3ki3a' and your own profile
-        const filteredData = data.filter(
-          (result) =>
-            result.profile_name !== "ke3ki3a" &&
-            result.profile_name !== user?.user?.profile_name
-        );
-        setSearchResults(filteredData);
-      } else {
-        setSearchResults([]);
-      }
-    };
-
-    const debounceFetch = setTimeout(fetchSearchResults, 300);
-    return () => clearTimeout(debounceFetch);
-  }, [searchQuery, user]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setSearchResults([]);
-      }
-      if (notifRef.current && !notifRef.current.contains(event.target)) {
-        setNotifOpen(false);
-      }
-      if (settRef.current && !settRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
-  
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter" && searchResults.length > 0) {
-      navigate(`/profile/${searchResults[0].profile_name}`);
+
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      fetch(`http://localhost:8000/api/search/?q=${searchQuery}`)
+        .then((response) => response.json())
+        .then((data) => setSearchResults(data));
+    } else {
+      setSearchResults([]);
+      setHighlightedIndex(-1);
+    }
+  }, [searchQuery]);
+
+  const handleKeyDown = (event) => {
+    if (searchResults.length > 0) {
+      if (event.key === "ArrowDown") {
+        setHighlightedIndex((prevIndex) =>
+          prevIndex < searchResults.length - 1 ? prevIndex + 1 : 0
+        );
+      } else if (event.key === "ArrowUp") {
+        setHighlightedIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : searchResults.length - 1
+        );
+      } else if (event.key === "Enter" && highlightedIndex !== -1) {
+        const selectedUser = searchResults[highlightedIndex];
+        navigate(`/profile/${selectedUser.profile_name}`);
+        setSearchQuery("");
+        setSearchResults([]);
+        setHighlightedIndex(-1);
+      }
+    }
+  };
+
+  const toggleMenu = () => {
+    if (menuRef.current.style.display === "block") {
+      menuRef.current.style.display = "none";
+    } else {
+      menuRef.current.style.display = "block";
     }
   };
 
   return (
     <div className={styl.navBar}>
-      <Link to="/" className={styl.logo} onClick={() => setActiveTab("home")}>
-        <img src={pinglogo} alt="Ping Pong Logo" />
-        <p>Ping Pong</p>
-      </Link>
-      <div className={styl.search} ref={searchRef}>
-        <div className={styl.iconSearch}>
-          <FaSearchengin style={{ width: "50%", height: "50%" }} />
-        </div>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
-          className={styl.inputSearch}
-        />
-        <div className={styl.searchResult}>
-          {searchResults.slice(0, 5).map((user) => (
-            <SearchCard key={user.id} user={user} />
-          ))}
-        </div>
-      </div>
-      <div className={styl.components}>
-        <Link to="/" onClick={() => setActiveTab("home")}>
-          <button style={{ color: buttonColors.home }}>Home</button>
-        </Link>
-        <Link
-          to={`/profile/${user?.user?.profile_name}`}
-          onClick={() => setActiveTab("profile")}
-        >
-          <button style={{ color: buttonColors.profile }}>Profile</button>
-        </Link>
-        <Link to="/games" onClick={() => setActiveTab("game")}>
-          <button style={{ color: buttonColors.game }}>Game</button>
-        </Link>
-        <Link to="/chat" onClick={() => setActiveTab("chat")}>
-          <button style={{ color: buttonColors.chat }}>Chat</button>
-        </Link>
-      </div>
-      <div className={styl.end}>
-        <button className={styl.notifIcon} onClick={toggleNotif} ref={notifRef}>
-          <MdNotifications
-            id={styl.listicon}
-            onClick={() => navigate("/notification")}
-          />
-        </button>
-        <button className={styl.intImg} onClick={toggleMenu} ref={settRef}>
-          <img src={user?.user?.avatar} alt="User Avatar" />
-        </button>
-        {menuOpen && (
-          <div className={styl.settings}>
-            <Link className={styl.links} to="/setting">
-              <CiSettings /> Settings
-            </Link>
-            <Link className={styl.links} to="/logout">
-              <CiLogout /> Logout
-            </Link>
+      <div className={styl.langage}>
+        <img src={langIcons[currentLang]} alt="Current Language" />
+        <p onClick={handleToggleLangList}>
+          {currentLang.toUpperCase()}
+          <IoIosArrowDown />
+        </p>
+        {isLangListOpen && (
+          <div
+            className={styl.langageList}
+            ref={langListRef}
+            style={{ display: "flex" }}
+          >
+            {Object.entries(langIcons).map(([lang, icon]) => (
+              <img
+                key={lang}
+                src={icon}
+                alt={`${lang} icon`}
+                onClick={() => changeLanguage(lang)}
+              />
+            ))}
           </div>
         )}
+      </div>
+      <div className={styl.searchComponents}>
+        <div className={styl.search} ref={searchRef}>
+          <div className={styl.iconSearch}>
+            <FaSearchengin style={{ width: "50%", height: "50%" }} />
+          </div>
+          <div className={styl.inputSearch}>
+            <input
+              type="text"
+              placeholder={t("Search...")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            {searchResults.length > 0 && (
+              <div className={styl.searchResult}>
+                {searchResults.slice(0, 5).map((user, index) => (
+                  <SearchCard
+                    key={user.id}
+                    user={user}
+                    isHighlighted={index === highlightedIndex}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={styl.components}>
+          <Link to={"/"}>
+            <button
+              style={{
+                color: location.pathname === "/" ? "yellow" : "white",
+              }}
+            >
+              {t("Home")}
+            </button>
+          </Link>
+          <Link to={`/profile/${user?.user?.profile_name}`}>
+            <button
+              style={{
+                color:
+                  location.pathname === `/profile/${user?.user?.profile_name}`
+                    ? "yellow"
+                    : "white",
+              }}
+            >
+              {t("Profile")}
+            </button>
+          </Link>
+          <Link to={"/notification"}>
+            <button
+              style={{
+                color:
+                  location.pathname === "/notification" ? "yellow" : "white",
+              }}
+            >
+              {t("Notification")}
+            </button>
+          </Link>
+          <Link to={"/games"}>
+            <button
+              style={{
+                color: location.pathname === "/games" ? "yellow" : "white",
+              }}
+            >
+              {t("Games")}
+            </button>
+          </Link>
+          <Link to={"/chat"}>
+            <button
+              style={{
+                color: location.pathname === "/chat" ? "yellow" : "white",
+              }}
+            >
+              {t("Chat")}
+            </button>
+          </Link>
+          <div className={styl.sett}>
+            <button onClick={toggleMenu} onClickCapture={handleDisplaySettings}>
+              <div className={styl.extImg}>
+                <div className={styl.intImg}>
+                  <img src={user?.user?.avatar} />
+                </div>
+              </div>
+            </button>
+            <div id="menu" ref={menuRef} className={styl.settings} style={{display: displaySett}}>
+              <div className={styl.links} onClick={() => navigate("/setting")}>
+                <CiSettings /> {t("Setting")}
+              </div>
+              <div onClick={Logout} className={styl.links}>
+                <CiLogout /> {t("Logout")}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

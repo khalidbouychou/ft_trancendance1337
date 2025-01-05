@@ -18,7 +18,7 @@ const Profile = ({ me }) => {
   const { profilesocket, sendMessage, isConnected } = useNotificationWS();
 
   let { profile_name } = useParams();
-  const { user } = useContext(AuthContext);
+  const { user, t } = useContext(AuthContext);
   const [userData, setUserData] = useState({});
   const [error, setError] = useState(null);
   const [ismyprofil, setIsMyProfil] = useState(1);
@@ -60,13 +60,15 @@ const Profile = ({ me }) => {
   };
 
   useEffect(() => {
-    console.log('++++++++++++++++++++ sockets', profilesocket)
-  },[profilesocket])
+    console.log('++++++++++++++++++++ userData == ', user)
+  },[])
 
   useEffect(() => {
     const fetchPingData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/pingdata/${profile_name}/`);
+        const response = await axios.get(`http://localhost:8000/api/pingdata/${profile_name}/` , {
+          withCredentials: true,
+      });
         const pingData = response.data;
         console.log("ping data", pingData);
   
@@ -113,9 +115,9 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchFriends = async () => {
       const response = await axios.get(
-        `http://localhost:8000/api/friends/${profile_name}/`,
-        { withCredentials: true }
-      );
+        `http://localhost:8000/api/friends/${profile_name}/` , {
+          withCredentials: true,
+      });
       setFriendList(response.data);
     };
     fetchFriends();
@@ -138,9 +140,9 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchBlocked = async () => {
       const response = await axios.get(
-        `http://localhost:8000/api/blocked/${profile_name}/`,
-        { withCredentials: true }
-      );
+        `http://localhost:8000/api/blocked/${profile_name}/` , {
+          withCredentials: true,
+      });
       setBlockedList(response.data);
     };
     fetchBlocked();
@@ -224,7 +226,7 @@ const Profile = ({ me }) => {
                 <div className={styl.settings} style={{ display: setting }}>
                   <button className={styl.Button} onClick={handleAddFriend}>
                     <IoIosPersonAdd className={styl.icons} />
-                    {isfriended ? <p>Unfriend</p> : <p>Add Friend</p>}
+                    {isfriended ? <p>{t("Unfriend")}</p> : <p>{t("Add Friend")}</p>}
                   </button>
                 </div>
               </button>
@@ -244,13 +246,13 @@ const Profile = ({ me }) => {
                           width: "11px",
                           height: "11px",
                           backgroundColor:
-                            userData?.status_network === "online"
+                            userData.status_network === "online"
                               ? "green"
                               : "red",
                         }}
                       ></div>
                     </div>
-                    {userData?.status_network}
+                    {t(userData?.status_network)}
                   </p>
                 </p>
               </div>
@@ -260,7 +262,7 @@ const Profile = ({ me }) => {
                     <div className={styl.Side}>
                       <FaMedal className={styl.icon} />
                     </div>
-                    <div className={styl.resName}>Wins</div>
+                    <div className={styl.resName}>{t("Wins")}</div>
                     <div className={styl.Side}>{wins}</div>
                   </div>
                   <hr />
@@ -268,7 +270,7 @@ const Profile = ({ me }) => {
                     <div className={styl.Side}>
                       <GiCrossMark className={styl.icon} />
                     </div>
-                    <div className={styl.resName}>Lose</div>
+                    <div className={styl.resName}>{t("Lose")}</div>
                     <div className={styl.Side}>{lose}</div>
                   </div>
                   <hr />
@@ -276,14 +278,14 @@ const Profile = ({ me }) => {
                     <div className={styl.Side}>
                       <PiGameControllerFill className={styl.icon} />
                     </div>
-                    <div className={styl.resName}>Games</div>
+                    <div className={styl.resName}>{t("Games")}</div>
                     <div className={styl.Side}>{wins + lose}</div>
                   </div>
                 </div>
 
                 <div className={styl.level}>
                   <div className={styl.tmp}>
-                    <p>Level {pingLevel}</p>
+                    <p>{t("Level")} {pingLevel}</p>
                     <p>
                       {pingExp} /{" "}
                       <p
@@ -309,9 +311,9 @@ const Profile = ({ me }) => {
                         left: "2px",
                       }}
                     >
-                      Next Level
+                      {t("Next Level")}
                     </p>
-                    <p>Level {nextpingLevel}</p>
+                    <p>{t("Level")} {nextpingLevel}</p>
                   </div>
                 </div>
               </div>
@@ -323,7 +325,7 @@ const Profile = ({ me }) => {
                         activeSection === "Leaderboard" ? "red" : "white",
                     }}
                   >
-                    Leaderboard
+                    {t("Leaderboard")}
                   </p>
                 </button>
                 <button onClick={() => handelClick("MatchHistory")}>
@@ -333,22 +335,22 @@ const Profile = ({ me }) => {
                         activeSection === "MatchHistory" ? "red" : "white",
                     }}
                   >
-                    Match History
+                    {t("Match History")}
                   </p>
                 </button>
               </div>
             </div>
             <div className={styl.userData}>
-              {activeSection === "Leaderboard" && <Leaderboard />}
+              {activeSection === "Leaderboard" && <Leaderboard t={t}/>}
               {activeSection === "MatchHistory" && (
-                <MatchHistory profileName={profileName} />
+                <MatchHistory profileName={profileName} t={t}/>
               )}
             </div>
           </div>
           {/* side2 */}
           <div className={styl.side2}>
             <div className={styl.headFr}>
-              <p>{status}</p>
+              <p>{t(status)}</p>
               <button onClick={handleShooseList} style={{display: displayShooseButton}}>
                 <p>...</p>
                 <div

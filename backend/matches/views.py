@@ -11,7 +11,7 @@ def get_matches(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def get_matches_by_profile_name(request, profile_name):
-    matches = Matches.objects.filter(Q(winner_profile_name=profile_name)|Q(loser_profile_name=profile_name))
+def get_matches_by_username(request, username):
+    matches = Matches.objects.filter(Q(winner=username)|Q(loser=username))
     serializer = MatchesSerializer(matches, many=True)
     return Response(serializer.data)

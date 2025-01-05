@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './ChatPage.css';
+import styl from './ChatPage.module.css';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function ChatPage() {
+function ChatPage({t}) {
 	const navigate = useNavigate();
 	const [sockets, setSockets] = useState({});
 	const [message, setMessage] = useState('');
@@ -40,6 +40,7 @@ function ChatPage() {
 				const response = await axios('http://localhost:8000/api/chat/',{
 					withCredentials: true,
 				});
+				console.log("1 data:", response.data);
 				setData(response.data);
 				setupSocket(1);
 				setupNotificationSocket();
@@ -128,15 +129,15 @@ function ChatPage() {
 		}
 	}, [currentContact]);
 
-	// useEffect(() => {
-	// 	Object.entries(unreadMessages).forEach(([userId, count]) => {
-	// 		const user = data.chat_rooms.flatMap(room => [room.user1, room.user2])
-	// 			.find(user => user.id === parseInt(userId));
-	// 		if (user && count > 0) {
-	// 			console.log(`${count} unread messages from ${user.username}`);
-	// 		}
-	// 	});
-	// }, [unreadMessages]);
+	useEffect(() => {
+		Object.entries(unreadMessages).forEach(([userId, count]) => {
+			const user = data.chat_rooms.flatMap(room => [room.user1, room.user2])
+				.find(user => user.id === parseInt(userId));
+			if (user && count > 0) {
+				console.log(`${count} unread messages from ${user.username}`);
+			}
+		});
+	}, [unreadMessages]);
 
 	useEffect(() => {
 		if (!receivedMessage) {
@@ -187,23 +188,24 @@ function ChatPage() {
 		};
 	};
 
-	const handleUnreadMessages = (message) => {
-		if (data.user.id === message.sender.id) {
-			return
-		}
-		if (currentContact) {
-			const currentContactId = currentContact.user1.id === data.user.id ? currentContact.user2.id : currentContact.user1.id
-			if (currentContactId === message.sender.id) {
-				return
-			}
-		}
-		setUnreadMessages({
-			...unreadMessages,
-			[message.sender.id]: (unreadMessages[message.sender.id] || 0) + 1
-		})
-	}
+	// const handleUnreadMessages = (message) => {
+	// 	if (data.user.id === message.sender.id) {
+	// 		return
+	// 	}
+	// 	if (currentContact) {
+	// 		const currentContactId = currentContact.user1.id === data.user.id ? currentContact.user2.id : currentContact.user1.id
+	// 		if (currentContactId === message.sender.id) {
+	// 			return
+	// 		}
+	// 	}
+	// 	setUnreadMessages({
+	// 		...unreadMessages,
+	// 		[message.sender.id]: (unreadMessages[message.sender.id] || 0) + 1
+	// 	})
+	// }
 
 	const setupSocket = (room_id) => {
+		console.log(`Setting up WebSocket for room: ${room_id}`);
 		return new Promise((resolve, reject) => {
 			if (!room_id) {
 				return reject(new Error('No room ID provided'));
@@ -302,15 +304,19 @@ function ChatPage() {
 		console.log('roomId:', roomId)
 		console.log('Current contact id:', currentContact.id)
 		if (message) {
-			sockets[roomId].send(JSON.stringify({
-				type: 'MESSAGE',
-				room_id: roomId,
-				sender: data.user.id,
-				content: message,
-			}))
-			setMessage('')
+			if (sockets[roomId] && sockets[roomId].readyState === WebSocket.OPEN) {
+				sockets[roomId].send(JSON.stringify({
+					type: 'MESSAGE',
+					room_id: roomId,
+					sender: data.user.id,
+					content: message,
+				}));
+				setMessage('');
+			} else {
+				console.warn('Cannot send message, WebSocket not ready.');
+			}
 		}
-	}
+	};
 
 	const handleTyping = (e) => {
 		setMessage(e.target.value)
@@ -323,22 +329,24 @@ function ChatPage() {
 		}
 	}
 
-	const setupChatRoom = (contact) => {
+	const setupChatRoom = async (contact) => {
 		setCurrentContact(contact)
 		setRoomId(contact.id)
 		setChat(contact.messages)
+
+		await setupSocket(contact.id);
 	}
 
 	return (
-		// <div className="chat-app">
-				<div className="chat-layout">
-					<div className="container-chat">
+		<div className={styl.chatApp}>
+				<div className={styl.chatLayout}>
 					<Sidebar
 						setupChatRoom={setupChatRoom}
 						setupSocket={setupSocket}
 						data={data}
 						allUsers={allUsers}
 						unreadMessages={unreadMessages}
+						t={t}
 						/>
 					<ChatWindow
 						currentContact={currentContact}
@@ -350,10 +358,10 @@ function ChatPage() {
 						chatMessagesRef={chatMessagesRef}
 						sockets={sockets}
 						typingUser={typingUser}
+						t={t}
 						/>
-					</div>
 				</div>
-        // </div>
+        </div>
     );
 }
 

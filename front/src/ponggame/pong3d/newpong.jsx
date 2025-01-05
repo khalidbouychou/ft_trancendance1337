@@ -1,10 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-// import { OrbitControls } from '@react-three/drei';
 import * as styles from './newpong.module.css';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from "three";
-import { use } from 'react';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 
@@ -29,6 +27,7 @@ export default function LocalNewGame() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const scene = new THREE.Scene();
+    left_score++;
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
@@ -111,7 +110,7 @@ export default function LocalNewGame() {
           mycondition = 'S';
           document.getElementById('result').style.display = "block";
           setWinner("Left Player");
-          setScore(3);
+          setScore(5);
         }
       }
       else if (ball.position.z <= -10) {
@@ -126,7 +125,7 @@ export default function LocalNewGame() {
           mycondition = 'S';
           document.getElementById('result').style.display = "block";
           setWinner("Right Player");
-          setScore(3);
+          setScore(5);
         }
       }
     }

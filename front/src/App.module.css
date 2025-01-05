@@ -1,12 +1,38 @@
-body{
-  background:linear-gradient(rgba(245, 236, 236, 0.01), rgba(200, 233, 36, 0.01)),  url('../public/assets/main-bg.jpg') no-repeat center center;
+
+/* body{ */
+  /* background:linear-gradient(rgba(245, 236, 236, 0.01), rgba(200, 233, 36, 0.01)),  url('../public/assets/main-bg.jpg') no-repeat center center; */
   /* background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.9)),  url('./bla.png') no-repeat center center; */
-  background-color: rgb(34, 7, 93);
+  /* background-color: rgb(34, 7, 93); */
   /* background-color: #524895; */
   /* background-color: black; */
-  background-size: cover;
-  overflow: hidden;
+  /* background-size: cover; */
+  /* overflow: hidden; */
+  /* background : url('../public/assets/main-bg.jpg') no-repeat center center; */
+/* }  */
+
+/* -------------------------------------------------------------------- */
+
+/* Font import and global reset */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+/* Global reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Quicksand', sans-serif;
+    /* color: white; */
 }
+/* Body styling */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('../public/assets/main-bg.jpg') no-repeat center center;
+}
+/* Section styles */
+
+/* ---------------------------------------- */
 
 .EntirePage {
   display: flex;

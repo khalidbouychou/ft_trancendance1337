@@ -13,70 +13,75 @@ from rest_framework.authentication import SessionAuthentication
 from login.models import Player
 from asgiref.sync import sync_to_async
 import asyncio
-from login.models import Friend
-from django.db.models import Q
- 
+
 class NotificationConsumer(AsyncWebsocketConsumer):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
-    time = 0
+    profile_name = ''
+    user_id = 0
     async def connect(self):
         self.user = self.scope['user']
-        self.user_id = self.user.id 
+        self.user.status_network = 'online'
+        await sync_to_async(self.user.save)()
+        self.user_id = self.user.id
         self.notification_group_name = f'user_{self.user_id}_NOTIF'
-
+        self.profile_name = self.user.profile_name
         await self.channel_layer.group_add(
             self.notification_group_name,
             self.channel_name
         )
-        
         await self.channel_layer.group_add(
-            "sedfomok",
+            "global_notification",
             self.channel_name
         )
+
+        await self.accept()
         data = {
-            'message:': 'online',
-            'user': self.user.profile_name,  
+            'message': 'status',
+            'online': self.profile_name,
+            'id': self.user_id
         }
+
         await self.channel_layer.group_send(
-            "sedfomok", 
+            "global_notification",
             {
-                'type': 'update_users_status',
+                'type': 'global_update',
                 'message': data
             }
         )
-        await self.accept()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.notification_group_name,
             self.channel_name
         )
-        await self.channel_layer.group_discard(
-            "sedfomok",
-            self.channel_name
-        )
-        data = {
-            'message:': 'offline',
-            'user': self.user.profile_name,
-        }
-        await self.channel_layer.group_send(
-            "sedfomok",
-            {
-                'type': 'update_users_status',
-                'message': data
-            }
-        )
         user = self.scope['user']
         user.status_network = 'offline'
         await sync_to_async(user.save)()
+        
+        data = {
+            'message': 'status',
+            'offline': self.profile_name,
+            'id': self.user_id
+        }
+
+        await self.channel_layer.group_send(
+            "global_notification",
+            {
+                'type': 'global_update',
+                'message': data
+            }
+        )
     
+    async def global_update(self, event):
+        data = event['message']
+        await self.send(text_data=json.dumps(data))
+
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message_type = text_data_json.get('type')
         game_type = text_data_json.get('game_type')
-
-        # try:
+        print("receive in notification consumer:", message_type, game_type)  
         if message_type == 'CANCEL_FR':
             await self.cancel_FR(text_data_json)
         elif message_type == 'ACCEPT_FR':
@@ -93,15 +98,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             await self.decline_GR(text_data_json, game_type)
         elif message_type == 'SEND_GR':
             await self.send_GR(text_data_json, game_type)
-        elif message_type == 'CONNECTED':
-            self.time = 10
-            user = self.scope['user']
-            user.status_network = 'online'
-            await sync_to_async(user.save)()
-        elif message_type == 'UN_FRIEND':
-            print("UN_FRIEND")
-            await self.unfriend(text_data_json)
-                
 
     @database_sync_to_async
     def cancel_FR(self, event):
@@ -113,15 +109,14 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             notif_type='FR', 
             status='pending'
         )
-        for notification in notifications: 
+        for notification in notifications:
             notification.status = 'cancelled'
             notification.save()
     
     @database_sync_to_async
-    def accept_FR(self, text_data_json): 
+    def accept_FR(self, text_data_json):
         from_user_id = text_data_json['from_user_id']
         to_user_id = self.scope['user'].id
-        
         notifications = Notification.objects.filter(
             from_user_id=from_user_id, 
             to_user_id=to_user_id, 
@@ -131,19 +126,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         for notification in notifications:
             notification.status = 'accepted'
             notification.save()
-    
-    @database_sync_to_async
-    def unfriend(self, text_data_json):
-        print("text_data_json:", text_data_json)
-        from_user_id = self.scope['user'].id
-        to_user_id = text_data_json.get('to_user_id')
-        print("Unfriend from", from_user_id, "to", to_user_id) 
-        friends = Friend.objects.filter(
-            Q(user1=from_user_id, user2=to_user_id) |
-            Q(user1=to_user_id, user2=from_user_id)
-        )
-        if friends.exists(): 
-            friends.update(status='None')
     
     @database_sync_to_async
     def decline_FR(self, text_data_json):
@@ -231,7 +213,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         for notif in notifs:
             if notif and notif.is_expired():
                 notifs.update(status='expired')
-                break
+                break 
         Notification.objects.get_or_create(
             from_user_id=from_user_id,
             to_user_id=to_user_id,
@@ -239,12 +221,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             game_room=game_room,
             game_type=game_type,
             status='pending'
-        )
-    
-    async def update_users_status(self, event):
-        data = event['message']
-        await self.send(text_data=json.dumps(data))
-    
+        ) 
     
     async def send_notification(self, event):
         notification = event['notification']

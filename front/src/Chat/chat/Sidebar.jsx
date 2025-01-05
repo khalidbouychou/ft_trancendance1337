@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ContactItem from './ContactItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import styl from './ChatPage.module.css';
 
-function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages }) {
+function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages, t }) {
 	const [search, setSearch] = useState('');
 	const [matchedUsers, setMatchedUsers] = useState([]);
 	const [sortedRooms, setSortedRooms] = useState([]);
@@ -26,14 +27,16 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
 			setShowResults(true);
 		}
 
-		const filteredUsers = allUsers.filter(user => user.profile_name.toLowerCase().includes(search.toLowerCase()));
+		const filteredUsers = allUsers.filter(user => 
+			user.username.toLowerCase().includes(search.toLowerCase())
+		);
 		setMatchedUsers(filteredUsers.slice(0, 5));
 		// console.log('matchedUsers: ', matchedUsers)
 	}, [search]);
 
 	useEffect(() => {
 		setMatchedUsers(allUsers.filter(user => 
-			user.profile_name.toLowerCase().includes(search.toLowerCase())
+			user.username.toLowerCase().includes(search.toLowerCase())
 		).slice(0, 5));
 	}, [allUsers]);
 
@@ -48,12 +51,14 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
 	}, [data.chat_rooms]);
 
 	const sendSelectUserRequest = async (profile_name) => {
+        console.log("sendSelectUserRequest");
         try {
             const socket = await setupSocket(1);
             socket.send(JSON.stringify({
                 type: 'SELECT_USER',
                 profile_name: profile_name,
             }));
+            console.log("it was send++++");
         } catch (error) {
             console.error('Error sending SELECT_USER request:', error);
         }
@@ -78,34 +83,37 @@ function Sidebar({ setupChatRoom, setupSocket, data, allUsers, unreadMessages })
     }
 
     return (
-        <div className="sidebar">
-            <form className="search-container" onSubmit={handleSubmitSearch}>
+        <div className={styl.sidebar}>
+            <form className={styl.searchContainer} onSubmit={handleSubmitSearch}>
                 <input 
                     type="text" 
-                    className="search" 
-                    placeholder="Search contacts" 
+                    className={styl.search} 
+                    placeholder={t("Search contacts")} 
                     value={search}
                     onChange={handleSearch}
 					maxLength={50}
                 />
+                <button type="submit" className={styl.searchButton}>
+                    Search
+                </button>
 				{showResults && (
-                    <div className="search-results">
+                    <div className={styl.searchResults}>
                         {matchedUsers.map((user, index) => (
-                            <div key={index} className="search-result-item" onClick={() => handleSelectUser(user)}>
+                            <div key={index} className={styl.searchResultItem} onClick={() => handleSelectUser(user)}>
                                 {user.avatar ? (
-                                    <img src={user.avatar} alt={user.profile_name} className="search-result-avatar" />
+                                    <img src={user.avatar} alt={user.profile_name} className={styl.searchResultAvatar} />
                                 ) : (
-                                    <div className="search-result-avatar default-avatar">
+                                    <div className={`${styl.searchResultAvatar} ${styl.defaultAvatar}`}>
                                         <FontAwesomeIcon icon={faUser} />
                                     </div>
                                 )}
-                                <span className="search-result-username">{user.profile_name}</span>
+                                <span className={styl.searchResultUsername}>{user.profile_name}</span>
                             </div>
                         ))}
                     </div>
                 )}
             </form>
-            <div className="contact-list">
+            <div className={styl.contactList}>
                 {sortedRooms.map((contact, index) => (
                     <ContactItem
                         key={index}

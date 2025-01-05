@@ -14,7 +14,7 @@ import {
 // Register necessary components for Chart.js
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
-const ExpChart = ({ data, playerName }) => {
+const ExpChart = ({ data, playerName, t }) => {
   const beginExp = 100;
 
   if (!data || data.length === 0) {
@@ -77,7 +77,7 @@ const ExpChart = ({ data, playerName }) => {
             const matchIndex = tooltipItem.dataIndex;
             const expChange =
               matchIndex === 0 ? currentExp - beginExp : currentExp - expData.exp[matchIndex - 1];
-            return `EXP: ${currentExp} (Change: ${expChange >= 0 ? '+' : ''}${expChange})`;
+            return `EXP: ${currentExp} (${t("Change")}: ${expChange >= 0 ? '+' : ''}${expChange})`;
           },
         },
       },
@@ -86,7 +86,7 @@ const ExpChart = ({ data, playerName }) => {
       x: {
         title: {
           display: true,
-          text: 'Matches',
+          text: t("Matches"),
           color: 'white', // X-axis title color
         },
         ticks: {

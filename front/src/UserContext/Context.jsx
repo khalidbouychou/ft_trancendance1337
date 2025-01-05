@@ -1,9 +1,9 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import i18n from "../i18n";
 import { toast } from "react-toastify";
-
+import { useTranslation } from "react-i18next";
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
@@ -12,7 +12,12 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const [loggedIntra, setLoggedIntra] = useState(false);
+  const {t} = useTranslation();
+
+  useEffect(() => {
+    i18n.changeLanguage(localStorage.getItem('lang') || 'en')
+  }
+  , [localStorage.getItem('lang')])
 
   async function auth_intra42() {
     const response = await axios.get("http://localhost:8000/api/auth_intra/", {
@@ -20,11 +25,10 @@ export default function AuthProvider({ children }) {
     });
     try {
       if (response.status === 200) {
-        setUrl(response.data.url);
-        
+        window.location.href = response.data.url;
       }
     } catch (error) {
-      console.log("auth_intra42", error);
+      navigate("/login");
     }
   }
 
@@ -49,52 +53,44 @@ export default function AuthProvider({ children }) {
         );
         if (res.status === 200) {
           setUser(res.data);
-          localStorage.setItem("token", res.data.token);
           setLoading(true);
           setTimeout(() => {
             setLoading(false);
           }, 1000);
           if (res.data.otp_login) {
             toast.success("login success", {
-              position: "top-right",
-              autoClose: 1000,
-              closeOnClick: true
+              style: {
+                backgroundColor: 'rgb(0, 128, 0)',
+                color: 'white'
+              }
             });
           }
           navigate(`/`);
         }
       }
     } catch (error) {
-      toast.error("login failed", {
-        position: "top-right",
-        autoClose: 1000
-      });
       navigate(`/`);
     } finally {
       setLoading(false);
     }
   }
-  let res = null;
   async function get_auth_user() {
     try {
-      res = await axios.get(`http://localhost:8000/api/user/`, {
+      const res = await axios.get(`http://localhost:8000/api/user/`, {
         withCredentials: true
       });
 
       if (res.status === 200) {
-        
         setUser(res.data);
         !res.data.user.bool_login &&
           res.data.user.two_factor &&
           res.data.user.otp_verified &&
           navigate("/otp");
         if (window.location.pathname === "/login") {
-          // navigate("/home");
           navigate(`/`);
         }
       }
     } catch (error) {
-      console.log("user", error);
       setUser(null);
       navigate("/login");
     }
@@ -111,39 +107,32 @@ export default function AuthProvider({ children }) {
         navigate("/login");
       }
     } catch (error) {
-      console.log("logout", error);
       setUser(null);
     }
   }
 
   useEffect(() => {
-    auth_intra42();
-}, []);
-
-  useEffect(() => {
-    console.log("-------------- useEffect login");
-    Login()
-    
+    !user && Login()
   }, []);
   useEffect(
     () => {
-       !user && get_auth_user();
+      if (!user) {
+        get_auth_user();
+      }
     },
-    [location.pathname]
+    [user]
   );
   return (
     <AuthContext.Provider
       value={{
         loading,
         user,
-        url,
         Logout,
         setUser,
         Login,
         auth_intra42,
         get_auth_user,
-        setLoggedIntra,
-        loggedIntra
+        t
       }}
     >
       {children}

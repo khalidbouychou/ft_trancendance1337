@@ -13,7 +13,7 @@ import {
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
-const Chart = ({ matches = [], profileName }) => {
+const Chart = ({ matches = [], profileName, t}) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
@@ -57,7 +57,7 @@ const Chart = ({ matches = [], profileName }) => {
     labels,
     datasets: [
       {
-        label: 'Your Score',
+        label: t('Your Score'),
         data: userScores,
         borderColor: 'rgba(255, 99, 132, 1)',
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -67,7 +67,7 @@ const Chart = ({ matches = [], profileName }) => {
         pointHoverRadius: 7,
       },
       {
-        label: 'Opponent Score',
+        label: t('Opponent Score'),
         data: opponentScores,
         borderColor: 'rgba(54, 162, 235, 1)',
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -84,7 +84,7 @@ const Chart = ({ matches = [], profileName }) => {
     plugins: {
       title: {
         display: true,
-        text: 'Match History (Your Scores vs Opponent)',
+        text: t('Match History (Your Scores vs Opponent)'),
         color: '#FFFFFF',
       },
       legend: {
@@ -119,7 +119,7 @@ const Chart = ({ matches = [], profileName }) => {
       y: {
         title: {
           display: true,
-          text: 'Score',
+          text: t('Score'),
           color: 'white',
         },
         min: 0,

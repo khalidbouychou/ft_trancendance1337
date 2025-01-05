@@ -5,8 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { useNotificationWS } from '../../contexts/NotifWSContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import { t } from 'i18next';
+import styl from './ChatPage.module.css';
     
-function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, data, chatMessagesRef, sockets, typingUser }) {
+export default function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, data, chatMessagesRef, sockets, typingUser, t }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [otherUser, setOtherUser] = useState(null);
     const [isTyping, setIsTyping] = useState(false);
@@ -15,6 +17,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log("currentUser:", currentUser);
         if (currentContact) {
             setOtherUser(currentContact.user1.id === data.user.id ? currentContact.user2 : currentContact.user1);
         } else {
@@ -41,11 +44,26 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
 
     useEffect(() => {
         if (data.user) {
+            console.log("2 data:", data);
+            console.log("data.user:", data.user);
             setCurrentUser(data.user);
         }
     }, [data.user]);
 
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    // const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+    // const handleBlockUser = (e) => {
+    //     if (!otherUser) {
+    //         return;
+    //     }
+    //     if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
+    //         sockets[currentContact.id].send(JSON.stringify({
+    //             type: 'BLOCK_USER',
+    //             event: e ? 'BLOCK' : 'UNBLOCK',
+    //             user_id: otherUser.id
+    //         }));
+    //     }
+    // };
 
     const handlePlayPong = () => {
         console.log('Play Pong');
@@ -56,7 +74,6 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                 game_type: 'PG',
                 to_user_id: otherUser.id
             });
-            //testing
             const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/`);
             pong_socket.onopen = () => {
                 const data2 = {
@@ -74,103 +91,81 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
         }
         else {
             console.log('Not connected');
-        }
+        };
     };
 
     const viewProfile = () => {
+        console.log('View Profile');
         navigate(`/profile/${otherUser.profile_name}`);
     };
 
-    const handleBlockUser = (e) => {
-        if (!otherUser) {
-            return;
-        }
-        if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
-            sockets[currentContact.id].send(JSON.stringify({
-                type: 'BLOCK_USER',
-                event: e ? 'BLOCK' : 'UNBLOCK',
-                user_id: otherUser.id
-            }));
-        }
-    };
-
-    const onFriendRequest = (e) => {
+    const onFriendRequest = () => {
         console.log('Friend Request:', otherUser.username);
-        if (e === true) {
-            if (isConnected) {
-                sendNotifMessage({
-                    type: 'SEND_FR',
-                    to_user_id: otherUser.id
-                });
-            }}
-        else {
-            if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
-                sockets[currentContact.id].send(JSON.stringify({
-                    type: 'UNFRIEND_USER',
-                    event: e ? 'nothing' : 'UNFRIEND_USER',
-                    user_id: otherUser.id
-                }));
-            }
+        if (isConnected) {
+            sendNotifMessage({
+                type: 'SEND_FR',
+                to_user_id: otherUser.id
+            });
+            
         }
     }
-
     return (
-        <div className="chat-container">
+        <div className={styl.chatContainer}>
             {otherUser ? (
                 <>
-                    <div className="chat-header">
-                        <div className="current-contact">
+                    <div className={styl.chatHeader}>
+                        <div className={styl.currentContact}>
                             {otherUser.avatar ? (
-                                <img src={otherUser.avatar} alt={otherUser.profile_name} className="contact-avatar" />
+                                <img src={otherUser.avatar} alt={otherUser.username} className={styl.contactAvatar} />
                             ) : (
-                                <div className="contact-avatar default-avatar">
+                                <div className={`${styl.contactAvatar} ${defaultAvatar}`}>
                                     <FontAwesomeIcon icon={faUser} />
                                 </div>
                             )}
-                            <span className="contact-name">
-                                {otherUser.profile_name}
+                            <span className={styl.contactName}>
+                                {otherUser.username}
                             </span>
                             {isTyping && (
-                                <div className="typing-indicator">
+                                <div className={styl.typingIndicator}>
                                     <p>Typing...</p>
                                 </div>
                             )}
                         </div>
+                        
                         <ChatOptionsMenu
-                            onBlockUser={handleBlockUser}
+                            // onBlockUser={handleBlockUser}
                             onPlayPong={handlePlayPong}
                             otherUser={otherUser}
                             currentUser={currentUser}
                             viewProfile={viewProfile}
                             onFriendRequest={onFriendRequest}
+                            t={t}
                         />
                     </div>
-                    <div className="chat-messages" ref={chatMessagesRef}>
+                    <div className={styl.chatMessages} ref={chatMessagesRef}>
                         {chat.map((msg, index) => (
                             <MessageItem key={index} message={msg} currentUser={currentUser} />
                         ))}
                     </div>
-                    <div className="chat-form-container">
-                        <form className="chat-form" onSubmit={sendMessage}>
+                    <div className={styl.chatFormContainer}>
+                        <form className={styl.chatForm} onSubmit={sendMessage}>
                             <input
                                 type="text"
-                                className="chat-message"
+                                className={styl.chatMessage}
                                 value={message}
                                 onChange={handleTyping}
                                 placeholder="Type a message"
                                 maxLength={1000}
                             />
-                            {/* <button type="submit">end</button> */}
+                            <button type="submit">Send</button>
                         </form>
                     </div>
                 </>
             ) : (
-                <div className="no-contact-selected">
-                    <p>Select a contact to start chatting</p>
+                <div className={styl.noContactSelected}>
+                    <p>{t("Select a contact to start chatting")}</p>
                 </div>
             )}
         </div>
     );
 }
-
-export default ChatWindow;

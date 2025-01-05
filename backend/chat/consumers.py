@@ -8,17 +8,26 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from .serializers import MessageSerializer, ChatRoomSerializer
 from login.serializers import PlayerSerializer
+from django.contrib.auth.models import AnonymousUser
 import sys
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication
- 
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+
 class ChatConsumer(AsyncWebsocketConsumer):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_pk']
         self.room_group_name = f'chat_room_{self.room_name}'
-        self.user = self.scope['user']
+        self.token = self.scope['session'].get('token')
+        if self.token:
+            self.scope['user'] = await self.auth_user(self.token)
+            if self.scope['user'] == AnonymousUser():
+                await self.close()
+                return
+        else:
+            print("chat consumer: No token found in cookies", file=sys.stderr)
+            await self.close()
+            return
+
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -37,6 +46,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json.get('content')
         sender = text_data_json.get('sender')
         room_pk = text_data_json.get('room_id')
+        # print(f"received message type: {message_type}", file=sys.stderr)
         try:
             if message_type == 'MESSAGE':
                 message = await self.create_message(room_pk, sender, message)
@@ -57,7 +67,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             elif message_type == 'SEARCH_USERS':
                 query = text_data_json.get('query')
                 user_list = await self.get_users(query)
-                print("user_list:", user_list)
                 await self.send(text_data=json.dumps({
                     'type': 'USERS_LIST',
                     'users': user_list
@@ -72,11 +81,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     }
                 )
             elif message_type == 'SELECT_USER':
-                profile_name = text_data_json.get('profile_name')
+                username = text_data_json.get('username')
                 try:
-                    user1 = await self.get_user_by_profile_name(profile_name)
+                    user1 = await self.get_user_by_username(username)
                     user2 = self.scope['user']
-                    if user2 == None or user1 == None:
+                    if user2 == AnonymousUser() or user1 == None:
                         return
                     chat_room = await self.create_or_get_chat_room(user1, user2)
                     chat_room_serializer = await self.get_chat_room_serializer(chat_room)
@@ -102,19 +111,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     await self.block_user(user_to_block)
                 elif event == 'UNBLOCK':
                     await self.unblock_user(user_to_block)
+                current_user = self.scope["user"]
                 await self.send(text_data=json.dumps({
                     'type': 'BLOCK_USER',
                     'user_id': user_to_block,
                     'event': event
                 }))
-            elif message_type == 'UNFRIEND_USER':
-                user_to_unfriend = text_data_json.get('user_id')
-                await self.unfriend_user(user_to_unfriend)
-                await self.send(text_data=json.dumps({
-                    'type': 'UNFRIEND_USER',
-                    'user_id': user_to_unfriend
-                }))
-
         except ObjectDoesNotExist as e:
             print(f"Error: {e}", file=sys.stderr)
 
@@ -124,17 +126,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             current_user = self.scope["user"]
             user_to_block = Player.objects.get(id=user_to_block_id)
             current_user.block_user(user_to_block)
-            current_user.unfriend_user(user_to_block)
-            return True
-        except Player.DoesNotExist:
-            return False
-        
-    @database_sync_to_async
-    def unfriend_user(self, user_to_unfriend_id):
-        try:
-            current_user = self.scope["user"]
-            user_user_to_unfriend = Player.objects.get(id=user_to_unfriend_id)
-            current_user.unfriend_user(user_user_to_unfriend)
             return True
         except Player.DoesNotExist:
             return False
@@ -149,6 +140,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except Player.DoesNotExist:
             return False
 
+    # Receive message from room group
     async def chat_message(self, event):
         message = event['message']
 
@@ -185,18 +177,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
         room = ChatRoom.objects.get(id=chat_room)
         sender_id = Player.objects.get(id=sender)
         receiver_id = room.user1 if room.user1 != sender_id else room.user2
-        if Player.are_enemies(sender_id, receiver_id) or receiver_id.username == 'ke3ki3a':
+        if Player.are_enemies(sender_id, receiver_id):
             return None
         return Message.objects.create(chat_room=room, sender=sender_id, content=content)
 
     @database_sync_to_async
     def get_users(self, query):
-        players = Player.objects.filter(profile_name__icontains=query).exclude(id=self.scope["user"].id)
+        players = Player.objects.filter(username__icontains=query).exclude(id=self.scope["user"].id)
         return PlayerSerializer(players, many=True).data
 
     @database_sync_to_async
-    def get_user_by_profile_name(self, profile_name):
-        player = Player.objects.get(profile_name=profile_name)
+    def get_user_by_username(self, username):
+        player = Player.objects.get(username=username)
         if player == self.scope["user"]:
             return None
         return player
@@ -227,20 +219,36 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = Player.objects.get(id=user)
         room.messages.filter(chat_room=room).exclude(sender=user).update(is_read=True)
 
-
+    @database_sync_to_async
+    def auth_user(self, token):
+        try:
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+            return Player.objects.get(id=user_id)
+        except (InvalidToken, TokenError, Player.DoesNotExist):
+            return AnonymousUser()
 
 class UserNotificationConsumer(AsyncWebsocketConsumer):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
     async def connect(self):
-        self.user = self.scope['user']
-        self.user_id = self.user.id
+        self.notification_group_name = f'__'
+        self.token = self.scope['session'].get('token')
+        if self.token:
+            self.scope['user'] = await self.auth_user(self.token)
+            if self.scope['user'] == AnonymousUser():
+                await self.close()
+                return
+        else:
+            print("chat consumer: No token found in cookies", file=sys.stderr)
+            await self.close()
+            return
+        self.user_id = self.scope['user'].id
         self.notification_group_name = f'user_{self.user_id}_notification'
 
         await self.channel_layer.group_add(
             self.notification_group_name,
             self.channel_name
         )
+
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -260,3 +268,11 @@ class UserNotificationConsumer(AsyncWebsocketConsumer):
             'room_data': room_data
         }))
     
+    @database_sync_to_async
+    def auth_user(self, token):
+        try:
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+            return Player.objects.get(id=user_id)
+        except (InvalidToken, TokenError, Player.DoesNotExist):
+            return AnonymousUser()

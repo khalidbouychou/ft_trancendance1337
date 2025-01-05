@@ -79,15 +79,15 @@ export default function FriendGame() {
     };
 
     useEffect(() => {
-        // console.log("im here");
         const fetchData = async () => {
             const response = await axios('http://localhost:8000/api/pong_data/',{
                 withCredentials: true,
             });
             console.log('response:', response.data);
             if (response.status === 200) {
-                setUsername(response.data.user);
+                setUsername(response.data.profile_name);
                 setLeftPlayerAvatar(response.data.avatar);
+                setLeftPlayerName(response.data.profile_name);
                 setAvatar(response.data.avatar);
                 setLevel(response.data.exp_game);
             } else {

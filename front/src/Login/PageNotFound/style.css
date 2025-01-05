@@ -1,5 +1,4 @@
 .container {
-    color: white;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -13,7 +12,6 @@
     color: #fff;
     border: 2px solid rgb(249, 133, 255);
     padding: 20px;
-    width: 200px;
 }
 .backhome:hover {
     background-color: rgb(102, 1, 153);
