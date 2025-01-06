@@ -3,7 +3,7 @@ import styl from "./Leaderboard.module.css";
 import { useNavigate } from "react-router-dom";
 import CardRank from "./components/CardRank/CardRank";
 
-const Leaderboard = () => {
+const Leaderboard = ({t}) => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
@@ -38,11 +38,11 @@ const Leaderboard = () => {
   return (
     <div className={styl.leaderboard}>
       <div className={styl.leaderHead}>
-        <p id={styl.Rank}>Rank</p>
-        <p id={styl.Name}>Name</p>
-        <p id={styl.Wins}>Wins</p>
-        <p id={styl.Loses}>Loses</p>
-        <p id={styl.Level}>Level</p>
+        <p id={styl.Rank}>{t("Rank")}</p>
+        <p id={styl.Name}>{t("Name")}</p>
+        <p id={styl.Wins}>{t("Wins")}</p>
+        <p id={styl.Loses}>{t("Loss")}</p>
+        <p id={styl.Level}>{t("Level")}</p>
       </div>
       <div className={styl.pingRanking}>
         {data.map((player, index) => (

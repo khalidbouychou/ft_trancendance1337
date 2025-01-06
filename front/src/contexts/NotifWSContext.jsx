@@ -59,6 +59,7 @@ export function NotificationWebSocketProvider({ children }) {
 
   const sendMessage = useCallback((message) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
+      console.log('Sending message:', message);
       socket.send(JSON.stringify(message));
     } else {
       console.error('WebSocket is not connected');

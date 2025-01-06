@@ -92,7 +92,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
         p = PingData.objects.create(player=user)
         print('User created' , flush=True)
         print('data == ', p) 
-        TicData.objects.create(player=user)
         user.save()
         return user
 
@@ -494,39 +493,6 @@ def get_all_ping_data(request):
         })
 
     return JsonResponse(all_ping_data, safe=False)
-
-def get_all_tic_data(request):
-    players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game')
-
-    all_tic_data = []
-
-    for player in players:
-        ticdata = TicData.objects.filter(player=player)
-        serializer = TicDataSerializer(ticdata, many=True)
-        
-        sorted_data = sorted(serializer.data, key=lambda x: (-x['exp_game'], -x['wins']))
-
-        all_tic_data.append({
-            'username': player.username,
-            'profile_name': player.profile_name,
-            'avatar': player.avatar,
-            'data': sorted_data,
-        })
-
-    return JsonResponse(all_tic_data, safe=False)
-
-def get_tic_data_by_username(request, username):
-    Player = get_user_model()
-    try:
-        player = Player.objects.get(username=username)
-    except Player.DoesNotExist:
-        return JsonResponse({'error': 'Player not found'}, status=404)	
-    ticdata = TicData.objects.filter(player=player)
-    serializer = TicDataSerializer(ticdata, many=True)
-    data = serializer.data
-    print("--------->", data)
-    return JsonResponse(data, safe=False)
-
 
 class UserNameFriendList(APIView):
     authentication_classes = [SessionAuthentication] 

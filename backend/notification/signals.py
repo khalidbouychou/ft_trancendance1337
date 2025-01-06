@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, pre_delete
 from django.dispatch import receiver
 from .models import Notification
 from channels.layers import get_channel_layer
@@ -17,9 +17,9 @@ def notify_user(sender, instance, created, **kwargs):
             if not friends.exists():
                 Friend.objects.create(user1=instance.from_user, user2=instance.to_user, status='pending')
         channel_layer = get_channel_layer()
-        notification_serializer = NotificationSerializer(instance)
-        # notif_type = instance.notif_type
+        notification_serializer = NotificationSerializer(instance) 
         room_group_name = f'user_{instance.to_user.id}_NOTIF'
+        print("it was me:", notification_serializer.data)
         async_to_sync(channel_layer.group_send)(
             room_group_name,
             {
@@ -33,24 +33,71 @@ def notify_user(sender, instance, created, **kwargs):
                                             Q(user1=instance.to_user, user2=instance.from_user))
             if friends.exists():
                 friends.update(status='friends' if instance.status == 'accepted' else 'None')
-                data = {
+                data1 = {
                     'message': 'friend_status_changed',
-                    'from_user': instance.from_user.profile_name,
-                    'to_user': instance.to_user.profile_name,
+                    'user_id': instance.from_user.id,
                     'status': 'friends'
                 }
-
+                data2 = {
+                    'message': 'friend_status_changed',
+                    'user_id': instance.to_user.id,
+                    'status': 'friends'
+                }
                 channel_layer = get_channel_layer()
                 notification_serializer = NotificationSerializer(instance)
-                # notif_type = instance.notif_type
-                room_group_name = f'user_{instance.to_user.id}_NOTIF'
+                room_group_name1 = f'user_{instance.to_user.id}_NOTIF'
+                room_group_name2 = f'user_{instance.from_user.id}_NOTIF'
                 async_to_sync(channel_layer.group_send)(
-                    "global_notification",
+                    room_group_name1,
                     {
-                        'type': 'send_notification',
-                        'notification': data
+                        'type': 'send_notification', 
+                        'notification': data1
                     }
                 )
+                async_to_sync(channel_layer.group_send)(
+                    room_group_name2,
+                    {
+                        'type': 'send_notification',
+                        'notification': data2
+                    }
+                )
+
+@receiver(pre_delete, sender=Friend)
+def notify_users(sender, instance, **kwargs):
+    print("instance: ", instance)
+    data1 = {
+        'message': 'friend_status_changed',
+        'user_id': instance.user2_id,
+        'status': 'unfriend'
+    }
+    data2 = {
+        'message': 'friend_status_changed',
+        'user_id': instance.user1_id,
+        'status': 'unfriend'
+    }
+    channel_layer = get_channel_layer()
+    notification_serializer = NotificationSerializer(instance)
+    room_group_name1 = f'user_{instance.user1_id}_NOTIF'
+    room_group_name2 = f'user_{instance.user2_id}_NOTIF'
+    print("room_group_name1:", room_group_name1, "room_group_name2", room_group_name2)
+    async_to_sync(channel_layer.group_send)(
+        room_group_name1,
+        {
+            'type': 'send_notification',
+            'notification': data1
+        }
+    )
+    async_to_sync(channel_layer.group_send)(
+        room_group_name2,
+        {
+            'type': 'send_notification',
+            'notification': data2
+        }
+    )
+
+async def send_notification(self, event):
+    data = event['message']
+    await self.send(text_data=json.dumps(data))
 
 @receiver(pre_save, sender=Notification)
 def check_GR_status_change(sender, instance, **kwargs):
@@ -74,7 +121,7 @@ def check_GR_status_change(sender, instance, **kwargs):
         notification_serializer = NotificationSerializer(instance)
         user_id = instance.from_user.id if status in by_receiver_status else instance.to_user.id
         room_group_name = f'user_{user_id}_NOTIF'
-        print(f'Sending notification to group {room_group_name}, status: {status}')
+        print(f'Sending notification to group {room_group_name}, status: {status}') 
 
         async_to_sync(channel_layer.group_send)(
             room_group_name,

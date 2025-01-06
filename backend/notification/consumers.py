@@ -6,12 +6,13 @@ from channels.db import database_sync_to_async
 from django.contrib.auth.models import AnonymousUser
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from login.models import Player
 from rest_framework.decorators import permission_classes , authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from login.models import Player
+from login.models import Friend
 from asgiref.sync import sync_to_async
+from django.db.models import Q
 import asyncio
 
 class NotificationConsumer(AsyncWebsocketConsumer):
@@ -22,6 +23,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope['user']
         self.user.status_network = 'online'
+        self.user.number_of_sessions += 1
         await sync_to_async(self.user.save)()
         self.user_id = self.user.id
         self.notification_group_name = f'user_{self.user_id}_NOTIF'
@@ -34,14 +36,12 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             "global_notification",
             self.channel_name
         )
-
         await self.accept()
         data = {
             'message': 'status',
             'online': self.profile_name,
             'id': self.user_id
         }
-
         await self.channel_layer.group_send(
             "global_notification",
             {
@@ -56,7 +56,9 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         user = self.scope['user']
-        user.status_network = 'offline'
+        user.number_of_sessions -= 1
+        if user.number_of_sessions <= 0:
+            user.status_network = 'offline'
         await sync_to_async(user.save)()
         
         data = {
@@ -86,6 +88,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             await self.cancel_FR(text_data_json)
         elif message_type == 'ACCEPT_FR':
             await self.accept_FR(text_data_json)
+        elif message_type == 'UN_FRIEND':
+            await self.un_friend(text_data_json)
         elif message_type == 'DECLINE_FR':
             await self.decline_FR(text_data_json)
         elif message_type == 'SEND_FR':
@@ -98,7 +102,25 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             await self.decline_GR(text_data_json, game_type)
         elif message_type == 'SEND_GR':
             await self.send_GR(text_data_json, game_type)
+        elif message_type == 'BLOCK':
+            await self.block(text_data_json)
+        elif message_type == 'UNBLOCK':
+            await self.unblock(text_data_json)
 
+    @database_sync_to_async
+    def block(self, event):
+        me = self.scope[user]
+        user_to_block = event['user_to_block']
+        # u need to block by username not profile_name
+        me.blocked_users.add(user_to_block)
+        
+    @database_sync_to_async
+    def unblock(self, event):
+        me = self.scope[user]
+        user_to_unblock = event['user_to_unblock']
+        # u need to block by username not profile_name
+        me.blocked_users.remove(user_to_unblock)
+        
     @database_sync_to_async
     def cancel_FR(self, event):
         from_user_id = self.scope['user'].id
@@ -126,6 +148,15 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         for notification in notifications:
             notification.status = 'accepted'
             notification.save()
+            
+    @database_sync_to_async
+    def un_friend(self, text_data_json):
+        from_user_id = text_data_json['to_user_id']
+        to_user_id = self.scope['user'].id
+        friend = Friend.objects.filter(Q(user1=from_user_id, user2=to_user_id) |
+                                            Q(user1=to_user_id, user2=from_user_id)).first() 
+        if friend is not None:
+            friend.delete()
     
     @database_sync_to_async
     def decline_FR(self, text_data_json):
@@ -143,13 +174,15 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def send_FR(self, text_data_json):
+        print("incoming send_FR")
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
+        print("from_user_id:", from_user_id," to user_id:", to_user_id) 
         notif = Notification.objects.get_or_create(
             from_user_id=from_user_id,
             to_user_id=to_user_id,
             notif_type='FR',
-            status='pending'
+            status='pending' 
         )
 
     @database_sync_to_async

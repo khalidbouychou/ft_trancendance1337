@@ -29,12 +29,10 @@ class Player(AbstractUser):
     bool_login = models.BooleanField(default=False)
     mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False)
     is_anonimized = models.BooleanField(default=False)
+    # number_of_sessions = models.IntegerField(default=0)
     
     class Meta: 
         db_table = 'player' 
-
-    class Meta:
-        db_table = 'player'
 
     def save(self, *args, **kwargs):
         if self.status_network == 'offline':
@@ -77,17 +75,6 @@ class PingData(models.Model):
 
     class Meta:
         db_table = 'ping_data'
-
-class TicData(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='tic_data')
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
-    exp_game = models.IntegerField(default=100)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'tic_data'
-
 
 class AnonymizedAccount(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='anonymized_data')

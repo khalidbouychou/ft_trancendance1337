@@ -119,7 +119,7 @@ const Chart = ({ matches = [], profileName, t}) => {
       y: {
         title: {
           display: true,
-          text: 'Score',
+          text: t('Score'),
           color: 'white',
         },
         min: 0,

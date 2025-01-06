@@ -91,5 +91,10 @@
   "offline": "non in linea",
   "online": "in linea",
   "Unfriend": "Rimuovi dagli amici",
-  "Add Friend": "Aggiungi amico"
+  "Add Friend": "Aggiungi amico",
+  "Win": "VITTORIE",
+  "Score": "Punteggio",
+  "Search contacts": "Cerca contatti",
+  "Select a contact to start chatting" : "Seleziona un contatto per iniziare a chattare",
+  "Send": "Invia"
 }

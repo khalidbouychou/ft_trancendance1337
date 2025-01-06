@@ -91,6 +91,10 @@
     "offline": "hors ligne",
     "online": "en ligne",
     "Unfriend": "Supprimer l'ami",
-    "Add Friend": "Ajouter un ami"
- }
- 
+    "Add Friend": "Ajouter un ami",
+    "Win": "VICTOIRE",
+    "Score": "Score",
+    "Search contacts": "Rechercher des contacts",
+    "Select a contact to start chatting": "Sélectionnez un contact pour commencer à discuter",
+    "Send": "Envoyer" 
+}

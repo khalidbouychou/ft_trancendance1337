@@ -63,6 +63,7 @@
    "Match History (Your Scores vs Opponent)": "Match History (Your Scores vs Opponent)",
    "Your Score": "Your Score",
    "Opponent Score": "Opponent Score",
+   "score": "Score",
    "Matches": "Matches",
    "Change": "Change",
    "Pending request":"Pending request",
@@ -90,5 +91,9 @@
     "offline": "offline",
     "online": "online",
     "Unfriend": "Unfriend",
-    "Add Friend": "Add Friend"
+    "Add Friend": "Add Friend",
+    "Win": "Win",
+    "Search contacts": "Search contacts",
+    "Select a contact to start chatting": "Select a contact to start chatting",
+    "Send": "Send"
 }

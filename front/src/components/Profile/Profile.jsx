@@ -15,7 +15,7 @@ import CardBlocked from "./components/cardBlocked/CardBlocked";
 import { useNotificationWS } from "../../contexts/NotifWSContext";
 
 const Profile = ({ me }) => {
-  const { profilesocket, sendMessage, isConnected } = useNotificationWS();
+  const { sendMessage, notif } = useNotificationWS();
 
   let { profile_name } = useParams();
   const { user, t } = useContext(AuthContext);
@@ -41,6 +41,19 @@ const Profile = ({ me }) => {
   const [blockedList, setBlockedList] = useState([]);
   const [shooseList, setShooseList] = useState('none');
   const [displayShooseButton, setDisplayShooseButton] = useState('none');
+
+  useEffect(() => {
+    if (notif && notif.status === 'friend'){
+      if (notif.user_id === user?.user?.id){
+          setIsfriended(true);
+      }
+    }
+    else if (notif && notif.status === 'unfriend'){
+      if (notif.user_id === user?.user?.id){
+          setIsfriended(false);
+      }
+    }
+  }, [notif])
 
   const handleBlockClick = () => {
     setShowUserBlocked((prev) => !prev);
@@ -121,21 +134,21 @@ const Profile = ({ me }) => {
       setFriendList(response.data);
     };
     fetchFriends();
-    const fromUserId = profilesocket?.notification?.from_user.id;
-    const toUserId = profilesocket?.notification?.to_user.id;
+    // const fromUserId = profilesocket?.notification?.from_user.id;
+    // const toUserId = profilesocket?.notification?.to_user.id;
 
-    if (
-      (fromUserId === user?.user?.id && toUserId === userData?.id) ||
-      (fromUserId === userData?.id && toUserId === user?.user?.id)
-    ) {
-      console.log('fiend list == ', friendList)
-      const isFriend = friendList?.["friend list"]?.some(
-        (friend) => friend.profile_name === user?.user?.profile_name
-      );
-      setIsfriended(isFriend);
-    }
+    // if (
+    //   (fromUserId === user?.user?.id && toUserId === userData?.id) ||
+    //   (fromUserId === userData?.id && toUserId === user?.user?.id)
+    // ) {
+    //   console.log('fiend list == ', friendList)
+    //   const isFriend = friendList?.["friend list"]?.some(
+    //     (friend) => friend.profile_name === user?.user?.profile_name
+    //   );
+    //   setIsfriended(isFriend);
+    // }
     console.log("friend list", friendList);
-  }, [profileName, isfriended], profilesocket);
+  }, [profileName, isfriended]);
 
   useEffect(() => {
     const fetchBlocked = async () => {
@@ -185,7 +198,9 @@ const Profile = ({ me }) => {
 
 
   const handleAddFriend = () => {
+    console.log("is_friend:", isfriended);
     if (!isfriended) {
+      console.log("i send the send_fr")
       sendMessage({
         type: "SEND_FR",
         to_user_id: userData?.id,
@@ -252,7 +267,7 @@ const Profile = ({ me }) => {
                         }}
                       ></div>
                     </div>
-                    {t(user?.status_network)}
+                    {t(userData?.status_network)}
                   </p>
                 </p>
               </div>
@@ -262,7 +277,7 @@ const Profile = ({ me }) => {
                     <div className={styl.Side}>
                       <FaMedal className={styl.icon} />
                     </div>
-                    <div className={styl.resName}>Wins</div>
+                    <div className={styl.resName}>{t("Wins")}</div>
                     <div className={styl.Side}>{wins}</div>
                   </div>
                   <hr />
@@ -270,7 +285,7 @@ const Profile = ({ me }) => {
                     <div className={styl.Side}>
                       <GiCrossMark className={styl.icon} />
                     </div>
-                    <div className={styl.resName}>Lose</div>
+                    <div className={styl.resName}>{t("Lose")}</div>
                     <div className={styl.Side}>{lose}</div>
                   </div>
                   <hr />
@@ -278,14 +293,14 @@ const Profile = ({ me }) => {
                     <div className={styl.Side}>
                       <PiGameControllerFill className={styl.icon} />
                     </div>
-                    <div className={styl.resName}>Games</div>
+                    <div className={styl.resName}>{t("Games")}</div>
                     <div className={styl.Side}>{wins + lose}</div>
                   </div>
                 </div>
 
                 <div className={styl.level}>
                   <div className={styl.tmp}>
-                    <p>Level {pingLevel}</p>
+                    <p>{t("Level")} {pingLevel}</p>
                     <p>
                       {pingExp} /{" "}
                       <p
@@ -311,9 +326,9 @@ const Profile = ({ me }) => {
                         left: "2px",
                       }}
                     >
-                      Next Level
+                      {t("Next Level")}
                     </p>
-                    <p>Level {nextpingLevel}</p>
+                    <p>{t("Level")} {nextpingLevel}</p>
                   </div>
                 </div>
               </div>
@@ -325,7 +340,7 @@ const Profile = ({ me }) => {
                         activeSection === "Leaderboard" ? "red" : "white",
                     }}
                   >
-                    Leaderboard
+                    {t("Leaderboard")}
                   </p>
                 </button>
                 <button onClick={() => handelClick("MatchHistory")}>
@@ -335,22 +350,22 @@ const Profile = ({ me }) => {
                         activeSection === "MatchHistory" ? "red" : "white",
                     }}
                   >
-                    Match History
+                    {t("Match History")}
                   </p>
                 </button>
               </div>
             </div>
             <div className={styl.userData}>
-              {activeSection === "Leaderboard" && <Leaderboard />}
+              {activeSection === "Leaderboard" && <Leaderboard t={t}/>}
               {activeSection === "MatchHistory" && (
-                <MatchHistory profileName={profileName} />
+                <MatchHistory profileName={profileName} t={t}/>
               )}
             </div>
           </div>
           {/* side2 */}
           <div className={styl.side2}>
             <div className={styl.headFr}>
-              <p>{status}</p>
+              <p>{t(status)}</p>
               <button onClick={handleShooseList} style={{display: displayShooseButton}}>
                 <p>...</p>
                 <div

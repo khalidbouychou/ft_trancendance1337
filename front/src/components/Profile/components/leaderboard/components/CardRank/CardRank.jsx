@@ -1,7 +1,7 @@
 import React from "react";
 import styl from "./CardRank.module.css";
 
-const CardRank = ({ player, index, handleCardClick }) => {
+const CardRank = ({ player, index, handleCardClick}) => {
   const playerData = player.data?.[0] || {};
 
   return (

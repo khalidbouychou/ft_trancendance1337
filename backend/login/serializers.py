@@ -12,7 +12,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Player
-        fields = ['id', 'username', 'profile_name', 'avatar','email', 'status_network', 'two_factor', 'otp_verified', 'blocked_users', 'friends', 'ping_data' , 'tic_data' , 'bool_login', 'qrcode_path','is_anonimized']
+        fields = ['id', 'username', 'profile_name', 'avatar','email', 'status_network', 'two_factor', 'otp_verified', 'blocked_users', 'friends', 'ping_data' , 'bool_login', 'qrcode_path','is_anonimized']
 
     def get_blocked_users(self, obj):
         return [{'profile_name': user.profile_name, 'avatar': user.avatar} for user in obj.blocked_users.all()]
@@ -40,13 +40,7 @@ class PingDataSerializer(serializers.ModelSerializer):
     player_username = serializers.CharField(source='player.username', read_only=True)
     class Meta:
         model = PingData
-        fields = ['wins', 'losses', 'exp_game', 'timestamp', 'player_username']
-
-class TicDataSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TicData
-        fields = ['wins', 'losses', 'exp_game', 'timestamp']
-        # fields = ['username', 'profile_name','avatar' ,'status_network', 'status_game', 'two_factor', 'otp_verified', 'qrcode_path','bool_login']
+        fields = ['wins', 'losses', 'exp_game', 'timestamp', 'player_username'] 
 
 def myownvalidate(data):
     username = data.get('username')
@@ -75,7 +69,6 @@ class SignupSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         PingData.objects.create(player=user)
-        TicData.objects.create(player=user)
         return user
     
 
@@ -130,12 +123,7 @@ class FriendSerializer(serializers.ModelSerializer):
 class PingDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = PingData
-        fields = ['wins', 'losses', 'exp_game', 'timestamp']
-
-class TicDataSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TicData
-        fields = ['wins', 'losses', 'exp_game', 'timestamp']
+        fields = ['wins', 'losses', 'exp_game', 'timestamp'] 
 
 class AnonymizedAccountSerializer(serializers.ModelSerializer):
     player =serializers.CharField(read_only=True)

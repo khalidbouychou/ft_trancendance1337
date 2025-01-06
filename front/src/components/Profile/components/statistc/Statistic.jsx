@@ -7,7 +7,7 @@ import Chart from "../../../Home/components/test/Chart";
 import axios from "axios";
 import CircularLevel from "./CirculeLevel/CercleLevel";
 
-const Statistic = ({ userData, profileName }) => {
+const Statistic = ({ userData, profileName, t }) => {
   const total = userData?.data[0]?.wins + userData?.data[0]?.losses;
   let winPercentage = (userData?.data[0]?.wins / total) * 100;
   let lossPercentage = (userData?.data[0]?.losses / total) * 100;
@@ -52,12 +52,12 @@ const Statistic = ({ userData, profileName }) => {
             }}
           ></div>
           <div className={styl.chartText}>
-            <p>Wins: {Math.floor(winPercentage)}%</p>
-            <p>Losses: {Math.floor(lossPercentage)}%</p>
+            <p>{t("Win")}: {Math.floor(winPercentage)}%</p>
+            <p>{t("Losses")}: {Math.floor(lossPercentage)}%</p>
           </div>
         </div>
         <div className={styl.CurveChart}>
-          <Chart matches={daTa} profileName={profileName} />
+          <Chart matches={daTa} profileName={profileName} t={t}/>
         </div>
       </div>
       <div className={styl.bottom}>
@@ -65,7 +65,7 @@ const Statistic = ({ userData, profileName }) => {
           <CircularLevel percentage={userData?.data[0]?.exp_game % 100} color="#660da5" width={250} height={250} />
         </div>
         <div className={styl.level_exp}>
-          <CurveLevel data={daTa} playerName={profileName} style={{width: '50%'}}/>
+          <CurveLevel data={daTa} playerName={profileName} style={{width: '50%'}} t={t}/>
         </div>
       </div>
     </div>
