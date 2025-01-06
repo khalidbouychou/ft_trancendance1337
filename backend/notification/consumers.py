@@ -39,14 +39,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.accept()
         data = {
             'message': 'status',
-            'online': self.profile_name,
-            'id': self.user_id
+            'online': self.user_id
         }
         await self.channel_layer.group_send(
             "global_notification",
             {
                 'type': 'global_update',
-                'message': data
+                'notification': data
             }
         )
 
@@ -57,27 +56,30 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         )
         user = self.scope['user']
         user.number_of_sessions -= 1
+        x = 0
         if user.number_of_sessions <= 0:
             user.status_network = 'offline'
+            x = 1
         await sync_to_async(user.save)()
-        
-        data = {
-            'message': 'status',
-            'offline': self.profile_name,
-            'id': self.user_id
-        }
-
-        await self.channel_layer.group_send(
-            "global_notification",
-            {
-                'type': 'global_update',
-                'message': data
+        if x == 1:
+            data = {
+                'message': 'status',
+                'offline': self.user_id
             }
-        )
+            await self.channel_layer.group_send(
+                "global_notification",
+                {
+                    'type': 'global_update',
+                    'notification': data
+                }
+            )
     
     async def global_update(self, event):
-        data = event['message']
-        await self.send(text_data=json.dumps(data))
+        data = event['notification']
+        response = {
+            'notification': data
+        }
+        await self.send(text_data=json.dumps(response))
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -109,14 +111,14 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def block(self, event):
-        me = self.scope[user]
+        me = self.scope['user']
         user_to_block = event['user_to_block']
         # u need to block by username not profile_name
         me.blocked_users.add(user_to_block)
         
     @database_sync_to_async
     def unblock(self, event):
-        me = self.scope[user]
+        me = self.scope['user']
         user_to_unblock = event['user_to_unblock']
         # u need to block by username not profile_name
         me.blocked_users.remove(user_to_unblock)

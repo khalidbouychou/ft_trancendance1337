@@ -67,18 +67,18 @@ export default function ChatWindow({
 
   // const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // const handleBlockUser = (e) => {
-  //     if (!otherUser) {
-  //         return;
-  //     }
-  //     if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
-  //         sockets[currentContact.id].send(JSON.stringify({
-  //             type: 'BLOCK_USER',
-  //             event: e ? 'BLOCK' : 'UNBLOCK',
-  //             user_id: otherUser.id
-  //         }));
-  //     }
-  // };
+  const handleBlockUser = (e) => {
+      if (!otherUser) {
+          return;
+      }
+      if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
+          sockets[currentContact.id].send(JSON.stringify({
+              type: 'BLOCK_USER',
+              event: e ? 'BLOCK' : 'UNBLOCK',
+              user_id: otherUser.id
+          }));
+      }
+  };
 
   const handlePlayPong = () => {
     console.log("Play Pong");
@@ -122,6 +122,7 @@ export default function ChatWindow({
       });
     }
   };
+
   return (
     <div className={styl.chatContainer}>
       {otherUser ? (
@@ -145,12 +146,11 @@ export default function ChatWindow({
             </div>
 
             <ChatOptionsMenu
-              // onBlockUser={handleBlockUser}
+              onBlockUser={handleBlockUser}
               onPlayPong={handlePlayPong}
               otherUser={otherUser}
               currentUser={currentUser}
               viewProfile={viewProfile}
-              onFriendRequest={onFriendRequest}
               t={t}
             />
           </div>

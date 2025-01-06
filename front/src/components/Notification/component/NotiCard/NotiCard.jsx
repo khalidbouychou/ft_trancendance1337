@@ -85,25 +85,6 @@ const NotiCard = ({request}) => {
 				from_user_id: request.from_user.id,
 				game_type: request.game_type
 			});
-			if (request.notif_type === 'GR' && request.game_type == "TICTACTOE") {
-				var	token = localStorage.getItem("token"),
-					xo_invite_socket;
-				if (token) {
-					try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`); }
-					catch (err) {}
-				
-					xo_invite_socket.onopen = () => {
-						xo_invite_socket.send(JSON.stringify({
-							message: "unregister",
-							me: request.from_user.id,
-							other: request.to_user.id,
-							room_id: request.game_room,
-							role: "guest",
-						}));
-						xo_invite_socket.close();
-					}
-				}
-			}
 		}
 		setIsVisible(false);
 	};

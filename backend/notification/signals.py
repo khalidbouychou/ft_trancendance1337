@@ -7,6 +7,7 @@ from .serializers import NotificationSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from login.models import Friend
 from django.db.models import Q
+import json
 
 @receiver(post_save, sender=Notification)
 def notify_user(sender, instance, created, **kwargs):
@@ -19,7 +20,6 @@ def notify_user(sender, instance, created, **kwargs):
         channel_layer = get_channel_layer()
         notification_serializer = NotificationSerializer(instance) 
         room_group_name = f'user_{instance.to_user.id}_NOTIF'
-        print("it was me:", notification_serializer.data)
         async_to_sync(channel_layer.group_send)(
             room_group_name,
             {
@@ -28,7 +28,7 @@ def notify_user(sender, instance, created, **kwargs):
             }
         )
     else:
-        if instance.notif_type == 'FR':
+        if instance.notif_type == 'FR' and instance.status != 'declined':
             friends = Friend.objects.filter(Q(user1=instance.from_user, user2=instance.to_user) |
                                             Q(user1=instance.to_user, user2=instance.from_user))
             if friends.exists():
@@ -96,7 +96,7 @@ def notify_users(sender, instance, **kwargs):
     )
 
 async def send_notification(self, event):
-    data = event['message']
+    data = event['notification']
     await self.send(text_data=json.dumps(data))
 
 @receiver(pre_save, sender=Notification)

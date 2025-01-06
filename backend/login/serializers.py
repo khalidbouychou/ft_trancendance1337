@@ -12,7 +12,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Player
-        fields = ['id', 'username', 'profile_name', 'avatar','email', 'status_network', 'two_factor', 'otp_verified', 'blocked_users', 'friends', 'ping_data' , 'bool_login', 'qrcode_path','is_anonimized']
+        fields = ['id', 'username', 'profile_name', 'avatar','email', 'status_network', 'two_factor', 'otp_verified', 'blocked_users', 'friends', 'ping_data' , 'number_of_sessions', 'bool_login', 'qrcode_path','is_anonimized']
 
     def get_blocked_users(self, obj):
         return [{'profile_name': user.profile_name, 'avatar': user.avatar} for user in obj.blocked_users.all()]

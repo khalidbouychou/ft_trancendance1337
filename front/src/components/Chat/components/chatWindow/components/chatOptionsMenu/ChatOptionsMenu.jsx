@@ -7,23 +7,23 @@ import { TbLockOpenOff, TbLock } from "react-icons/tb";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 
-function ChatOptionsMenu({ onPlayPong, otherUser, currentUser, viewProfile, onFriendRequest, onBlockUser, t }) {
+function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, viewProfile, t }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
-  const [isFriend, setIsFriend] = useState('None');
+  // const [isFriend, setIsFriend] = useState('None');
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [menuList, setMenuList] = useState('none');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const areFriends = currentUser?.friends.find(friend =>
-      friend.user1 === otherUser.username || friend.user2 === otherUser.username
-    );
-    if (areFriends) {
-      setIsFriend(areFriends.status);
-    } else {
-      setIsFriend('None');
-    }
+    // const areFriends = currentUser?.friends.find(friend =>
+    //   friend.user1 === otherUser.username || friend.user2 === otherUser.username
+    // );
+    // if (areFriends) {
+    //   setIsFriend(areFriends.status);
+    // } else {
+    //   setIsFriend('None');
+    // }
 
     const isOtherUserBlocked = currentUser?.blocked_users.includes(otherUser.id);
     setIsBlocked(isOtherUserBlocked);

@@ -15,7 +15,7 @@ import CardBlocked from "./components/cardBlocked/CardBlocked";
 import { useNotificationWS } from "../../contexts/NotifWSContext";
 
 const Profile = ({ me }) => {
-  const { sendMessage, notif } = useNotificationWS();
+  const { sendMessage, notif , setNotif} = useNotificationWS();
 
   let { profile_name } = useParams();
   const { user, t } = useContext(AuthContext);
@@ -43,14 +43,37 @@ const Profile = ({ me }) => {
   const [displayShooseButton, setDisplayShooseButton] = useState('none');
 
   useEffect(() => {
-    if (notif && notif.status === 'friend'){
-      if (notif.user_id === user?.user?.id){
-          setIsfriended(true);
+    console.log('we recieved a notification:', notif);
+    if (notif && notif.status === 'friends'){
+      console.log('notif == ', notif);
+      console.log("profile_id im watching is:", userData);
+      console.log("profile_id=", userData, "the notif user_id=", notif.user_id);
+      if (notif.user_id === userData.id){
+        console.log("we are friends");
+        setIsfriended(true);
+        setNotif(null);
       }
     }
     else if (notif && notif.status === 'unfriend'){
-      if (notif.user_id === user?.user?.id){
-          setIsfriended(false);
+      console.log('notif == ', notif);
+      console.log("profile_id im watching is:", userData.id);
+      console.log("profile_id=", userData.id, "the notif user_id=", notif.user_id);
+      if (notif.user_id === userData.id){
+        console.log("we are not friends anymore");
+        setIsfriended(false);
+        setNotif(null);
+      }
+    }
+    else if (notif && notif.message === 'status'){
+      if (notif.offline && notif.offline === userData.id){
+        console.log('offline');
+        setUserData({...userData, status_network: 'offline'});
+        setNotif(null);
+      }
+      else if (notif.online && notif.online === userData.id){
+        console.log('online');
+        setUserData({...userData, status_network: 'online'});
+        setNotif(null);
       }
     }
   }, [notif])
@@ -134,19 +157,6 @@ const Profile = ({ me }) => {
       setFriendList(response.data);
     };
     fetchFriends();
-    // const fromUserId = profilesocket?.notification?.from_user.id;
-    // const toUserId = profilesocket?.notification?.to_user.id;
-
-    // if (
-    //   (fromUserId === user?.user?.id && toUserId === userData?.id) ||
-    //   (fromUserId === userData?.id && toUserId === user?.user?.id)
-    // ) {
-    //   console.log('fiend list == ', friendList)
-    //   const isFriend = friendList?.["friend list"]?.some(
-    //     (friend) => friend.profile_name === user?.user?.profile_name
-    //   );
-    //   setIsfriended(isFriend);
-    // }
     console.log("friend list", friendList);
   }, [profileName, isfriended]);
 

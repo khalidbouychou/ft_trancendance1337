@@ -29,7 +29,7 @@ class Player(AbstractUser):
     bool_login = models.BooleanField(default=False)
     mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False)
     is_anonimized = models.BooleanField(default=False)
-    # number_of_sessions = models.IntegerField(default=0)
+    number_of_sessions = models.IntegerField(default=0)
     
     class Meta: 
         db_table = 'player' 
