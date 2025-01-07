@@ -6,6 +6,7 @@ import { RiPingPongFill } from "react-icons/ri";
 import { TbLockOpenOff, TbLock } from "react-icons/tb";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, viewProfile, t }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,18 +16,17 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   const [menuList, setMenuList] = useState('none');
   const navigate = useNavigate();
 
+  const check_blocked = async () => {
+        const response = await axios.get(`http://localhost:8000/api/getuser/${currentUser.profile_name}/` , {
+          withCredentials: true,
+        });
+        console.log('response:', response.data)
+        console.log('blocked_users:', response.data.blocked_users)
+        const isOtherUserBlocked = response.data.blocked_users.find(e => {return e.profile_name === otherUser.profile_name}) != undefined ? true : false;
+        setIsBlocked(isOtherUserBlocked);
+      }
   useEffect(() => {
-    // const areFriends = currentUser?.friends.find(friend =>
-    //   friend.user1 === otherUser.username || friend.user2 === otherUser.username
-    // );
-    // if (areFriends) {
-    //   setIsFriend(areFriends.status);
-    // } else {
-    //   setIsFriend('None');
-    // }
-
-    const isOtherUserBlocked = currentUser?.blocked_users.includes(otherUser.id);
-    setIsBlocked(isOtherUserBlocked);
+    check_blocked();
   }, [otherUser, currentUser]);
 
   const handleMenuListOpen = () => {
@@ -54,10 +54,10 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
     setShowConfirmation(false);
   };
 
-  const handleNavigate = () => {
-    setShowConfirmation(false);
-    navigate(`/profile/${otherUser.username}`);
-  };
+  // const handleNavigate = () => {
+  //   setShowConfirmation(false);
+  //   navigate(`/profile/${otherUser.username}`);
+  // };
 
   return (
     <div className={styl.chatOptionsMenu}>
@@ -76,7 +76,7 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
             )}
             <p>{isBlocked ? t("Unblock User") : t("Block User")}</p>
           </div>
-          <div className={styl.cards} onClick={handleNavigate}>
+          <div className={styl.cards} onClick={viewProfile}>
             <FaRegUserCircle className={styl.icon} />
             <p>{t("View Profile")}</p>
           </div>

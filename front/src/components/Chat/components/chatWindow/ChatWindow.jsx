@@ -113,16 +113,6 @@ export default function ChatWindow({
     navigate(`/profile/${otherUser.profile_name}`);
   };
 
-  const onFriendRequest = () => {
-    console.log("Friend Request:", otherUser.username);
-    if (isConnected) {
-      sendNotifMessage({
-        type: "SEND_FR",
-        to_user_id: otherUser.id,
-      });
-    }
-  };
-
   return (
     <div className={styl.chatContainer}>
       {otherUser ? (

@@ -104,25 +104,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             await self.decline_GR(text_data_json, game_type)
         elif message_type == 'SEND_GR':
             await self.send_GR(text_data_json, game_type)
-        elif message_type == 'BLOCK':
-            await self.block(text_data_json)
-        elif message_type == 'UNBLOCK':
-            await self.unblock(text_data_json)
 
-    @database_sync_to_async
-    def block(self, event):
-        me = self.scope['user']
-        user_to_block = event['user_to_block']
-        # u need to block by username not profile_name
-        me.blocked_users.add(user_to_block)
-        
-    @database_sync_to_async
-    def unblock(self, event):
-        me = self.scope['user']
-        user_to_unblock = event['user_to_unblock']
-        # u need to block by username not profile_name
-        me.blocked_users.remove(user_to_unblock)
-        
     @database_sync_to_async
     def cancel_FR(self, event):
         from_user_id = self.scope['user'].id

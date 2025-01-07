@@ -6,7 +6,7 @@ from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from .models import Message, ChatRoom
-from login.models import Player
+from login.models import Player, Friend
 from .serializers import MessageSerializer, ChatRoomSerializer
 from login.serializers import PlayerSerializer
 
@@ -221,6 +221,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def block_user(self, user_id):
+        my_id = self.scope['user'].id
+        friend = Friend.objects.filter(Q(user1=user_id, user2=my_id) |
+                                            Q(user1=my_id, user2=user_id)).first() 
+        if friend is not None:
+            friend.delete()
         target_user = Player.objects.get(id=user_id)
         self.user.block_user(target_user)
 
