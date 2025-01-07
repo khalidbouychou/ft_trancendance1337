@@ -25,6 +25,7 @@ class ChatRoom(models.Model):
         
         if not room:
             room = cls.objects.create(user1=user1, user2=user2)
+            print("we create the room and set create to 1")
         return room
 
     def mark_messages_read(self, user):

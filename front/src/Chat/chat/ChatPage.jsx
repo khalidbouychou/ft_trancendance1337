@@ -42,7 +42,7 @@ function ChatPage() {
 				});
 				setData(response.data);
 				setupSocket(1);
-				setupNotificationSocket();
+				// setupNotificationSocket();
 				initUnreadMessages(response.data);
 				console.log('Current User:', response.data.user);
 			} catch (error) {
@@ -82,34 +82,34 @@ function ChatPage() {
 		setUnreadMessages(urmsg);
 	};
 
-	const setupNotificationSocket = () => {
-		const socket = new WebSocket(`ws://localhost:8000/ws/notification/`);
+	// const setupNotificationSocket = () => {
+	// 	const socket = new WebSocket(`ws://localhost:8000/ws/notification/`);
 	
-		socket.onopen = () => {
-			console.log('Connected to notification socket');
-		};
+	// 	socket.onopen = () => {
+	// 		console.log('Connected to notification socket');
+	// 	};
 	
-		socket.onmessage = (event) => {
-			const data = JSON.parse(event.data);
-			if (data.type === 'NEW_ROOM') {
-				console.log('New room created:', data.room_data);
-				setData(prevData => ({
-					...prevData,
-					chat_rooms: [...prevData.chat_rooms, data.room_data]
-				}));
-			}
-		};
+	// 	socket.onmessage = (event) => {
+	// 		const data = JSON.parse(event.data);
+	// 		if (data.type === 'NEW_ROOM') {
+	// 			console.log('New room created:', data.room_data);
+	// 			setData(prevData => ({
+	// 				...prevData,
+	// 				chat_rooms: [...prevData.chat_rooms, data.room_data]
+	// 			}));
+	// 		}
+	// 	};
 	
-		socket.onerror = (error) => {
-			console.error('Notification socket error:', error);
-		};
+	// 	socket.onerror = (error) => {
+	// 		console.error('Notification socket error:', error);
+	// 	};
 	
-		socket.onclose = (event) => {
-			console.log('Notification socket closed:', event);
-		};
+	// 	socket.onclose = (event) => {
+	// 		console.log('Notification socket closed:', event);
+	// 	};
 	
-		setNotificationSocket(socket);
-	};
+	// 	setNotificationSocket(socket);
+	// };
 
 	useEffect(() => {
 		if (currentContact) {
@@ -128,15 +128,15 @@ function ChatPage() {
 		}
 	}, [currentContact]);
 
-	// useEffect(() => {
-	// 	Object.entries(unreadMessages).forEach(([userId, count]) => {
-	// 		const user = data.chat_rooms.flatMap(room => [room.user1, room.user2])
-	// 			.find(user => user.id === parseInt(userId));
-	// 		if (user && count > 0) {
-	// 			console.log(`${count} unread messages from ${user.username}`);
-	// 		}
-	// 	});
-	// }, [unreadMessages]);
+	useEffect(() => {
+		Object.entries(unreadMessages).forEach(([userId, count]) => {
+			const user = data.chat_rooms.flatMap(room => [room.user1, room.user2])
+				.find(user => user.id === parseInt(userId));
+			if (user && count > 0) {
+				console.log(`${count} unread messages from ${user.username}`);
+			}
+		});
+	}, [unreadMessages]);
 
 	useEffect(() => {
 		if (!receivedMessage) {
@@ -213,15 +213,18 @@ function ChatPage() {
 				resolve(sockets[room_id]);
 				return;
 			}
-		
+			console.log("we will open a new rood_id:", room_id)
 			const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room_id}/`)
 
 			newSocket.onopen = () => {
+				console.log("the new socket we opend:", newSocket);
 				setSockets(prev => ({
 					...prev,
 					[room_id]: newSocket
 				}));
+				console.log("it still ok xD before we cal resolve")
 				resolve(newSocket);
+				console.log("after we called resolve");
 			}
 
 			newSocket.onerror = (error) => {
@@ -231,6 +234,7 @@ function ChatPage() {
 			// reda add unfriend at saturday 10:43pm and i need to add the case where i send unfriend request here to update the data for the client in real time
 			newSocket.onmessage = (event) => {
 				const data_re = JSON.parse(event.data)
+				console.log("we recieved a:", data_re);
 				switch (data_re.type) {
 					case 'USERS_LIST':
 						console.log('Received users list:', data_re)
@@ -256,6 +260,14 @@ function ChatPage() {
 							resolve(newSocket)
 						}
 						break
+					case 'NEW_ROOM':
+					{
+						console.log('New room created:', data_re.room_data);
+						setData(prevData => ({
+							...prevData,
+							chat_rooms: [...prevData.chat_rooms, data_re.room_data]
+						}));
+					}
 					case 'BLOCK_USER':
 						console.log('Blocked user:', data_re);
 						if (data_re.event === 'BLOCK') {
@@ -302,6 +314,7 @@ function ChatPage() {
 		e.preventDefault()
 		console.log('roomId:', roomId)
 		console.log('Current contact id:', currentContact.id)
+		console.log("message:", message, " sockets:", sockets, " sockets[roomId]:", sockets[roomId], " sockets[roomId].readyState", sockets[roomId].readyState);
 		if (message) {
 			if (sockets[roomId] && sockets[roomId].readyState === WebSocket.OPEN) {
 				sockets[roomId].send(JSON.stringify({
