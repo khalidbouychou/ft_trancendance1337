@@ -82,29 +82,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if not content:
             await self.send_error('Message content cannot be empty')
             return
-        print("1")
         message = await self.create_message(room_pk, self.user.id, content)
-        print("2")
         if message is None:
             await self.send(text_data=json.dumps({'type': 'MESSAGE', 
                             'message': 'You are not allowed to send messages to this user'}))
             return
-        print("3")
         sender = await sync_to_async(Player.objects.get)(id=self.user.id)
-        print("3.5")
         room = await sync_to_async(ChatRoom.objects.get)(id=room_pk)
-        print("4")
         receiver = await sync_to_async(room.get_other_user)(sender)
-
-        print("5:", receiver.id)
         unique_room = await sync_to_async(ChatRoom.get_or_create_room)(sender, receiver)
         chat_room_data = await self.serialize_chat_room(unique_room)
-        print('unique_room:', unique_room)
         chat_room = await sync_to_async( ChatRoom.objects.get)(id=room_pk)
         message_count = await sync_to_async(chat_room.messages.count)()
-        # number_of_message = await unique_room.count()
-        print('message_count:', message_count) 
-        print("5.5")
         if message_count == 1:
             await self.channel_layer.group_send(
                 f'user_{receiver.id}_notification', 
@@ -113,9 +102,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'room_data': chat_room_data
                 }
             )
-        print("6") 
         message_data = await self.serialize_message(message)
-        print("7")
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -123,9 +110,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'message': message_data
             }
         )
-        print("8")
-        # except Exception as e:
-        #     await self.send_error(f'Failed to send message: {str(e)}')
 
     async def handle_search_users(self, data):
         query = data.get('query')
