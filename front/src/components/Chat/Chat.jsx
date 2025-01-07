@@ -49,7 +49,7 @@ const Chat = () => {
         console.log("1 data:", response.data);
         setData(response.data);
         setupSocket(1);
-        setupNotificationSocket();
+        // setupNotificationSocket();
         initUnreadMessages(response.data);
         console.log("Current User:", response.data.user);
       } catch (error) {
@@ -90,34 +90,34 @@ const Chat = () => {
     setUnreadMessages(urmsg);
   };
 
-  const setupNotificationSocket = () => {
-    const socket = new WebSocket(`ws://localhost:8000/ws/notification/`);
+  // const setupNotificationSocket = () => {
+  //   const socket = new WebSocket(`ws://localhost:8000/ws/notification/`);
 
-    socket.onopen = () => {
-      console.log("Connected to notification socket");
-    };
+    // socket.onopen = () => {
+    //   console.log("Connected to notification socket");
+    // };
 
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === "NEW_ROOM") {
-        console.log("New room created:", data.room_data);
-        setData((prevData) => ({
-          ...prevData,
-          chat_rooms: [...prevData.chat_rooms, data.room_data],
-        }));
-      }
-    };
+  //   socket.onmessage = (event) => {
+  //     const data = JSON.parse(event.data);
+  //     if (data.type === "NEW_ROOM") {
+  //       console.log("New room created:", data.room_data);
+  //       setData((prevData) => ({
+  //         ...prevData,
+  //         chat_rooms: [...prevData.chat_rooms, data.room_data],
+  //       }));
+  //     }
+  //   };
 
-    socket.onerror = (error) => {
-      console.error("Notification socket error:", error);
-    };
+  //   socket.onerror = (error) => {
+  //     console.error("Notification socket error:", error);
+  //   };
 
-    socket.onclose = (event) => {
-      console.log("Notification socket closed:", event);
-    };
+  //   socket.onclose = (event) => {
+  //     console.log("Notification socket closed:", event);
+  //   };
 
-    setNotificationSocket(socket);
-  };
+  //   setNotificationSocket(socket);
+  // };
 
   useEffect(() => {
     if (currentContact) {
@@ -249,6 +249,7 @@ const Chat = () => {
       };
       newSocket.onmessage = (event) => {
         const data_re = JSON.parse(event.data);
+        console.log("data_re: ",data_re);
         switch (data_re.type) {
           case "USERS_LIST":
             console.log("Received users list:", data_re);
@@ -264,6 +265,14 @@ const Chat = () => {
 
             setReceivedMessage(data_re.message);
             break;
+          case 'NEW_ROOM':
+            {
+              console.log('New room created:', data_re.room_data);
+              setData(prevData => ({
+                ...prevData,
+                chat_rooms: [...prevData.chat_rooms, data_re.room_data]
+              }));
+            }
           case "TYPING":
             setTypingUser(data_re);
             break;
