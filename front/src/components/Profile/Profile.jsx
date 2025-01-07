@@ -41,37 +41,27 @@ const Profile = ({ me }) => {
   const [blockedList, setBlockedList] = useState([]);
   const [shooseList, setShooseList] = useState('none');
   const [displayShooseButton, setDisplayShooseButton] = useState('none');
+  const [isblocked, setIsblocked] = useState(false);
 
   useEffect(() => {
-    console.log('we recieved a notification:', notif);
     if (notif && notif.status === 'friends'){
-      console.log('notif == ', notif);
-      console.log("profile_id im watching is:", userData);
-      console.log("profile_id=", userData, "the notif user_id=", notif.user_id);
       if (notif.user_id === userData.id){
-        console.log("we are friends");
         setIsfriended(true);
         setNotif(null);
       }
     }
     else if (notif && notif.status === 'unfriend'){
-      console.log('notif == ', notif);
-      console.log("profile_id im watching is:", userData.id);
-      console.log("profile_id=", userData.id, "the notif user_id=", notif.user_id);
       if (notif.user_id === userData.id){
-        console.log("we are not friends anymore");
         setIsfriended(false);
         setNotif(null);
       }
     }
     else if (notif && notif.message === 'status'){
       if (notif.offline && notif.offline === userData.id){
-        console.log('offline');
         setUserData({...userData, status_network: 'offline'});
         setNotif(null);
       }
       else if (notif.online && notif.online === userData.id){
-        console.log('online');
         setUserData({...userData, status_network: 'online'});
         setNotif(null);
       }
@@ -94,11 +84,7 @@ const Profile = ({ me }) => {
   const openSettings = () => {
     setSetting(setting == "none" ? "flex" : "none");
   };
-
-  useEffect(() => {
-    console.log('++++++++++++++++++++ userData == ', user)
-  },[])
-
+  
   useEffect(() => {
     const fetchPingData = async () => {
       try {
@@ -106,7 +92,6 @@ const Profile = ({ me }) => {
           withCredentials: true,
       });
         const pingData = response.data;
-        console.log("ping data", pingData);
   
         if (pingData.length > 0) {
           const { exp_game, wins, losses } = pingData[0];
@@ -125,18 +110,17 @@ const Profile = ({ me }) => {
         console.error("Failed to fetch ping data", error);
       }
     };
-  
+    
     fetchPingData();
   }, [profile_name]);
 
   useEffect(() => {
-    console.log('--------------------------------', friendList);
     const friendsArray = friendList['friend list'] || [];
     const isFriend = friendsArray.some(
       (friend) => friend.profile_name === user?.user?.profile_name
     );
     setIsfriended(isFriend);
-  
+    
     if (userData.profile_name === user?.user?.profile_name) {
       setIsMyProfil(1);
       setDisplayBt("none");
@@ -157,20 +141,35 @@ const Profile = ({ me }) => {
       setFriendList(response.data);
     };
     fetchFriends();
-    console.log("friend list", friendList);
   }, [profileName, isfriended]);
-
+                                                                              
   useEffect(() => {
     const fetchBlocked = async () => {
-      const response = await axios.get(
-        `http://localhost:8000/api/blocked/${profile_name}/` , {
-          withCredentials: true,
-      });
-      setBlockedList(response.data);
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/blocked/${profile_name}/`,
+          { withCredentials: true }
+        );
+        setBlockedList(response.data);
+        console.log("Blocked list:", response.data);
+  
+        setIsblocked(false)
+        if (profile_name !== user.user.profile_name) {
+          console.log("Is blocked list:", response.data);
+          const isBlocked = response.data["blocked list"].some(
+            (blockedUser) => blockedUser.profile_name === user.user.profile_name
+          );
+          if (isBlocked)
+            setIsblocked(true);
+        }
+      } catch (error) {
+        console.error("Error fetching blocked list:", error);
+      }
     };
+  
     fetchBlocked();
-    console.log("blocked list", blockedList);
   }, [profileName, isfriended, ismyprofil]);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -193,7 +192,7 @@ const Profile = ({ me }) => {
   
         const data = await response.json();
         setUserData(data);
-  
+        
       } catch (error) {
         setError(error.message);
         setUserData({});
@@ -205,12 +204,10 @@ const Profile = ({ me }) => {
     setActiveSection("Leaderboard");
     fetchData();
   }, [profile_name]);
-
-
+  
+  
   const handleAddFriend = () => {
-    console.log("is_friend:", isfriended);
     if (!isfriended) {
-      console.log("i send the send_fr")
       sendMessage({
         type: "SEND_FR",
         to_user_id: userData?.id,
@@ -222,11 +219,17 @@ const Profile = ({ me }) => {
       });
     }
   };
-
+  
+  // useEffect(() => {
+  //   if (ismyprofil) {
+  //     console.log('block list == ', blockedList)
+  //   }
+  // },[profile_name, blockedList, ismyprofil])
+  
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
   }
-
+  
   if (error) {
     return (
       <div className={styl.error}>
@@ -234,6 +237,10 @@ const Profile = ({ me }) => {
         <Link to="/"> back to home</Link>
       </div>
     );
+  }
+
+  if (isblocked) {
+    return <div className={styl.error} style={{color: 'white'}}>This user has blocked you.</div>
   }
 
   return (
