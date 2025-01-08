@@ -49,7 +49,7 @@ var	XO = props => {
 
 	var connect = n => {
 		var token = localStorage.getItem('token');
-		const ws = new WebSocket(`ws://localhost:8000/ws/${ props.invite ? "xo_invite" : "game" }/?token=${token}`);
+		const ws = new WebSocket(`ws://${import.meta.env.VITE_IP_HOST}:8000/ws/${ props.invite ? "xo_invite" : "game" }/?token=${token}`);
 		ws.onopen = () => {
 			if (props.invite) {
 				ws.send(JSON.stringify({

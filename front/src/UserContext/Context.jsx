@@ -20,7 +20,7 @@ export default function AuthProvider({ children }) {
   , [localStorage.getItem('lang')])
 
   async function auth_intra42() {
-    const response = await axios.get("http://localhost:8000/api/auth_intra/", {
+    const response = await axios.get(`http://${import.meta.env.VITE_IP_HOST}:8000/api/auth_intra/`, {
       withCredentials: true
     });
     try {
@@ -45,7 +45,7 @@ export default function AuthProvider({ children }) {
         const params = new URLSearchParams();
         params.append("code", code);
         res = await axios.post(
-          `http://localhost:8000/api/login/`,
+          `http://${import.meta.env.VITE_IP_HOST}:8000/api/login/`,
           params,
           {
             withCredentials: true
@@ -76,7 +76,7 @@ export default function AuthProvider({ children }) {
   }
   async function get_auth_user() {
     try {
-      const res = await axios.get(`http://localhost:8000/api/user/`, {
+      const res = await axios.get(`http://${import.meta.env.VITE_IP_HOST}:8000/api/user/`, {
         withCredentials: true
       });
 
@@ -98,7 +98,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`http://localhost:8000/api/logout/`, {
+      const res = await axios.get(`http://${import.meta.env.VITE_IP_HOST}:8000/api/logout/`, {
         withCredentials: true
       });
 

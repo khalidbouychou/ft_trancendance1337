@@ -14,7 +14,7 @@ const Search = () => {
   const fetchSearchResults = async (query) => {
     if (query.trim()) {
       const response = await fetch(
-        `http://localhost:8000/api/search/?q=${query}`
+        `http://${import.meta.env.VITE_IP_HOST}:8000/api/search/?q=${query}`
       );
       const data = await response.json();
       setSearchResults(data);

@@ -74,7 +74,7 @@ const NotiCard = ({request}) => {
 					var	token = localStorage.getItem("token"), xo_invite_socket,
 						room_id = request.game_room;
 					if (token && room_id && room_id.length) {
-						try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`); }
+						try { xo_invite_socket = new WebSocket(`ws://${import.meta.env.VITE_IP_HOST}:8000/ws/xo_invite/?token=${token}`); }
 						catch (err) {}
 						xo_invite_socket.onopen = () => {
 							xo_invite_socket.send(JSON.stringify({
@@ -110,7 +110,7 @@ const NotiCard = ({request}) => {
 				var	token = localStorage.getItem("token"),
 					xo_invite_socket;
 				if (token) {
-					try { xo_invite_socket = new WebSocket(`ws://localhost:8000/ws/xo_invite/?token=${token}`); }
+					try { xo_invite_socket = new WebSocket(`ws://${import.meta.env.VITE_IP_HOST}:8000/ws/xo_invite/?token=${token}`); }
 					catch (err) {}
 				
 					xo_invite_socket.onopen = () => {

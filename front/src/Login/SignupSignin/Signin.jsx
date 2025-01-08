@@ -23,7 +23,7 @@ const Signin = () => {
         return;
       }
       const response = await axios.post(
-        "http://localhost:8000/api/singin/",
+        `http://${import.meta.env.VITE_IP_HOST}:8000/api/singin/`,
         {
           username,
           password

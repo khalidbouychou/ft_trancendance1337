@@ -59,7 +59,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
  
     def get_user_by_profile_name(self, request, username):
         try:
-            print('username ==>', username)
             user = Player.objects.get(username=username)
             serializer = PlayerSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -96,9 +95,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
     def auth_intra(self, request):
         CID = os.environ.get('C_ID')
-        print('CID ==>', CID, flush=True)
-        REDIRECT_URI = os.environ.get('REDIRECT_URI')
-        print('REDIRECT_URI ==>', REDIRECT_URI, flush=True)
+        REDIRECT_URI = os.environ.get("REDIRECT_URI")
         try:
             response = Response(
                 {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
@@ -122,7 +119,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                     'client_id': os.environ.get('C_ID'),
                     'client_secret': os.environ.get('SCID'),
                     'code': request.data.get('code'),
-                    'redirect_uri': os.environ.get('REDIRECT_URI')
+                    'redirect_uri': os.environ.get("REDIRECT_URI")
                 }
             )
             response.raise_for_status()
@@ -232,7 +229,7 @@ class AuthUser(APIView):
             except TokenError as e:
                 refresh = request.COOKIES.get('refresh')
                 crstf = request.COOKIES.get('csrftoken')
-                res = requests.post('http://localhost:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
+                res = requests.post(f'http://{os.environ.get("VITE_IP_HOST")}:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
                 res.raise_for_status() # Raise an exception if the status code is not 2xx
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')

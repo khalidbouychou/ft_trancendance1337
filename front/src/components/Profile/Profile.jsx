@@ -42,7 +42,7 @@ const Profile = ({me}) => {
       setIsMyProfil(1);
       try {
         const response = await fetch(
-          `http://localhost:8000/api/getuser/${username}/`
+          `http://${import.meta.env.VITE_IP_HOST}:8000/api/getuser/${username}/`
         );
   
         if (!response.ok) {
@@ -61,7 +61,7 @@ const Profile = ({me}) => {
         }
   
         const pingResponse = await fetch(
-          `http://localhost:8000/api/pingdata/${username}/`
+          `http://${import.meta.env.VITE_IP_HOST}:8000/api/pingdata/${username}/`
         );
   
         if (!pingResponse.ok) {
@@ -85,7 +85,7 @@ const Profile = ({me}) => {
           throw new Error("Ping data is invalid or empty");
         }
 
-        const ticResponse = await fetch(`http://localhost:8000/api/ticdata/${username}/`);
+        const ticResponse = await fetch(`http://${import.meta.env.VITE_IP_HOST}:8000/api/ticdata/${username}/`);
         if (!ticResponse.ok) {
           throw new Error("Failed to fetch Tic Tac Toe data");
         }

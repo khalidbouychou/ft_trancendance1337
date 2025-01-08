@@ -11,39 +11,53 @@ import { Link } from 'react-router-dom';
 
 const Game = () => {
 
-  return (
-      <div className={styl.Game}>
-        <div className={styl.content}>
-          <div className={styl.head}>
-            <h1>GAME</h1>
-          </div>
-          <div className={styl.cont}>
-            <div className={styl.chouseGame}>
-              <div className={styl.cardGame}>
-                <div className={styl.game}>
-                  <div className={styl.gameName}>
-                    <p>Tic Tac Toe</p>
-                  </div>
-                  <Link to={"/xo"}><button className={styl.image} >
-                    <img src={tic} alt="Tic Tac Toe" />
-                  </button></Link>
-                </div>
-              </div>
-              <div className={styl.cardGame}>
-                <div className={styl.game}>
-                  <div className={styl.gameName}>
-                    <p>Ping Pong</p>
-                  </div>
-                  <Link to={"/pingpong-games"}><button className={styl.image}>
-                    <img src={ping} alt="Ping Pong" />
-                  </button></Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  );
+  // return (
+  //     <div className={styl.Game}>
+  //       <div className={styl.content}>
+  //         <div className={styl.head}>
+  //           <h1>GAME</h1>
+  //         </div>
+  //         <div className={styl.cont}>
+  //           <div className={styl.chouseGame}>
+  //             <div className={styl.cardGame}>
+  //               <div className={styl.game}>
+  //                 <div className={styl.gameName}>
+  //                   <p>Tic Tac Toe</p>
+  //                 </div>
+  //                 <Link to={"/xo"}><button className={styl.image} >
+  //                   <img src={tic} alt="Tic Tac Toe" />
+  //                 </button></Link>
+  //               </div>
+  //             </div>
+  //             <div className={styl.cardGame}>
+  //               <div className={styl.game}>
+  //                 <div className={styl.gameName}>
+  //                   <p>Ping Pong</p>
+  //                 </div>
+  //                 <Link to={"/pingpong-games"}><button className={styl.image}>
+  //                   <img src={ping} alt="Ping Pong" />
+  //                 </button></Link>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  // );
+  <div className='container-games'>
+    <div className='local'>
+      local
+    </div>
+    <div className='remote'>
+      remote
+    </div>
+    <div className='1vs1'>
+      1vs1
+    </div>
+    <div className='3dgame'>
+      3d hame
+    </div>
+  </div>
 };
 
 export default Game;

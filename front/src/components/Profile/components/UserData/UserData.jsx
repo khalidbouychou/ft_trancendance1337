@@ -26,7 +26,7 @@ const UserData = ({ userData, ismyprofil }) => {
       if (!username) return;
 
       try {
-        const response = await fetch(`http://localhost:8000/api/${fetchUrl}/${username}`);
+        const response = await fetch(`http://${import.meta.env.VITE_IP_HOST}:8000/api/${fetchUrl}/${username}`);
         if (response.ok) {
           const data = await response.json();
           setStatisticData(data[0]);

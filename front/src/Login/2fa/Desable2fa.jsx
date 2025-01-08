@@ -39,7 +39,7 @@ const Desable2fa = ({  message, setVerified }) => {
       .join("");
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/d_2fa/",
+        `http://${import.meta.env.VITE_IP_HOST}:8000/api/d_2fa/`,
         {
           otp:otp
         },
