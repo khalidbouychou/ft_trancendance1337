@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { useNotificationWS } from '../../../../contexts/NotifWSContext.jsx'
 import False from '../../assets/false.svg'
-import AuthContext  from "../../../../UserContext/Context";
+import {AuthContext} from "../../../../UserContext/Context";
 
 const NotiCardSent = ({request}) => {
   const {t} = useContext(AuthContext);

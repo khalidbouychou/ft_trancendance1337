@@ -1,8 +1,16 @@
 import React from "react";
 import styl from "./CardRank.module.css";
-
-const CardRank = ({ player, index, handleCardClick}) => {
+import { useNavigate } from "react-router-dom";
+const CardRank = ({ player, index , setProfileName}) => {
+const navigate = useNavigate();
   const playerData = player.data?.[0] || {};
+
+  const handleCardClick = (profileName) => {
+    setProfileName(profileName);
+    if (profileName) {
+      navigate(`/profile/${profileName}`);
+    }
+  };
 
   return (
     <button

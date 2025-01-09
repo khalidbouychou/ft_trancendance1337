@@ -43,6 +43,12 @@ const Profile = ({ me }) => {
   const [displayShooseButton, setDisplayShooseButton] = useState('none');
   const [isblocked, setIsblocked] = useState(false);
 
+
+  useEffect(() => {
+    setProfileName(profile_name);
+    console.log("-------------------------> setProfilename", profileName);
+  }, [profileName]);
+
   useEffect(() => {
     if (notif && notif.status === 'friends'){
       if (notif.user_id === userData.id){
@@ -88,7 +94,7 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchPingData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/pingdata/${profile_name}/` , {
+        const response = await axios.get(`http://localhost:8000/api/pingdata/${profileName}/` , {
           withCredentials: true,
       });
         const pingData = response.data;
@@ -112,13 +118,17 @@ const Profile = ({ me }) => {
     };
     
     fetchPingData();
-  }, [profile_name]);
+  }, [profileName]);
 
   useEffect(() => {
     const friendsArray = friendList['friend list'] || [];
+    console.log("friendsArray:", friendsArray);
+    console.log("friendList:", friendList);
+
     const isFriend = friendsArray.some(
       (friend) => friend.profile_name === user?.user?.profile_name
     );
+    console.log("isFriend:", isFriend);
     setIsfriended(isFriend);
     
     if (userData.profile_name === user?.user?.profile_name) {
@@ -138,6 +148,7 @@ const Profile = ({ me }) => {
         `http://localhost:8000/api/friends/${profile_name}/` , {
           withCredentials: true,
       });
+      console.log("profile_name_145:", profile_name);
       setFriendList(response.data);
     };
     fetchFriends();
@@ -373,7 +384,7 @@ const Profile = ({ me }) => {
               </div>
             </div>
             <div className={styl.userData}>
-              {activeSection === "Leaderboard" && <Leaderboard t={t}/>}
+              {activeSection === "Leaderboard" && <Leaderboard setProfileName={setProfileName} t={t}/>}
               {activeSection === "MatchHistory" && (
                 <MatchHistory profileName={profileName} t={t}/>
               )}

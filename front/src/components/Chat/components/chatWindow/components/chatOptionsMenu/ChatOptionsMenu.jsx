@@ -64,10 +64,12 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
       <button className={styl.menuToggle} onClick={handleMenuListOpen}>
         <p>⋮</p>
         <div className={styl.menuList} style={{ display: menuList }}>
-          <div className={styl.cards} onClick={onPlayPong}>
-            <RiPingPongFill className={styl.icon} />
-            <p>{t("Invite in Game")}</p>
-          </div>
+          {
+            !isBlocked ? (<div className={styl.cards} onClick={onPlayPong}>
+              <RiPingPongFill className={styl.icon} />
+              <p>{t("Invite in Game")}</p>
+            </div>) : null
+          }
           <div className={styl.cards} onClick={handleBlockClick}>
             {isBlocked ? (
               <TbLockOpenOff className={styl.icon} />

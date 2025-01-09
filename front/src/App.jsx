@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import { useContext } from "react"
 import style from "./App.module.css";
 import Layout from "./Layout.jsx";
@@ -24,12 +24,13 @@ import Home from "./components/Home/Home.jsx";
 import { useTranslation } from "react-i18next";
 import Chat from "./components/Chat/Chat.jsx";
 import i18n from "./i18n";
-import { AuthContext } from "./UserContext/Context.jsx";
+import AuthProvider from "./UserContext/Context.jsx";
 
 function App() {
   const {t} = useTranslation();
   return (
-    <>
+    <BrowserRouter>
+    <AuthProvider>
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
           <Routes>
@@ -89,7 +90,8 @@ function App() {
         pauseOnFocusLoss
         stacked
        />
-      </>
+      </AuthProvider>
+   </BrowserRouter>
   );
 }
 
