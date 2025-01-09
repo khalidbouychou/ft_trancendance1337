@@ -37,5 +37,9 @@
    "If you want to desable 2fa entre OTP code": "If you want to desable 2fa entre OTP code",
    "Cancel": "Cancel",
    "Confirm": "Confirm",
-   "Profile name must be between 9 and 15 characters": "Profile name must be between 9 and 15 characters"
+   "Profile name must be between 9 and 15 characters": "Profile name must be between 9 and 15 characters",
+   "OTP Verified Successfully":"OTP Verified Successfully",
+   "Please enter a valid OTP":"Please enter a valid OTP",
+   "Invalid OTP":"Invalid OTP",
+   " Enter the OTP" : "Enter the OTP"
 }

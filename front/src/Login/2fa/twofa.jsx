@@ -10,7 +10,7 @@ import BounceLoader from "react-spinners/BounceLoader";
 const Twofa = () => {
   const [twofa, setTwofa] = useState(false);
   const [qrcode, setQrcode] = useState("");
-  const { t,user, get_auth_user ,setUser } = useContext(AuthContext);
+  const { t,user, get_auth_user ,setUser,verifyotp} = useContext(AuthContext);
   const [isEnable, setEnable] = useState("Off");
   const [verified, setVerified] = useState(false);
 
@@ -93,47 +93,47 @@ useEffect(() => {
     }
   };
 
-  const handlverify = async () => {
-    await get_auth_user();
-    const inputs = document.getElementsByClassName("otp-input");
-    const otp = Array.from(inputs)
-      .map((input) => input.value)
-      .join("");
-    try {
-      const res = await axios.post(
-        `http://${import.meta.env.VITE_IP_HOST}:8000/api/otpverify/`,
-        {
-          otp: otp
-        },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("csrftoken="))
-              .split("=")[1]
-          }
-        }
-      );
-      if (res.status === 200) {
-        setVerified(true);
-        toast.success(t("2FA verified"), {
-          style: {
-            backgroundColor: 'rgb(0, 128, 0)',
-            color: 'white'
-          }
-        });
-      }
-    } catch (error) {
-      toast.error(t("OTP code is not correct"), {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      });
-    }
-  };
+  // const handlverify = async () => {
+  //   await get_auth_user();
+  //   const inputs = document.getElementsByClassName("otp-input");
+  //   const otp = Array.from(inputs)
+  //     .map((input) => input.value)
+  //     .join("");
+  //     try {
+  //       const res = await axios.post(
+  //       `http://${import.meta.env.VITE_IP_HOST}:8000/api/otpverify/`,
+  //       {
+  //         otp: otp
+  //       },
+  //       {
+  //         withCredentials: true,
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "X-CSRFToken": document.cookie
+  //           .split("; ")
+  //           .find((row) => row.startsWith("csrftoken="))
+  //           .split("=")[1]
+  //         }
+  //       }
+  //     );
+  //     if (res.status === 200) {
+  //       setVerified(true);
+  //       toast.success(t("2FA verified"), {
+  //         style: {
+  //           backgroundColor: 'rgb(0, 128, 0)',
+  //           color: 'white'
+  //         }
+  //       });
+  //     }
+  //   } catch (error) {
+  //     toast.error(t("OTP code is not correct"), {
+  //       style: {
+  //         backgroundColor: 'rgb(255, 0, 0)',
+  //         color: 'white'
+  //       }
+  //     });
+  //   }
+  // };
 
   return (
     <>
@@ -178,7 +178,7 @@ useEffect(() => {
               ) : (
                 <>
                   <h1>{t("Scan the QR code")}</h1>
-                  <div className="content">
+                  {/* <div className="content"> */}
                     <div className="cont">
                       <div className="qr">
                         {!qrcode ? (
@@ -194,8 +194,9 @@ useEffect(() => {
                         <div className="inputs-container">{renderInputs()}</div>
                         <div className="btns">
                           <button
-                            className="btn btn-verify"
-                            onClick={handlverify}
+                            className="btn-verify"
+                            // onClick={handlverify}
+                            onClick={verifyotp}
                           >
                             {t("Verify")}
                           </button>
@@ -211,7 +212,7 @@ useEffect(() => {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  {/* </div> */}
                 </>
               )}
             </>

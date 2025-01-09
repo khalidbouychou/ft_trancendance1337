@@ -28,9 +28,6 @@ const Desable2fa = ({  message, setVerified }) => {
       <input key={i} type="text" className="otp-input" maxLength={1} />
     ));
   };
-  // useEffect(() => {
-  //   i18n.changeLanguage("en");
-  // }, []);
 
   const Disable_twofa = async () => {
     const inputs = document.getElementsByClassName("otp-input");
@@ -65,7 +62,7 @@ const Desable2fa = ({  message, setVerified }) => {
         });
       }
     } catch (error) {
-      toast.error("OTP code is not correct", {
+      toast.error(t("OTP code is not correct"), {
         style: {
           backgroundColor: 'rgb(255, 0, 0)',
           color: 'white'
@@ -87,7 +84,15 @@ const Desable2fa = ({  message, setVerified }) => {
     </div>
   ) : (
     <>
-      <h1>{t("2fa desabled")} </h1>
+      <h1 style={
+        {
+          color: 'red',
+          textAlign: 'center',
+          marginTop: '10px',
+          border : '1px solid red',
+          padding: '10px',
+        }
+      } >{t("2fa desabled")} </h1>
     </>
   );
 };

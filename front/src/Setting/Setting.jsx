@@ -187,13 +187,13 @@ const Settings = () => {
             <div className={styl.data}>
               <button
                 className={styl.anonymize}
-                onClick={() => openModal(t("anonymize"))}
+                onClick={() => openModal("anonymize")}
               >
                 {t("Data Anonymization")}
               </button>
               <button
                 className={styl.deletebtn}
-                onClick={() => openModal(t('delete'))}
+                onClick={() => openModal('delete')}
               >
                 {t("Delete Account")}
                 

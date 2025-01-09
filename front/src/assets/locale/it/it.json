@@ -37,5 +37,9 @@
     "If you want to desable 2fa entre OTP code": "Se vuoi disabilitare il 2FA, inserisci il codice OTP",
     "Cancel": "Annulla",
    "Confirm": "Conferma",
-   "Profile name must be between 9 and 15 characters": "Il nome del profilo deve essere compreso tra 9 e 15 caratteri"
+   "Profile name must be between 9 and 15 characters": "Il nome del profilo deve essere compreso tra 9 e 15 caratteri",
+    "OTP Verified Successfully": "OTP verificato con successo",
+    "Please enter a valid OTP" : "Inserisci un OTP valido",
+    "Invalid OTP": "OTP non valido"
+
  }

@@ -19,6 +19,42 @@ export default function AuthProvider({ children }) {
   }
   , [localStorage.getItem('lang')])
 
+
+  const verifyotp = async () => {
+    const inputs = document.getElementsByClassName("otp-input");
+    const otp = Array.from(inputs).map(input => input.value).join("");
+    try {
+      await get_auth_user();
+      const res = await axios.post(
+        `http://${import.meta.env.VITE_IP_HOST}:8000/api/otpverify/`,
+        { otp: otp },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.cookie
+              .split("; ")
+              .find(row => row.startsWith("csrftoken="))
+              .split("=")[1]
+          }
+        }
+      );
+      if (res.status === 200) {
+        toast.success(t("OTP Verified Successfully"), {
+          style: {
+            backgroundColor: "rgb(0, 128, 0)",
+            color: "white"
+          }
+        });
+        setTimeout(() => {
+          navigate("/home");
+        }, 1000);
+      }
+    } catch (err) {
+      toast.error(t(`${err.response.data.error}`));
+    }
+  };
+
   async function auth_intra42() {
     const response = await axios.get(`http://${import.meta.env.VITE_IP_HOST}:8000/api/auth_intra/`, {
       withCredentials: true
@@ -132,7 +168,8 @@ export default function AuthProvider({ children }) {
         Login,
         auth_intra42,
         get_auth_user,
-        t
+        t,
+        verifyotp
       }}
     >
       {children}
