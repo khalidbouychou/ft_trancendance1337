@@ -6,9 +6,12 @@ from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from .models import Message, ChatRoom
-from login.models import Player
+from login.models import Player, Friend
 from .serializers import MessageSerializer, ChatRoomSerializer
 from login.serializers import PlayerSerializer
+
+from channels.layers import get_channel_layer
+from asgiref.sync import sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
     authentication_classes = [SessionAuthentication]
@@ -18,9 +21,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_pk']
         self.room_group_name = f'chat_room_{self.room_name}'
         self.user = self.scope['user']
+        self.user_id = self.user.id
+        self.notification_group_name = f'user_{self.user_id}_notification'
 
         await self.channel_layer.group_add(
             self.room_group_name,
+            self.channel_name
+        )
+        await self.channel_layer.group_add(
+            self.notification_group_name,
             self.channel_name
         )
         await self.accept()
@@ -33,6 +42,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         try:
+            print("we received something on the backend of the chat -------") 
             text_data_json = json.loads(text_data)
             message_type = text_data_json.get('type')
 
@@ -65,28 +75,41 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def handle_message(self, data):
         # try:
-            room_pk = data.get('room_id')
-            content = data.get('content')
-            if not content:
-                await self.send_error('Message content cannot be empty')
-                return
-
-            message = await self.create_message(room_pk, self.user.id, content)
-            if message is None:
-                await self.send(text_data=json.dumps({'type': 'MESSAGE', 
-                                'message': 'You are not allowed to send messages to this user'}))
-                return
-
-            message_data = await self.serialize_message(message)
+        print("i recieved a nessage +++++++")
+        room_pk = data.get('room_id')
+        content = data.get('content')
+        profile_name = data.get('profile_name')
+        if not content:
+            await self.send_error('Message content cannot be empty')
+            return
+        message = await self.create_message(room_pk, self.user.id, content)
+        if message is None:
+            await self.send(text_data=json.dumps({'type': 'MESSAGE', 
+                            'message': 'You are not allowed to send messages to this user'}))
+            return
+        sender = await sync_to_async(Player.objects.get)(id=self.user.id)
+        room = await sync_to_async(ChatRoom.objects.get)(id=room_pk)
+        receiver = await sync_to_async(room.get_other_user)(sender)
+        unique_room = await sync_to_async(ChatRoom.get_or_create_room)(sender, receiver)
+        chat_room_data = await self.serialize_chat_room(unique_room)
+        chat_room = await sync_to_async( ChatRoom.objects.get)(id=room_pk)
+        message_count = await sync_to_async(chat_room.messages.count)()
+        if message_count == 1:
             await self.channel_layer.group_send(
-                self.room_group_name,
+                f'user_{receiver.id}_notification', 
                 {
-                    'type': 'chat_message',
-                    'message': message_data
+                    'type': 'new_room_notification',
+                    'room_data': chat_room_data
                 }
             )
-        # except Exception as e:
-        #     await self.send_error(f'Failed to send message: {str(e)}')
+        message_data = await self.serialize_message(message)
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message_data
+            }
+        )
 
     async def handle_search_users(self, data):
         query = data.get('query')
@@ -160,6 +183,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 sender=sender,
                 content=content
             )
+
         # except (ChatRoom.DoesNotExist, Player.DoesNotExist):
         #     return None
 
@@ -176,7 +200,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def create_or_get_chat_room(self, user1, user2):
-        return ChatRoom.get_or_create_room(user1, user2)
+        obj = ChatRoom.get_or_create_room(user1, user2)
+        return obj
 
     @database_sync_to_async
     def mark_messages_as_read(self, room_id, user_id):
@@ -191,11 +216,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def serialize_chat_room(self, chat_room):
         return ChatRoomSerializer(
             chat_room,
-            context={'user': self.user}
+            context={'user': self.user} 
         ).data
 
     @database_sync_to_async
     def block_user(self, user_id):
+        my_id = self.scope['user'].id
+        friend = Friend.objects.filter(Q(user1=user_id, user2=my_id) |
+                                            Q(user1=my_id, user2=user_id)).first() 
+        if friend is not None:
+            friend.delete()
         target_user = Player.objects.get(id=user_id)
         self.user.block_user(target_user)
 
@@ -225,29 +255,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def send_json(self, data):
         await self.send(text_data=json.dumps(data))
 
-class UserNotificationConsumer(AsyncWebsocketConsumer):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
-    async def connect(self): 
-        self.user = self.scope['user']
-        self.user_id = self.user.id
-        self.notification_group_name = f'user_{self.user_id}_notification'
-
-        await self.channel_layer.group_add(
-            self.notification_group_name,
-            self.channel_name
-        )
-        await self.accept()
-
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.notification_group_name,
-            self.channel_name
-        )
-
-    async def receive(self, text_data):
-        pass
-
     async def new_room_notification(self, event):
         room_data = event['room_data']
 
@@ -255,4 +262,4 @@ class UserNotificationConsumer(AsyncWebsocketConsumer):
             'type': 'NEW_ROOM',
             'room_data': room_data
         }))
-    
+

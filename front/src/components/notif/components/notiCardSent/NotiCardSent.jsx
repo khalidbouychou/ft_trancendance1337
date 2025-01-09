@@ -1,12 +1,8 @@
-import React, { useState,useContext, useEffect } from 'react';
-import styl from './NotiCard.module.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { useNotificationWS } from '../../../../contexts/NotifWSContext.jsx'
-import False from '../../assets/false.svg'
+import React from "react";
+import styl from './NotiCardSent.module.css'
 import { AuthContext }  from "../../../../UserContext/Context";
 
-const NotiCardSent = ({request}) => {
+const NotiCardSent = () => {
   const {t} = useContext(AuthContext);
 
   const [isVisible, setIsVisible] = useState(true);
@@ -71,38 +67,22 @@ const NotiCardSent = ({request}) => {
   if (!isVisible) {
     return null;
   }
-  
   return (
-    <div className={styl.notiCard}>
-        <div className={styl.userimage}>
-            {request?.to_user?.avatar ? (
-                <img src={request.to_user.avatar} alt={request?.to_user?.username} className="contact-avatar" />
-            ) : (
-                <div className="contact-avatar default-avatar">
-                    <FontAwesomeIcon icon={faUser} />
-                </div>
-            )}
+    <div className={styl.notiCardSent}>
+      <div className={styl.userImage}>
+        <div className={styl.intImg}>
+          <div className={styl.intImg}></div>
         </div>
-        <div className={styl.Sender}>
-            <p>
-                {request.notif_type === 'FR' ? (
-                    `${t("Friend request sent to")} ${request?.to_user?.username}`
-                ) : (
-                    <>
-                    `{t("Game invitation")} (${request?.game_type}) {t("sent to")} ${request?.to_user?.username}`
-                    <span className={styl.timeLeft}> {timeLeft}s</span>
-                    </>
-                )}
-            </p>
-        </div>
-        <div className={styl.Icon}>
-            <button onClick={handleCancel}>
-                <img src={False}></img>
-            </button>
-        </div>
-        {showPopup && <div className={styl.popup}>{popupMessage}</div>}
+      </div>
+      <div className={styl.leftSide}>
+        <p>Friend request sent to</p>
+        <p style={{ fontSize: "13px", color: "white" }}>NOUAHIDI </p>
+        <button>
+          <p>Cancel friend request</p>
+        </button>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default NotiCardSent
+export default NotiCardSent;

@@ -1,15 +1,13 @@
-import styl from './NotiCard.module.css'
-import userImage from '../../assets/nouahidi.jpeg'
-import True from '../../assets/true.svg'
-import False from '../../assets/false.svg'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
-import { useNotificationWS } from '../../../../contexts/NotifWSContext.jsx'
-import { useState, useEffect } from 'react'
+import React from "react";
+import styl from "./InvitationCard.module.css";
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react'
+import { useNotificationWS } from '../../../../contexts/NotifWSContext.jsx'
+// import False from '../../assets/false.svg'
+// import True from '../../assets/true.svg'
 
-const NotiCard = ({request}) => {
-	const [isVisible, setIsVisible] = useState(true)
+const InvitationCard = ({request}) => {
+  const [isVisible, setIsVisible] = useState(true)
 	const [timeLeft, setTimeLeft] = useState(30)
 	const [popupMessage, setPopupMessage] = useState('');
 	const [showPopup, setShowPopup] = useState(false);
@@ -92,41 +90,23 @@ const NotiCard = ({request}) => {
 	if (!isVisible) {
 		return null;
 	}
+  return (
+    <div className={styl.invit}>
+      <div className={styl.userImage}>
+        <div className={styl.intImg}>
+          <div className={styl.intImg}></div>
+        </div>
+      </div>
+      <div className={styl.leftSide}>
+        <p style={{ fontSize: "13px", color: "white" }}>NOUAHIDI </p>
+        <p>sent you an invitation</p>
+        <div className={styl.shoose}>
+          <button style={{ backgroundColor: "green" }} onClick={handleAccept}>Accept</button>
+          <button onClick={handleDecline} >Decline</button>
+        </div>
+      </div>
+    </div>
+  )
+};
 
-	return (
-		<div className={styl.notiCard}> 
-		<div className={styl.userimage}>
-		{request?.from_user?.avatar ? (
-			<img src={request?.from_user?.avatar} alt={request?.from_user?.username} className="contact-avatar" />
-		) : (
-			<div className="contact-avatar default-avatar">
-			<FontAwesomeIcon icon={faUser} />
-			</div>
-		)}
-		</div>
-		<div className={styl.Sender}>
-		<p >
-		{request?.from_user?.username}
-		{request.notif_type === 'FR' ? (
-			'sent you a friend request'
-		) : (
-			<>
-			' invited you to play ' + request.game_type
-			<span className={styl.timeLeft}> {timeLeft}s</span>
-			</>
-		)}
-		</p>
-		</div>
-		<div className={styl.Icon}>
-		<button onClick={handleAccept}>
-		<img src={True}></img>
-		</button>
-		<button onClick={handleDecline}>
-		<img src={False}></img>
-		</button>
-		</div>
-		</div>
-	)
-}
-
-export default NotiCard
+export default InvitationCard;

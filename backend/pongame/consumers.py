@@ -308,8 +308,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.game_loop = False
                 data = {
                     'message': 'game_over',
-                    'winner': self.left_player,
-                    'loser': self.right_player,
+                    'winner': self.right_player,
+                    'loser': self.left_player,
                     'left_score': self.left_score,
                     'right_score': self.right_score
                 }

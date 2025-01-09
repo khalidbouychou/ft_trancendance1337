@@ -1,0 +1,73 @@
+.invit {
+    display: flex;
+    width: 100%;
+    height: 100px;
+    min-height: 100px;
+    background-color: blue;
+}
+
+.userImage {
+    display: flex;
+    width: 80px;
+    min-width: 80px;
+    height: 100%;
+    background-color: red;
+    justify-content: center;
+    padding: 2%;
+}
+
+.intImg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 55px;
+    background-color: rgb(81, 81, 3);
+    border: none;
+    cursor: pointer;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    img {
+      display: flex;
+      width: 50px;
+      height: 50px;
+    }
+}
+
+.leftSide {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    align-items: center;
+    padding: 4%;
+    gap: 10px;
+    flex-direction: column;
+    p {
+        display: flex;
+        width: 100%;
+        padding: 0;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.619);
+    }
+}
+
+.shoose {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40%;
+        height: 25px;
+        background-color: rgb(166, 6, 6);
+        color: white;
+        font-size: 13px;
+        border: 1px solid white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+}

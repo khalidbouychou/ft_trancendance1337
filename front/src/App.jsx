@@ -22,7 +22,7 @@ import Network from "./Login/Network/Network.jsx";
 import Anonymized from "./Anonymizeds/Anonymized.jsx";
 import Home from "./components/Home/Home.jsx";
 import { useTranslation } from "react-i18next";
-import Chat from "./Chat/Chat.jsx"
+import Chat from "./components/Chat/Chat.jsx";
 import i18n from "./i18n";
 import { AuthContext } from "./UserContext/Context.jsx";
 

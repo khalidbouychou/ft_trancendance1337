@@ -42,10 +42,10 @@ const Layout = () => {
     <GridLoader color="#fff" loading={loading} size={20} />
   </div> :
     <div className={style.EntirePage}>
-          {( location.pathname !== "/login" && location.pathname !== "/otp") &&  <Sidebar /> }
-          {user &&
+          {( location.pathname !== "/login" && location.pathname !== "/otp") &&  user &&
             <NotificationWebSocketProvider>
               <LocationProvider>
+                <Sidebar />
                 <Outlet />
               </LocationProvider>
             </NotificationWebSocketProvider>

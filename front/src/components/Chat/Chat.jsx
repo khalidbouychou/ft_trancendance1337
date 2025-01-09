@@ -1,6 +1,6 @@
 // import LoginPage from './login/LoginPage.jsx'
 // import ChatPage from "./chat/ChatPage.jsx";
-import { AuthContext } from "../UserContext/Context.jsx";
+import { AuthContext } from "../../UserContext/Context.jsx";
 import { useContext } from "react";
 import React, { useState, useEffect, useRef } from "react";
 import styl from "./Chat.module.css";
@@ -10,8 +10,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 // import { useNotificationWS } from '../contexts/NotifWSContext.jsx'
 // import { useContext } from 'react'
+import { useNotificationWS } from "../../contexts/NotifWSContext";
 
 const Chat = () => {
+  const {notif , setNotif} = useNotificationWS();
+
+
   const navigate = useNavigate();
   const [sockets, setSockets] = useState({});
   const [message, setMessage] = useState("");
@@ -36,9 +40,46 @@ const Chat = () => {
     }
   }, [chat]);
 
-  // useEffect(() => {
-  // 	console.log('blocked users: ', data.user.blocked_users);
-  // }, [data.user]);
+
+  useEffect(() => {
+      console.log('we recieved a notification:', notif);
+      if (notif && notif.message === 'status') {
+        setData((prevData) => {
+          const updatedChatRooms = prevData.chat_rooms.map((room) => {
+            if (notif.offline && room.user1.id === notif.offline) {
+              return {
+                ...room,
+                user1: { ...room.user1, status_network: 'offline' },
+              };
+            } else if (notif.offline && room.user2.id === notif.offline) {
+              return {
+                ...room,
+                user2: { ...room.user2, status_network: 'offline' },
+              };
+            } else if (notif.online && room.user1.id === notif.online) {
+              return {
+                ...room,
+                user1: { ...room.user1, status_network: 'online' },
+              };
+            } else if (notif.online && room.user2.id === notif.online) {
+              return {
+                ...room,
+                user2: { ...room.user2, status_network: 'online' },
+              };
+            }
+            return room;
+          });
+    
+          return {
+            ...prevData,
+            chat_rooms: updatedChatRooms,
+          };
+        });
+        setNotif(null);
+      }
+    }, [notif])
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,12 +90,10 @@ const Chat = () => {
         console.log("1 data:", response.data);
         setData(response.data);
         setupSocket(1);
-        setupNotificationSocket();
         initUnreadMessages(response.data);
         console.log("Current User:", response.data.user);
       } catch (error) {
         console.warn("Chat page inaccessible:", error);
-        // navigate('/login');
       }
     };
 
@@ -88,35 +127,6 @@ const Chat = () => {
       urmsg[otherUserId] = unreadCount;
     });
     setUnreadMessages(urmsg);
-  };
-
-  const setupNotificationSocket = () => {
-    const socket = new WebSocket(`ws://localhost:8000/ws/notification/`);
-
-    socket.onopen = () => {
-      console.log("Connected to notification socket");
-    };
-
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === "NEW_ROOM") {
-        console.log("New room created:", data.room_data);
-        setData((prevData) => ({
-          ...prevData,
-          chat_rooms: [...prevData.chat_rooms, data.room_data],
-        }));
-      }
-    };
-
-    socket.onerror = (error) => {
-      console.error("Notification socket error:", error);
-    };
-
-    socket.onclose = (event) => {
-      console.log("Notification socket closed:", event);
-    };
-
-    setNotificationSocket(socket);
   };
 
   useEffect(() => {
@@ -169,6 +179,9 @@ const Chat = () => {
       });
     }
   }, [receivedMessage]);
+
+
+  
 
   const updateChatRooms = (prevData, newMessage) => {
     const updatedChatRooms = prevData.chat_rooms.map((room) => {
@@ -247,9 +260,9 @@ const Chat = () => {
         console.error("WebSocket error:", error);
         reject(error);
       };
-      // reda add unfriend at saturday 10:43pm and i need to add the case where i send unfriend request here to update the data for the client in real time
       newSocket.onmessage = (event) => {
         const data_re = JSON.parse(event.data);
+        console.log("data_re: ",data_re);
         switch (data_re.type) {
           case "USERS_LIST":
             console.log("Received users list:", data_re);
@@ -257,7 +270,6 @@ const Chat = () => {
             break;
           case "MESSAGE":
             if (!data_re.message || !data_re.message.sender) {
-              // console.log('Received empty message, ignoring');
               break;
             }
             console.log("Received message:", data_re.message);
@@ -265,6 +277,14 @@ const Chat = () => {
 
             setReceivedMessage(data_re.message);
             break;
+          case 'NEW_ROOM':
+            {
+              console.log('New room created:', data_re.room_data);
+              setData(prevData => ({
+                ...prevData,
+                chat_rooms: [...prevData.chat_rooms, data_re.room_data]
+              }));
+            }
           case "TYPING":
             setTypingUser(data_re);
             break;

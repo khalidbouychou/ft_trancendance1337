@@ -8,7 +8,7 @@ function MessageItem({ message, currentUser }) {
     const isCurrentUser = message.sender.username === currentUser.username;
 
     return (
-        <div className={`${styl.message} ${isCurrentUser ? 'sent' : 'received'}`}>
+        <div className={`${styl.message} ${isCurrentUser ? styl.sent : styl.received}`}>
             <div className={styl.messageContent}>
                 <span className={styl.messageText}>{message.content}</span>
                 <span className={styl.messageTime}>

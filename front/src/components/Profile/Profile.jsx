@@ -15,7 +15,7 @@ import CardBlocked from "./components/cardBlocked/CardBlocked";
 import { useNotificationWS } from "../../contexts/NotifWSContext";
 
 const Profile = ({ me }) => {
-  const { profilesocket, sendMessage, isConnected } = useNotificationWS();
+  const { sendMessage, notif, setNotif } = useNotificationWS();
 
   let { profile_name } = useParams();
   const { user, t } = useContext(AuthContext);
@@ -33,14 +33,42 @@ const Profile = ({ me }) => {
   const [wins, setWins] = useState("");
   const [lose, setLose] = useState("");
   const [setting, setSetting] = useState("none");
-  const [displayBt, setDisplayBt] = useState('flex');
+  const [displayBt, setDisplayBt] = useState("flex");
   const [showUserBlocked, setShowUserBlocked] = useState(false);
   const [status, setStatus] = useState("Friends");
   const [isfriended, setIsfriended] = useState(false);
   const [friendList, setFriendList] = useState([]);
   const [blockedList, setBlockedList] = useState([]);
-  const [shooseList, setShooseList] = useState('none');
-  const [displayShooseButton, setDisplayShooseButton] = useState('none');
+  const [shooseList, setShooseList] = useState("none");
+  const [displayShooseButton, setDisplayShooseButton] = useState("none");
+  const [isblocked, setIsblocked] = useState(false);
+  const [isanonymize, setIsanonymize] = useState(false);
+
+  useEffect(() => {
+    if (notif && notif.status === "friends") {
+      if (notif.user_id === userData.id) {
+        setIsfriended(true);
+        setNotif(null);
+      }
+    } else if (notif && notif.status === "unfriend") {
+      if (notif.user_id === userData.id) {
+        setIsfriended(false);
+        setNotif(null);
+      }
+    } else if (notif && notif.message === "status") {
+      if (notif.offline && notif.offline === userData.id) {
+        setUserData({ ...userData, status_network: "offline" });
+        setNotif(null);
+      } else if (notif.online && notif.online === userData.id) {
+        setUserData({ ...userData, status_network: "online" });
+        setNotif(null);
+      }
+    }
+  }, [notif]);
+
+  useEffect(() => {
+    console.log("profile name", profileName);
+  }, [profile_name]);
 
   const handleBlockClick = () => {
     setShowUserBlocked((prev) => !prev);
@@ -52,31 +80,29 @@ const Profile = ({ me }) => {
   };
 
   const handleShooseList = () => {
-    setShooseList(shooseList == "none"? "flex" : "none");
-  }
+    setShooseList(shooseList == "none" ? "flex" : "none");
+  };
 
   const openSettings = () => {
     setSetting(setting == "none" ? "flex" : "none");
   };
 
   useEffect(() => {
-    console.log('++++++++++++++++++++ userData == ', user)
-  },[])
-
-  useEffect(() => {
     const fetchPingData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/pingdata/${profile_name}/` , {
-          withCredentials: true,
-      });
+        const response = await axios.get(
+          `http://localhost:8000/api/pingdata/${profile_name}/`,
+          {
+            withCredentials: true,
+          }
+        );
         const pingData = response.data;
-        console.log("ping data", pingData);
-  
+
         if (pingData.length > 0) {
           const { exp_game, wins, losses } = pingData[0];
           const calculatedLevel = Math.floor(exp_game / 100);
           const maxExperience = (calculatedLevel + 1) * 100;
-  
+
           setPingExp(exp_game);
           setMaxPingExp(maxExperience);
           setPingLevel(calculatedLevel);
@@ -89,73 +115,74 @@ const Profile = ({ me }) => {
         console.error("Failed to fetch ping data", error);
       }
     };
-  
+
     fetchPingData();
   }, [profile_name]);
 
   useEffect(() => {
-    console.log('--------------------------------', friendList);
-    const friendsArray = friendList['friend list'] || [];
+    const friendsArray = friendList["friend list"] || [];
     const isFriend = friendsArray.some(
       (friend) => friend.profile_name === user?.user?.profile_name
     );
     setIsfriended(isFriend);
-  
+
     if (userData.profile_name === user?.user?.profile_name) {
       setIsMyProfil(1);
       setDisplayBt("none");
-      setDisplayShooseButton('flex')
+      setDisplayShooseButton("flex");
     } else {
       setIsMyProfil(0);
       setDisplayBt("flex");
-      setDisplayShooseButton('none')
+      setDisplayShooseButton("none");
     }
   }, [friendList, user?.user?.profile_name, userData.profile_name]);
 
   useEffect(() => {
     const fetchFriends = async () => {
       const response = await axios.get(
-        `http://localhost:8000/api/friends/${profile_name}/` , {
+        `http://localhost:8000/api/friends/${profile_name}/`,
+        {
           withCredentials: true,
-      });
+        }
+      );
       setFriendList(response.data);
     };
     fetchFriends();
-    const fromUserId = profilesocket?.notification?.from_user.id;
-    const toUserId = profilesocket?.notification?.to_user.id;
-
-    if (
-      (fromUserId === user?.user?.id && toUserId === userData?.id) ||
-      (fromUserId === userData?.id && toUserId === user?.user?.id)
-    ) {
-      console.log('fiend list == ', friendList)
-      const isFriend = friendList?.["friend list"]?.some(
-        (friend) => friend.profile_name === user?.user?.profile_name
-      );
-      setIsfriended(isFriend);
-    }
-    console.log("friend list", friendList);
-  }, [profileName, isfriended], profilesocket);
+  }, [profileName, isfriended]);
 
   useEffect(() => {
     const fetchBlocked = async () => {
-      const response = await axios.get(
-        `http://localhost:8000/api/blocked/${profile_name}/` , {
-          withCredentials: true,
-      });
-      setBlockedList(response.data);
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/blocked/${profile_name}/`,
+          { withCredentials: true }
+        );
+        setBlockedList(response.data);
+        console.log("Blocked list:", response.data);
+
+        setIsblocked(false);
+        if (profile_name !== user.user.profile_name) {
+          console.log("Is blocked list:", response.data);
+          const isBlocked = response.data["blocked list"].some(
+            (blockedUser) => blockedUser.profile_name === user.user.profile_name
+          );
+          if (isBlocked) setIsblocked(true);
+        }
+      } catch (error) {
+        console.error("Error fetching blocked list:", error);
+      }
     };
+
     fetchBlocked();
-    console.log("blocked list", blockedList);
   }, [profileName, isfriended, ismyprofil]);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!profile_name) return;
-  
+
       setIsLoading(true);
       setError(null);
-  
+
       try {
         const response = await fetch(
           `http://localhost:8000/api/getuser/${profile_name}/`
@@ -167,10 +194,9 @@ const Profile = ({ me }) => {
               : "Failed to fetch user data"
           );
         }
-  
+
         const data = await response.json();
         setUserData(data);
-  
       } catch (error) {
         setError(error.message);
         setUserData({});
@@ -182,7 +208,6 @@ const Profile = ({ me }) => {
     setActiveSection("Leaderboard");
     fetchData();
   }, [profile_name]);
-
 
   const handleAddFriend = () => {
     if (!isfriended) {
@@ -198,6 +223,12 @@ const Profile = ({ me }) => {
     }
   };
 
+  // useEffect(() => {
+  //   if (ismyprofil) {
+  //     console.log('block list == ', blockedList)
+  //   }
+  // },[profile_name, blockedList, ismyprofil])
+
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
   }
@@ -207,6 +238,31 @@ const Profile = ({ me }) => {
       <div className={styl.error}>
         <p>{error}</p>
         <Link to="/"> back to home</Link>
+      </div>
+    );
+  }
+
+  if (isblocked) {
+    return (
+      <div className={styl.error} style={{ color: "white" }}>
+        This user has blocked you.
+      </div>
+    );
+  }
+
+  if (isanonymize) {
+    return (
+      <div className={styl.profile}>
+        <div className={styl.anonymized}>
+          <div className={styl.extImg}>
+            <div className={styl.intImg}>
+              <img src={userData.avatar} alt="Avatar" />
+            </div>
+          </div>
+          <p className={styl.userName} style={{top: '0%'}}>NOUAHIDI</p>
+          <p style={{color: 'rgba(255, 255, 255, 0.5)'}}>This profile is anonymized</p>
+          <button ><p >Back to home</p></button>
+        </div>
       </div>
     );
   }
@@ -226,7 +282,11 @@ const Profile = ({ me }) => {
                 <div className={styl.settings} style={{ display: setting }}>
                   <button className={styl.Button} onClick={handleAddFriend}>
                     <IoIosPersonAdd className={styl.icons} />
-                    {isfriended ? <p>{t("Unfriend")}</p> : <p>{t("Add Friend")}</p>}
+                    {isfriended ? (
+                      <p>{t("Unfriend")}</p>
+                    ) : (
+                      <p>{t("Add Friend")}</p>
+                    )}
                   </button>
                 </div>
               </button>
@@ -285,7 +345,9 @@ const Profile = ({ me }) => {
 
                 <div className={styl.level}>
                   <div className={styl.tmp}>
-                    <p>{t("Level")} {pingLevel}</p>
+                    <p>
+                      {t("Level")} {pingLevel}
+                    </p>
                     <p>
                       {pingExp} /{" "}
                       <p
@@ -313,7 +375,9 @@ const Profile = ({ me }) => {
                     >
                       {t("Next Level")}
                     </p>
-                    <p>{t("Level")} {nextpingLevel}</p>
+                    <p>
+                      {t("Level")} {nextpingLevel}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -341,9 +405,13 @@ const Profile = ({ me }) => {
               </div>
             </div>
             <div className={styl.userData}>
-              {activeSection === "Leaderboard" && <Leaderboard t={t}/>}
+              {activeSection === "Leaderboard" && <Leaderboard t={t} />}
               {activeSection === "MatchHistory" && (
-                <MatchHistory profileName={profileName} t={t}/>
+                <MatchHistory
+                  profileName={profileName}
+                  t={t}
+                  setProfileName={setProfileName}
+                />
               )}
             </div>
           </div>
@@ -351,11 +419,14 @@ const Profile = ({ me }) => {
           <div className={styl.side2}>
             <div className={styl.headFr}>
               <p>{t(status)}</p>
-              <button onClick={handleShooseList} style={{display: displayShooseButton}}>
+              <button
+                onClick={handleShooseList}
+                style={{ display: displayShooseButton }}
+              >
                 <p>...</p>
                 <div
                   className={styl.userBlocked}
-                  style={{ display: shooseList}}
+                  style={{ display: shooseList }}
                 >
                   <button onClick={handleBlockClick}>
                     {showUserBlocked ? "Friends" : "Blocked"}

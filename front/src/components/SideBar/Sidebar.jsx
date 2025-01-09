@@ -10,6 +10,8 @@ import En from "../../../public/assets/icons/lang-icons/En-lang.png";
 import Fr from "../../../public/assets/icons/lang-icons/Fr-lang.png";
 import It from "../../../public/assets/icons/lang-icons/It-lang.png";
 import SearchCard from "./components/searchCard/SearchCard.jsx";
+import { IoIosNotifications } from "react-icons/io";
+import Notif from "../notif/Notif.jsx";
 
 const Sidebar = () => {
   const { t, user, Logout } = useContext(AuthContext);
@@ -208,6 +210,11 @@ const Sidebar = () => {
               {t("Chat")}
             </button>
           </Link>
+          <button style={{display: 'flex', position: 'relative'}}>
+              <IoIosNotifications className={styl.icon}/>
+              <div className={styl.notifReceive}></div>
+              <Notif />
+          </button>
           <div className={styl.sett}>
             <button onClick={toggleMenu} onClickCapture={handleDisplaySettings}>
               <div className={styl.extImg}>

@@ -3,7 +3,7 @@ import styl from "./MatchHistory.module.css";
 import axios from "axios";
 import CardMatch from "./components/cardMatch/CardMatch";
 
-const MatchHistory = ({ profileName, t }) => {
+const MatchHistory = ({ profileName, t, setProfileName }) => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -58,6 +58,7 @@ const MatchHistory = ({ profileName, t }) => {
               match={match}
               profileName={profileName}
               animationDelay={`${0.2 * index}s`}
+              setProfileName={setProfileName}
             />
           ))}
         </div>
