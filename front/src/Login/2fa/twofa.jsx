@@ -10,7 +10,7 @@ import BounceLoader from "react-spinners/BounceLoader";
 const Twofa = () => {
   const [twofa, setTwofa] = useState(false);
   const [qrcode, setQrcode] = useState("");
-  const { t,user, get_auth_user ,setUser,verifyotp} = useContext(AuthContext);
+  const { t,user, get_auth_user ,setUser,verifyotp,renderInputs} = useContext(AuthContext);
   const [isEnable, setEnable] = useState("Off");
   const [verified, setVerified] = useState(false);
 
@@ -21,11 +21,11 @@ const Twofa = () => {
   const QR_CODE_URL = `http://${import.meta.env.VITE_IP_HOST}:8000/api/qrcode/`;
   const USER_STATUS_URL = `http://${import.meta.env.VITE_IP_HOST}:8000/api/user_status/`;
 
-  const renderInputs = () => {
-    return Array.from({ length: numInputs }).map((_, i) => (
-      <input key={i} type="text" className="otp-input" maxLength={1} />
-    ));
-  };
+  // const renderInputs = () => {
+  //   return Array.from({ length: numInputs }).map((_, i) => (
+  //     <input key={i} type="text" className="otp-input" maxLength={1} />
+  //   ));
+  // };
 
   useEffect(() => {
     const fetchTwofaStatus = async () => {

@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const Otplogin = () => {
   const navigate = useNavigate();
-  const { get_auth_user,t ,verifyotp} = useContext(AuthContext);
+  const { get_auth_user,t ,verifyotp,renderInputs} = useContext(AuthContext);
   const location = useLocation();
 
   useEffect(
@@ -17,11 +17,11 @@ const Otplogin = () => {
     [location.pathname]
   );
 
-  const renderInputs = () => {
-    return Array.from({ length: 6 }).map((_, i) =>
-      <input key={i} type="text" className="otp-input" maxLength={1} />
-    );
-  };
+  // const renderInputs = () => {
+  //   return Array.from({ length: 6 }).map((_, i) =>
+  //     <input key={i} type="text" className="otp-input" maxLength={1} />
+  //   );
+  // };
 
   // const verifyotp = async () => {
   //   const inputs = document.getElementsByClassName("otp-input");

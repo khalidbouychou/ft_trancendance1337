@@ -427,24 +427,25 @@ class AnonymizeAccount(APIView):
     
     def get(self, request):
         user = request.user
-        if user.is_anonimized:
-            return Response({'error': 'Account already anonymized'}, status=status.HTTP_400_BAD_REQUEST)
         user.is_active = False
         user.is_anonimized = True
-        id = random.randint(1, 1000000)
-        user.profile_name = f'Anonimized_{id}'
+        user.profile_name = f'Anonimized_{random.randint(1, 1000000)}'
         user.avatar = 'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Aneka'
         user.status_network = 'offline'
         user.status_game = 'offline'
         user.save()
+        print("-------->", user.profile_name)
         anonymizeaccount = AnonymizedAccount.objects.create(player=user)
         if not anonymizeaccount:
             return Response({'error': 'Anonymized account not created'}, status=status.HTTP_400_BAD_REQUEST)
+        anonymizeaccount.profile_name = user.profile_name
+        anonymizeaccount.avatar = user.avatar
+        anonymizeaccount.status_network = user.status_network
         anonymizeaccount.save()
         response = Response({'msg': '************** Account anonymized ***************'}, status=status.HTTP_200_OK)
         return DeleteCookies(response)
 #-----------------------------------AnnonimizedAccount-------------------------------------------------------------
-#-----------------------------------DeleteAccount-------------------------------------------------------------
+#-----------------------------------DeleteAccount------------------------------------------------------------------
 class DeleteAccount(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]

@@ -20,6 +20,12 @@ export default function AuthProvider({ children }) {
   , [localStorage.getItem('lang')])
 
 
+  const renderInputs = () => {
+    return Array.from({ length: 6 }).map((_, i) =>
+      <input key={i} type="text" className="otp-input" maxLength={1} />
+    );
+  };
+
   const verifyotp = async () => {
     const inputs = document.getElementsByClassName("otp-input");
     const otp = Array.from(inputs).map(input => input.value).join("");
@@ -169,7 +175,8 @@ export default function AuthProvider({ children }) {
         auth_intra42,
         get_auth_user,
         t,
-        verifyotp
+        verifyotp,
+        renderInputs
       }}
     >
       {children}
