@@ -22,6 +22,7 @@ export default function FriendGame() {
     const [gamestarted, setGameStarted] = useState(false);
     const [condition, setCondition] = useState('N');
     const [MESSAGE, setMessage] = useState("message");
+    const [profile_name, setProfileName] = useState('');
     const [username, setUsername] = useState('');
     const [avatar, setAvatar] = useState('');
     const [level, setLevel] = useState(0);
@@ -85,7 +86,8 @@ export default function FriendGame() {
             });
             console.log('response:', response.data);
             if (response.status === 200) {
-                setUsername(response.data.profile_name);
+                setProfileName(response.data.profile_name);
+                setUsername(response.data.username);
                 setLeftPlayerAvatar(response.data.avatar);
                 setLeftPlayerName(response.data.profile_name);
                 setAvatar(response.data.avatar);
@@ -126,6 +128,7 @@ export default function FriendGame() {
                     const message = {
                         action: 'connect',
                         username: username,
+                        profile_name: profile_name,
                         avatar: avatar,
                         level: level,
                         game_id: game_key,
@@ -159,7 +162,7 @@ export default function FriendGame() {
                 }
                 if (data.message) {
                     if (data.message === 'game_started') {
-                        if (data.player_id1 === username) {
+                        if (data.player_id1 === profile_name) {
                             player_id = 1;
                             setPlayerId(1);
                             setLeftPlayerName(data.player_id1);
@@ -167,7 +170,7 @@ export default function FriendGame() {
                             setLeftPlayerAvatar(data.player_1_avatar);
                             setRightPlayerAvatar(data.player_2_avatar);
                         }
-                        else if (data.player_id2 === username) {
+                        else if (data.player_id2 === profile_name) {
                             player_id = 2;
                             setPlayerId(2);
                             setLeftPlayerName(data.player_id1);
@@ -305,7 +308,7 @@ export default function FriendGame() {
                 socket.close(); // Close WebSocket when the component unmounts
             }
         };
-    }, [username]);
+    }, [profile_name]);
 
     useEffect(() => {
         console.log("gamestarted", gamestarted);
@@ -358,7 +361,7 @@ export default function FriendGame() {
                             {condition !== 'D' && (
                                 <>
                                     <img src={avatar} />
-                                    <h3>{username}</h3>
+                                    <h3>{profile_name}</h3>
                                 </>
                             )}
                         </div>
