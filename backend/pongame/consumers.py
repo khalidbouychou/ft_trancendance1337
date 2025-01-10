@@ -406,7 +406,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 GameConsumer.players_ingame.remove(self.left_player_username)
                 GameConsumer.players_ingame.remove(self.right_player_username)
         if self.game_loop:
-            await self.pack_data_to_send()
+            await self.pack_data_to_send() 
  
 class inviteConsumer(AsyncWebsocketConsumer):
     game_queue = {}
@@ -640,8 +640,8 @@ class inviteConsumer(AsyncWebsocketConsumer):
             'left_score': self.left_score,
             'game_width': self.game_width,
             'game_height': self.game_height,
-            'left_player': self.left_player,
-            'right_player': self.right_player,
+            'left_player': self.left_profile_name,
+            'right_player': self.right_profile_name,
         }
         GameStateManager.set_state(self.room_group_name, packet)
     
