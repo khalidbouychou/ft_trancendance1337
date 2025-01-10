@@ -89,7 +89,7 @@ services:
     volumes:
       - web3_vol:/root/
     healthcheck:
-      test: ["CMD", "nc", "-zv", "web3", "7545"]
+      test: ["CMD", "nc", "-zv", "web3_app", "7545"]
       interval: 5s
       timeout: 10s
       retries: 5

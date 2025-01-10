@@ -18,8 +18,8 @@ const Twofa = () => {
 
   const numInputs = 6;
 
-  const QR_CODE_URL = "http://localhost:8000/api/qrcode/";
-  const USER_STATUS_URL = "http://localhost:8000/api/user_status/";
+  const QR_CODE_URL = "http://10.13.3.2:8000/api/qrcode/";
+  const USER_STATUS_URL = "http://10.13.3.2:8000/api/user_status/";
 
   const renderInputs = () => {
     return Array.from({ length: numInputs }).map((_, i) => (
@@ -39,7 +39,7 @@ const Twofa = () => {
         if (res?.data?.user?.qrcode_path) {
         
           setTimeout(() => {
-            setQrcode(`http://localhost:8000/${res?.data?.user?.qrcode_path}`);
+            setQrcode(`http://10.13.3.2:8000/${res?.data?.user?.qrcode_path}`);
           }, 2000);
         }
       }
@@ -60,7 +60,7 @@ useEffect(() => {
     if (!isOn) {
       if (!twofa) {
         try {
-          const res = await axios.get("http://localhost:8000/api/clearqrcode/", { withCredentials: true });
+          const res = await axios.get("http://10.13.3.2:8000/api/clearqrcode/", { withCredentials: true });
           if (res.status === 200){
         
             await get_auth_user();
@@ -101,7 +101,7 @@ useEffect(() => {
       .join("");
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/otpverify/",
+        "http://10.13.3.2:8000/api/otpverify/",
         {
           otp: otp
         },

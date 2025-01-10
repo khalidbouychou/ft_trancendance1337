@@ -233,7 +233,7 @@ class AuthUser(APIView):
             except TokenError as e:
                 refresh = request.COOKIES.get('refresh')
                 crstf = request.COOKIES.get('csrftoken')
-                res = requests.post('http://localhost:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
+                res = requests.post('http://10.13.3.2:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
                 res.raise_for_status() # Raise an exception if the status code is not 2xx
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')
@@ -518,7 +518,7 @@ class UserNameBlockedList (APIView):
             user = Player.objects.get(username=username)
             # if not user :
             #     return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
-            friends = PlayerSerializer.get_blocked_users(self,user)
+            friends = PlayerSerializer.get_blocked_getusers(self,user)
             return Response({'blocked list':friends , 'user':user.username}, status=status.HTTP_200_OK)
         except Exception as e:
             e = 'No user found'

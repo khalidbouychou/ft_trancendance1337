@@ -1,16 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-
-
-
 from web3 import Web3
 import json
-import os
 
 # Create your views here.
 
@@ -32,7 +28,7 @@ def index(request):
 
     init_web3_connection()
 
-    return HttpResponse(f"connection successfuly established to {contract_address}")
+    return JsonResponse(f"connection successfuly established to {contract_address}")
 
 def init_web3_connection():
     global contract
@@ -54,21 +50,13 @@ def init_web3_connection():
     contract = web3.eth.contract(address=contract_address, abi=build_info["abi"])
 
 def get_scores(request):
-    print('u called me -------')
     global contract
-    print('contract:', contract)
     if contract == None:
-        print('its totaly ok')
         init_web3_connection()
-        print('still no problem')
-    print('a wall of rocks')
-    try:
-        scores = contract.functions.get_scores.call()
-        print('everything is way perfect')
-        return HttpResponse(f"{scores}")
-    except:
-        print('something went wrong')
-        return HttpResponse("scores array is still empty!")
+
+    scores = contract.functions.get_scores.call()
+    response = {'status': 'success', 'scores': f"{scores}"}
+    return JsonResponse(response)
 
 def get_scores_num(request):
     global contract
@@ -76,24 +64,24 @@ def get_scores_num(request):
         init_web3_connection()
 
     scores_num = contract.functions.get_scores_num.call()
-    return HttpResponse(f"{scores_num}")
+    response = {'status': 'success', 'score': f"{scores_num}"}
+    return JsonResponse(response)
 
 
-def add_score(request):
+def add_score(score: str):
+    print("function call!!!!!")
     global contract
     if contract == None:
         init_web3_connection()
-
-    # if request.method != "POST":
-    #     response = {'status': 'error', 'message': 'wrong http request method'}
-    #     return JsonResponse(response)
-
-    try:
-        score = request.GET.get('score', None)
+ 
+    try: 
         if score:
+            print("1score:", score)
+            send_add_score_transaction(str(score)) 
             response = {'status': 'success', 'score': score}
-            send_add_score_transaction(score)
+            print(response)
         else:
+            print("2score:", score)
             response = {'status': 'error', 'message': 'Parameter "score" not provided'}
     except:
             response = {'status': 'error', 'message': 'exception!!'}
@@ -102,6 +90,7 @@ def add_score(request):
 
 
 def send_add_score_transaction(score: str):
+    print("internal function called!!!!")
     global web3
     # Call a non-pure function that changes state
     nonce = web3.eth.get_transaction_count(caller)
@@ -123,19 +112,8 @@ def send_add_score_transaction(score: str):
 
     # Wait for the transaction to be mined
     txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
-    #print(txn_receipt)
-
-
-def get_first_score(request):
-    global contract
-    if contract == None:
-        init_web3_connection()
-
-    try:
-        first = contract.functions.get_first_score.call()
-        return HttpResponse(f"first score = {first}")
-    except:
-        return HttpResponse("scores array is still empty!")
+    print(" ---------------> printing receipt")
+    print(txn_receipt)
 
 def get_last_score(request):
     global contract
@@ -144,30 +122,8 @@ def get_last_score(request):
 
     try:
         last = contract.functions.get_last_score.call()
-        return HttpResponse(f"last score = {last}")
+        response = {'status': 'success', 'score': f"{last}"}
+        return JsonResponse(response)
     except:
-        return HttpResponse("scores array is still empty!")
-
-# @api_view(['GET', 'POST'])
-# def hello_world(request):
-#     global contract
-#     if contract == None:
-#         init_web3_connection()
-
-#     if request.method != "POST":
-#         response = {'status': 'error', 'message': 'wrong http request method'}
-#         return Response(response)
-
-#     try:
-#         score = request.data.get('score', None)
-#         if score:
-#             response = {'status': 'success', 'score': score}
-#             send_add_score_transaction(score)
-#         else:
-#             response = {'status': 'error', 'message': 'Parameter "score" not provided'}
-
-#         return Response(response)
-
-#     except Exception as e:
-#         print(e)
-#         return HttpResponse(f"error : {e}")
+        response = {'status': 'error', 'message': "there is no last score"}
+        return JsonResponse(response)

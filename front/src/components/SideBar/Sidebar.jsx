@@ -69,7 +69,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (searchQuery.trim()) {
-      fetch(`http://localhost:8000/api/search/?q=${searchQuery}`)
+      fetch(`http://10.13.3.2:8000/api/search/?q=${searchQuery}`)
         .then((response) => response.json())
         .then((data) => setSearchResults(data));
     } else {

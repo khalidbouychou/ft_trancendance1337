@@ -43,10 +43,8 @@ const Profile = ({ me }) => {
   const [displayShooseButton, setDisplayShooseButton] = useState('none');
   const [isblocked, setIsblocked] = useState(false);
 
-
   useEffect(() => {
     setProfileName(profile_name);
-    console.log("-------------------------> setProfilename", profileName);
   }, [profileName]);
 
   useEffect(() => {
@@ -94,7 +92,7 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchPingData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/pingdata/${profileName}/` , {
+        const response = await axios.get(`http://10.13.3.2:8000/api/pingdata/${profileName}/` , {
           withCredentials: true,
       });
         const pingData = response.data;
@@ -145,7 +143,7 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchFriends = async () => {
       const response = await axios.get(
-        `http://localhost:8000/api/friends/${profile_name}/` , {
+        `http://10.13.3.2:8000/api/friends/${profile_name}/` , {
           withCredentials: true,
       });
       console.log("profile_name_145:", profile_name);
@@ -158,7 +156,7 @@ const Profile = ({ me }) => {
     const fetchBlocked = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/blocked/${profile_name}/`,
+          `http://10.13.3.2:8000/api/blocked/${profile_name}/`,
           { withCredentials: true }
         );
         setBlockedList(response.data);
@@ -191,7 +189,7 @@ const Profile = ({ me }) => {
   
       try {
         const response = await fetch(
-          `http://localhost:8000/api/getuser/${profile_name}/`
+          `http://10.13.3.2:8000/api/getuser/${profile_name}/`
         );
         if (!response.ok) {
           throw new Error(

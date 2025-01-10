@@ -12,6 +12,7 @@ from channels.layers import get_channel_layer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from Chat2.models import ChatRoom, Message
+from web3_app.views import add_score
 
 channel_layer = get_channel_layer()
  
@@ -1662,6 +1663,9 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                             'message': data
                         }
                     )
+                    web3_score = f"first round:[first_winner:{tournament['winner1_alias']}, second_winner:{tournament['winner2_alias']}] final round:[winner:{tournament['winner1_alias']}]"
+                    print(web3_score)
+                    add_score(web3_score)
         if self.game_loop:
             await self.pack_data_to_send(tournament, self.gamename)
 
