@@ -1,7 +1,8 @@
 import React from "react";
 import styl from './NotiCardSent.module.css'
 import { AuthContext }  from "../../../../UserContext/Context";
-
+import { useContext ,useState,useEffect} from 'react';
+import { useNotificationWS } from "../../../../contexts/NotifWSContext.jsx"
 const NotiCardSent = () => {
   const {t} = useContext(AuthContext);
 
@@ -9,7 +10,7 @@ const NotiCardSent = () => {
   const [timeLeft, setTimeLeft] = useState(30);
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-  const { sendMessage: sendNotifMessage, isConnected, notif } = useNotificationWS();
+  const { sendMessage: sendNotifMessage, isConnected, notif} = useNotificationWS();
 
   useEffect(() => {
     if (request.notif_type === 'GR') {

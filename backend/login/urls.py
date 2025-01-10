@@ -14,7 +14,6 @@ urlpatterns = [
     path('pingdata/<str:username>/', get_ping_data_by_username, name='get_ping_data_by_username'),
     path('login/', PlayerViewSet.as_view({'post': 'login'})),
     path('auth_intra/', PlayerViewSet.as_view({'get': 'auth_intra'})),
-    path('getusers/', PlayerViewSet.as_view({'get': 'getallusers'})),
     path('getuser/<str:username>/', PlayerViewSet.as_view({'get': 'get_user_by_profile_name'}), name='get_user'),
     path('search/', PlayerViewSet.as_view({'get': 'search_users'}), name='search_users'),
     path('pingdata/', get_all_ping_data, name='get_all_ping_data'),

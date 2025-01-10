@@ -42,16 +42,16 @@ const Signin = () => {
         });
         setTimeout(() => {
           navigate("/");
-        }, 1300);
+        }, 1000);
       }
     } catch (err) {
-      console.log(err);
-      toast.error(err.response.data.error, {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white',
-        }
-      });
+      alert(`No Account`);
+      // toast.error(`${err.response.data.error}`, {
+      //   style: {
+      //     backgroundColor: 'rgb(255, 0, 0)',
+      //     color: 'white',
+      //   }
+      // });
     }
   };
 

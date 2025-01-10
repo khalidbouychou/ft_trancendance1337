@@ -30,6 +30,7 @@ const Sidebar = () => {
   const searchRef = useRef(null);
   const langListRef = useRef(null);
   const menuRef = useRef(null);
+  const [openNotif, setOpenNotif] = useState('none')
 
   const langIcons = { en: En, fr: Fr, it: It };
 
@@ -39,6 +40,11 @@ const Sidebar = () => {
     i18n.changeLanguage(lang);
     setIsLangListOpen(false);
   };
+
+  const handleOpenNotif = () => {
+    console.log('openNotif', openNotif)
+    setOpenNotif(openNotif === 'flex' ? 'none' : 'flex')
+  }
 
   const handleToggleLangList = () => {
     setIsLangListOpen((prev) => !prev);
@@ -79,6 +85,10 @@ const Sidebar = () => {
       setHighlightedIndex(-1);
     }
   }, [searchQuery]);
+
+  useEffect(() => {
+    
+  })
 
   const handleKeyDown = (event) => {
     if (searchResults.length > 0) {
@@ -210,16 +220,16 @@ const Sidebar = () => {
               {t("Chat")}
             </button>
           </Link>
-          <button style={{display: 'flex', position: 'relative'}}>
-              <IoIosNotifications className={styl.icon}/>
-              <div className={styl.notifReceive}></div>
-              <Notif />
-          </button>
+          <div style={{display: 'flex', position: 'relative'}}>
+              <IoIosNotifications className={styl.icon} onClick={handleOpenNotif}/>
+              <div className={styl.notifReceive} ></div>
+              <Notif open={openNotif}/>
+          </div>
           <div className={styl.sett}>
             <button onClick={toggleMenu} onClickCapture={handleDisplaySettings}>
               <div className={styl.extImg}>
                 <div className={styl.intImg}>
-                  <img src={user?.user?.avatar} />
+                  <img src={user?.user?.avatar}/>
                 </div>
               </div>
             </button>

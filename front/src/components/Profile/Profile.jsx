@@ -66,10 +66,6 @@ const Profile = ({ me }) => {
     }
   }, [notif]);
 
-  useEffect(() => {
-    console.log("profile name", profileName);
-  }, [profile_name]);
-
   const handleBlockClick = () => {
     setShowUserBlocked((prev) => !prev);
     setStatus((prev) => (prev === "Friends" ? "User Blocked" : "Friends"));
@@ -176,13 +172,17 @@ const Profile = ({ me }) => {
     fetchBlocked();
   }, [profileName, isfriended, ismyprofil]);
 
+  // useEffect(() => {
+  //   console.log("---------------->",userData)
+  // })
   useEffect(() => {
     const fetchData = async () => {
+      console.log(profile_name)
       if (!profile_name) return;
-
+      
       setIsLoading(true);
       setError(null);
-
+      
       try {
         const response = await fetch(
           `http://localhost:8000/api/getuser/${profile_name}/`
@@ -190,13 +190,14 @@ const Profile = ({ me }) => {
         if (!response.ok) {
           throw new Error(
             response.status === 404
-              ? "User not found"
-              : "Failed to fetch user data"
+            ? "User not found"
+            : "Failed to fetch user data"
           );
         }
-
+        
         const data = await response.json();
         setUserData(data);
+        console.log("************************>",userData)
       } catch (error) {
         setError(error.message);
         setUserData({});
@@ -223,11 +224,26 @@ const Profile = ({ me }) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (ismyprofil) {
-  //     console.log('block list == ', blockedList)
-  //   }
-  // },[profile_name, blockedList, ismyprofil])
+  useEffect(() => {
+    const fetchListAnony = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/list_anonymized');
+        const anonymizedList = response.data;
+  
+        // Check if the current profile_name is in the anonymized list
+        const isAnonymized = anonymizedList.some(
+          (profile) => player === profile_name
+        );
+  
+        setIsanonymize(isAnonymized);
+        console.log('is == ', anonymizedList)
+      } catch (error) {
+        console.error('Failed to fetch anonymized list:', error);
+      }
+    };
+  
+    fetchListAnony();
+  }, [profile_name, userData]);
 
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;

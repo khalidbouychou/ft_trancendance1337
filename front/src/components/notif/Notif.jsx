@@ -10,7 +10,7 @@ import { GiCrossMark } from "react-icons/gi";
 import { GiCheckMark } from "react-icons/gi";
 import InvitGameCard from "./components/invitGameCard/InvitGameCard";
 import NotiCardSent from "./components/notiCardSent/NotiCardSent";
-const XNotif = () => {
+const XNotif = ({open}) => {
   const { t } = useContext(AuthContext);
   const [FR_notif_received, setFR_notif_received] = useState([]);
   const [GR_notif_received, setGR_notif_received] = useState([]);
@@ -49,7 +49,7 @@ const XNotif = () => {
   }, []);
   console.log("GR_notif_receivedd", FR_notif_received);
   return (
-    <div className={styl.notif}>
+    <div className={styl.notif} style={{display: open}}>
       {FR_notif_received.map((notif) => (
         // <div className={styl.invit}>
         //   <div className={styl.userImage}>
@@ -83,9 +83,9 @@ const XNotif = () => {
           <button ><p >Cancel friend request</p></button>
         </div>
       </div> */}
-      {FR_notif_sent.map((notif) => (
+      {/* {FR_notif_sent.map((notif) => (
         <NotiCardSent key={notif.id} request={notif}/>
-      ))}
+      ))} */}
     </div>
   );
 };
