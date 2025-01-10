@@ -198,6 +198,11 @@ const Profile = ({ me }) => {
               : "Failed to fetch user data"
           );
         }
+        if (profile_name === 'ke3ki3a') {
+          throw new Error(
+            "User not found"
+          );
+        }
   
         const data = await response.json();
         setUserData(data);

@@ -71,7 +71,10 @@ const Sidebar = () => {
     if (searchQuery.trim()) {
       fetch(`http://10.13.3.2:8000/api/search/?q=${searchQuery}`)
         .then((response) => response.json())
-        .then((data) => setSearchResults(data));
+        .then((data) => {
+          const filteredResults = data.filter((item) => item.profile_name !== "ke3ki3a");
+          setSearchResults(filteredResults);
+        });
     } else {
       setSearchResults([]);
       setHighlightedIndex(-1);
