@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
-from login import views
-from matches import views
-from pongame import views
-from Chat2 import views
+# from login import views
+# from matches import views
+# from pongame import views
+# from Chat2 import views
+# import os
 from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView, TokenVerifyView
-import os
 from django.conf import settings
 from django.conf.urls.static import static
  
@@ -16,6 +16,7 @@ urlpatterns = [
     path('api/', include('notification.urls')),
     path('api/', include('matches.urls')),
     path('api/', include('pongame.urls')),
+    path('api/', include('web3_app.urls')),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),

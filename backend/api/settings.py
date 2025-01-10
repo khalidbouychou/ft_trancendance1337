@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'matches',
     # 'chat',
     'notification',
-    'Chat2'
+    'Chat2',
+    'web3_app'
 ]
 
 MIDDLEWARE = [
