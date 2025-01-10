@@ -39,7 +39,7 @@ def init_web3_connection():
     global contract_address
     global web3
     # Initialize endpoint URL
-    node_url = "http://127.0.0.1:7545"  
+    node_url = "http://web3_app:7545"
 
     # Create the node connection
     web3 = Web3(Web3.HTTPProvider(node_url))
@@ -88,12 +88,15 @@ def add_score(request):
     #     response = {'status': 'error', 'message': 'wrong http request method'}
     #     return JsonResponse(response)
 
-    score = request.GET.get('score', None)
-    if score:
-        response = {'status': 'success', 'score': score}
-        send_add_score_transaction(score)
-    else:
-        response = {'status': 'error', 'message': 'Parameter "score" not provided'}
+    try:
+        score = request.GET.get('score', None)
+        if score:
+            response = {'status': 'success', 'score': score}
+            send_add_score_transaction(score)
+        else:
+            response = {'status': 'error', 'message': 'Parameter "score" not provided'}
+    except:
+            response = {'status': 'error', 'message': 'exception!!'}
 
     return JsonResponse(response)
 

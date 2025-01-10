@@ -16,7 +16,7 @@ urlpatterns = [
     path('api/', include('notification.urls')),
     path('api/', include('matches.urls')),
     path('api/', include('pongame.urls')),
-    path('api/', include('web3_app.urls')),
+    path('api/web3/', include('web3_app.urls')),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),

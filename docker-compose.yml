@@ -77,9 +77,9 @@ services:
         condition: service_healthy
     restart: on-failure
 
-  web3:
-    container_name: web3
-    image: web3:69
+  web3_app:
+    container_name: web3_app
+    image: web3_app:69
     restart: always
     build: web3
     networks:
@@ -94,7 +94,7 @@ services:
       timeout: 10s
       retries: 5
       start_period: 5s
-  
+
   # redis:
   #   container_name: redis
   #   image: redis:alpine
