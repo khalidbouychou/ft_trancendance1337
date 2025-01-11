@@ -29,7 +29,7 @@ const Twofa = () => {
 
   useEffect(() => {
     const fetchTwofaStatus = async () => {
-      await get_auth_user();
+      // await get_auth_user();
       const res = await axios.get(USER_STATUS_URL, { withCredentials: true });
       if (res.status === 200) {
         setUser(res?.data?.user);
@@ -39,7 +39,7 @@ const Twofa = () => {
         if (res?.data?.user?.qrcode_path) {
         
           setTimeout(() => {
-            setQrcode(`http://${import.meta.env.VITE_IP_HOST}:8000/${res?.data?.user?.qrcode_path}`);
+            setQrcode(`${res?.data?.user?.qrcode_path}`);
           }, 2000);
         }
       }
@@ -49,9 +49,7 @@ const Twofa = () => {
   }, [location.pathname]);
 
 
-useEffect(() => {
 
-}, [isEnable])
   const handleSwitch = async (e) => {
     const isOn = e.target.value === t("On");
     setEnable(isOn);
@@ -93,47 +91,48 @@ useEffect(() => {
     }
   };
 
-  // const handlverify = async () => {
-  //   await get_auth_user();
-  //   const inputs = document.getElementsByClassName("otp-input");
-  //   const otp = Array.from(inputs)
-  //     .map((input) => input.value)
-  //     .join("");
-  //     try {
-  //       const res = await axios.post(
-  //       `http://${import.meta.env.VITE_IP_HOST}:8000/api/otpverify/`,
-  //       {
-  //         otp: otp
-  //       },
-  //       {
-  //         withCredentials: true,
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "X-CSRFToken": document.cookie
-  //           .split("; ")
-  //           .find((row) => row.startsWith("csrftoken="))
-  //           .split("=")[1]
-  //         }
-  //       }
-  //     );
-  //     if (res.status === 200) {
-  //       setVerified(true);
-  //       toast.success(t("2FA verified"), {
-  //         style: {
-  //           backgroundColor: 'rgb(0, 128, 0)',
-  //           color: 'white'
-  //         }
-  //       });
-  //     }
-  //   } catch (error) {
-  //     toast.error(t("OTP code is not correct"), {
-  //       style: {
-  //         backgroundColor: 'rgb(255, 0, 0)',
-  //         color: 'white'
-  //       }
-  //     });
-  //   }
-  // };
+  const handlverify = async () => {
+    // await get_auth_user();
+    const inputs = document.getElementsByClassName("otp-input");
+    const otp = Array.from(inputs)
+      .map((input) => input.value)
+      .join("");
+      try {
+        const res = await axios.post(
+        `http://${import.meta.env.VITE_IP_HOST}:8000/api/otpverify/`,
+        {
+          otp: otp
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("csrftoken="))
+            .split("=")[1]
+          }
+        }
+      );
+      if (res.status === 200) {
+        console.log("--------------->",verified);
+        // setVerified(true);
+        toast.success(t("2FA verified"), {
+          style: {
+            backgroundColor: 'rgb(0, 128, 0)',
+            color: 'white'
+          }
+        });
+      }
+    } catch (error) {
+      toast.error(t("OTP code is not correct"), {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
+      });
+    }
+  };
 
   return (
     <>
@@ -195,8 +194,8 @@ useEffect(() => {
                         <div className="btns">
                           <button
                             className="btn-verify"
-                            // onClick={handlverify}
-                            onClick={verifyotp}
+                            onClick={handlverify}
+                          
                           >
                             {t("Verify")}
                           </button>

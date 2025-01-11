@@ -17,7 +17,6 @@ const Desable2fa = ({  message, setVerified }) => {
 
   useEffect(() => {
     get_auth_user();
-  
     setFormsg(user?.user?.otp_verified);
   }, [user?.user?.otp_verified]);
 
@@ -52,8 +51,8 @@ const Desable2fa = ({  message, setVerified }) => {
         }
       );
       if (res.status === 200) {
-        setVerified(res.data.otp_verified);
-        setFormsg(res.data.otp_verified);
+        setVerified(res?.data?.otp_verified);
+        setFormsg(res?.data?.otp_verified);
         toast.success("2FA Disabled", {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
