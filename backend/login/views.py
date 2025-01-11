@@ -145,6 +145,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 username=user_data['username']).first()
             if not user:
                 user = self.create_user(user_data)
+            if user.is_anonimized ==True and user.is_active == False:
+                return Response({'error': 'Account is anonymized'}, status=status.HTTP_400_BAD_REQUEST)
             authenticate(request, username=user_data['username'])
             login(request, user)
             user.bool_login = True
@@ -429,19 +431,19 @@ class AnonymizeAccount(APIView):
         user = request.user
         user.is_active = False
         user.is_anonimized = True
-        user.profile_name = f'Anonimized_{random.randint(1, 1000000)}'
+        user.profile_name = f'Anonimized_{random.randint(1, 100)}'
         user.avatar = 'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Aneka'
         user.status_network = 'offline'
         user.status_game = 'offline'
         user.save()
-        print("-------->", user.profile_name)
-        anonymizeaccount = AnonymizedAccount.objects.create(player=user)
-        if not anonymizeaccount:
-            return Response({'error': 'Anonymized account not created'}, status=status.HTTP_400_BAD_REQUEST)
-        anonymizeaccount.profile_name = user.profile_name
-        anonymizeaccount.avatar = user.avatar
-        anonymizeaccount.status_network = user.status_network
-        anonymizeaccount.save()
+        # print("-------->", user.profile_name)
+        # anonymizeaccount = AnonymizedAccount.objects.create(player=user)
+        # if not anonymizeaccount:
+        #     return Response({'error': 'Anonymized account not created'}, status=status.HTTP_400_BAD_REQUEST)
+        # anonymizeaccount.profile_name = user.profile_name
+        # anonymizeaccount.avatar = user.avatar
+        # anonymizeaccount.status_network = user.status_network
+        # anonymizeaccount.save()
         response = Response({'msg': '************** Account anonymized ***************'}, status=status.HTTP_200_OK)
         return DeleteCookies(response)
 #-----------------------------------AnnonimizedAccount-------------------------------------------------------------

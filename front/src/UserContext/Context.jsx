@@ -94,23 +94,29 @@ export default function AuthProvider({ children }) {
           }
         );
         if (res.status === 200) {
-          setUser(res.data);
+          setUser(res?.data);
           setLoading(true);
           setTimeout(() => {
             setLoading(false);
           }, 1000);
-          if (res.data.otp_login) {
+          // if (res.data.otp_login) {
             toast.success("login success", {
               style: {
                 backgroundColor: 'rgb(0, 128, 0)',
                 color: 'white'
               }
             });
-          }
+          // }
           navigate(`/`);
         }
       }
     } catch (error) {
+      toast.error(t(error?.response?.data?.error), {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
+      });
       navigate(`/`);
     } finally {
       setLoading(false);

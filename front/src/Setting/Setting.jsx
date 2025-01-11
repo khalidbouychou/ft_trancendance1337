@@ -12,7 +12,7 @@ const Settings = () => {
   const { t,user, get_auth_user } = useContext(AuthContext);
   const [updated, setUpdated] = useState(false);
   const [NewProfileName, setNewProfileName] = useState(null);
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
   const {setUser} = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionToPerform, setActionToPerform] = useState(null);
