@@ -17,7 +17,7 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   const navigate = useNavigate();
 
   const check_blocked = async () => {
-        const response = await axios.get(`http://10.11.10.12:8000/api/getuser/${currentUser.profile_name}/` , {
+        const response = await axios.get(`http://e3r1p9.1337.ma:8000/api/getuser/${currentUser.profile_name}/` , {
           withCredentials: true,
         });
         console.log('response:', response.data)

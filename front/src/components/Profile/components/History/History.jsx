@@ -31,7 +31,7 @@ const History = ({ username, ismyprofil }) => {
 
       try {
         const response = await fetch(
-          `http://10.11.10.12:8000/matches/matches/${username}/`
+          `http://e3r1p9.1337.ma:8000/matches/matches/${username}/`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch match history");
