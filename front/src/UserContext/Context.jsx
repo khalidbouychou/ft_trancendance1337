@@ -130,10 +130,10 @@ export default function AuthProvider({ children }) {
 
       if (res.status === 200) {
         setUser(res.data);
-        !res.data.user.bool_login &&
-          res.data.user.two_factor &&
-          res.data.user.otp_verified &&
-          navigate("/otp");
+        // !res?.data?.user?.bool_login &&
+        //   res?.data?.user?.two_factor &&
+        //   res?.data?.user?.otp_verified &&
+        //   navigate("/otp");
         if (window.location.pathname === "/login") {
           navigate(`/`);
         }

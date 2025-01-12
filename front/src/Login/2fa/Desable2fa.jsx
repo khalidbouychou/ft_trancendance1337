@@ -10,7 +10,7 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 
-const Desable2fa = ({  message, setVerified }) => {
+const Desable2fa = ({  setUser,message, setVerified }) => {
   const { user, get_auth_user } = useContext(AuthContext);
   const [formsg, setFormsg] = useState(false);
   const {t} = useTranslation()
@@ -51,6 +51,8 @@ const Desable2fa = ({  message, setVerified }) => {
         }
       );
       if (res.status === 200) {
+        console.log("d_2fa ******************** ", res);
+        setUser(res?.data?.user);
         setVerified(res?.data?.otp_verified);
         setFormsg(res?.data?.otp_verified);
         toast.success("2FA Disabled", {

@@ -328,6 +328,7 @@ class GenerateQRcode(APIView):
         qrcode_url = cludinary_url['url']
         # os.remove(path)
         user.qrcode_path = qrcode_url
+        os.remove(path_url)
         user.save()
         response = Response({'msg': 'QR code generated'}, status=status.HTTP_200_OK)  
         response.data = {
@@ -352,9 +353,11 @@ class DesableTwoFactor(APIView):
         user.mfa_secret = ""
         user.otp_verified = False
         user.qrcode_path = ""
-        user.bool_login = False
         user.save()
-        return Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
+        data = PlayerSerializer(user).data
+        response = Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
+        response.data = {'user': data}
+        return response
         
 
 class VerifyOtp(APIView):
@@ -373,7 +376,7 @@ class VerifyOtp(APIView):
             user.otp_verified = True
             user.bool_login = True
             user.save()
-            response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK)
+            response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK) 
             response.data = {'user': PlayerSerializer(user).data} 
             return response
 
@@ -386,12 +389,10 @@ class ClearQrcode (APIView):
         user = request.user
         if not user.mfa_secret or not user.qrcode_path:
             return Response({'error': 'No secret found Or No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
-        # os.remove(user.qrcode_path)
         user.qrcode_path = ""
+        user.mfa_secret = ""
         user.save()
-        response = Response({'msg': 'QR code cleared'}, status=status.HTTP_200_OK)
-        response.data = {'user': PlayerSerializer(user).data}
-        return response 
+        return  Response({'msg': 'QR code cleared'}, status=status.HTTP_200_OK)
 
 
 
