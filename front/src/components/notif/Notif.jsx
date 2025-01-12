@@ -10,7 +10,7 @@ import { GiCrossMark } from "react-icons/gi";
 import { GiCheckMark } from "react-icons/gi";
 import InvitGameCard from "./components/invitGameCard/InvitGameCard";
 import NotiCardSent from "./components/notiCardSent/NotiCardSent";
-const Notif = ({ open }) => {
+const Notif = ({ open, notifReceived, setNotifReceived}) => {
   const { t } = useContext(AuthContext);
   const [FR_notif_received, setFR_notif_received] = useState([]);
   const [GR_notif_received, setGR_notif_received] = useState([]);
@@ -23,6 +23,7 @@ const Notif = ({ open }) => {
   useEffect(() => {
     if (notif) {
       if (notif.status === "pending") {
+        setNotifReceived(true)
         if (notif.notif_type === "FR") {
           setFR_notif_received((prev) => [...prev, notif]);  // Adds to FR_notif_received state
         } else if (notif.notif_type === "GR") {

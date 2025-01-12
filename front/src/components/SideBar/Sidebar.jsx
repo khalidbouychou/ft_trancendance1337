@@ -34,6 +34,7 @@ const Sidebar = () => {
   const notifRef = useRef(null);
 
   const langIcons = { en: En, fr: Fr, it: It };
+  const [notifReceived, setNotifReceived] = useState(false)
 
   const changeLanguage = (lang) => {
     setCurrentLang(lang);
@@ -43,6 +44,7 @@ const Sidebar = () => {
   };
 
   const handleOpenNotif = () => {
+    setNotifReceived(false)
     console.log('openNotif', openNotif)
     setOpenNotif(openNotif === 'flex' ? 'none' : 'flex')
   }
@@ -68,8 +70,7 @@ const Sidebar = () => {
       setHighlightedIndex(-1);
     }
     // Close notifications if clicked outside
-    const notifElement = document.querySelector(`.${styl.notifReceive}`);
-    if (notifElement && !notifElement.contains(event.target)) {
+    if (notifRef.current && !notifRef.current.contains(event.target)) {
       setOpenNotif("none");
     }
   };
@@ -228,8 +229,9 @@ const Sidebar = () => {
           </Link>
           <div style={{display: 'flex', position: 'relative'}} ref={notifRef}>
               <IoIosNotifications className={styl.icon} onClick={handleOpenNotif}/>
-              <div className={styl.notifReceive} ></div>
-              <Notif open={openNotif}/>
+              {notifReceived && <div className={styl.notifReceive}></div>}
+              <Notif open={openNotif} notifReceived={notifReceived} setNotifReceived={setNotifReceived}/>
+              {notifReceived}
           </div>
           <div className={styl.sett}>
             <button onClick={toggleMenu} onClickCapture={handleDisplaySettings}>

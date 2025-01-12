@@ -72,12 +72,14 @@ const NotiCardSent = ({request, type}) => {
     <div className={styl.notiCardSent}>
       <div className={styl.userImage}>
         <div className={styl.intImg}>
-          <div className={styl.intImg}></div>
+          <div className={styl.intImg}>
+            <img src={request?.to_user?.avatar}/>
+          </div>
         </div>
       </div>
       <div className={styl.leftSide}>
         <p>{type === 'FR' ? 'Friend request sent to' : 'Game invitation to' }</p>
-        <p style={{ fontSize: "13px", color: "white" }}>NOUAHIDI </p>
+        <p style={{ fontSize: "13px", color: "white" }}>{request?.to_user?.profile_name.toUpperCase()}</p>
         <button onClick={handleCancel}>
           <p>{type === 'FR' ? 'Cancel friend request' : 'Cancel invitation Game' }</p>
         </button>

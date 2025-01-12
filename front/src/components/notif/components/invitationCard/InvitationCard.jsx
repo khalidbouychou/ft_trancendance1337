@@ -94,11 +94,13 @@ const InvitationCard = ({request}) => {
     <div className={styl.invit}>
       <div className={styl.userImage}>
         <div className={styl.intImg}>
-          <div className={styl.intImg}></div>
+          <div className={styl.intImg}>
+			<img src={request?.from_user?.avatar}/>
+		  </div>
         </div>
       </div>
       <div className={styl.leftSide}>
-        <p style={{ fontSize: "13px", color: "white" }}>NOUAHIDI </p>
+        <p style={{ fontSize: "13px", color: "white" }}>{request?.from_user?.profile_name.toUpperCase()}</p>
         <p>sent you an invitation</p>
         <div className={styl.shoose}>
           <button style={{ backgroundColor: "green" }} onClick={handleAccept}>Accept</button>
