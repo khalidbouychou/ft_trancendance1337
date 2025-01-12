@@ -1496,6 +1496,9 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                             'message': data
                         }
                     )
+                web3_score = f"first round:[first_winner:{tournament['winner1_alias']}, second_winner:{tournament['winner2_alias']}] final round:[winner:{tournament['winner1_alias']}]"
+                # print(web3_score)
+                add_score(web3_score)
         elif self.ballx >= self.game_width - 15:
             self.ballx = 400
             self.bally = 250
@@ -1664,7 +1667,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         }
                     )
                     web3_score = f"first round:[first_winner:{tournament['winner1_alias']}, second_winner:{tournament['winner2_alias']}] final round:[winner:{tournament['winner1_alias']}]"
-                    print(web3_score)
+                    # print(web3_score)
                     add_score(web3_score)
         if self.game_loop:
             await self.pack_data_to_send(tournament, self.gamename)

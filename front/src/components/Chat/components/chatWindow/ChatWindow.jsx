@@ -89,7 +89,7 @@ export default function ChatWindow({
         game_type: "PG",
         to_user_id: otherUser.id,
       });
-      const pong_socket = new WebSocket(`ws://10.13.3.2:8000/ws/play-friend/`);
+      const pong_socket = new WebSocket(`ws://10.11.10.12:8000/ws/play-friend/`);
       pong_socket.onopen = () => {
         const data2 = {
           action: "friend_game",

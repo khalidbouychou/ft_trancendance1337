@@ -69,7 +69,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (searchQuery.trim()) {
-      fetch(`http://10.13.3.2:8000/api/search/?q=${searchQuery}`)
+      fetch(`http://10.11.10.12:8000/api/search/?q=${searchQuery}`)
         .then((response) => response.json())
         .then((data) => {
           const filteredResults = data.filter((item) => item.profile_name !== "ke3ki3a");

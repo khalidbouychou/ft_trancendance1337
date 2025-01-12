@@ -24,7 +24,7 @@ const Home = () => {
   useEffect(() => {
     const fetchDataResults = async () => {
       try {
-        const response = await fetch(`http://10.13.3.2:8000/api/pingdata/`);
+        const response = await fetch(`http://10.11.10.12:8000/api/pingdata/`);
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
