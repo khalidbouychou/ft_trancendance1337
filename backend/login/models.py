@@ -9,19 +9,11 @@ class Player(AbstractUser):
         ('online', _('online')),
         ('offline', _('offline')),
     )
-    GAME_STATUS = (
-        ('available', _('available')),
-        ('waiting', _('waiting')),
-        ('playing', _('playing')),
-        ('offline', _('offline')),
-    )
     username = models.CharField(max_length=255, default='default_username', unique=True, blank=False)
     profile_name = models.CharField(max_length=200, default='default_username')
     avatar = models.URLField(max_length=200, default='https://i.pinimg.com/originals/5d/b5/b4/5db5b469edf32bb41f002482b784b894.png')
     status_network = models.CharField(max_length=10, choices=STATUS, default='offline')
-    status_game = models.CharField(max_length=10, choices=GAME_STATUS, default='offline')
     two_factor = models.BooleanField(default=False)
-    otp = models.CharField(max_length=6, default='000000')
     otp_verified = models.BooleanField(default=False)
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
     friends = models.ManyToManyField('self', symmetrical=True, through='Friend', blank=True)
@@ -29,6 +21,7 @@ class Player(AbstractUser):
     bool_login = models.BooleanField(default=False)
     mfa_secret = models.CharField(max_length=255, default='none' ,blank=False , null=False)
     is_anonimized = models.BooleanField(default=False)
+    number_of_sessions = models.IntegerField(default=0)
     
     class Meta: 
         db_table = 'player' 
@@ -74,3 +67,15 @@ class PingData(models.Model):
 
     class Meta:
         db_table = 'ping_data'
+
+
+class AnonymizedAccount(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='anonymized_data')
+    profile_name = models.CharField(max_length=200, default='Anonymized')
+    avatar = models.URLField(max_length=200, default='https://api.dicebear.com/9.x/thumbs/svg?flip=false')
+    status_network = models.CharField(max_length=10, choices=Player.STATUS, default='offline')
+    class Meta:
+        db_table = 'anonymized_data'
+        
+    def __str__(self):
+        return self.player.username

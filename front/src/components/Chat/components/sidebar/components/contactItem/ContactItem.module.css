@@ -1,0 +1,76 @@
+.contactCard {
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: rgba(255, 255, 255, 0.079);
+    display: flex;
+    width: 100%;
+    height: 70px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.contactCard:hover {
+    background-color: #451661b2;
+}
+
+.intImg {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 45px;
+	height: 50px;
+	background-color: yellow;
+	border: none;
+	position: relative;
+	clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+	img {
+		display: flex;
+		height: 50px;
+	}
+}
+
+.contactDetails {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.contactName {
+    display: flex;
+    font-weight: bold;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.status {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: red;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: white;
+}
+
+.contactMetadata {
+    display: flex;
+    width: 100%;
+    align-items: end;
+    justify-content: end;
+    font-size: 13px;
+    color: #72767d;
+    gap: 5px
+}
+
+.contactLastMessage {
+    display: flex;
+    color: gray;
+}

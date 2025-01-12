@@ -1,19 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styl from "./Profile.module.css";
 import { AuthContext } from "../../UserContext/Context";
 import MatchHistory from "./components/matchHistory/MatchHistory";
 import Leaderboard from "./components/leaderboard/Leaderboard";
-import Statistic from "./components/statistc/Statistic";
 import CardFriend from "./components/History/components/CardFriend/CardFriend";
 import { FaMedal } from "react-icons/fa";
 import { PiGameControllerFill } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
+import { MdOutlineFormatListBulleted } from "react-icons/md";
+import { IoIosPersonAdd } from "react-icons/io";
+import axios from "axios";
+import CardBlocked from "./components/cardBlocked/CardBlocked";
+import { useNotificationWS } from "../../contexts/NotifWSContext";
 
 const Profile = ({ me }) => {
+  const { sendMessage, notif , setNotif} = useNotificationWS();
+
   let { profile_name } = useParams();
-  const { user } = useContext(AuthContext);
-  const [userData, setUserData] = useState(null);
+  const { user, t } = useContext(AuthContext);
+  const [userData, setUserData] = useState({});
   const [error, setError] = useState(null);
   const [ismyprofil, setIsMyProfil] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,95 +29,249 @@ const Profile = ({ me }) => {
   const [pingExp, setPingExp] = useState("0");
   const [maxPingExp, setMaxPingExp] = useState("0");
   const [pingPercentage, setPingPercentage] = useState("");
+  const [profileName, setProfileName] = useState(profile_name);
+  const [wins, setWins] = useState("");
+  const [lose, setLose] = useState("");
+  const [setting, setSetting] = useState("none");
+  const [displayBt, setDisplayBt] = useState('flex');
+  const [showUserBlocked, setShowUserBlocked] = useState(false);
+  const [status, setStatus] = useState("Friends");
+  const [isfriended, setIsfriended] = useState(false);
+  const [friendList, setFriendList] = useState([]);
+  const [blockedList, setBlockedList] = useState([]);
+  const [shooseList, setShooseList] = useState('none');
+  const [displayShooseButton, setDisplayShooseButton] = useState('none');
+  const [isblocked, setIsblocked] = useState(false);
+
+  useEffect(() => {
+    setProfileName(profile_name);
+  }, [profileName]);
+
+  useEffect(() => {
+    if (notif && notif.status === 'friends'){
+      if (notif.user_id === userData.id){
+        setIsfriended(true);
+        setNotif(null);
+      }
+    }
+    else if (notif && notif.status === 'unfriend'){
+      if (notif.user_id === userData.id){
+        setIsfriended(false);
+        setNotif(null);
+      }
+    }
+    else if (notif && notif.message === 'status'){
+      if (notif.offline && notif.offline === userData.id){
+        setUserData({...userData, status_network: 'offline'});
+        setNotif(null);
+      }
+      else if (notif.online && notif.online === userData.id){
+        setUserData({...userData, status_network: 'online'});
+        setNotif(null);
+      }
+    }
+  }, [notif])
+
+  const handleBlockClick = () => {
+    setShowUserBlocked((prev) => !prev);
+    setStatus((prev) => (prev === "Friends" ? "User Blocked" : "Friends"));
+  };
 
   const handelClick = (section) => {
     setActiveSection(section);
   };
 
+  const handleShooseList = () => {
+    setShooseList(shooseList == "none"? "flex" : "none");
+  }
 
-  // if (!profile_name)
-  //     profile_name = user.user.profile_name
+  const openSettings = () => {
+    setSetting(setting == "none" ? "flex" : "none");
+  };
+  
   useEffect(() => {
-    const fetchData = async () => {
-      if (!profile_name) return;
-      setIsLoading(true);
-      setError(null);
-      
-      console.log("=====>>> ppppppPPPPP", profile_name)
+    const fetchPingData = async () => {
       try {
-        const response = await fetch(`https://localhost/api/getuser/${profile_name}/`);
-        if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error("User not found");
-          } else {
-            console.log("checkkk")
-            throw new Error("Failed to fetch user data");
-          }
-        }
-
-        const data = await response.json();
-        setUserData(data);
-        
-        if (data.profile_name === user?.user?.profile_name) {
-          setIsMyProfil(1);
-        } else {
-          setIsMyProfil(0);
-        }
-        
-        const pingResponse = await fetch(`https://localhost/api/pingdata/${profile_name}/`);
-        if (!pingResponse.ok) {
-          console.log('Failed to')
-          throw new Error("Failed to fetch ping data");
-        }
-
-        const pingData = await pingResponse.json();
-        if (pingData && pingData.length > 0) {
-          const { exp_game } = pingData[0];
+        const response = await axios.get(`https://e3r1p1.1337.ma/api/pingdata/${profileName}/` , {
+          withCredentials: true,
+      });
+        const pingData = response.data;
+  
+        if (pingData.length > 0) {
+          const { exp_game, wins, losses } = pingData[0];
           const calculatedLevel = Math.floor(exp_game / 100);
-          const calculatedNextLevel = calculatedLevel + 1;
-          const maxExperience = calculatedNextLevel * 100;
-          
+          const maxExperience = (calculatedLevel + 1) * 100;
+  
           setPingExp(exp_game);
           setMaxPingExp(maxExperience);
           setPingLevel(calculatedLevel);
-          setNextPingLevel(calculatedNextLevel);
-          setPingPercentage(Math.floor((exp_game / maxExperience) * 100));
-        } else {
-          throw new Error("Ping data is invalid or empty");
+          setNextPingLevel(calculatedLevel + 1);
+          setPingPercentage(exp_game % 100);
+          setWins(wins);
+          setLose(losses);
+        }
+        console.log("Ping data:", pingData);
+      } catch (error) {
+        console.error("Failed to fetch ping data", error);
+      }
+    };
+    
+    fetchPingData();
+  }, [profileName]);
+
+  useEffect(() => {
+    const friendsArray = friendList['friend list'] || [];
+    console.log("friendsArray:", friendsArray);
+    console.log("friendList:", friendList);
+
+    const isFriend = friendsArray.some(
+      (friend) => friend.profile_name === user?.user?.profile_name
+    );
+    console.log("isFriend:", isFriend);
+    setIsfriended(isFriend);
+    
+    if (userData.profile_name === user?.user?.profile_name) {
+      setIsMyProfil(1);
+      setDisplayBt("none");
+      setDisplayShooseButton('flex')
+    } else {
+      setIsMyProfil(0);
+      setDisplayBt("flex");
+      setDisplayShooseButton('none')
+    }
+  }, [friendList, user?.user?.profile_name, userData.profile_name]);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      const response = await axios.get(
+        `https://e3r1p1.1337.ma/api/friends/${profile_name}/` , {
+          withCredentials: true,
+      });
+      console.log("profile_name_145:", profile_name);
+      setFriendList(response.data);
+    };
+    fetchFriends();
+  }, [profileName, isfriended]);
+                                                                              
+  useEffect(() => {
+    const fetchBlocked = async () => {
+      try {
+        const response = await axios.get(
+          `https://e3r1p1.1337.ma/api/blocked/${profile_name}/`,
+          { withCredentials: true }
+        );
+        setBlockedList(response.data);
+        console.log("Blocked list:", response.data);
+  
+        setIsblocked(false)
+        if (profile_name !== user.user.profile_name) {
+          console.log("Is blocked list:", response.data);
+          const isBlocked = response.data["blocked list"].some(
+            (blockedUser) => blockedUser.profile_name === user.user.profile_name
+          );
+          if (isBlocked)
+            setIsblocked(true);
         }
       } catch (error) {
+        console.error("Error fetching blocked list:", error);
+      }
+    };
+  
+    fetchBlocked();
+  }, [profileName, isfriended, ismyprofil]);
+  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!profile_name) return;
+  
+      setIsLoading(true);
+      setError(null);
+  
+      try {
+        const response = await fetch(
+          `https://e3r1p1.1337.ma/api/getuser/${profile_name}/`
+        );
+        if (!response.ok) {
+          throw new Error(
+            response.status === 404
+              ? "User not found"
+              : "Failed to fetch user data"
+          );
+        }
+        if (profile_name === 'ke3ki3a') {
+          throw new Error(
+            "User not found"
+          );
+        }
+  
+        const data = await response.json();
+        setUserData(data);
+        
+      } catch (error) {
         setError(error.message);
+        setUserData({});
       } finally {
         setIsLoading(false);
       }
     };
-
+    setShowUserBlocked(false);
+    setActiveSection("Leaderboard");
     fetchData();
-  }, [profile_name, user]);
-  console.log("userDDDDDaata", userData)
+  }, [profile_name]);
+  
+  
+  const handleAddFriend = () => {
+    if (!isfriended) {
+      sendMessage({
+        type: "SEND_FR",
+        to_user_id: userData?.id,
+      });
+    } else {
+      sendMessage({
+        type: "UN_FRIEND",
+        to_user_id: userData?.id,
+      });
+    }
+  };
+  
   
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
   }
-
+  
   if (error) {
     return (
       <div className={styl.error}>
-        <h2>Error</h2>
         <p>{error}</p>
+        <Link to="/"> back to home</Link>
       </div>
     );
+  }
+
+  if (isblocked) {
+    return <div className={styl.error} style={{color: 'white'}}>This user has blocked you.</div>
   }
 
   return (
     <div className={styl.profile}>
       <div className={styl.content}>
-        <div className={styl.head}>
-          {/* <h2>{t("PROFILE")}</h2> */}
-        </div>
         <div className={styl.userPrf}>
           <div className={styl.side1}>
             <div className={styl.userInfo}>
+              <button
+                className={styl.settingsBt}
+                onClick={openSettings}
+                style={{ display: displayBt }}
+              >
+                <MdOutlineFormatListBulleted />
+                <div className={styl.settings} style={{ display: setting }}>
+                  <button className={styl.Button} onClick={handleAddFriend}>
+                    <IoIosPersonAdd className={styl.icons} />
+                    {isfriended ? <p>{t("Unfriend")}</p> : <p>{t("Add Friend")}</p>}
+                  </button>
+                </div>
+              </button>
               <div className={styl.userDis}>
                 <div className={styl.extImg}>
                   <div className={styl.intImg}>
@@ -129,11 +289,14 @@ const Profile = ({ me }) => {
                         style={{
                           width: "11px",
                           height: "11px",
-                          backgroundColor: "rgb(7, 118, 174)",
+                          backgroundColor:
+                            userData.status_network === "online"
+                              ? "green"
+                              : "red",
                         }}
                       ></div>
                     </div>
-                    online
+                    {t(userData?.status_network)}
                   </p>
                 </p>
               </div>
@@ -143,29 +306,30 @@ const Profile = ({ me }) => {
                     <div className={styl.Side}>
                       <FaMedal className={styl.icon} />
                     </div>
-                    <div className={styl.resName}>Wins</div>
-                    <div className={styl.Side}>4</div>
+                    <div className={styl.resName}>{t("Wins")}</div>
+                    <div className={styl.Side}>{wins}</div>
                   </div>
                   <hr />
                   <div className={styl.rs}>
                     <div className={styl.Side}>
                       <GiCrossMark className={styl.icon} />
                     </div>
-                    <div className={styl.resName}>Lose</div>
-                    <div className={styl.Side}>2</div>
+                    <div className={styl.resName}>{t("Lose")}</div>
+                    <div className={styl.Side}>{lose}</div>
                   </div>
                   <hr />
                   <div className={styl.rs}>
                     <div className={styl.Side}>
                       <PiGameControllerFill className={styl.icon} />
                     </div>
-                    <div className={styl.resName}>Games</div>
-                    <div className={styl.Side}>4</div>
+                    <div className={styl.resName}>{t("Games")}</div>
+                    <div className={styl.Side}>{wins + lose}</div>
                   </div>
                 </div>
+
                 <div className={styl.level}>
                   <div className={styl.tmp}>
-                    <p>Level {pingLevel}</p>
+                    <p>{t("Level")} {pingLevel}</p>
                     <p>
                       {pingExp} /{" "}
                       <p
@@ -174,7 +338,7 @@ const Profile = ({ me }) => {
                           left: "2px",
                         }}
                       >
-                        {maxPingExp}
+                        {maxPingExp} xp
                       </p>
                     </p>
                   </div>
@@ -191,9 +355,9 @@ const Profile = ({ me }) => {
                         left: "2px",
                       }}
                     >
-                      Next Level
+                      {t("Next Level")}
                     </p>
-                    <p>Level {nextpingLevel}</p>
+                    <p>{t("Level")} {nextpingLevel}</p>
                   </div>
                 </div>
               </div>
@@ -205,7 +369,7 @@ const Profile = ({ me }) => {
                         activeSection === "Leaderboard" ? "red" : "white",
                     }}
                   >
-                    Leaderboard
+                    {t("Leaderboard")}
                   </p>
                 </button>
                 <button onClick={() => handelClick("MatchHistory")}>
@@ -215,38 +379,42 @@ const Profile = ({ me }) => {
                         activeSection === "MatchHistory" ? "red" : "white",
                     }}
                   >
-                    Match History
-                  </p>
-                </button>
-                <button onClick={() => handelClick("Statistic")}>
-                  <p
-                    style={{
-                      textDecorationColor:
-                        activeSection === "Statistic" ? "red" : "white",
-                    }}
-                  >
-                    Statistic
+                    {t("Match History")}
                   </p>
                 </button>
               </div>
             </div>
             <div className={styl.userData}>
-              {activeSection === "Statistic" && <Statistic />}
-              {activeSection === "Leaderboard" && <Leaderboard />}
-              {activeSection === "MatchHistory" && <MatchHistory />}
+              {activeSection === "Leaderboard" && <Leaderboard setProfileName={setProfileName} t={t}/>}
+              {activeSection === "MatchHistory" && (
+                <MatchHistory profileName={profileName} t={t}/>
+              )}
             </div>
           </div>
+          {/* side2 */}
           <div className={styl.side2}>
-            <div className={styl.headBut}>
-              <button>My Friends</button>
-              <button style={{ display: "none" }}>Blocked Friends</button>
+            <div className={styl.headFr}>
+              <p>{t(status)}</p>
+              <button onClick={handleShooseList} style={{display: displayShooseButton}}>
+                <p>...</p>
+                <div
+                  className={styl.userBlocked}
+                  style={{ display: shooseList}}
+                >
+                  <button onClick={handleBlockClick}>
+                    {showUserBlocked ? "Friends" : "Blocked"}
+                  </button>
+                </div>
+              </button>
             </div>
-            <div className={styl.displayFr}>
-              <CardFriend />
-              <CardFriend />
-            </div>
-            <div className={styl.searchFr}>
-              <input type="text" placeholder="Search" />
+            <div className={styl.displayUser}>
+              {showUserBlocked
+                ? blockedList?.["blocked list"]?.map((user, index) => (
+                    <CardBlocked key={index} user={user} />
+                  ))
+                : friendList?.["friend list"]?.map((user, index) => (
+                    <CardFriend key={index} friend={user} />
+                  ))}
             </div>
           </div>
         </div>

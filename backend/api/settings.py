@@ -7,7 +7,7 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/4.2/ref/settings/ 
+https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path 
@@ -23,9 +23,15 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent  
 # Add this setting to the end of the file or before the MIDDLEWARE setting
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost',
-    'https://localhost',
+    'https://127.0.0.1', 
+    'http://127.0.0.1', 
+    'http://e3r1p1.1337.ma',
+    'https://e3r1p1.1337.ma',
+    'http://e3r1p1.1337.ma', 
     'https://127.0.0.1:5173',
+    "http://e3r1p1.1337.ma:5173",
+    "http://e3r1p1.1337.ma:5173",
+    f'http://{os.getenv("VITE_IP_HOST")}',
 ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -35,8 +41,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production! 
 DEBUG = True # Set to False in production
- 
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
+
+IP_MACHINE = os.getenv('VITE_IP_HOST')
+
+ALLOWED_HOSTS = ['127.0.0.1','e3r1p1.1337.ma',IP_MACHINE,'e3r1p1.1337.ma']
 
 # Application definition
 
@@ -50,14 +58,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework_simplejwt.token_blacklist',  
+    'rest_framework_simplejwt.token_blacklist',
     'rest_framework',
     'login',
     'pongame',
     'matches',
-    'chat',
+    # 'chat',
     'notification',
-    # 'xo_game'
+    'Chat2',
+    'web3_app'
 ]
 
 MIDDLEWARE = [
@@ -69,8 +78,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
 
+
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+ 
 ASGI_APPLICATION = 'api.asgi.application'
 
 CHANNEL_LAYERS = {
@@ -105,18 +118,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'api.wsgi.application'
-
-# Database configuration
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql', 
-        'NAME': os.getenv("POSTGRES_DB"),
-        'USER': os.getenv("POSTGRES_USER"), 
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD"), 
-        'HOST': os.getenv("POSTGRES_HOST"),
-        'PORT': os.getenv("POSTGRES_PORT"),
-    }
-}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -223,8 +224,13 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'https://127.0.0.1',  
     'http://127.0.0.1',
-    'http://localhost',
-    "https://localhost", 
+    'http://e3r1p1.1337.ma',
+    'https://e3r1p1.1337.ma',
+    "http://e3r1p1.1337.ma:5173", 
+    'http://e3r1p1.1337.ma',
+    'https://e3r1p1.1337.ma',
+    "http://e3r1p1.1337.ma:5173",
+    f'http://{os.getenv("VITE_IP_HOST")}',
     ]
 
 DATABASES = {

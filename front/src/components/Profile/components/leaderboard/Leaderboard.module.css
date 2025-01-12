@@ -10,7 +10,7 @@
 
 .leaderHead {
 	display: flex;
-	width: 95%;
+	width: 100%;
 	height: 30px;
 	position: relative;
 
@@ -78,7 +78,7 @@
 
 .pingRanking {
 	display: flex;
-	width: 95%;
+	width: 100%;
 	height: 100%;
 	flex-direction: column;
 	gap: 25px;
@@ -98,12 +98,11 @@
 	display: flex;
 	width: 100%;
 	height: 55px;
-	/* background-color: rgb(59, 58, 58); */
 	background-color: black;
 	border: none;
 	cursor: pointer;
 	border-radius: 10px;
-	opacity: 0;
+	/* opacity: 0; */
 	animation: slideFrame 0.5s ease-in-out forwards, fadeIn 0.5s ease-in-out forwards;
 }
 

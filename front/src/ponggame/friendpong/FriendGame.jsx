@@ -22,6 +22,7 @@ export default function FriendGame() {
     const [gamestarted, setGameStarted] = useState(false);
     const [condition, setCondition] = useState('N');
     const [MESSAGE, setMessage] = useState("message");
+    const [profile_name, setProfileName] = useState('');
     const [username, setUsername] = useState('');
     const [avatar, setAvatar] = useState('');
     const [level, setLevel] = useState(0);
@@ -71,13 +72,16 @@ export default function FriendGame() {
     };
 
     useEffect(() => {
-        // console.log("im here");
         const fetchData = async () => {
-            const response = await axios('http//localhost/api/pingpong/');
-            // console.log('response:', response);
+            const response = await axios('https://e3r1p1.1337.ma/api/pong_data/',{
+                withCredentials: true,
+            });
+            console.log('response:', response.data);
             if (response.status === 200) {
-                setUsername(response.data.user);
+                setProfileName(response.data.profile_name);
+                setUsername(response.data.username);
                 setLeftPlayerAvatar(response.data.avatar);
+                setLeftPlayerName(response.data.profile_name);
                 setAvatar(response.data.avatar);
                 setLevel(response.data.exp_game);
             } else {
@@ -106,7 +110,7 @@ export default function FriendGame() {
         let player_id = 0;
         let myReq;
         if (FetchedData)
-            socket = new WebSocket(`wss://localhost/ws/play-friend/`);
+            socket = new WebSocket(`wss://e3r1p1.1337.ma/ws/play-friend/`);
 
         if (socket) {
             socket.onopen = () => {
@@ -116,6 +120,7 @@ export default function FriendGame() {
                     const message = {
                         action: 'connect',
                         username: username,
+                        profile_name: profile_name,
                         avatar: avatar,
                         level: level,
                         game_id: game_key,
@@ -147,7 +152,7 @@ export default function FriendGame() {
                 }
                 if (data.message) {
                     if (data.message === 'game_started') {
-                        if (data.player_id1 === username) {
+                        if (data.player_id1 === profile_name) {
                             player_id = 1;
                             setPlayerId(1);
                             setLeftPlayerName(data.player_id1);
@@ -155,7 +160,7 @@ export default function FriendGame() {
                             setLeftPlayerAvatar(data.player_1_avatar);
                             setRightPlayerAvatar(data.player_2_avatar);
                         }
-                        else if (data.player_id2 === username) {
+                        else if (data.player_id2 === profile_name) {
                             player_id = 2;
                             setPlayerId(2);
                             setLeftPlayerName(data.player_id1);
@@ -171,7 +176,7 @@ export default function FriendGame() {
                         setMessage("Opponent left the game");
                     }
                     else if (data.message === 'Leave') {
-                        navigate('/home');
+                        navigate('/');
                     }
                 }
                 if (data.hasOwnProperty('winner')) {
@@ -261,7 +266,7 @@ export default function FriendGame() {
             drawLeftRacket();
             drawRightRacket();
             const currentPath = window.location.pathname;
-            if (currentPath === '/friend-game' && condition === 'N')
+            if (currentPath === '/friendgame' && condition === 'N')
                 return requestAnimationFrame(draw);
             else
                 return cancelAnimationFrame(myReq);
@@ -288,7 +293,7 @@ export default function FriendGame() {
                 socket.close(); // Close WebSocket when the component unmounts
             }
         };
-    }, [username]);
+    }, [profile_name]);
 
     useEffect(() => {
         console.log("gamestarted", gamestarted);
@@ -304,7 +309,7 @@ export default function FriendGame() {
     }, [gamestarted, condition]);
 
     const handleExitClick = () => {
-        navigate('/pingpong-games');
+        navigate('/games');
     };
 
     return (
@@ -341,7 +346,7 @@ export default function FriendGame() {
                             {condition !== 'D' && (
                                 <>
                                     <img src={avatar} />
-                                    <h3>{username}</h3>
+                                    <h3>{profile_name}</h3>
                                 </>
                             )}
                         </div>

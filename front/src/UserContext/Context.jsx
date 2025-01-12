@@ -20,8 +20,50 @@ export default function AuthProvider({ children }) {
   }
   , [localStorage.getItem('lang')])
 
+
+  const renderInputs = () => {
+    return Array.from({ length: 6 }).map((_, i) =>
+      <input key={i} type="text" className="otp-input" maxLength={1} />
+    );
+  };
+
+  const verifyotp = async () => {
+    const inputs = document.getElementsByClassName("otp-input");
+    const otp = Array.from(inputs).map(input => input.value).join("");
+    try {
+      await get_auth_user();
+      const res = await axios.post(
+        `https://e3r1p1.1337.ma/api/otpverify/`,
+        { otp: otp },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.cookie
+              .split("; ")
+              .find(row => row.startsWith("csrftoken="))
+              .split("=")[1]
+          }
+        }
+      );
+      if (res.status === 200) {
+        toast.success(t("OTP Verified Successfully"), {
+          style: {
+            backgroundColor: "rgb(0, 128, 0)",
+            color: "white"
+          }
+        });
+        setTimeout(() => {
+          navigate("/home");
+        }, 1000);
+      }
+    } catch (err) {
+      toast.error(t(`${err.response.data.error}`));
+    }
+  };
+
   async function auth_intra42() {
-    const response = await axios.get("https://localhost/api/auth_intra/", {
+    const response = await axios.get(`https://e3r1p1.1337.ma/api/auth_intra/`, {
       withCredentials: true
     });
     try {
@@ -51,8 +93,8 @@ export default function AuthProvider({ children }) {
       if (code) {
         const params = new URLSearchParams();
         params.append("code", code);
-        const res = await axios.post(
-          `https://localhost/api/login/`,
+        res = await axios.post(
+          `https://e3r1p1.1337.ma/api/login/`,
           params,
           {
             withCredentials: true
@@ -60,27 +102,28 @@ export default function AuthProvider({ children }) {
         );
         if (res.status === 200) {
           setUser(res?.data);
+          setLoading(true);
           setTimeout(() => {
             setLoading(false);
           }, 1000);
-          if (res?.data?.bool_login) {
-            toast.success(`Welcome ${res?.data?.profile_name}`, {
+          // if (res.data.otp_login) {
+            toast.success("login success", {
               style: {
                 backgroundColor: 'rgb(0, 128, 0)',
                 color: 'white',
               }
             });
-            navigate(`/`);
-          }
-        }
-        else {
-          console.log("---------login----------");
-          navigate(`/login`);
+          // }
+          navigate(`/`);
         }
       }
     } catch (error) {
-      console.log("---------home----------");
-      console.log(error);
+      toast.error(t(error?.response?.data?.error), {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
+      });
       navigate(`/`);
       // navigate('/login');
       setLoading(false);
@@ -91,19 +134,19 @@ export default function AuthProvider({ children }) {
 
   async function get_auth_user() {
     try {
-      const res = await axios.get(`https://localhost/api/user/`, {
+      const res = await axios.get(`https://e3r1p1.1337.ma/api/user/`, {
         withCredentials: true
       });
 
       if (res.status === 200) {
-        if (location.pathname === "/otp" || location.pathname === "/login") {
+        setUser(res.data);
+        // !res?.data?.user?.bool_login &&
+        //   res?.data?.user?.two_factor &&
+        //   res?.data?.user?.otp_verified &&
+        //   navigate("/otp");
+        if (window.location.pathname === "/login") {
           navigate(`/`);
         }
-        setUser(res.data);
-        !res.data.user.bool_login &&
-          res.data.user.two_factor &&
-          res.data.user.otp_verified &&
-          navigate("/otp");
       }
     } catch (error) {
       setUser(null);
@@ -113,7 +156,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`https://localhost/api/logout/`, {
+      const res = await axios.get(`https://e3r1p1.1337.ma/api/logout/`, {
         withCredentials: true
       });
 
@@ -149,7 +192,9 @@ export default function AuthProvider({ children }) {
         Login,
         auth_intra42,
         get_auth_user,
-        t
+        t,
+        verifyotp,
+        renderInputs
       }}
     >
       {children}

@@ -12,14 +12,14 @@ const Settings = () => {
   const { t,user, get_auth_user } = useContext(AuthContext);
   const [updated, setUpdated] = useState(false);
   const [NewProfileName, setNewProfileName] = useState(null);
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
   const {setUser} = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionToPerform, setActionToPerform] = useState(null);
   const handleProfileNameUpdate = async () => {
     try {
       const response = await axios.put(
-        'http://localhost:8000/api/update/',
+        `https://e3r1p1.1337.ma/api/update/`,
         { profile_name: NewProfileName },
         {
           withCredentials: true,
@@ -59,7 +59,7 @@ const Settings = () => {
       formData.append('avatar', input.files[0]);
 
       axios
-        .put('http://localhost:8000/api/update/', formData, {
+        .put(`https://e3r1p1.1337.ma/api/update/`, formData, {
           withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -118,7 +118,7 @@ const Settings = () => {
 
   const handleConfirm = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/${actionToPerform}/` , {
+      const response = await axios.get(`https://e3r1p1.1337.ma/api/${actionToPerform}/` , {
         withCredentials: true,
     });
       if (response.status === 200) {
@@ -187,13 +187,13 @@ const Settings = () => {
             <div className={styl.data}>
               <button
                 className={styl.anonymize}
-                onClick={() => openModal(t("anonymize"))}
+                onClick={() => openModal("anonymize")}
               >
                 {t("Data Anonymization")}
               </button>
               <button
                 className={styl.deletebtn}
-                onClick={() => openModal(t('delete'))}
+                onClick={() => openModal('delete')}
               >
                 {t("Delete Account")}
                 

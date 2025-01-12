@@ -1,11 +1,15 @@
 import styl from './Notification.module.css'
 import NotiCard from './component/NotiCard/NotiCard'
 import NotiCardSent from './component/NotiCard/NotiCardSent'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNotificationWS } from '../../contexts/NotifWSContext'
 
+
+import {AuthContext} from "../../UserContext/Context"
+
 const Notification = () => {
+    const {t} = useContext(AuthContext);
     const [FR_notif_received, setFR_notif_received] = useState([])
     const [GR_notif_received, setGR_notif_received] = useState([])
     const [FR_notif_sent, setFR_notif_sent] = useState([])
@@ -26,11 +30,8 @@ const Notification = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('https://localhost/api/notif/', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+        const response = await axios.get('https://e3r1p1.1337.ma/api/notif/' , {
+            withCredentials: true,
         });
         const notifications = response.data;
         setFR_notif_received(notifications.FR_notif_received);
@@ -47,13 +48,12 @@ const Notification = () => {
   return (
     <div className={styl.Notification}>
         <div className={styl.content}>
-            <div className={styl.head}><h1>NOTIFICATION</h1></div>
             <div className={styl.cont}>
                 <hr className={styl.line}/>
                 <div className={styl.noti}>
                     <div className={styl.Request}>
                         <div className={styl.title}>
-                            <h3 >Pending request</h3>
+                            <h3 >{t("Pending request")}</h3>
                         </div>
                         <div className={styl.card}>
                             {FR_notif_received.map((notif) => (
@@ -63,7 +63,7 @@ const Notification = () => {
                     </div>
                     <div className={styl.Request}>
                         <div className={styl.title}>
-                            <h3 >Game request</h3>
+                            <h3 >{t("Game request")}</h3>
                         </div>
                         <div className={styl.card}>
                             {GR_notif_received.map((notif) => (
@@ -73,7 +73,7 @@ const Notification = () => {
                     </div>
                     <div className={styl.Request}>
                         <div className={styl.title}>
-                            <h3>Sent requests</h3>
+                            <h3>{t("Sent requests")}</h3>
                         </div>
                         <div className={styl.card}>
                             {FR_notif_sent.map((notif) => (

@@ -18,7 +18,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_pk']
         self.room_group_name = f'chat_room_{self.room_name}'
-        self.user = self.scope['user']
+        self.token = self.scope['session'].get('token')
+        if self.token:
+            self.scope['user'] = await self.auth_user(self.token)
+            if self.scope['user'] == AnonymousUser():
+                await self.close()
+                return
+        else:
+            print("chat consumer: No token found in cookies", file=sys.stderr)
+            await self.close()
+            return
+
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -207,14 +217,31 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = Player.objects.get(id=user)
         room.messages.filter(chat_room=room).exclude(sender=user).update(is_read=True)
 
-
+    @database_sync_to_async
+    def auth_user(self, token):
+        try:
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+            return Player.objects.get(id=user_id)
+        except (InvalidToken, TokenError, Player.DoesNotExist):
+            return AnonymousUser()
 
 class UserNotificationConsumer(AsyncWebsocketConsumer):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
     async def connect(self):
-        self.user = self.scope['user']
-        self.user_id = self.user.id
+        self.notification_group_name = f'__'
+        self.token = self.scope['session'].get('token')
+        if self.token:
+            self.scope['user'] = await self.auth_user(self.token)
+            if self.scope['user'] == AnonymousUser():
+                await self.close()
+                return
+        else:
+            print("chat consumer: No token found in cookies", file=sys.stderr)
+            await self.close()
+            return
+        self.user_id = self.scope['user'].id
         self.notification_group_name = f'user_{self.user_id}_notification'
 
         await self.channel_layer.group_add(
@@ -240,3 +267,11 @@ class UserNotificationConsumer(AsyncWebsocketConsumer):
             'room_data': room_data
         }))
     
+    @database_sync_to_async
+    def auth_user(self, token):
+        try:
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+            return Player.objects.get(id=user_id)
+        except (InvalidToken, TokenError, Player.DoesNotExist):
+            return AnonymousUser()

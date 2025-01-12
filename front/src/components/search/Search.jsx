@@ -14,7 +14,7 @@ const Search = () => {
   const fetchSearchResults = async (query) => {
     if (query.trim()) {
       const response = await fetch(
-        `https://localhost/api/search/?q=${query}`
+        `https://e3r1p1.1337.ma/api/search/?q=${query}`
       );
       const data = await response.json();
       setSearchResults(data);
@@ -63,7 +63,6 @@ const Search = () => {
     <div className={styl.Search}>
       <div className={styl.cont}>
         <div className={styl.head}>
-          <h1>SEARCH</h1>
         </div>
         <div className={styl.search}>
           <div className={styl.extFrame}>

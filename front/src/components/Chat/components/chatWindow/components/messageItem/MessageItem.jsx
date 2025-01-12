@@ -1,4 +1,5 @@
 import React from 'react';
+import styl from './MessageItem.module.css';
 
 function MessageItem({ message, currentUser }) {
     if (!currentUser) {
@@ -7,10 +8,10 @@ function MessageItem({ message, currentUser }) {
     const isCurrentUser = message.sender.username === currentUser.username;
 
     return (
-        <div className={`message ${isCurrentUser ? 'sent' : 'received'}`}>
-            <div className="message-content">
-                <span className="message-text">{message.content}</span>
-                <span className="message-time">
+        <div className={`${styl.message} ${isCurrentUser ? styl.sent : styl.received}`}>
+            <div className={styl.messageContent}>
+                <span className={styl.messageText}>{message.content}</span>
+                <span className={styl.messageTime}>
                     {new Date(message.created_at).toLocaleTimeString('en-US', {
                         hour: 'numeric',
                         minute: '2-digit',

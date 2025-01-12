@@ -8,6 +8,7 @@ import { SlOptions } from "react-icons/sl";
 import { IoIosPersonAdd } from "react-icons/io";
 import { TbLock } from "react-icons/tb";
 import { BsChatDots } from "react-icons/bs";
+import axios from "axios";
 
 const UserData = ({ userData, ismyprofil }) => {
   const [settingsVisible, setSettingsVisible] = useState(false);
@@ -26,7 +27,7 @@ const UserData = ({ userData, ismyprofil }) => {
       if (!username) return;
 
       try {
-        const response = await fetch(`https://localhost/api/${fetchUrl}/${username}`);
+        const response = await fetch(`3r1p9.1337.ma:8000/api/${fetchUrl}/${username}`);
         if (response.ok) {
           const data = await response.json();
           setStatisticData(data[0]);

@@ -1,212 +1,233 @@
-import { Link, useNavigate} from "react-router-dom";
 import React, { useState, useEffect, useContext, useRef } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { IoIosArrowDown } from "react-icons/io";
+import { FaSearchengin } from "react-icons/fa";
+import { CiSettings, CiLogout } from "react-icons/ci";
+import i18n from "../../i18n";
+import { AuthContext } from "../../UserContext/Context";
 import styl from "./Sidebar.module.css";
 import En from "../../../public/assets/icons/lang-icons/En-lang.png";
 import Fr from "../../../public/assets/icons/lang-icons/Fr-lang.png";
 import It from "../../../public/assets/icons/lang-icons/It-lang.png";
-import { MdNotifications, MdNotificationImportant } from "react-icons/md";
-import { AuthContext } from "../../UserContext/Context";
-import { FaSearchengin } from "react-icons/fa";
 import SearchCard from "./components/searchCard/SearchCard.jsx";
-import userImage from "./assets/nouahidi.jpeg";
-import { CiSettings } from "react-icons/ci";
-import { CiLogout } from "react-icons/ci";
-import { use } from "react";
-import i18n from "../../i18n";
-// import { height } from "@mui/system";
-
 
 const Sidebar = () => {
-  const { t,user ,Logout} = useContext(AuthContext);
+  const { t, user, Logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  const searchRef = useRef(null);
-  const notifRef = useRef(null);
-  const settRef = useRef(null);
+  const location = useLocation();
+  const [displaySett, setDisplaySett] = useState('none')
 
-  const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const[openNotf, setOpenNotf] = useState('none');
-  const[openSet, setOpenSet] = useState('none');
-  const [gameColor, setGameColor] = useState('white')
-  const [chatColor, setChatColor] = useState('white')
-  const [profileColor, setProfileColor] = useState('yellow')
-  const [menu, setMenu] = useState(false)
+  const [searchResults, setSearchResults] = useState([]);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [currentLang, setCurrentLang] = useState(
+    localStorage.getItem("lang") || "en"
+  );
+  const [isLangListOpen, setIsLangListOpen] = useState(false);
 
+  const searchRef = useRef(null);
+  const langListRef = useRef(null);
+  const menuRef = useRef(null);
 
+  const langIcons = { en: En, fr: Fr, it: It };
 
-  //------------Translation----------------
-  const French = () => {
-    localStorage.setItem("lang", "fr");
-    i18n.changeLanguage(localStorage.getItem("lang"));
-  }
-  const English = () => {
-      localStorage.setItem("lang", "en");
-      i18n.changeLanguage(localStorage.getItem("lang"));
-  }
-  const Italian = () => {
-    localStorage.setItem("lang", "it");
-    i18n.changeLanguage(localStorage.getItem("lang"));
-  }
-  //------------Translation----------------
-  const handelNotifOpen = () => {
-    setOpenNotf(openNotf === "none" ? "flex" : "none");
-  }
+  const changeLanguage = (lang) => {
+    setCurrentLang(lang);
+    localStorage.setItem("lang", lang);
+    i18n.changeLanguage(lang);
+    setIsLangListOpen(false);
+  };
 
-  const handlGameColor = () => {
-    setProfileColor("white");
-    setGameColor("yellow")
-    setChatColor("white")
-  }
-  const handlProfileColor = () => {
-    setProfileColor("yellow");
-    setGameColor("white")
-    setChatColor("white")
-  }
-  const handlChatColor = () => {
-    setProfileColor("white");
-    setGameColor("white")
-    setChatColor("yellow")
+  const handleToggleLangList = () => {
+    setIsLangListOpen((prev) => !prev);
+  };
+
+  const handleDisplaySettings = () => {
+    setDisplaySett(displaySett === 'none' ? 'flex' : 'none');
   }
 
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      if (searchQuery.trim()) {
-        const response = await fetch(
-          `http://localhost:8000/api/search/?q=${searchQuery}`
-        );
-        const data = await response.json();
-        setSearchResults(data);
-      } else {
-        setSearchResults([]);
-  
-      }
-    };
-
-    fetchSearchResults();
-  }, [searchQuery]);
+  const handleClickOutside = (event) => {
+    if (langListRef.current && !langListRef.current.contains(event.target)) {
+      setIsLangListOpen(false);
+    }
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      menuRef.current.style.display = "none";
+    }
+    if (searchRef.current && !searchRef.current.contains(event.target)) {
+      setSearchQuery("");
+      setSearchResults([]);
+      setHighlightedIndex(-1);
+    }
+  };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setSearchResults([]);
-      }
-      if (notifRef.current && !notifRef.current.contains(event.target))
-        setOpenNotf('none')
-    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      if (searchResults.length > 0)
-        navigate(`/profile/${searchResults[0]?.profile_name}`);
-    }
-  };
-
-  const handelClick = (e) => {
-
-    if (settRef.current && !settRef.current.contains(e.target)) {
-      setMenu(false);
-    }
-  };
   useEffect(() => {
-    document.addEventListener("click", handelClick);
-    return () => {
-      document.removeEventListener("click", handelClick);
-    };
-  }, []);
+    if (searchQuery.trim()) {
+      fetch(`https://e3r1p1.1337.ma/api/search/?q=${searchQuery}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const filteredResults = data.filter((item) => item.profile_name !== "ke3ki3a");
+          setSearchResults(filteredResults);
+        });
+    } else {
+      setSearchResults([]);
+      setHighlightedIndex(-1);
+    }
+  }, [searchQuery]);
+
+  const handleKeyDown = (event) => {
+    if (searchResults.length > 0) {
+      if (event.key === "ArrowDown") {
+        setHighlightedIndex((prevIndex) =>
+          prevIndex < searchResults.length - 1 ? prevIndex + 1 : 0
+        );
+      } else if (event.key === "ArrowUp") {
+        setHighlightedIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : searchResults.length - 1
+        );
+      } else if (event.key === "Enter" && highlightedIndex !== -1) {
+        const selectedUser = searchResults[highlightedIndex];
+        navigate(`/profile/${selectedUser.profile_name}`);
+        setSearchQuery("");
+        setSearchResults([]);
+        setHighlightedIndex(-1);
+      }
+    }
+  };
+
+  const toggleMenu = () => {
+    if (menuRef.current.style.display === "block") {
+      menuRef.current.style.display = "none";
+    } else {
+      menuRef.current.style.display = "block";
+    }
+  };
 
   return (
     <div className={styl.navBar}>
-      <div className={styl.logo}>
-        <img src={En} onClick={English}/>
-        <img src={Fr} onClick={French}/>
-        <img src={It}
-        onClick={Italian} 
-        />
-      </div>
-      <div className={styl.search}>
-        <div className={styl.iconSearch}>
-          <FaSearchengin style={{ width: "50%", height: "50%" }} />
-        </div>
-        <div className={styl.inputSearch}>
-          <input
-            type="text"
-            placeholder={t("Search...")}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
-          <div className={styl.searchResult}>
-              {searchResults.slice(0, 5).map((user) => (
-                <SearchCard key={user.id} user={user} />
-              ))}
-          </div>
-        </div>
-      </div>
-        <div className={styl.components}>
-        <Link to={`/profile/${user?.user?.profile_name}`} onClick={handlProfileColor}><button style={{color: profileColor}}>Profile</button></Link>
-        <Link to={'/pingpong-games'} onClick={handlGameColor}><button style={{color: gameColor}}>Game</button></Link>
-        <Link to={'/chat'} onClick={handlChatColor}><button style={{color: chatColor}}>Chat</button></Link>
-        </div>
-      <div className={styl.end}>
-        <button className={styl.notifIcon} onClick={handelNotifOpen} ref={notifRef}>
-          <MdNotifications id={styl.listicon}/>
-          <div className={styl.notification} style={{display: openNotf}}>
-            <div className={styl.inviteCard}>
-              <button className={styl.userImg}>
-                <div className={styl.intImg} style={{ width: "50px", height: "55px" }}>
-                  <div className={styl.intImg} style={{ width: "45px", height: "50px" }}>
-                    {/* notification image */}
-                  <img src={userImage}/>
-                  </div>
-                </div>
-              </button>
-              <div className={styl.choose}>
-                <div className={styl.Sender}>
-                  <button style={{fontSize: '15px', fontWeight: '600'}}>NOUAHIDI</button>
-                  <p style={{color: 'rgba(255, 255, 255, 0.4)'}}>sends you an invitation</p>
-                </div>
-                <div className={styl.butChoose}>
-                  <button >accept</button>
-                  <button style={{backgroundColor: '#660da56a'}}>remove</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </button>
-        <div className={styl.sett}>
-          <button className={styl.intImg}
-          onClick={()=>
-            {setMenu(true)}
-          }
-          ref={settRef}
+      <div className={styl.langage}>
+        <img src={langIcons[currentLang]} alt="Current Language" />
+        <p onClick={handleToggleLangList}>
+          {currentLang.toUpperCase()}
+          <IoIosArrowDown />
+        </p>
+        {isLangListOpen && (
+          <div
+            className={styl.langageList}
+            ref={langListRef}
+            style={{ display: "flex" }}
           >
-              <div className={styl.extImg}>
-              <img src={user?.user?.avatar}/>
+            {Object.entries(langIcons).map(([lang, icon]) => (
+              <img
+                key={lang}
+                src={icon}
+                alt={`${lang} icon`}
+                onClick={() => changeLanguage(lang)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+      <div className={styl.searchComponents}>
+        <div className={styl.search} ref={searchRef}>
+          <div className={styl.iconSearch}>
+            <FaSearchengin style={{ width: "50%", height: "50%" }} />
+          </div>
+          <div className={styl.inputSearch}>
+            <input
+              type="text"
+              placeholder={t("Search...")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            {searchResults.length > 0 && (
+              <div className={styl.searchResult}>
+                {searchResults.slice(0, 5).map((user, index) => (
+                  <SearchCard
+                    key={user.id}
+                    user={user}
+                    isHighlighted={index === highlightedIndex}
+                  />
+                ))}
               </div>
-          </button>
-          {menu &&
-          <div id='menu' className={styl.settings}>
-            <div className="links-container">
-            <div className={styl.links} onClick={
-              ()=> {
-                // setMenu(false)
-                navigate('/setting')
-              }
-            }>
-              <CiSettings style={{width: '20px', height: '20px'}}/> 
-              {t("Setting")}
-            </div>
-            <div onClick={Logout} className={styl.links}>
-              <CiLogout style={{width: '20px', height: '20px'}} />
-              {t("Logout")}
+            )}
+          </div>
+        </div>
+
+        <div className={styl.components}>
+          <Link to={"/"}>
+            <button
+              style={{
+                color: location.pathname === "/" ? "yellow" : "white",
+              }}
+            >
+              {t("Home")}
+            </button>
+          </Link>
+          <Link to={`/profile/${user?.user?.profile_name}`}>
+            <button
+              style={{
+                color:
+                  location.pathname === `/profile/${user?.user?.profile_name}`
+                    ? "yellow"
+                    : "white",
+              }}
+            >
+              {t("Profile")}
+            </button>
+          </Link>
+          <Link to={"/notification"}>
+            <button
+              style={{
+                color:
+                  location.pathname === "/notification" ? "yellow" : "white",
+              }}
+            >
+              {t("Notification")}
+            </button>
+          </Link>
+          <Link to={"/games"}>
+            <button
+              style={{
+                color: location.pathname === "/games" ? "yellow" : "white",
+              }}
+            >
+              {t("Games")}
+            </button>
+          </Link>
+          <Link to={"/chat"}>
+            <button
+              style={{
+                color: location.pathname === "/chat" ? "yellow" : "white",
+              }}
+            >
+              {t("Chat")}
+            </button>
+          </Link>
+          <div className={styl.sett}>
+            <button onClick={toggleMenu} onClickCapture={handleDisplaySettings}>
+              <div className={styl.extImg}>
+                <div className={styl.intImg}>
+                  <img src={user?.user?.avatar} />
+                </div>
+              </div>
+            </button>
+            <div id="menu" ref={menuRef} className={styl.settings} style={{display: displaySett}}>
+              <div className={styl.links} onClick={() => navigate("/setting")}>
+                <CiSettings /> {t("Setting")}
+              </div>
+              <div onClick={Logout} className={styl.links}>
+                <CiLogout /> {t("Logout")}
+              </div>
             </div>
           </div>
-            </div>
-          }
         </div>
       </div>
     </div>

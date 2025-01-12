@@ -1,10 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Canvas, useThree } from '@react-three/fiber';
-// import { OrbitControls } from '@react-three/drei';
 import * as styles from './newpong.module.css';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from "three";
-import { use } from 'react';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 
@@ -29,6 +26,7 @@ export default function LocalNewGame() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const scene = new THREE.Scene();
+    left_score++;
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
@@ -43,30 +41,30 @@ export default function LocalNewGame() {
     camera.position.z = 0;
     const controls = new OrbitControls(camera, renderer.domElement);
 
-    const geometry = new THREE.BoxGeometry(10, 0.25, 20);
-    const material = new THREE.MeshBasicMaterial({ color: 0x4AC112 });
-    const table = new THREE.Mesh(geometry, material);
+    const table_geometry = new THREE.BoxGeometry(10, 0.25, 20);
+    const table_material = new THREE.MeshBasicMaterial({ color: 0x4AC112 });
+    const table = new THREE.Mesh(table_geometry, table_material);
     scene.add(table);
 
-    const geometry2 = new THREE.SphereGeometry(0.2, 32, 32);
-    const material2 = new THREE.MeshBasicMaterial({ color: 'red' });
-    const ball = new THREE.Mesh(geometry2, material2);
+    const ball_geometry = new THREE.SphereGeometry(0.2, 32, 32);
+    const ball_material = new THREE.MeshBasicMaterial({ color: 'red' });
+    const ball = new THREE.Mesh(ball_geometry, ball_material);
     scene.add(ball);
     ball.position.x = 0;
     ball.position.y = 0.3;
     ball.position.z = 0;
 
-    const geometry3 = new THREE.BoxGeometry(1.5, 0.5, 0.75);
-    const material3 = new THREE.MeshBasicMaterial({ color: 'blue' });
-    const rightpaddle = new THREE.Mesh(geometry3, material3);
+    const rightpaddle_geometry = new THREE.BoxGeometry(1.5, 0.5, 0.75);
+    const rightpaddle_material = new THREE.MeshBasicMaterial({ color: 'blue' });
+    const rightpaddle = new THREE.Mesh(rightpaddle_geometry, rightpaddle_material);
     scene.add(rightpaddle);
     rightpaddle.position.x = 0;
     rightpaddle.position.y = 0.3;
     rightpaddle.position.z = 10;
 
-    const geometry4 = new THREE.BoxGeometry(1.5, 0.5, 0.75);
-    const material4 = new THREE.MeshBasicMaterial({ color: 'purple' });
-    const leftpaddle = new THREE.Mesh(geometry4, material4);
+    const leftpaddle_geometry = new THREE.BoxGeometry(1.5, 0.5, 0.75);
+    const leftpaddle_material = new THREE.MeshBasicMaterial({ color: 'purple' });
+    const leftpaddle = new THREE.Mesh(leftpaddle_geometry, leftpaddle_material);
     scene.add(leftpaddle);
     leftpaddle.position.x = 0;
     leftpaddle.position.y = 0.3;
@@ -101,6 +99,7 @@ export default function LocalNewGame() {
       }
       else if (ball.position.z >= 10) {
         setLeftScore(prevScore => prevScore + 1);
+        left_score++;
         ball.position.x = 0;
         ball.position.z = 0;
         balldirectionZ = numbers[Math.floor(Math.random() * numbers.length)];
@@ -110,7 +109,7 @@ export default function LocalNewGame() {
           mycondition = 'S';
           document.getElementById('result').style.display = "block";
           setWinner("Left Player");
-          setScore(3);
+          setScore(5);
         }
       }
       else if (ball.position.z <= -10) {
@@ -125,7 +124,7 @@ export default function LocalNewGame() {
           mycondition = 'S';
           document.getElementById('result').style.display = "block";
           setWinner("Right Player");
-          setScore(3);
+          setScore(5);
         }
       }
     }
@@ -145,25 +144,21 @@ export default function LocalNewGame() {
         if (leftpaddle.position.x - speed >= -4.25) {
           leftpaddle.position.x -= speed;
         }
-        // leftpaddle.position.x = Math.max(leftpaddle.position.x + speed, -5);
       }
       if (pressedKeys.current.has('ArrowUp')) {
         if (rightpaddle.position.x + speed <= 4.25) {
           rightpaddle.position.x += speed;
         }
-        // rightpaddle.position.x = Math.max(rightpaddle.position.x - speed, 0);
       }
       else if (pressedKeys.current.has('ArrowDown')) {
         if (rightpaddle.position.x - speed >= -4.25) {
           rightpaddle.position.x -= speed;
         }
-        // rightpaddle.position.x = Math.min(rightpaddle.position.x + speed, -4.25);
       }
 
       renderer.render(scene, camera);
       controls.update();
       gamelogic();
-      // console.log("ballX", ball.position.x, "ballZ", ball.position.z);
       const currentPath = window.location.pathname;
       if (currentPath === '/games/pong3d' && condition === 'R')
       {
@@ -187,8 +182,8 @@ export default function LocalNewGame() {
 
     return () => {
       window.removeEventListener('resize', onResize);
-      renderer.dispose(); // Dispose the renderer
-      controls.dispose(); // Dispose the controls
+      renderer.dispose();
+      controls.dispose();
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
       cancelAnimationFrame(myReq);

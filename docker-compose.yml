@@ -1,11 +1,12 @@
-version: "3.8"
-
 networks:
   connexion:
     driver: bridge
 
 volumes:
   db:
+    driver: local
+  web3_vol:
+    driver: local
 
 services:
   postgres:
@@ -45,6 +46,7 @@ services:
     volumes:
       - ./backend:/app
       - .env:/app/.env
+      - web3_vol:/volume
     depends_on:
       - postgres
     networks:
@@ -73,13 +75,30 @@ services:
       - ./front:/khbouych
       - .env:/khbouych/.env
     healthcheck:
-      test: curl  -f http://localhost:5173
+      test: curl  -f http://e3r1p1.1337.ma:5173
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 1s
     restart: on-failure
 
+  web3_app:
+    container_name: web3_app
+    image: web3_app:69
+    restart: always
+    build: web3
+    networks:
+      - connexion
+    environment:
+      PRIVATE_KEY: ${PRIVATE_KEY}
+    volumes:
+      - web3_vol:/root/
+    healthcheck:
+      test: ["CMD", "nc", "-zv", "web3_app", "7545"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
 
   # redis:
   #   container_name: redis
@@ -106,8 +125,8 @@ services:
     networks:
       - connexion
     depends_on:
-     front:
-       condition: service_healthy
-     back:
+      front:
+        condition: service_healthy
+      back:
         condition: service_healthy
     restart: on-failure

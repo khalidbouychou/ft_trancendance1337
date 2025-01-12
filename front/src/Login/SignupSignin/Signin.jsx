@@ -28,7 +28,7 @@ const Signin = () => {
         return;
       }
       const response = await axios.post(
-        "https://localhost/api/singin/",
+        `https://e3r1p1.1337.ma/api/singin/`,
         {
           username,
           password
@@ -38,7 +38,6 @@ const Signin = () => {
         }
       );
       if (response.status === 200) {
-        localStorage.setItem("token", response.data.user.token);
         setUser(response.data.user);
         toast.success(t(`Welcome ${response.data.user.username}`), {
           style: {

@@ -70,7 +70,7 @@ function ChatWindow({ currentContact, chat, message, sendMessage, handleTyping, 
                 to_user_id: otherUser.id
             });
             //testing
-            const pong_socket = new WebSocket(`wss://localhost/ws/play-friend/`);
+            const pong_socket = new WebSocket(`wss://e3r1p1.1337.ma/ws/play-friend/`);
             pong_socket.onopen = () => {
                 const data2 = {
                     action: 'friend_game',
