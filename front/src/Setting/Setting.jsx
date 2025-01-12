@@ -12,14 +12,14 @@ const Settings = () => {
   const { t,user, get_auth_user } = useContext(AuthContext);
   const [updated, setUpdated] = useState(false);
   const [NewProfileName, setNewProfileName] = useState(null);
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
   const {setUser} = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionToPerform, setActionToPerform] = useState(null);
   const handleProfileNameUpdate = async () => {
     try {
       const response = await axios.put(
-        'http://e3r1p9.1337.ma:8000/api/update/',
+        `http://e3r1p9.1337.ma:8000/api/update/`,
         { profile_name: NewProfileName },
         {
           withCredentials: true,
@@ -59,7 +59,7 @@ const Settings = () => {
       formData.append('avatar', input.files[0]);
 
       axios
-        .put('http://e3r1p9.1337.ma:8000/api/update/', formData, {
+        .put(`http://e3r1p9.1337.ma:8000/api/update/`, formData, {
           withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -71,7 +71,7 @@ const Settings = () => {
         })
         .then((res) => {
           setUpdated(true);
-          toast.success(t('Image uploaded successfully'), {
+          toast.success('Image uploaded successfully', {
             style: {
               backgroundColor: 'rgb(0, 128, 0)',
               color: 'white',
@@ -80,7 +80,7 @@ const Settings = () => {
         })
         .catch((err) => {
           setUpdated(false);
-          toast.error(t('Image upload failed. Please try again'), {
+          toast.error('Image upload failed. Please try again', {
             style: {
               backgroundColor: 'rgb(255, 0, 0)',
               color: 'white',
@@ -96,7 +96,7 @@ const Settings = () => {
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
       uploadImage();
     } else {
-      toast.error(t('Invalid image format'), {
+      toast.error('Invalid image format', {
         style: {
           backgroundColor: 'rgb(255, 0, 0)',
           color: 'white',

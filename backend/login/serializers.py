@@ -83,25 +83,25 @@ class SigninSerializer(serializers.ModelSerializer):
             'username': {'required': True, 'min_length': 9, 'max_length': 16}
         }
 
-    def validate(self, data):
-        username = data.get('username')
-        password = data.get('password')
+    # def validate(self, data):
+    #     username = data.get('username')
+    #     password = data.get('password')
 
-        # Check if the user exists
-        user = Player.objects.filter(username=username).first()
-        if user is None:
-            raise serializers.ValidationError({'error': 'User Not Found'})
+    #     # Check if the user exists
+    #     user = Player.objects.filter(username=username).first()
+    #     if user is None:
+    #         raise serializers.ValidationError({'error': 'User Not Found'})
 
-        # Authenticate the user
-        if username and password:
-            user = authenticate(username=username, password=password)
-            if not user:
-                raise serializers.ValidationError({'error': 'Wrong Password'})
-        else:
-            raise serializers.ValidationError({'error': "Username and Password are required"})
+    #     # Authenticate the user
+    #     if username and password:
+    #         user = authenticate(username=username, password=password)
+    #         if not user:
+    #             raise serializers.ValidationError({'error': 'Wrong Password'})
+    #     else:
+    #         raise serializers.ValidationError({'error': "Username and Password are required"})
 
-        # If authentication is successful, return the validated data
-        return data
+    #     # If authentication is successful, return the validated data
+    #     return data
 
 
 
@@ -124,6 +124,7 @@ class PingDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = PingData
         fields = ['wins', 'losses', 'exp_game', 'timestamp'] 
+
 
 class AnonymizedAccountSerializer(serializers.ModelSerializer):
     player =serializers.CharField(read_only=True)

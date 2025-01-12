@@ -43,9 +43,7 @@ export default function OnlineGame() {
                 action: 's',
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle.");
-        }
+        } 
     };
 
     const rightup = () => {
@@ -54,9 +52,7 @@ export default function OnlineGame() {
                 action: 'ArrowUp',
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the right player can move the right paddle.");
-        }
+        } 
     };
 
     const rightdown = () => {
@@ -66,7 +62,6 @@ export default function OnlineGame() {
             };
             socket.send(JSON.stringify(message));
         } else {
-            console.log("Only the right player can move the right paddle.");
         }
     };
 
@@ -121,7 +116,6 @@ export default function OnlineGame() {
                         level: level,
                     };
                     socket.send(JSON.stringify(message));
-                    console.log('WebSocket is open now');
                 } else {
                     console.error('WebSocket is not open. readyState:', socket.readyState);
                 }
@@ -180,15 +174,6 @@ export default function OnlineGame() {
                     }
                     socket.close();
                 }
-            };
-
-            socket.onclose = () => {
-                console.log('WebSocket connection closed');
-            };
-
-
-            socket.onerror = (error) => {
-                console.error('WebSocket error:', error);
             };
         }
 

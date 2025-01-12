@@ -30,6 +30,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://e3r1p9.1337.ma:8000', 
     'https://127.0.0.1:5173',
     "http://e3r1p9.1337.ma:5173",
+    "http://localhost:5173",
+    f'http://{os.getenv("VITE_IP_HOST")}',
 ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -39,8 +41,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production! 
 DEBUG = True # Set to False in production
- 
-ALLOWED_HOSTS = ['127.0.0.1','e3r1p9.1337.ma']
+
+IP_MACHINE = os.getenv('VITE_IP_HOST')
+
+ALLOWED_HOSTS = ['127.0.0.1','localhost',IP_MACHINE,'e3r1p9.1337.ma']
 
 # Application definition
 
@@ -224,6 +228,10 @@ CORS_ALLOWED_ORIGINS = [
     'http://e3r1p9.1337.ma',
     'https://e3r1p9.1337.ma',
     "http://e3r1p9.1337.ma:5173", 
+    'http://localhost',
+    'https://localhost',
+    "http://localhost:5173",
+    f'http://{os.getenv("VITE_IP_HOST")}',
     ]
 
 DATABASES = {

@@ -110,6 +110,7 @@ const Profile = ({ me }) => {
           setWins(wins);
           setLose(losses);
         }
+        console.log("Ping data:", pingData);
       } catch (error) {
         console.error("Failed to fetch ping data", error);
       }
@@ -234,11 +235,6 @@ const Profile = ({ me }) => {
     }
   };
   
-  // useEffect(() => {
-  //   if (ismyprofil) {
-  //     console.log('block list == ', blockedList)
-  //   }
-  // },[profile_name, blockedList, ismyprofil])
   
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;

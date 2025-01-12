@@ -18,16 +18,7 @@ urlpatterns = [
     path('api/', include('pongame.urls')),
     path('api/web3/', include('web3_app.urls')),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('verify/', TokenVerifyView.as_view(), name='token_verify'),
-    # path('api/matches/', views.Matches_list),
-    # path('api/user/<str:username>/', views.Matches_by_user),
-    # path ('api-auth/', include('rest_framework.urls')),
-    # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    # path ('api-auth/', include('rest_framework.urls')),
-    #---------------game urls------------------
-    # path('game/', include('game.urls')),
     
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  

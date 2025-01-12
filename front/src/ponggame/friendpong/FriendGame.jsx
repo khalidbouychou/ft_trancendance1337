@@ -38,8 +38,6 @@ export default function FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle.");
         }
     };
 
@@ -50,9 +48,7 @@ export default function FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle.");
-        }
+        } 
     };
 
     const rightup = () => {
@@ -62,9 +58,7 @@ export default function FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the right player can move the right paddle.");
-        }
+        } 
     };
 
     const rightdown = () => {
@@ -74,9 +68,7 @@ export default function FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the right player can move the right paddle.");
-        }
+        } 
     };
 
     useEffect(() => {
@@ -124,7 +116,7 @@ export default function FriendGame() {
             socket.onopen = () => {
                 console.log('onopen game_key:', game_key);
                 if (socket.readyState === WebSocket.OPEN) {
-                    console.log('WebSocket is open now and the game_id is:', game_key);
+                  
                     const message = {
                         action: 'connect',
                         username: username,
@@ -134,9 +126,7 @@ export default function FriendGame() {
                         game_id: game_key,
                     };
                     socket.send(JSON.stringify(message));
-                    console.log('WebSocket is open now');
-                } else {
-                    console.error('WebSocket is not open. readyState:', socket.readyState);
+            
                 }
             };
 
@@ -204,14 +194,9 @@ export default function FriendGame() {
             };
 
             socket.onclose = () => {
-                console.log('WebSocket connection closed');
                 socket.close();
             };
 
-
-            socket.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
         }
 
         const drawball = () => {

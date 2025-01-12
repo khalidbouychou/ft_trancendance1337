@@ -59,8 +59,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
  
     def get_user_by_profile_name(self, request, username):
         try:
-            print('username ==>', username)
-            user = Player.objects.get(username=username)
+            user = Player.objects.get(profile_name=username)
             serializer = PlayerSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Player.DoesNotExist:
@@ -86,20 +85,17 @@ class PlayerViewSet(viewsets.ModelViewSet):
         user = Player.objects.create(
             username=user_data['username'],
             avatar=user_data['avatar'],
-            profile_name=user_data['username'],
-            # status_network='online',
+            profile_name=user_data['username']+'_intra',
+            status_network='online',
+            bool_login=True,
         )
         p = PingData.objects.create(player=user)
-        print('User created' , flush=True)
-        print('data == ', p) 
         user.save()
         return user
 
     def auth_intra(self, request):
         CID = os.environ.get('C_ID')
-        print('CID ==>', CID, flush=True)
-        REDIRECT_URI = os.environ.get('REDIRECT_URI')
-        print('REDIRECT_URI ==>', REDIRECT_URI, flush=True)
+        REDIRECT_URI = os.environ.get("REDIRECT_URI")
         try:
             response = Response(
                 {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
@@ -123,7 +119,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                     'client_id': os.environ.get('C_ID'),
                     'client_secret': os.environ.get('SCID'),
                     'code': request.data.get('code'),
-                    'redirect_uri': os.environ.get('REDIRECT_URI')
+                    'redirect_uri': os.environ.get("REDIRECT_URI")
                 }
             )
             response.raise_for_status()
@@ -149,10 +145,12 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 username=user_data['username']).first()
             if not user:
                 user = self.create_user(user_data)
+            if user.is_anonimized ==True and user.is_active == False:
+                return Response({'error': 'Account is anonymized'}, status=status.HTTP_400_BAD_REQUEST)
+            user.status_network='online',
+            user.bool_login=True,
             authenticate(request, username=user_data['username'])
             login(request, user)
-            user.bool_login = True
-            user.status_network = 'online'
             user.save()
             tokens = self.create_jwt_token(user)
             data= PlayerSerializer(user).data
@@ -160,42 +158,15 @@ class PlayerViewSet(viewsets.ModelViewSet):
             is_secure = request.is_secure()
             response.set_cookie(key='token', value=tokens['access'], secure=is_secure , httponly=True ,samesite='Lax' ) 
             response.set_cookie(key='refresh', value=tokens['refresh'], secure=is_secure , httponly=True , samesite='Lax') 
-            
             return response
         except requests.RequestException as e:
             return Response({'error': 'Request failed: {}'.format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-    def getusers (self,request):
-        users = Player.objects.all()
-        data = PlayerSerializer(users, many=True)
-        return Response(data.data, status=status.HTTP_200_OK)
-    def check_authentication(self, request):
-        try:
-            token = request.COOKIES.get('token')
-            if token:
-                try:
-                    access_token = AccessToken(token)
-                    user = access_token.user
-                    if user and user.is_authenticated:
-                        return True, user, "Authenticated via token"
-                    
-                except TokenError:
-                    return False, None, "Invalid or expired token"
-            if request.user.is_authenticated:
-                return True, request.user, "Authenticated via session"
-            return False, None, "No valid authentication found"
-        except Exception as e:
-            return False, None, f"Authentication error: {str(e)}"
-
 
 #------------------------------------LOGIN INTRA------------------------------------------------------------
 
-
 #-----------------------------------Logout-------------------------------------------------------------
-
-
 class LogoutView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -213,8 +184,6 @@ class LogoutView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
 class AuthUser(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -227,7 +196,6 @@ class AuthUser(APIView):
                 response = Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
                 django_logout(request)
                 return DeleteCookies(response)
-
             try:
                 AccessToken(token) # Check if the token is valid
             except TokenError as e:
@@ -257,7 +225,6 @@ class SignupForm (generics.CreateAPIView):
     serializer_class = SignupSerializer
     
     
-
 class SigninForm(generics.CreateAPIView):
     queryset = Player.objects.all()
     serializer_class = SigninSerializer
@@ -302,7 +269,6 @@ class UserStatus(APIView):
         user = request.user
         return Response({'user': PlayerSerializer(user).data}, status=status.HTTP_200_OK)
 
-
 # Configuration       
 cloudinary.config( 
     cloud_name = os.environ.get('CLOUD_NAME'),
@@ -310,7 +276,6 @@ cloudinary.config(
     api_secret = os.environ.get('API_SECRET'),
     secure=os.environ.get('SECURE'),
 )
-
 class GenerateQRcode(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -330,6 +295,7 @@ class GenerateQRcode(APIView):
         qrcode_url = cludinary_url['url']
         # os.remove(path)
         user.qrcode_path = qrcode_url
+        os.remove(path_url)
         user.save()
         response = Response({'msg': 'QR code generated'}, status=status.HTTP_200_OK)  
         response.data = {
@@ -354,9 +320,11 @@ class DesableTwoFactor(APIView):
         user.mfa_secret = ""
         user.otp_verified = False
         user.qrcode_path = ""
-        user.bool_login = False
         user.save()
-        return Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
+        data = PlayerSerializer(user).data
+        response = Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
+        response.data = {'user': data}
+        return response
         
 
 class VerifyOtp(APIView):
@@ -375,7 +343,7 @@ class VerifyOtp(APIView):
             user.otp_verified = True
             user.bool_login = True
             user.save()
-            response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK)
+            response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK) 
             response.data = {'user': PlayerSerializer(user).data} 
             return response
 
@@ -388,12 +356,10 @@ class ClearQrcode (APIView):
         user = request.user
         if not user.mfa_secret or not user.qrcode_path:
             return Response({'error': 'No secret found Or No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
-        # os.remove(user.qrcode_path)
         user.qrcode_path = ""
+        user.mfa_secret = ""
         user.save()
-        response = Response({'msg': 'QR code cleared'}, status=status.HTTP_200_OK)
-        response.data = {'user': PlayerSerializer(user).data}
-        return response 
+        return  Response({'msg': 'QR code cleared'}, status=status.HTTP_200_OK)
 
 
 
@@ -431,24 +397,17 @@ class AnonymizeAccount(APIView):
     
     def get(self, request):
         user = request.user
-        if user.is_anonimized:
-            return Response({'error': 'Account already anonymized'}, status=status.HTTP_400_BAD_REQUEST)
         user.is_active = False
         user.is_anonimized = True
-        id = random.randint(1, 1000000)
-        user.profile_name = f'Anonimized_{id}'
+        user.profile_name = f'Anonimized_{random.randint(1, 100)}'
         user.avatar = 'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Aneka'
         user.status_network = 'offline'
         user.status_game = 'offline'
         user.save()
-        anonymizeaccount = AnonymizedAccount.objects.create(player=user)
-        if not anonymizeaccount:
-            return Response({'error': 'Anonymized account not created'}, status=status.HTTP_400_BAD_REQUEST)
-        anonymizeaccount.save()
         response = Response({'msg': '************** Account anonymized ***************'}, status=status.HTTP_200_OK)
         return DeleteCookies(response)
 #-----------------------------------AnnonimizedAccount-------------------------------------------------------------
-#-----------------------------------DeleteAccount-------------------------------------------------------------
+#-----------------------------------DeleteAccount------------------------------------------------------------------
 class DeleteAccount(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -458,20 +417,12 @@ class DeleteAccount(APIView):
         response = Response({'msg': '----------------- Account deleted --------------'}, status=status.HTTP_200_OK)
         return DeleteCookies(response)
 #-----------------------------------DeleteAccount-------------------------------------------------------------
-#-----------------------------------List AnonymizeAccount -------------------------------------------------------------
-class ListAnonymizeAccount(APIView):
-    # authentication_classes = [SessionAuthentication]
-    # permission_classes = [IsAuthenticated]
-    def get(self,request):
-        anonymizeaccount = AnonymizedAccount.objects.all()
-        data = AnonymizedAccountSerializer(anonymizeaccount, many=True)
-        return Response(data.data, status=status.HTTP_200_OK)
-#-----------------------------------List AnonymizeAccount -------------------------------------------------------------
 
-def get_ping_data_by_username(request, username):
+
+def get_ping_data_by_profile_name(request, username):
     Player = get_user_model()
     try:
-        player = Player.objects.get(username=username)
+        player = Player.objects.get(profile_name=username)
     except Player.DoesNotExist:
         return JsonResponse({'error': 'Player not found'}, status=404)
     pingdata = PingData.objects.filter(player=player)

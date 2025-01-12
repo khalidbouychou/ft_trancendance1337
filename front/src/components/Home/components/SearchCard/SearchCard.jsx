@@ -7,7 +7,7 @@ const SearchCard = ({ user }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/profile/${user.username}`);
+    navigate(`/profile/${user?.username}`);
   };
 
   return (
@@ -16,7 +16,7 @@ const SearchCard = ({ user }) => {
         <img src={user.avatar} />
       </div>
       <div className={styl.userName}>
-        <p>{user.username}</p>
+        <p>{user?.username}</p>
       </div>
     </button>
   );
