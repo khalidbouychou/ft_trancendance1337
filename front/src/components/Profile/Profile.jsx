@@ -197,7 +197,8 @@ const Profile = ({ me }) => {
         
         const data = await response.json();
         setUserData(data);
-        console.log("************************>",userData)
+        console.log("************************>",data.is_anonimized)
+        setIsanonymize(data.is_anonimized)
       } catch (error) {
         setError(error.message);
         setUserData({});
@@ -224,26 +225,6 @@ const Profile = ({ me }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchListAnony = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/api/list_anonymized');
-        const anonymizedList = response.data;
-  
-        // Check if the current profile_name is in the anonymized list
-        const isAnonymized = anonymizedList.some(
-          (profile) => player === profile_name
-        );
-  
-        setIsanonymize(isAnonymized);
-        console.log('is == ', anonymizedList)
-      } catch (error) {
-        console.error('Failed to fetch anonymized list:', error);
-      }
-    };
-  
-    fetchListAnony();
-  }, [profile_name, userData]);
 
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
@@ -275,9 +256,9 @@ const Profile = ({ me }) => {
               <img src={userData.avatar} alt="Avatar" />
             </div>
           </div>
-          <p className={styl.userName} style={{top: '0%'}}>NOUAHIDI</p>
+          <p className={styl.userName} style={{top: '0%'}}>{userData.profile_name.toUpperCase()}</p>
           <p style={{color: 'rgba(255, 255, 255, 0.5)'}}>This profile is anonymized</p>
-          <button ><p >Back to home</p></button>
+          <button > <Link to="/"> back to home</Link></button>
         </div>
       </div>
     );

@@ -31,6 +31,7 @@ const Sidebar = () => {
   const langListRef = useRef(null);
   const menuRef = useRef(null);
   const [openNotif, setOpenNotif] = useState('none')
+  const notifRef = useRef(null);
 
   const langIcons = { en: En, fr: Fr, it: It };
 
@@ -65,6 +66,11 @@ const Sidebar = () => {
       setSearchQuery("");
       setSearchResults([]);
       setHighlightedIndex(-1);
+    }
+    // Close notifications if clicked outside
+    const notifElement = document.querySelector(`.${styl.notifReceive}`);
+    if (notifElement && !notifElement.contains(event.target)) {
+      setOpenNotif("none");
     }
   };
 
@@ -192,7 +198,7 @@ const Sidebar = () => {
               {t("Profile")}
             </button>
           </Link>
-          <Link to={"/notification"}>
+          {/* <Link to={"/notification"}>
             <button
               style={{
                 color:
@@ -201,7 +207,7 @@ const Sidebar = () => {
             >
               {t("Notification")}
             </button>
-          </Link>
+          </Link> */}
           <Link to={"/games"}>
             <button
               style={{
@@ -220,7 +226,7 @@ const Sidebar = () => {
               {t("Chat")}
             </button>
           </Link>
-          <div style={{display: 'flex', position: 'relative'}}>
+          <div style={{display: 'flex', position: 'relative'}} ref={notifRef}>
               <IoIosNotifications className={styl.icon} onClick={handleOpenNotif}/>
               <div className={styl.notifReceive} ></div>
               <Notif open={openNotif}/>

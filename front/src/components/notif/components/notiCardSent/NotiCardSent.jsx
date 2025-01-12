@@ -3,7 +3,7 @@ import styl from './NotiCardSent.module.css'
 import { AuthContext }  from "../../../../UserContext/Context";
 import { useContext ,useState,useEffect} from 'react';
 import { useNotificationWS } from "../../../../contexts/NotifWSContext.jsx"
-const NotiCardSent = () => {
+const NotiCardSent = ({request, type}) => {
   const {t} = useContext(AuthContext);
 
   const [isVisible, setIsVisible] = useState(true);
@@ -76,10 +76,10 @@ const NotiCardSent = () => {
         </div>
       </div>
       <div className={styl.leftSide}>
-        <p>Friend request sent to</p>
+        <p>{type === 'FR' ? 'Friend request sent to' : 'Game invitation to' }</p>
         <p style={{ fontSize: "13px", color: "white" }}>NOUAHIDI </p>
-        <button>
-          <p>Cancel friend request</p>
+        <button onClick={handleCancel}>
+          <p>{type === 'FR' ? 'Cancel friend request' : 'Cancel invitation Game' }</p>
         </button>
       </div>
     </div>

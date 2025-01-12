@@ -1,10 +1,13 @@
 .notif {
     position: absolute;
-    background-color: aquamarine;
+    background-color: rgba(31, 11, 50, 1);
     width: 300px;
     height: 300px;
     top: 170%;
     right: 50%;
+    overflow: auto;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
 .notiCardSent {
