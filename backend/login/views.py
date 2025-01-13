@@ -452,9 +452,9 @@ class UserNameFriendList(APIView):
 
     def get(self,request, username):
         try :
-            user = Player.objects.get(username=username)
-            # if not user :
-            #     return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
+            user = Player.objects.get(profile_name=username)
+            if not user :
+                return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
             friends = PlayerSerializer.get_friends(self,user)
             return Response({'friend list':friends , 'user':user.username}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -467,9 +467,9 @@ class UserNameBlockedList (APIView):
 
     def get(self,request, username):
         try :
-            user = Player.objects.get(username=username)
-            # if not user :
-            #     return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
+            user = Player.objects.get(profile_name=username)
+            if not user :
+                return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
             friends = PlayerSerializer.get_blocked_getusers(self,user)
             return Response({'blocked list':friends , 'user':user.username}, status=status.HTTP_200_OK)
         except Exception as e:

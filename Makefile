@@ -26,6 +26,7 @@ clean:
 	@rm -rf */*/migrations
 	@rm -rf */*/__pycache__
 	@docker system prune -af
+	@docker volume prune -af
 	@rm -rf ssl/*
 
 push: 
