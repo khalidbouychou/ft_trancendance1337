@@ -84,7 +84,7 @@ const Chat = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios("http://e3r1p9.1337.ma:8000/api/chat/", {
+        const response = await axios("http://10.13.10.18:8000/api/chat/", {
           withCredentials: true,
         });
         console.log("1 data:", response.data);
@@ -245,7 +245,7 @@ const Chat = () => {
       }
 
       const newSocket = new WebSocket(
-        `ws://e3r1p9.1337.ma:8000/ws/chat/${room_id}/`
+        `ws://10.13.10.18:8000/ws/chat/${room_id}/`
       );
 
       newSocket.onopen = () => {
@@ -290,8 +290,9 @@ const Chat = () => {
             break;
           case "USER_SELECTED":
             if (data_re.status === "OK") {
-              setupChatRoom(data_re.chat_room);
-              // setupSocket(data_re.chat_room.id)
+              if (!data.chat_rooms.some(room => room.id === data_re.chat_room.id)) {
+                setupChatRoom(data_re.chat_room);
+              }
               resolve(newSocket);
             }
             break;

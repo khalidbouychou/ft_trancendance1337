@@ -147,8 +147,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 user = self.create_user(user_data)
             if user.is_anonimized ==True and user.is_active == False:
                 return Response({'error': 'Account is anonymized'}, status=status.HTTP_400_BAD_REQUEST)
-            user.status_network='online',
-            user.bool_login=True,
+            user.status_network='online'
+            user.bool_login=True
             authenticate(request, username=user_data['username'])
             login(request, user)
             user.save()
@@ -201,7 +201,7 @@ class AuthUser(APIView):
             except TokenError as e:
                 refresh = request.COOKIES.get('refresh')
                 crstf = request.COOKIES.get('csrftoken')
-                res = requests.post('http://e3r1p9.1337.ma:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
+                res = requests.post('http://10.13.10.18:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
                 res.raise_for_status() # Raise an exception if the status code is not 2xx
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')
@@ -428,7 +428,8 @@ def get_ping_data_by_profile_name(request, username):
     pingdata = PingData.objects.filter(player=player)
     serializer = PingDataSerializer(pingdata, many=True)
     data = serializer.data
-    return JsonResponse(data, safe=False)
+    print("ping data",data,flush=True)
+    return JsonResponse(data, safe=False) 
 
 def get_all_ping_data(request):
     players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game') 
