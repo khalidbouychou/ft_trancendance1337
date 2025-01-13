@@ -27,7 +27,7 @@ const UserData = ({ userData, ismyprofil }) => {
       if (!username) return;
 
       try {
-        const response = await fetch(`3r1p9.1337.ma:8000/api/${fetchUrl}/${username}`);
+        const response = await fetch(`e3r1p9.1337.ma:8000/api/${fetchUrl}/${username}`);
         if (response.ok) {
           const data = await response.json();
           setStatisticData(data[0]);

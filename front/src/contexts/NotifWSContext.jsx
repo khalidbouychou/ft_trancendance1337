@@ -10,7 +10,7 @@ export function NotificationWebSocketProvider({ children }) {
 
   useEffect(() => {
     let ws;
-    ws = new WebSocket(`ws://10.13.10.18:8000/ws/notif/`);
+    ws = new WebSocket(`ws://${process.env.BACKEND_IP}:8000/ws/notif/`);
 
     ws.onopen = () => {
       console.log("notif socket opened");

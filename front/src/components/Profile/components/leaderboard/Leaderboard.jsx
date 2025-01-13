@@ -10,7 +10,7 @@ const Leaderboard = ({t , setProfileName}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://10.13.10.18:8000/api/pingdata`);
+        const response = await fetch(`http://${process.env.BACKEND_IP}:8000/api/pingdata`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

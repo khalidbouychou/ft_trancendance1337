@@ -201,7 +201,7 @@ class AuthUser(APIView):
             except TokenError as e:
                 refresh = request.COOKIES.get('refresh')
                 crstf = request.COOKIES.get('csrftoken')
-                res = requests.post('http://10.13.10.18:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
+                res = requests.post(f'http://{os.getenv("BACKEND_IP")}:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
                 res.raise_for_status() # Raise an exception if the status code is not 2xx
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')
