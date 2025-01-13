@@ -1,6 +1,6 @@
 FROM debian
 
-RUN apt update && apt install -y bash vim iproute2 ncat # just a bunch of helpers, might delete lter
+RUN apt update && apt install -y bash vim iproute2 ncat
 
 RUN apt install nodejs npm -y
 
@@ -10,7 +10,7 @@ COPY tools/startup.sh /
 
 RUN chmod +x startup.sh
 
-ENV PRIVATE_KEY 0xDF1F5281594CD457780BE2DE7CE0834CC15F230258CD17F99541DEEAFDAD9BF2
+# ENV PRIVATE_KEY 0xDF1F5281594CD457780BE2DE7CE0834CC15F230258CD17F99541DEEAFDAD9BF2
 
 # for truffle
 WORKDIR /root

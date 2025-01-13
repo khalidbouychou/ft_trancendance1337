@@ -4,7 +4,7 @@ import axios from "axios";
 import CardMatch from "./components/cardMatch/CardMatch";
 
 const MatchHistory = ({ profileName, t }) => {
-  const [matches, setMatches] = useState([]);
+  const [matchees, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,7 +12,7 @@ const MatchHistory = ({ profileName, t }) => {
     const fetchMatches = async () => {
       try {
         const response = await axios.get(
-          `http://e3r1p9.1337.ma:8000/api/matches/${profileName}/`,
+          `http://10.13.10.18:8000/api/matches/${profileName}/`,
           {
             withCredentials: true,
           }
@@ -50,9 +50,9 @@ const MatchHistory = ({ profileName, t }) => {
         <p>{t("Status")}</p>
         <p>{t("Date & Time")}</p>
       </div>
-      {matches.length > 0 ? (
+      {matchees.length > 0 ? (
         <div className={styl.matches}>
-          {matches.map((match, index) => (
+          {matchees.map((match, index) => (
             <CardMatch
               key={index}
               match={match}

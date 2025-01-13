@@ -217,6 +217,13 @@ export default function LocalGame() {
                     </div>
                 </div>
                 <canvas id="canvas" className={styles.canvass}></canvas>
+            <div style={{
+                color : "yellow",
+                marginTop:"50px"
+            }
+            }>
+                <h1>Manual : (W/S  | UP/DOWN)</h1>
+            </div>
             </div>
         </>
     );
