@@ -1,0 +1,61 @@
+.notiCardSent {
+    display: flex;
+    width: 100%;
+    height: 100px;
+    min-height: 100px;
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: 0.5s;
+    &:hover {
+        transition: 0.5s;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.userImage {
+    display: flex;
+    width: 80px;
+    min-width: 80px;
+    height: 100%;
+    justify-content: center;
+    padding: 2%;
+}
+
+.intImg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 55px;
+    background-color: rgb(81, 81, 3);
+    border: none;
+    cursor: pointer;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    img {
+      display: flex;
+      width: 50px;
+      height: 50px;
+    }
+}
+
+.leftSide {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    padding: 4%;
+    gap: 10px;
+    flex-direction: column;
+    p {
+        display: flex;
+        width: 100%;
+        padding: 0;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.619);
+    }
+    button {
+        background-color: blueviolet;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid white;
+    }
+}

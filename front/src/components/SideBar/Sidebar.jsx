@@ -10,6 +10,8 @@ import En from "../../../public/assets/icons/lang-icons/En-lang.png";
 import Fr from "../../../public/assets/icons/lang-icons/Fr-lang.png";
 import It from "../../../public/assets/icons/lang-icons/It-lang.png";
 import SearchCard from "./components/searchCard/SearchCard.jsx";
+import { IoIosNotifications } from "react-icons/io";
+import Notif from "../notif/Notif.jsx";
 
 const Sidebar = () => {
   const { t, user, Logout } = useContext(AuthContext);
@@ -28,8 +30,11 @@ const Sidebar = () => {
   const searchRef = useRef(null);
   const langListRef = useRef(null);
   const menuRef = useRef(null);
+  const [openNotif, setOpenNotif] = useState('none')
+  const notifRef = useRef(null);
 
   const langIcons = { en: En, fr: Fr, it: It };
+  const [notifReceived, setNotifReceived] = useState(false)
 
   const changeLanguage = (lang) => {
     setCurrentLang(lang);
@@ -37,6 +42,12 @@ const Sidebar = () => {
     i18n.changeLanguage(lang);
     setIsLangListOpen(false);
   };
+
+  const handleOpenNotif = () => {
+    setNotifReceived(false)
+    console.log('openNotif', openNotif)
+    setOpenNotif(openNotif === 'flex' ? 'none' : 'flex')
+  }
 
   const handleToggleLangList = () => {
     setIsLangListOpen((prev) => !prev);
@@ -58,6 +69,10 @@ const Sidebar = () => {
       setSearchResults([]);
       setHighlightedIndex(-1);
     }
+    // Close notifications if clicked outside
+    if (notifRef.current && !notifRef.current.contains(event.target)) {
+      setOpenNotif("none");
+    }
   };
 
   useEffect(() => {
@@ -69,17 +84,18 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (searchQuery.trim()) {
-      fetch(`http://${import.meta.env.VITE_BACKEND_IP}/api/search/?q=${searchQuery}`)
+      fetch(`http://http://10.13.6.7/:8000/api/search/?q=${searchQuery}`)
         .then((response) => response.json())
-        .then((data) => {
-          const filteredResults = data.filter((item) => item.profile_name !== "ke3ki3a");
-          setSearchResults(filteredResults);
-        });
+        .then((data) => setSearchResults(data));
     } else {
       setSearchResults([]);
       setHighlightedIndex(-1);
     }
   }, [searchQuery]);
+
+  useEffect(() => {
+    
+  })
 
   const handleKeyDown = (event) => {
     if (searchResults.length > 0) {
@@ -183,7 +199,7 @@ const Sidebar = () => {
               {t("Profile")}
             </button>
           </Link>
-          <Link to={"/notification"}>
+          {/* <Link to={"/notification"}>
             <button
               style={{
                 color:
@@ -192,7 +208,7 @@ const Sidebar = () => {
             >
               {t("Notification")}
             </button>
-          </Link>
+          </Link> */}
           <Link to={"/games"}>
             <button
               style={{
@@ -211,11 +227,17 @@ const Sidebar = () => {
               {t("Chat")}
             </button>
           </Link>
+          <div style={{display: 'flex', position: 'relative'}} ref={notifRef}>
+              <IoIosNotifications className={styl.icon} onClick={handleOpenNotif}/>
+              {notifReceived && <div className={styl.notifReceive}></div>}
+              <Notif open={openNotif} notifReceived={notifReceived} setNotifReceived={setNotifReceived}/>
+              {notifReceived}
+          </div>
           <div className={styl.sett}>
             <button onClick={toggleMenu} onClickCapture={handleDisplaySettings}>
               <div className={styl.extImg}>
                 <div className={styl.intImg}>
-                  <img src={user?.user?.avatar} />
+                  <img src={user?.user?.avatar}/>
                 </div>
               </div>
             </button>

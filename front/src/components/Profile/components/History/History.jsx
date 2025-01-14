@@ -22,7 +22,8 @@ const History = ({ username, ismyprofil }) => {
 
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_BACKEND_IP}/api/matches/${username}/`
+          `http://${import.meta.env.VITE_BACKEND_IP}/matches/matches/${username}/`
+          // `http://${import.meta.env.VITE_BACKEND_IP}/matches/matches/${username}/`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch match history");
