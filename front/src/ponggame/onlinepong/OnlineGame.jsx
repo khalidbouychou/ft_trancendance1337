@@ -6,7 +6,7 @@ import axios from 'axios';
 
 export default function OnlineGame() {
 
-    const { user, setUser } = useContext(AuthContext);
+    const {t} = useContext(AuthContext);
     const navigate = useNavigate();
 
     const pressedKeys = useRef(new Set());
@@ -67,15 +67,10 @@ export default function OnlineGame() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios('http://${process.env.BACKEND_IP}:8000/api/pong_data/',{
+            const response = await axios(`http://${import.meta.env.VITE_BACKEND_IP}/api/pong_data/`,{
                 withCredentials: true,
             });
             if (response.status === 200) {
-                console.log('response: ', response);
-            }
-            if (response.status === 200) {
-                // setUser(response.data);
-                console.log(response.data);
                 setUsername(response.data.profile_name);
                 setLeftPlayerAvatar(response.data.avatar); 
                 setLeftPlayerName(response.data.profile_name);
@@ -88,7 +83,6 @@ export default function OnlineGame() {
 
         if (!hasFetchedData.current) {
             fetchData();
-            // hasFetchedData.current = true;
             setFetchedData(true);
         }
     }, []);
@@ -107,7 +101,7 @@ export default function OnlineGame() {
         let rightRacketY = 0;
         let myReq;
         if (FetchedData)
-            socket = new WebSocket(`ws://${process.env.BACKEND_IP}:8000/ws/remote-game/`);
+            socket = new WebSocket(`ws://${import.meta.env.VITE_BACKEND_IP}/ws/remote-game/`);
         if (socket) {
             socket.onopen = () => {
                 if (socket.readyState === WebSocket.OPEN) {
@@ -127,7 +121,6 @@ export default function OnlineGame() {
             window.rightdown = rightdown;
             socket.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-                console.log('Received:', data)
                 if (data.message) {
                     if (data.message === 'game_data') {
                         ballx = (data.ballx / game_width) * canvas.width
@@ -270,7 +263,6 @@ export default function OnlineGame() {
     }, [username]);
 
     useEffect(() => {
-        console.log("gamestarted", gamestarted);
         if (gamestarted) {
             document.getElementById('matchmaking').style.display = "none";
             document.getElementById('result').style.display = "none";
@@ -295,16 +287,16 @@ export default function OnlineGame() {
                         </div>
                         <div className={styles.vs}>
                             <img src="/assets/loading.gif" className={styles.loadingGif} />
-                            <p>VS</p>
+                            <p>{t("VS")}</p>
                         </div>
                         <div className={styles.leftplayer}>
                             <img src={rightplayeravatar} className={styles.userImg} />
-                            <h4>Unknown</h4>
+                            <h4>{t("Unknown")}</h4>
                         </div>
                     </div>
                     <div className={styles.buttoncontainer}>
                         <div className={styles.Button}>
-                            <button onClick={handleExitClick}>Exit</button>
+                            <button onClick={handleExitClick}>{t("Exit")}</button>
                         </div>
                     </div>
                 </div>
@@ -314,7 +306,7 @@ export default function OnlineGame() {
                 <div className={styles.centered}>
                     <div className={styles.holderx} style={{ height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                         <div className={styles.message}>
-                            <h4>{MESSAGE}</h4>
+                            <h4>{t(MESSAGE)}</h4>
                             {condition !== 'D' && (
                                 <>
                                     <img src={avatar} />
@@ -324,7 +316,7 @@ export default function OnlineGame() {
                         </div>
                         <div className={styles.buttoncontainer}>
                             <div className={styles.Button}>
-                                <button onClick={handleExitClick}>Exit</button>
+                                <button onClick={handleExitClick}>{t("Exit")}</button>
                             </div>
                         </div>
                     </div>

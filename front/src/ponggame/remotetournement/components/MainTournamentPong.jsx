@@ -4,22 +4,21 @@ import { AuthContext } from '../../../UserContext/Context';
 import { useGlobalContext } from '../context/TournamentContext.jsx';
 
 const MainTournamentPong = () => {
-    const { user } = useContext(AuthContext);
+    const { user, t } = useContext(AuthContext);
     const { setTournamentStart , setRoomName} = useGlobalContext();
     const [tournaments, setTournaments] = useState([]);
     const socket = useRef(null);
     const safeTournaments = tournaments || [];
 
     useEffect(() => {
-        if (tournaments)
-            console.log("now tournament is:", tournaments);
+        // if (tournaments)
+        //     console.log("now tournament is:", tournaments);
     }, [tournaments]);
 
     useEffect(() => {
-        socket.current = new WebSocket(`ws://${process.env.BACKEND_IP}:8000/ws/tournament-game/`);
+        socket.current = new WebSocket(`ws://${import.meta.env.VITE_BACKEND_IP}/ws/tournament-game/`);
 
         socket.current.onopen = () => {
-            console.log("name:", user.user.username);
             if (socket.current.readyState === WebSocket.OPEN) {
                 const message = {
                     action: 'fetch_tournaments',
@@ -33,35 +32,20 @@ const MainTournamentPong = () => {
         };
 
         socket.current.onmessage = (event) => {
-            // console.log('WebSocket message received:', event);
             const data = JSON.parse(event.data);
 
             if (data.message === 'tournament_page') {
-                // console.log('data:', data);
-                // console.log('data.data:', data.data);
                 setTournaments(data.data);
-                console.log("tournament current", tournaments);
             } else if (data.message === 'tournament_created') {
-                // console.log('tournament_created:', data);
-                // console.log('tournament:', data.tournament);
                 setTournaments(data.tournament);
-                console.log("we are in tournament_created");
             } else if (data.message === 'join_tournament') {
-                // console.log('tournament_joined:', data);
-                // console.log('tournament:', data.tournament);
                 setTournaments(data.tournament);
-                console.log("we are in tournament_joined");
             } else if (data.message === 'leave_tournament') {
                 setTournaments(data.tournament);
-                console.log("we are in leave_tournament");
             } else if (data.message === 'cancel_tournament') {
                 setTournaments(data.tournament);
-                console.log("we are in cancel_tournament");
             }
             else if (data.message === 'tournament_about_to_start') {
-                console.log('a tournament about to start');
-                console.log("data:", data);
-                console.log("room name:", data.RoomName);
                 setRoomName(data.RoomName);
                 setTournamentStart('yes');
             }
@@ -83,20 +67,16 @@ const MainTournamentPong = () => {
     }, []);
 
     const createTournament = () => {
-        // console.log('createTournament clicked', socket.current);
         if (socket.current && socket.current.readyState === WebSocket.OPEN) {
             const message = {
                 action: 'create_tournament',
                 name: user.user.username,
             };
             socket.current.send(JSON.stringify(message));
-            console.log('Message sent to create tournament');
         }
     };
 
     const joinTournament = (index) => {
-        console.log("room im trying to join its name is:", tournaments[index].name);
-        console.log("im:", user.user.username); 
         if (socket.current && socket.current.readyState === WebSocket.OPEN) {
             const message = {
                 action: 'join_tournament',
@@ -132,18 +112,18 @@ const MainTournamentPong = () => {
     return (
         <>
             <div className={styles.top_container}>
-                <button className={styles.create_button} onClick={createTournament}>Create Tournament</button>
+                <button className={styles.create_button} onClick={createTournament}>{t("Create Tournament")}</button>
                 <div className={styles.tournament_list}>
                     {safeTournaments.length === 0 ? (
-                        <div className={styles.no_tournaments}>There are no tournaments now.</div>
+                        <div className={styles.no_tournaments}>{t("There are no tournaments now.")}</div>
                     ) : (
                         Object.entries(tournaments).map(([tournamentName, tournament], index) => (
                             <div key={index} className={styles.tournament_card}>
                                 <h3>{tournament.name}</h3>
-                                <h3>{tournament.players}/4 players</h3>
-                                <button onClick={() => joinTournament(tournamentName)}>Join</button>
-                                <button onClick={() => cancelTournament(tournamentName)}>Cancel</button>
-                                <button onClick={() => leaveTournament(tournamentName)}>Leave</button>
+                                <h3>{tournament.players}/4 {t("players")}</h3>
+                                <button onClick={() => joinTournament(tournamentName)}>{t("Join")}</button>
+                                <button onClick={() => cancelTournament(tournamentName)}>{t("Cancel")}</button>
+                                <button onClick={() => leaveTournament(tournamentName)}>{t("Leave")}</button>
                             </div>
                         ))
                     )}

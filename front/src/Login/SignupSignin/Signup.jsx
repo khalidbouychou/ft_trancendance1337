@@ -13,7 +13,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
   const handleForm = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`http://${process.env.BACKEND_IP}:8000/api/signup/`, {
+      const res = await axios.post(`http://${import.meta.env.VITE_BACKEND_IP}/api/signup/`, {
         username,
         profile_name: displayname,
         password

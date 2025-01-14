@@ -30,7 +30,7 @@ const Notification = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('http://${process.env.BACKEND_IP}:8000/api/notif/' , {
+        const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/notif/` , {
             withCredentials: true,
         });
         const notifications = response.data;

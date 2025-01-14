@@ -19,7 +19,7 @@ const Settings = () => {
   const handleProfileNameUpdate = async () => {
     try {
       const response = await axios.put(
-        `http://${process.env.BACKEND_IP}:8000/api/update/`,
+        `http://${import.meta.env.VITE_BACKEND_IP}/api/update/`,
         { profile_name: NewProfileName },
         {
           withCredentials: true,
@@ -59,7 +59,7 @@ const Settings = () => {
       formData.append('avatar', input.files[0]);
 
       axios
-        .put(`http://${process.env.BACKEND_IP}:8000/api/update/`, formData, {
+        .put(`http://${import.meta.env.VITE_BACKEND_IP}/api/update/`, formData, {
           withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -118,7 +118,7 @@ const Settings = () => {
 
   const handleConfirm = async () => {
     try {
-      const response = await axios.get(`http://${process.env.BACKEND_IP}:8000/api/${actionToPerform}/` , {
+      const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/${actionToPerform}/` , {
         withCredentials: true,
     });
       if (response.status === 200) {

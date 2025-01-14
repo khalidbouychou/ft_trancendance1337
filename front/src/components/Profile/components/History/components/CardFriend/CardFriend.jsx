@@ -12,7 +12,7 @@ const CardFriend = ({friend}) => {
 
   useEffect (() => {
     const fectchData = async () => {
-      const response = await axios.get(`http://${process.env.BACKEND_IP}:8000/api/pingdata/${friend.profile_name}/` , {
+      const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/pingdata/${friend.profile_name}/` , {
         withCredentials: true,
     });
       setPingdata(response.data)

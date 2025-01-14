@@ -84,7 +84,7 @@ const Chat = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios("http://${process.env.BACKEND_IP}:8000/api/chat/", {
+        const response = await axios(`http://${import.meta.env.VITE_BACKEND_IP}/api/chat/`, {
           withCredentials: true,
         });
         console.log("1 data:", response.data);
@@ -245,7 +245,7 @@ const Chat = () => {
       }
 
       const newSocket = new WebSocket(
-        `ws://${process.env.BACKEND_IP}:8000/ws/chat/${room_id}/`
+        `ws://${import.meta.env.VITE_BACKEND_IP}/ws/chat/${room_id}/`
       );
 
       newSocket.onopen = () => {

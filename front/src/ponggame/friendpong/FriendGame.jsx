@@ -1,16 +1,15 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './FriendGame.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../UserContext/Context';
+import { AuthContext } from "../../UserContext/Context";
 import axios from 'axios';
 
 export default function FriendGame() {
 
-    // const {user, setUser} = useContext(AuthContext);
+    const {t} = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
     const { game_key } = location.state || {};
-    // console.log('from friendgame game_key:', game_key);
 
     const pressedKeys = useRef(new Set());
     const [rightScore, setRightScore] = useState(0);
@@ -73,10 +72,9 @@ export default function FriendGame() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios('http://${process.env.BACKEND_IP}:8000/api/pong_data/',{
+            const response = await axios(`http://${import.meta.env.VITE_BACKEND_IP}/api/pong_data/`,{
                 withCredentials: true,
             });
-            console.log('response:', response.data);
             if (response.status === 200) {
                 setProfileName(response.data.profile_name);
                 setUsername(response.data.username);
@@ -110,11 +108,10 @@ export default function FriendGame() {
         let player_id = 0;
         let myReq;
         if (FetchedData)
-            socket = new WebSocket(`ws://${process.env.BACKEND_IP}:8000/ws/play-friend/`);
+            socket = new WebSocket(`ws://${import.meta.env.VITE_BACKEND_IP}/ws/play-friend/`);
 
         if (socket) {
             socket.onopen = () => {
-                console.log('onopen game_key:', game_key);
                 if (socket.readyState === WebSocket.OPEN) {
                   
                     const message = {
@@ -136,7 +133,6 @@ export default function FriendGame() {
             window.rightdown = rightdown;
             socket.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-                console.log('Received:', data)
                 if (data.message) {
                     if (data.message === 'game_data') {
                         ballx = (data.ballx / game_width) * canvas.width
@@ -290,20 +286,17 @@ export default function FriendGame() {
             cancelAnimationFrame(myReq);
 
             if (socket && socket.readyState === WebSocket.OPEN) {
-                socket.close(); // Close WebSocket when the component unmounts
+                socket.close();
             }
         };
     }, [profile_name]);
 
     useEffect(() => {
-        console.log("gamestarted", gamestarted);
-        console.log("condition", condition);
         if (gamestarted) {
             document.getElementById('matchmaking').style.display = "none";
             document.getElementById('result').style.display = "none";
         }
         if (condition != 'N') {
-            console.log("condition", condition);
             document.getElementById('result').style.display = "block";
         }
     }, [gamestarted, condition]);
@@ -323,16 +316,16 @@ export default function FriendGame() {
                         </div>
                         <div className={styles.vs}>
                             <img src="/assets/loading.gif" className={styles.loadingGif} />
-                            <p>VS</p>
+                            <p>{t("VS")}</p>
                         </div>
                         <div className={styles.leftplayer}>
                             <img src={rightplayeravatar} className={styles.userImg} />
-                            <h4>Unknown</h4>
+                            <h4>{t("Unknown")}</h4>
                         </div>
                     </div>
                     <div className={styles.buttoncontainer}>
                         <div className={styles.Button}>
-                            <button onClick={handleExitClick}>Exit</button>
+                            <button onClick={handleExitClick}>{t("Exit")}</button>
                         </div>
                     </div>
                 </div>
@@ -342,7 +335,7 @@ export default function FriendGame() {
                 <div className={styles.centered}>
                     <div className={styles.holderx} style={{ height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                         <div className={styles.message}>
-                            <h4>{MESSAGE}</h4>
+                            <h4>{t(MESSAGE)}</h4>
                             {condition !== 'D' && (
                                 <>
                                     <img src={avatar} />
@@ -352,7 +345,7 @@ export default function FriendGame() {
                         </div>
                         <div className={styles.buttoncontainer}>
                             <div className={styles.Button}>
-                                <button onClick={handleExitClick}>Exit</button>
+                                <button onClick={handleExitClick}>{t("Exit")}</button>
                             </div>
                         </div>
                     </div>

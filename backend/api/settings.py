@@ -25,8 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 CSRF_TRUSTED_ORIGINS = [
     'https://127.0.0.1', 
     'http://127.0.0.1', 
-    f'http://{os.getenv("BACKEND_IP")}',
-    f'https://{os.getenv("BACKEND_IP")}',
+    f'http://{os.getenv("VITE_BACKEND_IP")}',
+    f'https://{os.getenv("VITE_BACKEND_IP")}',
     'http://10.13.10.18:8000', 
     'http://127.0.0.1:5173',
     'https://127.0.0.1:5173',
@@ -43,9 +43,9 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production! 
 DEBUG = True # Set to False in production
 
-IP_MACHINE = os.getenv('VITE_IP_HOST')
+BACKEND_IP = os.getenv("VITE_BACKEND_IP")
 
-ALLOWED_HOSTS = ['127.0.0.1','10.13.10.18',IP_MACHINE,'10.13.10.18']
+ALLOWED_HOSTS = ['127.0.0.1', '10.13.7.1', BACKEND_IP, 'e3r7p1.1337.ma']
 
 # Application definition
 
@@ -226,8 +226,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'https://127.0.0.1',  
     'http://127.0.0.1',
-    f'http://{os.getenv("BACKEND_IP")}',
-    f'https://{os.getenv("BACKEND_IP")}',
+    f'http://{os.getenv("VITE_BACKEND_IP")}',
+    f'https://{os.getenv("VITE_BACKEND_IP")}',
     'http://10.13.10.18',
     'https://10.13.10.18',
     "http://10.13.10.18:5173", 

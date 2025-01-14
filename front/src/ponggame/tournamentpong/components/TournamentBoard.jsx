@@ -1,11 +1,12 @@
-import React from 'react'
+import { useContext, React } from "react"
 import styles from './TournamentBoard.module.css'
 import { useGlobalContext } from '../context/TournamentContext.jsx';
+import { AuthContext } from "../../../UserContext/Context";
 
 const TournamentBoard = () => {
-
+    const {t} = useContext(AuthContext);
     const { player1Name, player2Name, player3Name, player4Name, player5Name,player5Avatar, player6Name,player6Avatar, player7Name, player7Avatar } = useGlobalContext();
-    
+
   return (
     <div className={styles.first}>
         <div className={styles.etaps}>
@@ -19,7 +20,7 @@ const TournamentBoard = () => {
                     </div>
                 </div>
                 <div className={styles.vs}>
-                    <p>VS</p>
+                    <p>{t("VS")}</p>
                 </div>
                 <div className={styles.player}>
                     <div className={styles.userImage}>
@@ -40,7 +41,7 @@ const TournamentBoard = () => {
                     </div>
                 </div>
                 <div className={styles.vs}>
-                    <p>VS</p>
+                    <p>{t("VS")}</p>
                 </div>
                 <div className={styles.player}>
                     <div className={styles.userImage}>
@@ -63,7 +64,7 @@ const TournamentBoard = () => {
                     </div>
                 </div>
                 <div className={styles.vs}>
-                    <p>VS</p>
+                    <p>{t("VS")}</p>
                 </div>
                 <div className={styles.player}>
                     <div className={styles.userImage}>

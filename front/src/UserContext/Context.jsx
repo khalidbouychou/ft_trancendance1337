@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import i18n from "../i18n";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
@@ -32,7 +33,7 @@ export default function AuthProvider({ children }) {
     try {
       await get_auth_user();
       const res = await axios.post(
-        `http://${process.env.BACKEND_IP}:8000/api/otpverify/`,
+        `http://${import.meta.env.VITE_BACKEND_IP}/api/otpverify/`,
         { otp: otp },
         {
           withCredentials: true,
@@ -62,7 +63,11 @@ export default function AuthProvider({ children }) {
   };
 
   async function auth_intra42() {
-    const response = await axios.get(`http://${process.env.BACKEND_IP}:8000/api/auth_intra/`, {
+    const backend_ip = import.meta.env.VITE_BACKEND_IP
+    console.log("ip:", backend_ip);
+    // console.log('again ip:', backend_ip);
+    // console.log('VAR:', process.env.VITE_BACKEND_IP);
+    const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/auth_intra/`, {
       withCredentials: true
     });
     try {
@@ -87,7 +92,7 @@ export default function AuthProvider({ children }) {
         const params = new URLSearchParams();
         params.append("code", code);
         res = await axios.post(
-          `http://${process.env.BACKEND_IP}:8000/api/login/`,
+          `http://${import.meta.env.VITE_BACKEND_IP}/api/login/`,
           params,
           {
             withCredentials: true
@@ -124,7 +129,7 @@ export default function AuthProvider({ children }) {
   }
   async function get_auth_user() {
     try {
-      const res = await axios.get(`http://${process.env.BACKEND_IP}:8000/api/user/`, {
+      const res = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/user/`, {
         withCredentials: true
       });
 
@@ -146,7 +151,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`http://${process.env.BACKEND_IP}:8000/api/logout/`, {
+      const res = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/logout/`, {
         withCredentials: true
       });
 

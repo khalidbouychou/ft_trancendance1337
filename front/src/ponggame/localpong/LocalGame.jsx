@@ -1,9 +1,10 @@
-import React, {useRef, useEffect, useState } from 'react';
+import React, {useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './LocalGame.module.css';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from "../../UserContext/Context";
 
 export default function LocalGame() {
-
+    const {t} = useContext(AuthContext);
     const pressedKeys = useRef(new Set());
     const [rightScore, setRightScore] = useState(0);
     const [leftScore, setLeftScore] = useState(0);
@@ -189,10 +190,10 @@ export default function LocalGame() {
                 <div className={styles.centered}>
                     <div className={styles.holderx}>
                         <div className={styles.holderx}>
-                            <h4>Winner {winner} by {winner_score}</h4>
+                            <h4>{t("Winner")} {t(winner)} {t("by")} {winner_score}</h4>
                             <div className={styles.buttoncontainer}>
                                 <div className={styles.Button}>
-                                    <button onClick={handleExitClick}>Exit</button>
+                                    <button onClick={handleExitClick}>{t("Exit")}</button>
                                 </div>
                             </div>
                         </div>
@@ -204,10 +205,10 @@ export default function LocalGame() {
                 <div className={styles.topgame}>
                     <div className={styles.side}>
                         <img src="/assets/superior.png" className={styles.Img}/>
-                        <p >Left Player</p>
+                        <p>{t("Left Player")}</p>
                     </div>
                     <div className={styles.side} style={{justifyContent: 'end'}}>
-                        <p >Right Player</p>
+                        <p>{t("Right Player")}</p>
                         <img src="/assets/battlebeast.png" className={styles.Img}/>
                     </div>
                     <div className={styles.score}>

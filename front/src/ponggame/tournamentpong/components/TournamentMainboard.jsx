@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styles from './TournamentMainboard.module.css'
 import { useGlobalContext } from '../context/TournamentContext.jsx';
 import Match from './Match.jsx';
+import { AuthContext } from "../../../UserContext/Context"; 
 
 const TournamentMainboard = () => {
-
+    const {t} = useContext(AuthContext);
     const { player1Name, player2Name, player3Name, player4Name, player5Name, player6Name, player7Name, gameStatus, setGameStatus, player5Avatar, player6Avatar, player7Avatar} = useGlobalContext();
 
     const [matchType, setMatchType] = useState('');
@@ -30,10 +31,7 @@ const TournamentMainboard = () => {
             {gameStatus && <Match type={matchType}/>}
             {player5Name === "Unknown" || player6Name === "Unknown" ? (
                 <div className={styles.matchBegin}>
-
                     <div className={styles.startCard}>
-                        {/* left card*/}
-
                         <div className={styles.gameCard}>
                             <div className={styles.player}>
                             <div className={styles.userImage}>
@@ -44,7 +42,7 @@ const TournamentMainboard = () => {
                             </div>
                         </div>
                         <div className={styles.vs}>
-                            <p>VS</p>
+                            <p>{t("VS")}</p>
                         </div>
                         <div className={styles.player}>
                             <div className={styles.userImage}>
@@ -55,15 +53,14 @@ const TournamentMainboard = () => {
                             </div>
                         </div>
                         </div>
-                        {/* incase if already played it i should not display start */}
                         {player5Name === "Unknown" ? (
                             <div className={styles.startButton}>
-                                <button onClick={startgameleft}>Start Match</button>
+                                <button onClick={startgameleft}>{t("Start Match")}</button>
                             </div>
                         ) : (
                             <div className={styles.youWin}>
                                 <div className={styles.str}>
-                                    <p>WIN</p>
+                                    <p>{t("WIN")}</p>
                                 </div>
                                 <div className={styles.userWin}>
                                     <div className={styles.userImage}>
@@ -76,10 +73,6 @@ const TournamentMainboard = () => {
                             </div>
                         )}
                     </div>
-                    {/* left card end*/}
-
-                    {/* right card  */}
-
                     <div className={styles.startCard}>
                         <div className={styles.gameCard}>
                             <div className={styles.player}>
@@ -91,7 +84,7 @@ const TournamentMainboard = () => {
                                 </div>
                             </div>
                             <div className={styles.vs}>
-                                <p>VS</p>
+                                <p>{t("VS")}</p>
                             </div>
                             <div className={styles.player}>
                                 <div className={styles.userImage}>
@@ -104,12 +97,12 @@ const TournamentMainboard = () => {
                         </div>
                         {player6Name === "Unknown" ? (
                             <div className={styles.startButton}>
-                                <button onClick={startgameright}>Start Match</button>
+                                <button onClick={startgameright}>{t("Start Match")}</button>
                             </div>
                         ) : (
                             <div className={styles.youWin}>
                                 <div className={styles.str}>
-                                    <p>WIN</p>
+                                    <p>{t(WIN)}</p>
                                 </div>
                                 <div className={styles.userWin}>
                                     <div className={styles.userImage}>
@@ -122,12 +115,11 @@ const TournamentMainboard = () => {
                             </div>
                         )}
                     </div>
-                    {/* right card  end */}
                 </div>
             ) :
             <div className={styles.matchFinal}>
                 <div className={styles.finalCard}>
-                    <h1 >FINAL MATCH</h1>
+                    <h1 >{t("FINAL MATCH")}</h1>
                     <div className={styles.gameCard}>
                         <div className={styles.player}>
                             <div className={styles.userImage}>
@@ -138,7 +130,7 @@ const TournamentMainboard = () => {
                             </div>
                         </div>
                         <div className={styles.vs}>
-                            <p>VS</p>
+                            <p>{t("VS")}</p>
                         </div>
                         <div className={styles.player}>
                             <div className={styles.userImage}>
@@ -151,10 +143,10 @@ const TournamentMainboard = () => {
                     </div>
                     {player7Name === "Unknown" ? (
                     <div className={styles.startButton}>
-                        <button onClick={startgamefinal} >Start Match</button>
+                        <button onClick={startgamefinal} >{t("Start Match")}</button>
                     </div>):
                     <div className={styles.winer}>
-                        <h2 >WINER</h2>
+                        <h2 >{t("Winner")}</h2>
                         <div className={styles.player}>
                             <div className={styles.userImage}>
                                 <img src={player7Avatar}/>
@@ -168,10 +160,6 @@ const TournamentMainboard = () => {
                 </div>
             </div>}
         </div>
-
-    <div className={styles.Button}>
-        <button onClick={() => window.location.reload()}>Restart</button>
-    </div>
 </div>
   )
 }

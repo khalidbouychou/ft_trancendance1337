@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import TokenRefreshView ,TokenObtainPairView
 from django.conf import settings
 from django.conf.urls.static import static
  
-urlpatterns = [
+urlpatterns = [ 
     path('admin/', admin.site.urls),
     path('api/', include('login.urls')),
     path('api/', include('Chat2.urls')),

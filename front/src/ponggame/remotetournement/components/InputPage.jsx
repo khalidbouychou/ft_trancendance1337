@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../UserContext/Context';
 
 const MainTournament = () => {
-    const { user } = useContext(AuthContext);
+    const { user, t } = useContext(AuthContext);
     const navigate = useNavigate();
     const socket = useRef(null);
     const pressedKeys = useRef(new Set());
@@ -28,14 +28,11 @@ const MainTournament = () => {
     const [MESSAGE, setMessage] = useState("message");
 
     useEffect(() => {
-        socket.current = new WebSocket(`ws://${process.env.BACKEND_IP}:8000/ws/tournament-game/`);
+        socket.current = new WebSocket(`ws://${import.meta.env.VITE_BACKEND_IP}/ws/tournament-game/`);
 
         socket.current.onopen = () => {
-
-            console.log("name:", user.user.username);
             if (socket.current.readyState === WebSocket.OPEN) {
                 if (!matchstart && !Aliasname) {
-                    console.log("im in the page to update my alias name");
                     const message = {
                         action: 'connect',
                         name: user.user.username,
@@ -43,10 +40,8 @@ const MainTournament = () => {
                         room: RoomName,
                     };
                     socket.current.send(JSON.stringify(message));
-                    console.log('socket.current is open now');
                 }
                 else {
-                    console.log("first time connecting to tournament");
                     const message = {
                         action: 'connected',
                         name: user.user.username,
@@ -54,7 +49,6 @@ const MainTournament = () => {
                         room: RoomName,
                     };
                     socket.current.send(JSON.stringify(message));
-                    console.log('tournaments socket.current is open now');
                 }
             } else {
                 console.error('tournaments socket.current is not readyState:');
@@ -77,7 +71,6 @@ const MainTournament = () => {
     },[]);
 
     useEffect(() => {
-        console.log("we enter useeffect matchstart:", matchstart, "PlayerAliasName:", PlayerAliasName);
         const game_width = 800;
         const game_height = 500;
         let ballx = 0;
@@ -93,20 +86,17 @@ const MainTournament = () => {
 
         socket.current.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            // console.log("---------------data:", data);
             if (data.message === 'update_players') {
-                console.log('update_players:', data);
-                    setPlayer1Name(data.player1_alias);
-                    setPlayer1Avatar(data.player1_avatar);
-                    setPlayer2Name(data.player2_alias);
-                    setPlayer2Avatar(data.player2_avatar);
-                    setPlayer3Name(data.player3_alias);
-                    setPlayer3Avatar(data.player3_avatar);
-                    setPlayer4Name(data.player4_alias);
-                    setPlayer4Avatar(data.player4_avatar);
+                setPlayer1Name(data.player1_alias);
+                setPlayer1Avatar(data.player1_avatar);
+                setPlayer2Name(data.player2_alias);
+                setPlayer2Avatar(data.player2_avatar);
+                setPlayer3Name(data.player3_alias);
+                setPlayer3Avatar(data.player3_avatar);
+                setPlayer4Name(data.player4_alias);
+                setPlayer4Avatar(data.player4_avatar);
             }
             else if (data.message === 'disconnected') {
-                console.log("one of the players disconnected");
                 setCondition('D');
                 setMatchStart(true);
                 localcondition = 'D';
@@ -114,22 +104,18 @@ const MainTournament = () => {
                 setMessage("Tournament was canceled because one of the players disconnected");
             }
             else if (data.message === 'first_winner') {
-                console.log('first_winner:', data);
                 setPlayer5Name(data.winner_name);
                 setPlayer5Avatar(data.winner_avatar);
             }
             else if (data.message === 'second_winner') {
-                console.log('second_winner:', data);
                 setPlayer6Name(data.winner_name);
                 setPlayer6Avatar(data.winner_avatar);
             }
             else if (data.message === 'alias_exists') {
-                console.log('alias name is already taken');
                 setAliasName(false);
             }
             else if (data.message === 'tournament_started'){
                 setMatchStart(true);
-                console.log("my client alias is:", PlayerAliasName);
                 if (socket.current.readyState === WebSocket.OPEN) {
                     const message = {
                         action: 'startmygame',
@@ -140,29 +126,21 @@ const MainTournament = () => {
                     };
                     socket.current.send(JSON.stringify(message));
                 }
-                console.log('send to server startmygame');
             }
             else if (data.message === 'match_result1'){
-                console.log("data:", data);
-                console.log("PlayerAliasName:", PlayerAliasName);
                 if (data.winner === PlayerAliasName){
-                    console.log("u win");
                     setMessage("You won the match and you are qualified to the next round");
                     localcondition = 'W';
                     setCondition('W');
                 }
                 else{
-                    console.log("u lost");
                     setMessage("You lost the match");
                     localcondition = 'D';
                     setCondition('D');
                 }
             }
             else if (data.message === 'match_result2'){
-                console.log("data:", data);
-                console.log("PlayerAliasName:", PlayerAliasName);
                 if (data.winner === PlayerAliasName){
-                    console.log("u win");
                     setMessage("You won the final match and you are tournament winner");
                     localcondition = 'W';
                     setCondition('W');
@@ -170,14 +148,12 @@ const MainTournament = () => {
                     setPlayer7Avatar(user.user.avatar);
                 }
                 else{
-                    console.log("u lost");
                     setMessage("You lost the match");
                     localcondition = 'D';
                     setCondition('D');
                 }
             }
             else if (data.message === 'game_data') {
-                console.log("data:", data);
                 ballx = (data.ballx / game_width) * canvas.width
                 bally = (data.bally / game_height) * canvas.height
                 rightRacketY = (data.right_paddleY / game_height) * canvas.height
@@ -189,12 +165,8 @@ const MainTournament = () => {
                 ball_radius = ((canvas.height / game_width + canvas.width / game_height) / 2) * 15
             }
             else if (data.message === 'game_started') {
-                console.log("we received game started message we begin the game");
-                console.log("data:", data);
-                console.log("my alias name:", PlayerAliasName);
                 setCondition('N');
                 if (data.player_id1 === PlayerAliasName) {
-                    console.log("player id 1");
                     player_id = 1;
                     setLeftPlayerName(data.player_id1);
                     setRightPlayerName(data.player_id2);
@@ -202,7 +174,6 @@ const MainTournament = () => {
                     setRightPlayerAvatar(data.player2_avatar);
                 }
                 if (data.player_id2 === PlayerAliasName) {
-                    console.log("player id 2");
                     player_id = 2;
                     setLeftPlayerName(data.player_id1);
                     setRightPlayerName(data.player_id2);
@@ -244,43 +215,35 @@ const MainTournament = () => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
     
                 if (pressedKeys.current.has('w') && player_id === 1) {
-                    console.log("im pressing w");
                     if (socket.current.readyState === WebSocket.OPEN) {
                         const message = {
                             action: 'w',
                         };
                         socket.current.send(JSON.stringify(message));
-                        console.log("message was send");
                     }
                 }
                 else if (pressedKeys.current.has('s') && player_id === 1) {
-                    console.log("im pressing s");
                     if (socket.current.readyState === WebSocket.OPEN) {
                         const message = {
                             action: 's',
                         };
                         socket.current.send(JSON.stringify(message));
-                        console.log("message was send");
                     }
                 }
                 if (pressedKeys.current.has('ArrowUp') && player_id === 2) {
-                    console.log("im pressing ArrowUp");
                     if (socket.current.readyState === WebSocket.OPEN) {
                         const message = {
                             action: 'ArrowUp',
                         };
                         socket.current.send(JSON.stringify(message));
-                        console.log("message was send");
                     }
                 }
                 else if (pressedKeys.current.has('ArrowDown') && player_id === 2) {
-                    console.log("im pressing ArrowDown");
                     if (socket.current.readyState === WebSocket.OPEN) {
                         const message = {
                             action: 'ArrowDown',
                         };
                         socket.current.send(JSON.stringify(message));
-                        console.log("message was send");
                     }
                 }
                 drawball();
@@ -330,7 +293,6 @@ const MainTournament = () => {
     },[PlayerAliasName]);
 
     const starttournament = () => {
-        console.log('send my alias name:');
         setAliasName(true);
     };
 
@@ -345,7 +307,6 @@ const MainTournament = () => {
                     room: RoomName,
                 };
                 socket.current.send(JSON.stringify(message));
-                console.log('i send my alias name');
             }
         }
     }, [Aliasname]);
@@ -366,25 +327,25 @@ const MainTournament = () => {
                         </div>
                     </div>
                     <div className={styles.Button}>
-                        <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'grey' : 'green'}}>Start</button>
+                        <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'grey' : 'green'}}>{t("Start")}</button>
                     </div>
                 </div>
             ) : ( condition === 'N' ? (
                 <div className={styles.last}>
                     <div className={styles.waiting}>
-                        <h2>Waiting for other players...</h2>
+                        <h2>{t("Waiting for other players...")}</h2>
                     </div>
                 </div>) : (
                 <div className={styles.subContainer}>
-                    <h2>{MESSAGE}</h2>
+                    <h2>{t(MESSAGE)}</h2>
                 </div>
             )
             ) ) : (
                 condition === 'D' ? (
                     <div className={styles.subContainer}>
-                        <h2 className={styles.message} >{MESSAGE}</h2>
+                        <h2 className={styles.message} >{t(MESSAGE)}</h2>
                         <div className={styles.Button}>
-                            <button onClick={handleExitClick}>Exit</button>
+                            <button onClick={handleExitClick}>{t("Exit")}</button>
                         </div>
                     </div>
                 ) : (

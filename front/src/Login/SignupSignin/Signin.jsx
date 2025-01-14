@@ -23,7 +23,7 @@ const Signin = () => {
         return;
       }
       const response = await axios.post(
-        `http://${process.env.BACKEND_IP}:8000/api/singin/`,
+        `http://${import.meta.env.VITE_BACKEND_IP}/api/singin/`,
         {
           username,
           password

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styles from './InputPage.module.css'
 import { useGlobalContext } from '../context/TournamentContext.jsx';
+import { AuthContext } from "../../../UserContext/Context";
 
 const MainTournament = () => {
     const { setPlayer1Name, setPlayer2Name, setPlayer3Name, setPlayer4Name, setTournamentStart } = useGlobalContext();
-
+    const {t} = useContext(AuthContext);
     const [player1Input, setPlayer1Input] = useState('');
     const [player2Input, setPlayer2Input] = useState('');
     const [player3Input, setPlayer3Input] = useState('');
@@ -60,7 +61,7 @@ const MainTournament = () => {
                 </div>
             </div>
             <div className={styles.Button}>
-            <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'grey' : 'green'}}>Start</button>
+            <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'grey' : 'green'}}>{t("Start")}</button>
             </div>
         </div>
     )

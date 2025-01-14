@@ -470,7 +470,7 @@ class UserNameBlockedList (APIView):
             user = Player.objects.get(profile_name=username)
             if not user :
                 return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
-            friends = PlayerSerializer.get_blocked_getusers(self,user)
+            friends = PlayerSerializer.get_blocked_users(self,user)
             return Response({'blocked list':friends , 'user':user.username}, status=status.HTTP_200_OK)
         except Exception as e:
             e = 'No user found'

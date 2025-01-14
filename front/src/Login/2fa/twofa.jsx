@@ -19,8 +19,8 @@ const Twofa = () => {
 
   const numInputs = 6;
 
-  const QR_CODE_URL = `http://${process.env.BACKEND_IP}:8000/api/qrcode/`;
-  const USER_STATUS_URL = `http://${process.env.BACKEND_IP}:8000/api/user_status/`;
+  const QR_CODE_URL = `http://${import.meta.env.VITE_BACKEND_IP}/api/qrcode/`;
+  const USER_STATUS_URL = `http://${import.meta.env.VITE_BACKEND_IP}/api/user_status/`;
 
   // const renderInputs = () => {
   //   return Array.from({ length: numInputs }).map((_, i) => (
@@ -59,7 +59,7 @@ const Twofa = () => {
     // {
 
     //   try {
-    //     const res = await axios.get(`http://${process.env.BACKEND_IP}:8000/api/clearqrcode/`, { withCredentials: true });
+    //     const res = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/clearqrcode/`, { withCredentials: true });
     //     if (res.status === 200){
     //       await get_auth_user();
     //       setQrcode(res.data?.qrcode_path);
@@ -103,7 +103,7 @@ const Twofa = () => {
   //   console.log(user?.user?.two_factor);
   //   if (user?.user?.two_factor) {
   //       try {
-  //         const res = await axios.get(`http://${process.env.BACKEND_IP}:8000/api/clearqrcode/`, { withCredentials: true });
+  //         const res = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/clearqrcode/`, { withCredentials: true });
   //         if (res.status === 200){
         
   //           await get_auth_user();
@@ -140,7 +140,7 @@ const Twofa = () => {
       .join("");
       try {
         const res = await axios.post(
-        `http://${process.env.BACKEND_IP}:8000/api/otpverify/`,
+        `http://${import.meta.env.VITE_BACKEND_IP}/api/otpverify/`,
         {
           otp: otp
         },

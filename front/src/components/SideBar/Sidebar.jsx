@@ -69,7 +69,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (searchQuery.trim()) {
-      fetch(`http://${process.env.BACKEND_IP}:8000/api/search/?q=${searchQuery}`)
+      fetch(`http://${import.meta.env.VITE_BACKEND_IP}/api/search/?q=${searchQuery}`)
         .then((response) => response.json())
         .then((data) => {
           const filteredResults = data.filter((item) => item.profile_name !== "ke3ki3a");

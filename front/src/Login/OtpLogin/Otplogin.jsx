@@ -31,7 +31,7 @@ const Otplogin = () => {
   //   try {
   //     await get_auth_user();
   //     const res = await axios.post(
-  //       `http://${process.env.BACKEND_IP}:8000/api/otpverify/`,
+  //       `http://${import.meta.env.VITE_BACKEND_IP}/api/otpverify/`,
   //       { otp: otp },
   //       {
   //         withCredentials: true,
