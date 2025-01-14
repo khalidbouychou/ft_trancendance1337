@@ -137,9 +137,10 @@
 .chatFormContainer {
     display: flex;
     justify-content: center;
-    background-color: #40444b;
+    background-color: rgb(44, 8, 85);
     width: 100%;
     height: 70px;
+    align-items: center;
     /* padding-bottom: 20px; */
 }
 
@@ -150,6 +151,7 @@
     border-radius: 20px;
     width: 100%;
     max-width: 70%;
+    height: 60%;
     
 }
 
@@ -170,6 +172,9 @@
     height: 100%;
     font-style: italic;
     color: #72767d;
-    font-size: 1.2em;
-    background-color: rgba(174, 176, 180, 0.3);
+    p{
+        font-size: 17px;
+        letter-spacing: 1px;
+        font-weight: 800;
+    }
 }

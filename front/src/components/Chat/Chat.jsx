@@ -180,9 +180,6 @@ const Chat = () => {
     }
   }, [receivedMessage]);
 
-
-  
-
   const updateChatRooms = (prevData, newMessage) => {
     const updatedChatRooms = prevData.chat_rooms.map((room) => {
       if (room.id === newMessage.chat_room) {
