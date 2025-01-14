@@ -10,7 +10,7 @@ import { GiCrossMark } from "react-icons/gi";
 import { GiCheckMark } from "react-icons/gi";
 import InvitGameCard from "./components/invitGameCard/InvitGameCard";
 import NotiCardSent from "./components/notiCardSent/NotiCardSent";
-const Notif = ({ open, notifReceived, setNotifReceived}) => {
+const Notif = ({ open, notifReceived, setNotifReceived }) => {
   const { t } = useContext(AuthContext);
   const [FR_notif_received, setFR_notif_received] = useState([]);
   const [GR_notif_received, setGR_notif_received] = useState([]);
@@ -21,29 +21,21 @@ const Notif = ({ open, notifReceived, setNotifReceived}) => {
 
   // WebSocket notification handler
   useEffect(() => {
-    if (notif) {
-      if (notif.status === "pending") {
-        setNotifReceived(true)
-        if (notif.notif_type === "FR") {
-          setFR_notif_received((prev) => [...prev, notif]);  // Adds to FR_notif_received state
-        } else if (notif.notif_type === "GR") {
-          setGR_notif_received((prev) => [...prev, notif]);  // Adds to GR_notif_received state
-        }
-      } else if (notif.status === "sent") {
-        if (notif.notif_type === "FR") {
-          setFR_notif_sent((prev) => [...prev, notif]);  // Adds to FR_notif_sent state
-        } else if (notif.notif_type === "GR") {
-          setGR_notif_sent((prev) => [...prev, notif]);  // Adds to GR_notif_sent state
-        }
+    if (notif && notif.status === "pending") {
+      if (notif.notif_type === "FR") {
+        setFR_notif_received([...FR_notif_received, notif]);
+      } else if (notif.notif_type === "GR") {
+        setGR_notif_received([...GR_notif_received, notif]);
       }
     }
+    console.log('notif1', notif);
   }, [notif]);
 
   // Fetch notifications on initial load
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/notif/", {
+        const response = await axios.get("http://10.13.10.12:8000/api/notif/", {
           withCredentials: true,
         });
         const notifications = response.data;
@@ -76,6 +68,5 @@ const Notif = ({ open, notifReceived, setNotifReceived}) => {
     </div>
   );
 };
-
 
 export default Notif;

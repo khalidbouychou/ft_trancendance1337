@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styl from "./History.module.css";
-import CardFriend from "./components/CardFriend/CardFriend";
-import CardBlocked from "./components/CardBlocked/CardBlocked";
 import CardMatch from "./components/CardMatch/CardMatch";
-import { IoIosArrowForward } from "react-icons/io";
-import Add from "../../assets/Add.svg";
-import Chat from "../../assets/Chat.svg";
-import Block from "../../assets/Block.svg";
-import Settings from "./components/Settings/Settings";
 import { RxTextAlignJustify } from "react-icons/rx";
 
 const History = ({ username, ismyprofil }) => {
   const [activeSection, setActiveSection] = useState("matchhistory");
-  const [friend, setFriends] = useState([]);
-  const [userBlocked, setUserBlocked] = useState([]);
   const [isGame2Visible, setIsGame2Visible] = useState(false);
   const [currentGame, setCurrentGame] = useState("Ping Pong");
   const [isIconRotated, setIsIconRotated] = useState(false);
@@ -31,7 +22,8 @@ const History = ({ username, ismyprofil }) => {
 
       try {
         const response = await fetch(
-          `http://localhost:8000/matches/matches/${username}/`
+          `http://10.13.10.12:8000/matches/matches/${username}/`
+          // `http://10.13.10.12:8000/matches/matches/${username}/`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch match history");
@@ -67,8 +59,7 @@ const History = ({ username, ismyprofil }) => {
     setSett(prevSett => prevSett === 'none' ? 'flex' : 'none')
   }
 
-  console.log("matches", matches);
-  console.log("username", username);
+
   return (
     <div className={styl.last}>
       <div className={styl.Title}>

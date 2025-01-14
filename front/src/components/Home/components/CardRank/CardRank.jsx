@@ -14,7 +14,7 @@ const CardRank = ({data, index}) => {
     const [color, setColor] = useState('rgba(255, 255, 255, 0.3)')
     const [type, setType] = useState('')
     const Navigate = useNavigate();
-    console.log('huwaaa', data)
+
 
     useEffect(() => {
         if (data) {
@@ -33,7 +33,7 @@ const CardRank = ({data, index}) => {
     }
 
     useEffect(() => {
-        if (user && user.user.username === username) {
+        if (user && user?.user?.username === username) {
             setColor('rgba(65, 21, 160, 0.3)');
         }
         else 

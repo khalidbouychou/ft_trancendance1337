@@ -13,7 +13,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
   const handleForm = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8000/api/signup/", {
+      const res = await axios.post(`http://10.13.10.12:8000/api/signup/`, {
         username,
         profile_name: displayname,
         password

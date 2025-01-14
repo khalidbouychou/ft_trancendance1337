@@ -1,25 +1,20 @@
-import React, { useContext } from "react";
+import React from "react";
 import styl from "./CardMatch.module.css";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../../../../UserContext/Context";
-import { Link, useParams } from "react-router-dom";
 
-const CardMatch = ({ match, profileName, animationDelay , setProfileName}) => {
-  let { profile_name } = useParams();
-  const { user } = useContext(AuthContext)
+const CardMatch = ({ match, profileName, animationDelay }) => {
   const navigate = useNavigate();
-  const opponent = match.winner === profile_name ? match.loser : match.winner;
-  const status = match.winner === profile_name ? "Victory" : "Defeat";
+  const opponent = match.winner === profileName ? match.loser : match.winner;
+  const status = match.winner === profileName ? "Victory" : "Defeat";
   const score = `${match.left_score} - ${match.right_score}`;
-  const color = match.winner === profile_name ? "linear-gradient(to right, #006437, #00b378)" : "linear-gradient(to right, #64000e, #8b0000)";
+  const color = match.winner === profileName ? "linear-gradient(to right, #006437, #00b378)" : "linear-gradient(to right, #64000e, #8b0000)";
   const [date, time] = match.date.split("T");
   const formattedTime = time.slice(0, 5);
   const image =
-    match.winner === profile_name ? match.loser_avatar : match.winner_avatar;
-    console.log('userName', profile_name)
+    match.winner === profileName ? match.winner_avatar : match.loser_avatar;
+
   const handleClick = () => {
-    // setProfileName(profileName);
-    navigate(`/profile/${opponent}`);
+    navigate(`/profile/${opponent}`, { replace: true });
   };
 
   return (
@@ -35,7 +30,9 @@ const CardMatch = ({ match, profileName, animationDelay , setProfileName}) => {
           </div>
         </div>
         <p>
-          {opponent.toUpperCase()}
+          {opponent.length > 8
+            ? opponent.toUpperCase().slice(0, 6) + "."
+            : opponent.toUpperCase()}
         </p>
       </div>
       <div className={styl.res}>

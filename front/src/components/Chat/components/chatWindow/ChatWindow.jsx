@@ -89,7 +89,7 @@ export default function ChatWindow({
         game_type: "PG",
         to_user_id: otherUser.id,
       });
-      const pong_socket = new WebSocket(`ws://localhost:8000/ws/play-friend/`);
+      const pong_socket = new WebSocket(`ws://10.13.10.12:8000/ws/play-friend/`);
       pong_socket.onopen = () => {
         const data2 = {
           action: "friend_game",
@@ -134,7 +134,7 @@ export default function ChatWindow({
                 </div>
               )}
             </div>
-
+            {(otherUser.username !== "ke3ki3a") &&
             <ChatOptionsMenu
               onBlockUser={handleBlockUser}
               onPlayPong={handlePlayPong}
@@ -142,7 +142,7 @@ export default function ChatWindow({
               currentUser={currentUser}
               viewProfile={viewProfile}
               t={t}
-            />
+            />}
           </div>
           <div className={styl.chatMessages} ref={chatMessagesRef}>
             {chat.map((msg, index) => (
@@ -153,6 +153,7 @@ export default function ChatWindow({
               />
             ))}
           </div>
+          {(otherUser.username !== "ke3ki3a") &&
           <div className={styl.chatFormContainer} onClick={sendMessage}>
             <form className={styl.chatForm} onSubmit={sendMessage}>
               <input
@@ -165,6 +166,7 @@ export default function ChatWindow({
               />
             </form>
           </div>
+          }
         </>
       ) : (
         <div className={styl.noContactSelected}>

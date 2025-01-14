@@ -25,12 +25,13 @@ const Notification = () => {
                 setGR_notif_received([...GR_notif_received, notif]);
             }
         }
+        console.log('notif2', notif);
     }, [notif]);
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/notif/' , {
+        const response = await axios.get('http://10.13.10.12:8000/api/notif/' , {
             withCredentials: true,
         });
         const notifications = response.data;

@@ -12,6 +12,7 @@ from channels.layers import get_channel_layer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from Chat2.models import ChatRoom, Message
+from web3_app.views import add_score
 
 channel_layer = get_channel_layer()
  
@@ -32,8 +33,6 @@ class GameStateManager:
             del cls._game_states[room_name]
 
 class GameConsumer(AsyncWebsocketConsumer):
-    # authentication_classes = [SessionAuthentication]
-    # permission_classes = [IsAuthenticated] 
     profile_name = ''
     username = ''
     avatar = ''
@@ -142,12 +141,15 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if match_found:
                     group_name = f'game{matched_players[0]}vs{matched_players[1]}'
                     game_state = {
+                        'message': 'game_data',
                         'ballx': 400,
                         'bally': 250,
                         'left_paddle_y': 0,
                         'right_paddle_y': 0,
                         'left_score': 0,
                         'right_score': 0,
+                        'game_width': self.game_width,
+                        'game_height': self.game_height,
                         'left_player': GameConsumer.queue[matched_players[0]]['profile_name'],
                         'right_player': GameConsumer.queue[matched_players[1]]['profile_name']
                     }
@@ -405,11 +407,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                 GameConsumer.players_ingame.remove(self.left_player_username)
                 GameConsumer.players_ingame.remove(self.right_player_username)
         if self.game_loop:
-            await self.pack_data_to_send()
+            await self.pack_data_to_send() 
  
 class inviteConsumer(AsyncWebsocketConsumer):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
     game_queue = {}
     room_group_name = ''
     name = ''
@@ -433,6 +433,10 @@ class inviteConsumer(AsyncWebsocketConsumer):
     left_score = 0
     bonus = 0
     ball_speed = 800 / (2 * 60) + bonus
+    left_profile_name = ''
+    right_profile_name = ''
+    left_username = ''
+    right_username = ''
 
     async def connect(self):
         await self.accept()
@@ -495,6 +499,7 @@ class inviteConsumer(AsyncWebsocketConsumer):
         elif action == 'connect':
             print('a user has connected')
             username = data.get('username')
+            profile_name = data.get('profile_name')
             if len(inviteConsumer.game_queue) > 0:
                 print('game queue is not empty')
                 game_id = data.get('game_id')
@@ -504,9 +509,11 @@ class inviteConsumer(AsyncWebsocketConsumer):
                     if game['player1']['username'] == username:
                         game['player1']['channel_name'] = self.channel_name
                         game['player1']['instance'] = self
+                        game['player1']['profile_name'] = profile_name
                     elif game['player2']['username'] == username:
                         game['player2']['channel_name'] = self.channel_name
                         game['player2']['instance'] = self
+                        game['player2']['profile_name'] = profile_name
                     self.inqueue = True
                     self.room_group_name = game_id
                     print(f"Player {username} joined game")
@@ -517,15 +524,27 @@ class inviteConsumer(AsyncWebsocketConsumer):
                         game['player2']['instance'].admin = self
                         game['player1']['instance'].inqueue = False
                         game['player2']['instance'].inqueue = False
+                        game['player1']['instance'].left_profile_name = game['player1']['profile_name']
+                        game['player1']['instance'].left_username = game['player1']['username']
+                        game['player1']['instance'].right_profile_name = game['player2']['profile_name']
+                        game['player1']['instance'].right_username = game['player2']['username']
+
+                        game['player2']['instance'].left_profile_name = game['player1']['profile_name']
+                        game['player2']['instance'].left_username = game['player1']['username']
+                        game['player2']['instance'].right_profile_name = game['player2']['profile_name']
+                        game['player2']['instance'].right_username = game['player2']['username']
                         game_state = {
+                            'message': 'game_data',
                             'ballx': 400,
                             'bally': 250,
                             'left_paddle_y': 0,
                             'right_paddle_y': 0,
                             'left_score': 0,
                             'right_score': 0,
-                            'left_player': game['player1']['username'],
-                            'right_player': game['player2']['username']
+                            'game_width': self.game_width,
+                            'game_height': self.game_height,
+                            'left_player': game['player1']['profile_name'],
+                            'right_player': game['player2']['profile_name']
                         }
                         GameStateManager.set_state(game_id, game_state)
 
@@ -539,9 +558,9 @@ class inviteConsumer(AsyncWebsocketConsumer):
                         )
                         data = {
                             'message': 'game_started',
-                            'player_id1': game['player1']['username'],
+                            'player_id1': game['player1']['profile_name'],
                             'player_1_avatar': game['player1']['avatar1'],
-                            'player_id2': game['player2']['username'],
+                            'player_id2': game['player2']['profile_name'],
                             'player_2_avatar': game['player2']['avatar2'],
                         }
                         await self.channel_layer.group_send(
@@ -622,6 +641,8 @@ class inviteConsumer(AsyncWebsocketConsumer):
             'left_score': self.left_score,
             'game_width': self.game_width,
             'game_height': self.game_height,
+            'left_player': self.left_profile_name,
+            'right_player': self.right_profile_name,
         }
         GameStateManager.set_state(self.room_group_name, packet)
     
@@ -680,7 +701,6 @@ class inviteConsumer(AsyncWebsocketConsumer):
         elif (self.ballx - 15 <= self.racketWidth and
             self.left_paddleY <= (self.bally + 15) and
             self.left_paddleY + self.racketHeight >= (self.bally - 15)):
-
             offset = (self.bally - (self.left_paddleY + self.racketHeight / 2)) / (self.racketHeight / 2)
             if (offset > 0 and offset > 10):
                 offset = 10
@@ -690,15 +710,12 @@ class inviteConsumer(AsyncWebsocketConsumer):
             self.balldirectionX *= -1
             self.balldirectionY = offset
             self.bonus += 1
-
         elif self.bally - 15 <= 0:
             self.bally = 16
             self.balldirectionY *= -1
-        
         elif self.bally + 15 >= self.game_height:
             self.bally = self.game_height - 16
             self.balldirectionY *= -1
-        
         elif self.ballx <= 15:
             self.ballx = 400
             self.bally = 250
@@ -721,9 +738,34 @@ class inviteConsumer(AsyncWebsocketConsumer):
                         'message': data
                     }
                 )
-
                 GameStateManager.remove_state(self.room_group_name)
+                first_player = await sync_to_async(Player.objects.get)(username=self.left_username)
+                first_player_data = await sync_to_async(PingData.objects.get)(player=first_player.id)
+                second_player = await sync_to_async(Player.objects.get)(username=self.right_username)
+                second_player_data = await sync_to_async(PingData.objects.get)(player=second_player.id)
 
+                first_player_data.losses += 1
+                first_player_data.exp_game += 1
+                second_player_data.wins += 1
+                second_player_data.exp_game += 10
+
+                await sync_to_async(first_player_data.save)()
+                await sync_to_async(second_player_data.save)()
+
+                match = await sync_to_async(Matches.objects.create)(
+                    game_type='Pong',
+                    player=first_player,
+                    opponent=second_player,
+                    winner=second_player.username,
+                    winner_profile_name=second_player.profile_name,
+                    loser_profile_name=first_player.profile_name,
+                    winner_avatar=second_player.avatar,
+                    loser_avatar=first_player.avatar,
+                    loser=first_player.username,
+                    left_score=self.left_score,
+                    right_score=self.right_score
+                )
+                await sync_to_async(match.save)()
         elif self.ballx >= self.game_width - 15:
             self.ballx = 400
             self.bally = 250
@@ -745,8 +787,34 @@ class inviteConsumer(AsyncWebsocketConsumer):
                     'type': 'game_data',
                     'message': data
                 })
-
                 GameStateManager.remove_state(self.room_group_name)
+                first_player = await sync_to_async(Player.objects.get)(username=self.left_username)
+                first_player_data = await sync_to_async(PingData.objects.get)(player=first_player.id)
+                second_player = await sync_to_async(Player.objects.get)(username=self.right_username)
+                second_player_data = await sync_to_async(PingData.objects.get)(player=second_player.id)
+
+                first_player_data.wins += 1
+                first_player_data.exp_game += 10
+                second_player_data.losses += 1
+                second_player_data.exp_game += 1
+
+                await sync_to_async(first_player_data.save)()
+                await sync_to_async(second_player_data.save)()
+
+                match = await sync_to_async(Matches.objects.create)(
+                    game_type='Pong',
+                    player=first_player,
+                    opponent=second_player,
+                    winner=first_player.username,
+                    loser=second_player.username,
+                    winner_profile_name=first_player.profile_name,
+                    loser_profile_name=second_player.profile_name,
+                    winner_avatar=first_player.avatar,
+                    loser_avatar=second_player.avatar,
+                    left_score=self.left_score,
+                    right_score=self.right_score
+                )
+                await sync_to_async(match.save)()
         await self.pack_data_to_send()
         
 
@@ -1428,6 +1496,9 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                             'message': data
                         }
                     )
+                web3_score = f"first round:[first_winner:{tournament['winner1_alias']}, second_winner:{tournament['winner2_alias']}] final round:[winner:{tournament['winner1_alias']}]"
+                # print(web3_score)
+                add_score(web3_score)
         elif self.ballx >= self.game_width - 15:
             self.ballx = 400
             self.bally = 250
@@ -1595,6 +1666,9 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                             'message': data
                         }
                     )
+                    web3_score = f"first round:[first_winner:{tournament['winner1_alias']}, second_winner:{tournament['winner2_alias']}] final round:[winner:{tournament['winner1_alias']}]"
+                    # print(web3_score)
+                    add_score(web3_score)
         if self.game_loop:
             await self.pack_data_to_send(tournament, self.gamename)
 

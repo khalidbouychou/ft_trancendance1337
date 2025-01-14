@@ -7,7 +7,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication 
 
 from rest_framework.views import APIView
+# from web3_app.views import add_score
 
+import json
+
+    
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
@@ -23,10 +27,14 @@ class UserDataView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+
+        # add_score(10)
+        
         context = {
             'username': request.user.username,
             'profile_name': request.user.profile_name,
             'avatar': request.user.avatar,
             'exp_game': PingData.objects.get(player=request.user).exp_game,
         }
-        return JsonResponse(context)
+        return JsonResponse(context) 
+ 

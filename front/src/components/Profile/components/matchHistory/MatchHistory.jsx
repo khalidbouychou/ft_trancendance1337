@@ -3,8 +3,8 @@ import styl from "./MatchHistory.module.css";
 import axios from "axios";
 import CardMatch from "./components/cardMatch/CardMatch";
 
-const MatchHistory = ({ profileName, t, setProfileName }) => {
-  const [matches, setMatches] = useState([]);
+const MatchHistory = ({ profileName, t }) => {
+  const [matchees, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,7 +12,7 @@ const MatchHistory = ({ profileName, t, setProfileName }) => {
     const fetchMatches = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/matches/${profileName}/`,
+          `http://10.13.10.12:8000/api/matches/${profileName}/`,
           {
             withCredentials: true,
           }
@@ -50,15 +50,14 @@ const MatchHistory = ({ profileName, t, setProfileName }) => {
         <p>{t("Status")}</p>
         <p>{t("Date & Time")}</p>
       </div>
-      {matches.length > 0 ? (
+      {matchees.length > 0 ? (
         <div className={styl.matches}>
-          {matches.map((match, index) => (
+          {matchees.map((match, index) => (
             <CardMatch
               key={index}
               match={match}
               profileName={profileName}
               animationDelay={`${0.2 * index}s`}
-              setProfileName={setProfileName}
             />
           ))}
         </div>

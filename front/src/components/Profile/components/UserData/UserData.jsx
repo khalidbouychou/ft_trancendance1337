@@ -1,4 +1,4 @@
-import styl from "./UserData.module.css";
+Zimport styl from "./UserData.module.css";
 import { CiMedal } from "react-icons/ci";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { VscChromeClose } from "react-icons/vsc";
@@ -8,6 +8,7 @@ import { SlOptions } from "react-icons/sl";
 import { IoIosPersonAdd } from "react-icons/io";
 import { TbLock } from "react-icons/tb";
 import { BsChatDots } from "react-icons/bs";
+import axios from "axios";
 
 const UserData = ({ userData, ismyprofil }) => {
   const [settingsVisible, setSettingsVisible] = useState(false);
@@ -26,16 +27,15 @@ const UserData = ({ userData, ismyprofil }) => {
       if (!username) return;
 
       try {
-        const response = await fetch(`http://localhost:8000/api/${fetchUrl}/${username}`);
+        const response = await fetch(`3r1p9.1337.ma:8000/api/${fetchUrl}/${username}`);
         if (response.ok) {
           const data = await response.json();
           setStatisticData(data[0]);
-          console.log('Fetched Data:', data);
-        } else {
-          console.log('Failed to fetch data.');
+       
         }
+      
       } catch (error) {
-        console.log('Fetch error:', error);
+      
       }
     };
 

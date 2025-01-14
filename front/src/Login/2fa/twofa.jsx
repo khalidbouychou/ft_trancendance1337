@@ -6,102 +6,141 @@ import { useLocation } from "react-router-dom";
 import Desable2fa from "./Desable2fa";
 import { toast } from "react-toastify";
 import BounceLoader from "react-spinners/BounceLoader";
+import { use } from "react";
 
 const Twofa = () => {
-  const [twofa, setTwofa] = useState(false);
+  // const [twofa, setTwofa] = useState(false);
   const [qrcode, setQrcode] = useState("");
-  const { t,user, get_auth_user ,setUser } = useContext(AuthContext);
-  const [isEnable, setEnable] = useState("Off");
-  const [verified, setVerified] = useState(false);
+  const { t,user, get_auth_user ,setUser,verifyotp,renderInputs} = useContext(AuthContext);
+  const [isEnable, setEnable] = useState(false);
+  const [verified, setVerified] = useState(user?.user?.otp_verified);
 
   const location = useLocation();
 
   const numInputs = 6;
 
-  const QR_CODE_URL = "http://localhost:8000/api/qrcode/";
-  const USER_STATUS_URL = "http://localhost:8000/api/user_status/";
+  const QR_CODE_URL = `http://10.13.10.12:8000/api/qrcode/`;
+  const USER_STATUS_URL = `http://10.13.10.12:8000/api/user_status/`;
 
-  const renderInputs = () => {
-    return Array.from({ length: numInputs }).map((_, i) => (
-      <input key={i} type="text" className="otp-input" maxLength={1} />
-    ));
-  };
+  // const renderInputs = () => {
+  //   return Array.from({ length: numInputs }).map((_, i) => (
+  //     <input key={i} type="text" className="otp-input" maxLength={1} />
+  //   ));
+  // };
 
-  useEffect(() => {
-    const fetchTwofaStatus = async () => {
-      await get_auth_user();
-      const res = await axios.get(USER_STATUS_URL, { withCredentials: true });
-      if (res.status === 200) {
-        setUser(res?.data?.user);
-        setVerified(res?.data?.user?.otp_verified);
-        setTwofa(res?.data?.user?.two_factor);
-        setEnable(res?.data?.user?.two_factor);
-        if (res?.data?.user?.qrcode_path) {
+  // useEffect(() => {
+  //   const fetchTwofaStatus = async () => {
+  //     // await get_auth_user();
+  //     const res = await axios.get(USER_STATUS_URL, { withCredentials: true });
+  //     if (res.status === 200) {
+  //       setUser(res?.data?.user);
+  //       setVerified(res?.data?.user?.otp_verified);
+  //       // setTwofa(res?.data?.user?.two_factor);
+  //       setEnable(res?.data?.user?.two_factor);
+  //       if (res?.data?.user?.qrcode_path) {
         
-          setTimeout(() => {
-            setQrcode(`http://localhost:8000/${res?.data?.user?.qrcode_path}`);
-          }, 2000);
-        }
-      }
+  //         setTimeout(() => {
+  //           setQrcode(`${res?.data?.user?.qrcode_path}`);
+  //         }, 2000);
+  //       }
+  //     }
      
-    };
-    fetchTwofaStatus();
-  }, [location.pathname]);
+  //   };
+  //   fetchTwofaStatus();
+  // }, [location.pathname]);
 
 
-useEffect(() => {
+  const Offswitch = async () => {
+    console.log("off switch",isEnable);
 
-}, [isEnable])
-  const handleSwitch = async (e) => {
-    const isOn = e.target.value === t("On");
-    setEnable(isOn);
-    const url = isOn && QR_CODE_URL;
+    setQrcode("");
+    setEnable(false);
+    // if (user?.user?.two_factor)
+    // {
 
-    if (!isOn) {
-      if (!twofa) {
-        try {
-          const res = await axios.get("http://localhost:8000/api/clearqrcode/", { withCredentials: true });
-          if (res.status === 200){
-        
-            await get_auth_user();
-            setQrcode(res.data?.qrcode_path);
-            // setQrcode("");
-          };
-        }
-        catch (err){setQrcode("");}
-      }
-      else {setQrcode("");}
+    //   try {
+    //     const res = await axios.get(`http://10.13.10.12:8000/api/clearqrcode/`, { withCredentials: true });
+    //     if (res.status === 200){
+    //       await get_auth_user();
+    //       setQrcode(res.data?.qrcode_path);
+    //       // setQrcode("");
+    //     };
+    //   }
+    //   catch (err){setQrcode("");}
+    // }
+  }
+
+  const Onswitch = async () => {
+    console.log("on switch",isEnable);
+    // await get_auth_user();
+    setEnable(true);
+    // console.log(user);
+    const usertofa = user?.user?.two_factor | user?.two_factor
+    console.log(usertofa);
+    if(!usertofa){
+    try {
+      const res = await axios.get(QR_CODE_URL, { withCredentials: true });
+      if (res.status === 200) {
+        setTimeout(() => {
+        setQrcode(`${res.data?.user?.qrcode_path}`);
+        }, 2000);
     }
-    else if (url == "undefined") {
+    else {
       setQrcode("");
-      setEnable(!isOn);
-      setTwofa(user?.user?.two_factor); 
-    } else {
-      try {
-        await get_auth_user();
-        setQrcode("");
-        const res = await axios.get(url, { withCredentials: true });
-        if (res.status === 200) { 
-    
-          setTimeout(() => {
-            setQrcode(`${res.data?.user?.qrcode_path}`);
-          }, 1000);
-        }
-      } catch (error) {
-        // setQrcode("");
-      }
     }
-  };
+    } catch (error) {
+      setQrcode("");
+      console.log(error);
+        }    }
+  }
+
+
+  // const handleSwitch = async (e) => {
+  //   const isOn = e.target.value === t("On");
+  //   setEnable(isOn);
+  //   const url = isOn && QR_CODE_URL;
+  //   // await get_auth_user();
+  //   console.log(user?.user?.two_factor);
+  //   if (user?.user?.two_factor) {
+  //       try {
+  //         const res = await axios.get(`http://10.13.10.12:8000/api/clearqrcode/`, { withCredentials: true });
+  //         if (res.status === 200){
+        
+  //           await get_auth_user();
+  //           setQrcode(res.data?.qrcode_path);
+  //           // setQrcode("");
+  //         };
+  //       }
+  //       catch (err){setQrcode("");}
+  //   }
+  //  else {
+  //     try {
+  //       await get_auth_user();
+  //       setQrcode("");
+  //       if (!user?.user?.two_factor)
+  //         {
+  //             const res = await axios.get(QR_CODE_URL, { withCredentials: true });
+  //             if (res.status === 200) { 
+  //               setTimeout(() => {
+  //               setQrcode(`${res.data?.user?.qrcode_path}`);
+  //               }, 1000);
+  //           }
+  //         }
+  //     } catch (error) {
+  //       // setQrcode("");
+  //     }
+  //   }
+  // };
 
   const handlverify = async () => {
-    await get_auth_user();
+    // await get_auth_user();
     const inputs = document.getElementsByClassName("otp-input");
     const otp = Array.from(inputs)
       .map((input) => input.value)
       .join("");
-    try {
-      const res = await axios.post(
-        "http://localhost:8000/api/otpverify/",
+      try {
+        const res = await axios.post(
+        `http://10.13.10.12:8000/api/otpverify/`,
         {
           otp: otp
         },
@@ -110,14 +149,15 @@ useEffect(() => {
           headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("csrftoken="))
-              .split("=")[1]
+            .split("; ")
+            .find((row) => row.startsWith("csrftoken="))
+            .split("=")[1]
           }
         }
       );
       if (res.status === 200) {
-        setVerified(true);
+        setVerified(res?.data?.user?.otp_verified);
+        setQrcode("");
         toast.success(t("2FA verified"), {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
@@ -148,7 +188,8 @@ useEffect(() => {
                 name="qrcode"
                 value={t("On")}
                 checked={isEnable}
-                onClick={handleSwitch}
+                // onClick={handleSwitch}
+                onClick={Onswitch}
               />
             </div>
             <div className="off">
@@ -158,7 +199,8 @@ useEffect(() => {
                 id="qrcode-off"
                 name="qrcode"
                 value={t("Off")}
-                onClick={handleSwitch}
+                // onClick={handleSwitch}
+                onClick={Offswitch}
                 checked={!isEnable}
               />
             </div>
@@ -167,9 +209,8 @@ useEffect(() => {
           {!isEnable ? (
             <Desable2fa
               setVerified={setVerified}
-              setEnable={setEnable}
-              isEnable={twofa}
               message={t("If you want to desable 2fa entre OTP code")}
+              setUser={setUser}
             />
           ) : (
             <>
@@ -178,7 +219,7 @@ useEffect(() => {
               ) : (
                 <>
                   <h1>{t("Scan the QR code")}</h1>
-                  <div className="content">
+                  {/* <div className="content"> */}
                     <div className="cont">
                       <div className="qr">
                         {!qrcode ? (
@@ -194,8 +235,9 @@ useEffect(() => {
                         <div className="inputs-container">{renderInputs()}</div>
                         <div className="btns">
                           <button
-                            className="btn btn-verify"
+                            className="btn-verify"
                             onClick={handlverify}
+                          
                           >
                             {t("Verify")}
                           </button>
@@ -211,7 +253,7 @@ useEffect(() => {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  {/* </div> */}
                 </>
               )}
             </>

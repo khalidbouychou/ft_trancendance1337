@@ -59,48 +59,43 @@ class PlayerViewSet(viewsets.ModelViewSet):
  
     def get_user_by_profile_name(self, request, username):
         try:
-            print('profile_name ==>', username)
-            user = Player.objects.get(profile_name=username) 
+            user = Player.objects.get(profile_name=username)
             serializer = PlayerSerializer(user)
-            print("serialize --------",serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Player.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def generate_qr_code(self, request): 
+    def generate_qr_code(self, request):
         token = request.COOKIES.get('access') 
         if not token:
-            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)  
+            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST) 
         try:
-            user = AccessToken(token).user  
+            user = AccessToken(token).user
             if user.two_factor:
                 return Response({'error': '2FA already enabled'}, status=status.HTTP_400_BAD_REQUEST)
             user.two_factor = True
             user.save()
             return Response({'msg': '2FA enabled'}, status=status.HTTP_200_OK) 
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST) 
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def create_user(self, user_data):
         user = Player.objects.create(
-            username=user_data['username'], 
+            username=user_data['username'],
             avatar=user_data['avatar'],
             profile_name=user_data['username']+'_intra',
             status_network='online',
-            bool_login = True,
-            is_anonimized = False
+            bool_login=True,
         )
-        p = PingData.objects.create(player=user) 
+        p = PingData.objects.create(player=user)
         user.save()
         return user
 
     def auth_intra(self, request):
         CID = os.environ.get('C_ID')
-        print('CID ==>', CID, flush=True)
-        REDIRECT_URI = os.environ.get('REDIRECT_URI')
-        print('REDIRECT_URI ==>', REDIRECT_URI, flush=True)
+        REDIRECT_URI = os.environ.get("REDIRECT_URI")
         try:
             response = Response(
                 {'url': f'https://api.intra.42.fr/oauth/authorize?client_id={CID}&redirect_uri={REDIRECT_URI}&response_type=code'}, status=status.HTTP_200_OK)
@@ -124,7 +119,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
                     'client_id': os.environ.get('C_ID'),
                     'client_secret': os.environ.get('SCID'),
                     'code': request.data.get('code'),
-                    'redirect_uri': os.environ.get('REDIRECT_URI')
+                    'redirect_uri': os.environ.get("REDIRECT_URI")
                 }
             )
             response.raise_for_status()
@@ -142,45 +137,36 @@ class PlayerViewSet(viewsets.ModelViewSet):
             
             intra_data = response.json()
             user_data = {
-                'username': intra_data.get('login'), 
+                'username': intra_data.get('login'),
                 'avatar': intra_data.get('image')['link'],
+                'profile_name': intra_data.get('login'), 
             }
             user = Player.objects.filter(
                 username=user_data['username']).first()
             if not user:
-                print("----------------- new intra user -------------------")
                 user = self.create_user(user_data)
-            elif not user.is_anonimized :
-                authenticate(request, username=user_data['username'])
-                login(request, user)
-                # user.bool_login = True
-                # user.status_network = 'online'
-                # user.save()
-                tokens = self.create_jwt_token(user)
-                data= PlayerSerializer(user).data
-                response = Response(data, status=status.HTTP_200_OK)
-                is_secure = request.is_secure()
-                response.set_cookie(key='token', value=tokens['access'], secure=is_secure , httponly=True ,samesite='Lax' ) 
-                response.set_cookie(key='refresh', value=tokens['refresh'], secure=is_secure , httponly=True , samesite='Lax') 
-                return response
-            else :
-                return Response({'error': "this account anonymized"}, status=status.HTTP_400_BAD_REQUEST) 
+            if user.is_anonimized ==True and user.is_active == False:
+                return Response({'error': 'Account is anonymized'}, status=status.HTTP_400_BAD_REQUEST)
+            user.status_network='online'
+            user.bool_login=True
+            authenticate(request, username=user_data['username'])
+            login(request, user)
+            user.save()
+            tokens = self.create_jwt_token(user)
+            data= PlayerSerializer(user).data
+            response = Response(data, status=status.HTTP_200_OK)
+            is_secure = request.is_secure()
+            response.set_cookie(key='token', value=tokens['access'], secure=is_secure , httponly=True ,samesite='Lax' ) 
+            response.set_cookie(key='refresh', value=tokens['refresh'], secure=is_secure , httponly=True , samesite='Lax') 
+            return response
         except requests.RequestException as e:
             return Response({'error': 'Request failed: {}'.format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-    def getusers (self,request):
-        users = Player.objects.all()
-        data = PlayerSerializer(users, many=True)
-        return Response(data.data, status=status.HTTP_200_OK)
 
 #------------------------------------LOGIN INTRA------------------------------------------------------------
 
-
 #-----------------------------------Logout-------------------------------------------------------------
-
-
 class LogoutView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -198,8 +184,6 @@ class LogoutView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
 class AuthUser(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -212,13 +196,12 @@ class AuthUser(APIView):
                 response = Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
                 django_logout(request)
                 return DeleteCookies(response)
-
             try:
                 AccessToken(token) # Check if the token is valid
             except TokenError as e:
                 refresh = request.COOKIES.get('refresh')
                 crstf = request.COOKIES.get('csrftoken')
-                res = requests.post('http://localhost:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
+                res = requests.post('http://10.13.10.12:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
                 res.raise_for_status() # Raise an exception if the status code is not 2xx
                 access = res.json().get('access')
                 refresh = res.json().get('refresh')
@@ -242,10 +225,9 @@ class SignupForm (generics.CreateAPIView):
     serializer_class = SignupSerializer
     
     
-
 class SigninForm(generics.CreateAPIView):
     queryset = Player.objects.all()
-    serializer_class = PlayerSerializer
+    serializer_class = SigninSerializer
 
     def post(self, request):
         try:
@@ -287,7 +269,6 @@ class UserStatus(APIView):
         user = request.user
         return Response({'user': PlayerSerializer(user).data}, status=status.HTTP_200_OK)
 
-
 # Configuration       
 cloudinary.config( 
     cloud_name = os.environ.get('CLOUD_NAME'),
@@ -295,7 +276,6 @@ cloudinary.config(
     api_secret = os.environ.get('API_SECRET'),
     secure=os.environ.get('SECURE'),
 )
-
 class GenerateQRcode(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -315,6 +295,7 @@ class GenerateQRcode(APIView):
         qrcode_url = cludinary_url['url']
         # os.remove(path)
         user.qrcode_path = qrcode_url
+        os.remove(path_url)
         user.save()
         response = Response({'msg': 'QR code generated'}, status=status.HTTP_200_OK)  
         response.data = {
@@ -339,9 +320,11 @@ class DesableTwoFactor(APIView):
         user.mfa_secret = ""
         user.otp_verified = False
         user.qrcode_path = ""
-        user.bool_login = False
         user.save()
-        return Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
+        data = PlayerSerializer(user).data
+        response = Response({'msg': '2FA disabled'}, status=status.HTTP_200_OK)
+        response.data = {'user': data}
+        return response
         
 
 class VerifyOtp(APIView):
@@ -360,7 +343,7 @@ class VerifyOtp(APIView):
             user.otp_verified = True
             user.bool_login = True
             user.save()
-            response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK)
+            response = Response({'msg': 'OTP verified'}, status=status.HTTP_200_OK) 
             response.data = {'user': PlayerSerializer(user).data} 
             return response
 
@@ -373,12 +356,10 @@ class ClearQrcode (APIView):
         user = request.user
         if not user.mfa_secret or not user.qrcode_path:
             return Response({'error': 'No secret found Or No QR code found'}, status=status.HTTP_400_BAD_REQUEST)
-        # os.remove(user.qrcode_path)
         user.qrcode_path = ""
+        user.mfa_secret = ""
         user.save()
-        response = Response({'msg': 'QR code cleared'}, status=status.HTTP_200_OK)
-        response.data = {'user': PlayerSerializer(user).data}
-        return response 
+        return  Response({'msg': 'QR code cleared'}, status=status.HTTP_200_OK)
 
 
 
@@ -416,22 +397,17 @@ class AnonymizeAccount(APIView):
     
     def get(self, request):
         user = request.user
-        user.profile_name = f'Anonimized_{random.randint(1, 10)}'
-        user.username = user.profile_name
+        user.is_active = False
         user.is_anonimized = True
+        user.profile_name = f'Anonimized_{random.randint(1, 100)}'
         user.avatar = 'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Aneka'
         user.status_network = 'offline'
         user.status_game = 'offline'
         user.save()
-        # anonymizeaccount = AnonymizedAccount.objects.create(player=user)
-        # anonymizeaccount.profile_name = user.profile_name
-        # anonymizeaccount.avatar= user.avatar
-        # anonymizeaccount.status_network = user.status_network
-        # anonymizeaccount.save()
         response = Response({'msg': '************** Account anonymized ***************'}, status=status.HTTP_200_OK)
         return DeleteCookies(response)
 #-----------------------------------AnnonimizedAccount-------------------------------------------------------------
-#-----------------------------------DeleteAccount-------------------------------------------------------------
+#-----------------------------------DeleteAccount------------------------------------------------------------------
 class DeleteAccount(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -441,26 +417,19 @@ class DeleteAccount(APIView):
         response = Response({'msg': '----------------- Account deleted --------------'}, status=status.HTTP_200_OK)
         return DeleteCookies(response)
 #-----------------------------------DeleteAccount-------------------------------------------------------------
-#-----------------------------------List AnonymizeAccount -------------------------------------------------------------
-class ListAnonymizeAccount(APIView):
-    # authentication_classes = [SessionAuthentication]
-    # permission_classes = [IsAuthenticated]
-    def get(self,request):
-        anonymizeaccount = AnonymizedAccount.objects.all()
-        data = AnonymizedAccountSerializer(anonymizeaccount, many=True)
-        return Response(data.data, status=status.HTTP_200_OK)
-#-----------------------------------List AnonymizeAccount -------------------------------------------------------------
 
-def get_ping_data_by_username(request, username):
+
+def get_ping_data_by_profile_name(request, username):
     Player = get_user_model()
     try:
-        player = Player.objects.get(username=username)
+        player = Player.objects.get(profile_name=username)
     except Player.DoesNotExist:
         return JsonResponse({'error': 'Player not found'}, status=404)
     pingdata = PingData.objects.filter(player=player)
     serializer = PingDataSerializer(pingdata, many=True)
     data = serializer.data
-    return JsonResponse(data, safe=False)
+    print("ping data",data,flush=True)
+    return JsonResponse(data, safe=False) 
 
 def get_all_ping_data(request):
     players = Player.objects.annotate(total_exp_game=Sum('ping_data__exp_game')).order_by('-total_exp_game') 
@@ -483,11 +452,11 @@ class UserNameFriendList(APIView):
 
     def get(self,request, username):
         try :
-            user = Player.objects.get(username=username)
+            user = Player.objects.get(profile_name=username)
             # if not user :
             #     return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
             friends = PlayerSerializer.get_friends(self,user)
-            return Response({'friend list':friends , 'user':user.username}, status=status.HTTP_200_OK)
+            return Response({'friend list':friends , 'user':user.profile_name}, status=status.HTTP_200_OK)
         except Exception as e:
             e = 'No user found'
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -498,19 +467,11 @@ class UserNameBlockedList (APIView):
 
     def get(self,request, username):
         try :
-            user = Player.objects.get(username=username)
+            user = Player.objects.get(profile_name=username)
             # if not user :
             #     return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
-            friends = PlayerSerializer.get_blocked_users(self,user)
-            return Response({'blocked list':friends , 'user':user.username}, status=status.HTTP_200_OK)
+            friends = PlayerSerializer.get_blocked_getusers(self,user)
+            return Response({'blocked list':friends , 'user':user.profile_name}, status=status.HTTP_200_OK)
         except Exception as e:
             e = 'No user found'
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-class ListAnonymizeAccount(APIView):
-    # authentication_classes = [SessionAuthentication]
-    # permission_classes = [IsAuthenticated]
-    def get(self,request):
-        anonymizeaccount = AnonymizedAccount.objects.all()
-        data = AnonymizedAccountSerializer(anonymizeaccount, many=True)
-        return Response(data.data, status=status.HTTP_200_OK)

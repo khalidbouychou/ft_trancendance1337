@@ -1,4 +1,6 @@
-#!bin/bash
+#!/bin/bash
+
+
 echo "-------------------------- Starting backend server ------------------------------------"
 
 python3 manage.py makemigrations login Chat2 matches notification pongame

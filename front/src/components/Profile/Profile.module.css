@@ -526,32 +526,6 @@
 	}
 }
 
-.anonymized {
-	display: flex;
-	width: 600px;
-	min-width: 600px;
-	height: 450px;
-	min-height: 450px;
-	align-items: center;
-	margin-top: 150px;
-	flex-direction: column;
-	padding: 60px 0 60px 0;
-	background-color: rgba(47, 6, 90, 0.4);
-	border: 1px solid rgb(130, 130, 5);
-	border-radius: 10px;
-	gap: 20px;
-	p {
-		font-size: 17px;
-	}
-	button {
-		background-color: #660da5;
-		padding: 10px;
-		border: 1px solid white;
-		border-radius: 5px;
-		cursor: pointer;
-	}
-}
-
 @media (max-width: 1540px) {
 	.extLvl {
 		width: 90%;

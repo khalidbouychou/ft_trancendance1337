@@ -22,6 +22,7 @@ export default function FriendGame() {
     const [gamestarted, setGameStarted] = useState(false);
     const [condition, setCondition] = useState('N');
     const [MESSAGE, setMessage] = useState("message");
+    const [profile_name, setProfileName] = useState('');
     const [username, setUsername] = useState('');
     const [avatar, setAvatar] = useState('');
     const [level, setLevel] = useState(0);
@@ -37,8 +38,6 @@ export default function FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle.");
         }
     };
 
@@ -49,9 +48,7 @@ export default function FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle.");
-        }
+        } 
     };
 
     const rightup = () => {
@@ -61,9 +58,7 @@ export default function FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the right player can move the right paddle.");
-        }
+        } 
     };
 
     const rightdown = () => {
@@ -73,19 +68,18 @@ export default function FriendGame() {
                 value: 10,
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the right player can move the right paddle.");
-        }
+        } 
     };
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios('http://localhost:8000/api/pong_data/',{
+            const response = await axios('http://10.13.10.12:8000/api/pong_data/',{
                 withCredentials: true,
             });
             console.log('response:', response.data);
             if (response.status === 200) {
-                setUsername(response.data.profile_name);
+                setProfileName(response.data.profile_name);
+                setUsername(response.data.username);
                 setLeftPlayerAvatar(response.data.avatar);
                 setLeftPlayerName(response.data.profile_name);
                 setAvatar(response.data.avatar);
@@ -116,24 +110,23 @@ export default function FriendGame() {
         let player_id = 0;
         let myReq;
         if (FetchedData)
-            socket = new WebSocket(`ws://localhost:8000/ws/play-friend/`);
+            socket = new WebSocket(`ws://10.13.10.12:8000/ws/play-friend/`);
 
         if (socket) {
             socket.onopen = () => {
                 console.log('onopen game_key:', game_key);
                 if (socket.readyState === WebSocket.OPEN) {
-                    console.log('WebSocket is open now and the game_id is:', game_key);
+                  
                     const message = {
                         action: 'connect',
                         username: username,
+                        profile_name: profile_name,
                         avatar: avatar,
                         level: level,
                         game_id: game_key,
                     };
                     socket.send(JSON.stringify(message));
-                    console.log('WebSocket is open now');
-                } else {
-                    console.error('WebSocket is not open. readyState:', socket.readyState);
+            
                 }
             };
 
@@ -159,7 +152,7 @@ export default function FriendGame() {
                 }
                 if (data.message) {
                     if (data.message === 'game_started') {
-                        if (data.player_id1 === username) {
+                        if (data.player_id1 === profile_name) {
                             player_id = 1;
                             setPlayerId(1);
                             setLeftPlayerName(data.player_id1);
@@ -167,7 +160,7 @@ export default function FriendGame() {
                             setLeftPlayerAvatar(data.player_1_avatar);
                             setRightPlayerAvatar(data.player_2_avatar);
                         }
-                        else if (data.player_id2 === username) {
+                        else if (data.player_id2 === profile_name) {
                             player_id = 2;
                             setPlayerId(2);
                             setLeftPlayerName(data.player_id1);
@@ -201,14 +194,9 @@ export default function FriendGame() {
             };
 
             socket.onclose = () => {
-                console.log('WebSocket connection closed');
                 socket.close();
             };
 
-
-            socket.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
         }
 
         const drawball = () => {
@@ -305,7 +293,7 @@ export default function FriendGame() {
                 socket.close(); // Close WebSocket when the component unmounts
             }
         };
-    }, [username]);
+    }, [profile_name]);
 
     useEffect(() => {
         console.log("gamestarted", gamestarted);
@@ -358,7 +346,7 @@ export default function FriendGame() {
                             {condition !== 'D' && (
                                 <>
                                     <img src={avatar} />
-                                    <h3>{username}</h3>
+                                    <h3>{profile_name}</h3>
                                 </>
                             )}
                         </div>
@@ -388,6 +376,13 @@ export default function FriendGame() {
                     </div>
                 </div>
                 <canvas id="canvas" className={styles.canvass}></canvas>
+            <div style={{
+                color : "yellow",
+                marginTop:"50px"
+            }
+            }>
+                <h1>Manual : (W/S  | UP/DOWN)</h1>
+            </div>
             </div>
         </>
     );

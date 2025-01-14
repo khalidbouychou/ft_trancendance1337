@@ -43,9 +43,7 @@ export default function OnlineGame() {
                 action: 's',
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle.");
-        }
+        } 
     };
 
     const rightup = () => {
@@ -54,9 +52,7 @@ export default function OnlineGame() {
                 action: 'ArrowUp',
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the right player can move the right paddle.");
-        }
+        } 
     };
 
     const rightdown = () => {
@@ -66,13 +62,12 @@ export default function OnlineGame() {
             };
             socket.send(JSON.stringify(message));
         } else {
-            console.log("Only the right player can move the right paddle.");
         }
     };
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios('http://localhost:8000/api/pong_data/',{
+            const response = await axios('http://10.13.10.12:8000/api/pong_data/',{
                 withCredentials: true,
             });
             if (response.status === 200) {
@@ -112,7 +107,7 @@ export default function OnlineGame() {
         let rightRacketY = 0;
         let myReq;
         if (FetchedData)
-            socket = new WebSocket(`ws://localhost:8000/ws/remote-game/`);
+            socket = new WebSocket(`ws://10.13.10.12:8000/ws/remote-game/`);
         if (socket) {
             socket.onopen = () => {
                 if (socket.readyState === WebSocket.OPEN) {
@@ -121,7 +116,6 @@ export default function OnlineGame() {
                         level: level,
                     };
                     socket.send(JSON.stringify(message));
-                    console.log('WebSocket is open now');
                 } else {
                     console.error('WebSocket is not open. readyState:', socket.readyState);
                 }
@@ -180,15 +174,6 @@ export default function OnlineGame() {
                     }
                     socket.close();
                 }
-            };
-
-            socket.onclose = () => {
-                console.log('WebSocket connection closed');
-            };
-
-
-            socket.onerror = (error) => {
-                console.error('WebSocket error:', error);
             };
         }
 
@@ -363,6 +348,13 @@ export default function OnlineGame() {
                     </div>
                 </div>
                 <canvas id="canvas" className={styles.canvass}></canvas>
+                <div style={{
+                color : "yellow",
+                marginTop:"50px"
+            }
+            }>
+                <h1>Manual : (W/S  | UP/DOWN)</h1>
+            </div>
             </div>
         </>
     );

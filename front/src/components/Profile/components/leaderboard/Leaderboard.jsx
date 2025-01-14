@@ -3,14 +3,14 @@ import styl from "./Leaderboard.module.css";
 import { useNavigate } from "react-router-dom";
 import CardRank from "./components/CardRank/CardRank";
 
-const Leaderboard = ({t}) => {
+const Leaderboard = ({t , setProfileName}) => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/pingdata`);
+        const response = await fetch(`http://10.13.10.12:8000/api/pingdata`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -29,7 +29,12 @@ const Leaderboard = ({t}) => {
     fetchData();
   }, []);
 
+  // useEffect(() => {
+  //   console.log("----------->Data:", data);
+  // }, [data]);
+
   const handleCardClick = (profileName) => {
+    setProfileName(profileName);
     if (profileName) {
       navigate(`/profile/${profileName}`);
     }
@@ -50,7 +55,8 @@ const Leaderboard = ({t}) => {
             key={player.username || index}
             player={player}
             index={index}
-            handleCardClick={handleCardClick}
+            setProfileName={setProfileName}
+            // handleCardClick={handleCardClick()}
           />
         ))}
       </div>

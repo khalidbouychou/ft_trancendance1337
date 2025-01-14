@@ -84,7 +84,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (searchQuery.trim()) {
-      fetch(`http://localhost:8000/api/search/?q=${searchQuery}`)
+      fetch(`http://http://10.13.10.12/:8000/api/search/?q=${searchQuery}`)
         .then((response) => response.json())
         .then((data) => setSearchResults(data));
     } else {
@@ -199,7 +199,7 @@ const Sidebar = () => {
               {t("Profile")}
             </button>
           </Link>
-          {/* <Link to={"/notification"}>
+          <Link to={"/notification"}>
             <button
               style={{
                 color:
@@ -208,7 +208,7 @@ const Sidebar = () => {
             >
               {t("Notification")}
             </button>
-          </Link> */}
+          </Link>
           <Link to={"/games"}>
             <button
               style={{

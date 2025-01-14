@@ -23,7 +23,7 @@ const Signin = () => {
         return;
       }
       const response = await axios.post(
-        "http://localhost:8000/api/singin/",
+        `http://10.13.10.12:8000/api/singin/`,
         {
           username,
           password
@@ -42,16 +42,16 @@ const Signin = () => {
         });
         setTimeout(() => {
           navigate("/");
-        }, 1000);
+        }, 1300);
       }
     } catch (err) {
-      alert(`No Account`);
-      // toast.error(`${err.response.data.error}`, {
-      //   style: {
-      //     backgroundColor: 'rgb(255, 0, 0)',
-      //     color: 'white',
-      //   }
-      // });
+      console.log(err);
+      toast.error(err.response.data.error, {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white',
+        }
+      });
     }
   };
 

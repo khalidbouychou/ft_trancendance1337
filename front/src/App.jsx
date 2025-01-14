@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import { useContext } from "react"
 import style from "./App.module.css";
 import Layout from "./Layout.jsx";
@@ -8,7 +8,7 @@ import LocalTeamGame from "./ponggame/teampong/LocalTeamGame.jsx";
 import LocalTournament from "./ponggame/tournamentpong/Tournament.jsx";
 import RemoteTournament from "./ponggame/remotetournement/RemoteTournament.jsx";
 import OnlineGame from "./ponggame/onlinepong/OnlineGame.jsx";
-import Pong3d from "./ponggame/pong3d/newpong.jsx";
+// import Pong3d from "./ponggame/pong3d/newpong.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import Setting from "./Setting/Setting.jsx";
 import Notification from "./components/Notification/Notification.jsx";
@@ -18,22 +18,20 @@ import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
 import Twofa from "./Login/2fa/twofa.jsx";
 import Otplogin from "./Login/OtpLogin/Otplogin.jsx";
 import { ToastContainer } from "react-toastify";
-import Network from "./Login/Network/Network.jsx";
-import Anonymized from "./Anonymizeds/Anonymized.jsx";
 import Home from "./components/Home/Home.jsx";
-import { useTranslation } from "react-i18next";
+
 import Chat from "./components/Chat/Chat.jsx";
-import i18n from "./i18n";
-import { AuthContext } from "./UserContext/Context.jsx";
+import AuthProvider from "./UserContext/Context.jsx";
 
 function App() {
-  const {t} = useTranslation();
+
   return (
-    <>
+    <BrowserRouter>
+    <AuthProvider>
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
           <Routes>
-            <Route path="/" element={<Layout />}>
+            <Route  element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="games" element={<PingPongGames />} />
               <Route path="games/localpong" element={<LocalGame />} />
@@ -41,7 +39,7 @@ function App() {
               <Route path="games/onlinepong" element={<OnlineGame />} />
               <Route path="games/localtournament" element={<LocalTournament />} />
               <Route path="games/remotetournament" element={<RemoteTournament />} />
-              <Route path="games/pong3d" element={<Pong3d />} />
+              {/* <Route path="games/pong3d" element={<Pong3d />} /> */}
               <Route path="friendgame" element={<FriendGame />} />
               <Route path="chat" element={<Chat />} />
               <Route path="profile" element={<RedirectToMyProfile />} />
@@ -49,34 +47,9 @@ function App() {
               <Route path="setting" element={<Setting />} />
               <Route path="notification" element={<Notification />} />
               <Route path="twofa" element={<Twofa />} />
-              {/* <Route
-                path="lang" element={
-                  <div>
-                    <div style={{display: "flex", justifyContent: "center", gap: "10px", marginTop: "10px", marginBottom: "10px", color: "red", width: "100%"}}>
-                      <button style={{color: "black", backgroundColor: "white",border: "1px solid red", padding: "5px", borderRadius: "5px", width: "100px", fontSize: "20px"}} onClick={() => {
-                          localStorage.setItem("lang", "en");
-                          i18n.changeLanguage(localStorage.getItem("lang"));}}>
-                          en
-                      </button>
-                      <button style={{ color: "black", backgroundColor: "white", border: "1px solid red", padding: "5px", borderRadius: "5px", width: "100px", fontSize: "20px"}} onClick={() => {
-                          localStorage.setItem("lang", "fr");
-                          i18n.changeLanguage(localStorage.getItem("lang"));}}>
-                        fr
-                      </button>
-                      <button style={{color: "black", backgroundColor: "white", border: "1px solid red", padding: "5px", borderRadius: "5px", width: "100px", fontSize: "20px"}} onClick={() => {
-                          localStorage.setItem("lang", "it");
-                          i18n.changeLanguage(localStorage.getItem("lang"));}}>
-                        it
-                      </button>
-                    </div>
-                    <h1 style={{ color: "red" }}> {t("fristname lastname")}</h1>
-                  </div>
-                }/> */}
               <Route path="otp" element={<Otplogin />} />
-              {/* <Route path="network" element={<Network />} /> */}
             </Route>
             <Route path="/login" element={<LoginSignup />} />
-            {/* <Route path="/anonymized" element={<Anonymized />} /> */}
             <Route path="/*" element={<PageNotFound />} />
           </Routes>
         </div>
@@ -89,7 +62,8 @@ function App() {
         pauseOnFocusLoss
         stacked
        />
-      </>
+      </AuthProvider>
+   </BrowserRouter>
   );
 }
 

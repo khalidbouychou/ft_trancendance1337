@@ -10,14 +10,13 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 
-const Desable2fa = ({  message, setVerified }) => {
+const Desable2fa = ({  setUser,message, setVerified }) => {
   const { user, get_auth_user } = useContext(AuthContext);
   const [formsg, setFormsg] = useState(false);
   const {t} = useTranslation()
 
   useEffect(() => {
     get_auth_user();
-  
     setFormsg(user?.user?.otp_verified);
   }, [user?.user?.otp_verified]);
 
@@ -39,7 +38,7 @@ const Desable2fa = ({  message, setVerified }) => {
       .join("");
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/d_2fa/",
+        `http://10.13.10.12:8000/api/d_2fa/`,
         {
           otp:otp
         },
@@ -55,8 +54,10 @@ const Desable2fa = ({  message, setVerified }) => {
         }
       );
       if (res.status === 200) {
-        setVerified(res.data.otp_verified);
-        setFormsg(res.data.otp_verified);
+        console.log("d_2fa ******************** ", res);
+        setUser(res?.data?.user);
+        setVerified(res?.data?.otp_verified);
+        setFormsg(res?.data?.otp_verified);
         toast.success("2FA Disabled", {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
@@ -65,7 +66,7 @@ const Desable2fa = ({  message, setVerified }) => {
         });
       }
     } catch (error) {
-      toast.error("OTP code is not correct", {
+      toast.error(t("OTP code is not correct"), {
         style: {
           backgroundColor: 'rgb(255, 0, 0)',
           color: 'white'
@@ -87,7 +88,15 @@ const Desable2fa = ({  message, setVerified }) => {
     </div>
   ) : (
     <>
-      <h1>{t("2fa desabled")} </h1>
+      <h1 style={
+        {
+          color: 'red',
+          textAlign: 'center',
+          marginTop: '10px',
+          border : '1px solid red',
+          padding: '10px',
+        }
+      } >{t("2fa desabled")} </h1>
     </>
   );
 };

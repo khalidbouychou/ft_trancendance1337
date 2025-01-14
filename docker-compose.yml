@@ -5,6 +5,8 @@ networks:
 volumes:
   db:
     driver: local
+  web3_vol:
+    driver: local
 
 services:
   postgres:
@@ -44,6 +46,7 @@ services:
     volumes:
       - ./backend:/app
       - .env:/app/.env
+      - web3_vol:/volume
     depends_on:
       postgres:
         condition: service_healthy
@@ -74,6 +77,23 @@ services:
         condition: service_healthy
     restart: on-failure
 
+  web3_app:
+    container_name: web3_app
+    image: web3_app:69
+    restart: always
+    build: web3
+    networks:
+      - connexion
+    environment:
+      PRIVATE_KEY: ${PRIVATE_KEY}
+    volumes:
+      - web3_vol:/root/
+    healthcheck:
+      test: ["CMD", "nc", "-zv", "web3_app", "7545"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 1s
 
   # redis:
   #   container_name: redis

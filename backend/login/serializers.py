@@ -12,7 +12,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Player
-        fields = ['id', 'username', 'profile_name', 'avatar','email', 'status_network', 'two_factor', 'otp_verified', 'blocked_users', 'friends', 'ping_data' ,'number_of_sessions', 'bool_login', 'qrcode_path','is_anonimized']
+        fields = ['id', 'username', 'profile_name', 'avatar','email', 'status_network', 'two_factor', 'otp_verified', 'blocked_users', 'friends', 'ping_data' , 'number_of_sessions', 'bool_login', 'qrcode_path','is_anonimized']
 
     def get_blocked_users(self, obj):
         return [{'profile_name': user.profile_name, 'avatar': user.avatar} for user in obj.blocked_users.all()]
@@ -83,25 +83,25 @@ class SigninSerializer(serializers.ModelSerializer):
             'username': {'required': True, 'min_length': 9, 'max_length': 16}
         }
 
-    def validate(self, data):
-        username = data.get('username')
-        password = data.get('password')
+    # def validate(self, data):
+    #     username = data.get('username')
+    #     password = data.get('password')
 
-        # Check if the user exists
-        user = Player.objects.filter(username=username).first()
-        if user is None:
-            raise serializers.ValidationError({'error': 'User Not Found'})
+    #     # Check if the user exists
+    #     user = Player.objects.filter(username=username).first()
+    #     if user is None:
+    #         raise serializers.ValidationError({'error': 'User Not Found'})
 
-        # Authenticate the user
-        if username and password:
-            user = authenticate(username=username, password=password)
-            if not user:
-                raise serializers.ValidationError({'error': 'Wrong Password'})
-        else:
-            raise serializers.ValidationError({'error': "Username and Password are required"})
+    #     # Authenticate the user
+    #     if username and password:
+    #         user = authenticate(username=username, password=password)
+    #         if not user:
+    #             raise serializers.ValidationError({'error': 'Wrong Password'})
+    #     else:
+    #         raise serializers.ValidationError({'error': "Username and Password are required"})
 
-        # If authentication is successful, return the validated data
-        return data
+    #     # If authentication is successful, return the validated data
+    #     return data
 
 
 
@@ -124,6 +124,7 @@ class PingDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = PingData
         fields = ['wins', 'losses', 'exp_game', 'timestamp'] 
+
 
 class AnonymizedAccountSerializer(serializers.ModelSerializer):
     player =serializers.CharField(read_only=True)

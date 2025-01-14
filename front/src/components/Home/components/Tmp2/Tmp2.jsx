@@ -41,8 +41,6 @@ const Tmp2 = ({ Data, myData }) => {
     setMydaTa(myData.Ping.data[0] || []);
   };
 
-  console.log("pp::}++>", mydaTa);
-
   const handleticDataClick = () => {
     setDaTa(Data.tic || []);
     setMydaTa(myData.Tic.data[0] || []);
