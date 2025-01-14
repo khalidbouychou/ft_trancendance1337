@@ -23,6 +23,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent  
 # Add this setting to the end of the file or before the MIDDLEWARE setting
 CSRF_TRUSTED_ORIGINS = [
+    'http://e3r7p1.1337.ma:5173',
     'https://127.0.0.1', 
     'http://127.0.0.1', 
     f'http://{os.getenv("VITE_BACKEND_IP")}',
@@ -222,6 +223,7 @@ ip_frontendl = os.getenv("IP_FRONTEND")
 ip_backend = os.getenv("IP_BACKEND") 
 
 CORS_ALLOWED_ORIGINS = [
+    'http://e3r7p1.1337.ma:5173',
     'https://127.0.0.1:5173',
     'http://127.0.0.1:5173',
     'https://127.0.0.1',  

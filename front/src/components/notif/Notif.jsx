@@ -39,7 +39,7 @@ const Notif = ({ open, notifReceived, setNotifReceived }) => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get("http://${import.meta.env.VITE_BACKEND_IP}/api/notif/", {
+        const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/notif/`, {
           withCredentials: true,
         });
         const notifications = response.data;

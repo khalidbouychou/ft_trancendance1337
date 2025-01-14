@@ -7,23 +7,50 @@ import { TbLockOpenOff, TbLock } from "react-icons/tb";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNotificationWS } from "../../../../../../contexts/NotifWSContext";
 
 function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, viewProfile, t }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
-  // const [isFriend, setIsFriend] = useState('None');
+  const [amiBlocked, setAmIBlocked] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [menuList, setMenuList] = useState('none');
   const navigate = useNavigate();
+  const { notif , setNotif} = useNotificationWS();
+
+  useEffect(() => {
+    console.log("***********************************************i recieved a notif:", notif);
+    if (notif && notif.status === 'BLOCK'){
+      if (notif.user_id === otherUser.id){
+        setAmIBlocked(true);
+        setNotif(null);
+      }
+    }
+    else if (notif && notif.status === 'UNBLOCK'){
+      if (notif.user_id === otherUser.id){
+        setAmIBlocked(false);
+        setNotif(null);
+      }
+    }
+  }, [notif])
 
   const check_blocked = async () => {
-        const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/getuser/${currentUser.profile_name}/` , {
+        const response1 = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/getuser/${currentUser.profile_name}/` , {
           withCredentials: true,
         });
-        console.log('response:', response.data)
-        console.log('blocked_users:', response.data.blocked_users)
-        const isOtherUserBlocked = response.data.blocked_users.find(e => {return e.profile_name === otherUser.profile_name}) != undefined ? true : false;
-        setIsBlocked(isOtherUserBlocked);
+        const response2 = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/getuser/${otherUser.profile_name}/` , {
+          withCredentials: true,
+        });
+        console.log('my response:', response1.data)
+        console.log('my blocked_users:', response1.data.blocked_users)
+        console.log('him response:', response2.data)
+        console.log('him blocked_users:', response2.data.blocked_users)
+        const didIBlockHim = response1.data.blocked_users.find(e => {return e.profile_name === otherUser.profile_name}) != undefined ? true : false;
+        const didHeBlockMe = response2.data.blocked_users.find(e => {return e.profile_name === currentUser.profile_name}) != undefined ? true : false;
+        console.log('didIBlockHim:', didIBlockHim)
+        console.log('didHeBlockMe:', didHeBlockMe)
+        setIsBlocked(didIBlockHim);
+        setAmIBlocked(didHeBlockMe);
       }
   useEffect(() => {
     check_blocked();
@@ -54,13 +81,9 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
     setShowConfirmation(false);
   };
 
-  // const handleNavigate = () => {
-  //   setShowConfirmation(false);
-  //   navigate(`/profile/${otherUser.username}`);
-  // };
-
   return (
     <div className={styl.chatOptionsMenu}>
+      { !amiBlocked ? (
       <button className={styl.menuToggle} onClick={handleMenuListOpen}>
         <p>⋮</p>
         <div className={styl.menuList} style={{ display: menuList }}>
@@ -94,7 +117,10 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
             </button>
           </div>
         )}
-      </button>
+      </button>) : (
+        <button className={styl.menuToggle} onClick={handleMenuListOpen}></button>
+        )
+      }
     </div>
   );
 }

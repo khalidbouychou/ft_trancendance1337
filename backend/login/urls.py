@@ -29,8 +29,8 @@ urlpatterns = [
     path('otpverify/',VerifyOtp.as_view(), name='VerifyOtp'),
     path('clearqrcode/',ClearQrcode.as_view() , name='ClearQrcode'),
     path('update/',UpdateProfile.as_view() , name='UpdateProfile'),
-    path('friends/<str:username>/', UserNameFriendList.as_view()), 
-    path('blocked/<str:username>/', UserNameBlockedList.as_view()), 
+    path('friends/<str:profile_name>/', UserNameFriendList.as_view()), 
+    path('blocked/<str:profile_name>/', UserNameBlockedList.as_view()), 
 
 
     ]

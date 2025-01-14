@@ -117,7 +117,7 @@ const Profile = ({ me }) => {
     };
     
     fetchPingData();
-  }, [profileName]);
+  }, [profile_name, notif, isblocked]);
 
   useEffect(() => {
     const friendsArray = friendList['friend list'] || [];
@@ -139,7 +139,7 @@ const Profile = ({ me }) => {
       setDisplayBt("flex");
       setDisplayShooseButton('none')
     }
-  }, [friendList, user?.user?.profile_name, userData.profile_name]);
+  }, [friendList, user?.user?.profile_name, userData.profile_name, notif, isblocked]);
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -151,7 +151,7 @@ const Profile = ({ me }) => {
       setFriendList(response.data);
     };
     fetchFriends();
-  }, [profileName, isfriended]);
+  }, [isfriended, profile_name, notif, isblocked]);
                                                                               
   useEffect(() => {
     const fetchBlocked = async () => {
@@ -178,7 +178,7 @@ const Profile = ({ me }) => {
     };
   
     fetchBlocked();
-  }, [profileName, isfriended, ismyprofil]);
+  }, [isfriended, ismyprofil, profile_name, notif, isblocked]);
   
 
   useEffect(() => {
@@ -218,7 +218,7 @@ const Profile = ({ me }) => {
     setShowUserBlocked(false);
     setActiveSection("Leaderboard");
     fetchData();
-  }, [profile_name]);
+  }, [profile_name, notif, isblocked]);
   
   
   const handleAddFriend = () => {
@@ -250,7 +250,7 @@ const Profile = ({ me }) => {
   }
 
   if (isblocked) {
-    return <div className={styl.error} style={{color: 'white'}}>This user has blocked you.</div>
+    return <div className={styl.error} style={{color: 'white'}}>{t("This user has blocked you.")}</div>
   }
 
   return (
@@ -262,8 +262,7 @@ const Profile = ({ me }) => {
               <button
                 className={styl.settingsBt}
                 onClick={openSettings}
-                style={{ display: displayBt }}
-              >
+                style={{ display: displayBt }}>
                 <MdOutlineFormatListBulleted />
                 <div className={styl.settings} style={{ display: setting }}>
                   <button className={styl.Button} onClick={handleAddFriend}>
@@ -389,7 +388,6 @@ const Profile = ({ me }) => {
               )}
             </div>
           </div>
-          {/* side2 */}
           <div className={styl.side2}>
             <div className={styl.headFr}>
               <p>{t(status)}</p>

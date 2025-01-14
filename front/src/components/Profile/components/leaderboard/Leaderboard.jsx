@@ -27,7 +27,7 @@ const Leaderboard = ({t , setProfileName}) => {
     };
 
     fetchData();
-  }, []);
+  }, [setProfileName]);
 
   // useEffect(() => {
   //   console.log("----------->Data:", data);

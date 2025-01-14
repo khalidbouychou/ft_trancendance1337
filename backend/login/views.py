@@ -450,13 +450,13 @@ class UserNameFriendList(APIView):
     authentication_classes = [SessionAuthentication] 
     permission_classes = [IsAuthenticated]
 
-    def get(self,request, username):
+    def get(self,request, profile_name):
         try :
-            user = Player.objects.get(profile_name=username)
+            user = Player.objects.get(profile_name=profile_name)
             if not user :
                 return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
             friends = PlayerSerializer.get_friends(self,user)
-            return Response({'friend list':friends , 'user':user.username}, status=status.HTTP_200_OK)
+            return Response({'friend list':friends , 'user':user.profile_name}, status=status.HTTP_200_OK)
         except Exception as e:
             e = 'No user found'
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -465,13 +465,13 @@ class UserNameBlockedList (APIView):
     authentication_classes = [SessionAuthentication] 
     permission_classes = [IsAuthenticated]
 
-    def get(self,request, username):
+    def get(self,request, profile_name):
         try :
-            user = Player.objects.get(profile_name=username)
+            user = Player.objects.get(profile_name=profile_name)
             if not user :
                 return Response({'error': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
             friends = PlayerSerializer.get_blocked_users(self,user)
-            return Response({'blocked list':friends , 'user':user.username}, status=status.HTTP_200_OK)
+            return Response({'blocked list':friends , 'user':user.profile_name}, status=status.HTTP_200_OK)
         except Exception as e:
             e = 'No user found'
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

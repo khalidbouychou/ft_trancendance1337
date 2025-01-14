@@ -42,7 +42,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         try:
-            print("we received something on the backend of the chat -------") 
             text_data_json = json.loads(text_data)
             message_type = text_data_json.get('type')
 
@@ -66,16 +65,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.send_error(f'An error occurred: {str(e)}')
 
     async def handle_mark_as_read(self, data):
-        # try:
-            room_id = data.get('room_id')
-
-            await self.mark_messages_as_read(room_id, self.user.id)
-        # except Exception as e:
-        #     await self.send_error(f'Failed to mark messages as read: {str(e)}')
+        room_id = data.get('room_id')
+        await self.mark_messages_as_read(room_id, self.user.id)
 
     async def handle_message(self, data):
-        # try:
-        print("i recieved a nessage +++++++")
         room_pk = data.get('room_id')
         content = data.get('content')
         profile_name = data.get('profile_name')
@@ -170,7 +163,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def create_message(self, room_id, sender_id, content):
-        # try:
             room = ChatRoom.objects.get(id=room_id)
             sender = Player.objects.get(id=sender_id)
             receiver = room.get_other_user(sender)
@@ -183,9 +175,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 sender=sender,
                 content=content
             )
-
-        # except (ChatRoom.DoesNotExist, Player.DoesNotExist):
-        #     return None
 
     @database_sync_to_async
     def search_users(self, query):
@@ -222,17 +211,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def block_user(self, user_id):
         my_id = self.scope['user'].id
-        friend = Friend.objects.filter(Q(user1=user_id, user2=my_id) |
-                                            Q(user1=my_id, user2=user_id)).first() 
+        friend = Friend.objects.filter(Q(user1=user_id, user2=my_id) | Q(user1=my_id, user2=user_id)).first() 
         if friend is not None:
             friend.delete()
         target_user = Player.objects.get(id=user_id)
         self.user.block_user(target_user)
+        message = {
+            'status': 'BLOCK',
+            'user_id': my_id
+        }
+        group_name = f'user_{user_id}_notification'
+        channel_layer = get_channel_layer()
+        channel_layer.group_send(group_name, message)
 
     @database_sync_to_async
     def unblock_user(self, user_id):
         target_user = Player.objects.get(id=user_id)
         self.user.unblock_user(target_user)
+        
+        my_id = self.scope['user'].id
+        message = {
+            'status': 'UNBLOCK',
+            'user_id': my_id
+        }
+        group_name = f'user_{user_id}_notification'
+        channel_layer = get_channel_layer()
+        channel_layer.group_send(group_name, message)
 
     async def send_error(self, message):
         await self.send_json({

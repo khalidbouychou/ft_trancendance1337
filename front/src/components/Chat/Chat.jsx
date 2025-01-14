@@ -1,21 +1,17 @@
 // import LoginPage from './login/LoginPage.jsx'
 // import ChatPage from "./chat/ChatPage.jsx";
 import { AuthContext } from "../../UserContext/Context.jsx";
-import { useContext } from "react";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import styl from "./Chat.module.css";
 import Sidebar from "./components/sidebar/Sidebar.jsx";
 import ChatWindow from "./components/chatWindow/ChatWindow.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { useNotificationWS } from '../contexts/NotifWSContext.jsx'
-// import { useContext } from 'react'
 import { useNotificationWS } from "../../contexts/NotifWSContext";
 
 const Chat = () => {
   const {notif , setNotif} = useNotificationWS();
-
-
+  const { t } = useContext(AuthContext);
   const navigate = useNavigate();
   const [sockets, setSockets] = useState({});
   const [message, setMessage] = useState("");
@@ -385,7 +381,7 @@ const Chat = () => {
 
     await setupSocket(contact.id);
   };
-  const { t } = useContext(AuthContext);
+  
   return (
     <div className={styl.chatApp}>
       <div className={styl.content}>
