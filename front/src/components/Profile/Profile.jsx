@@ -48,6 +48,7 @@ const Profile = ({ me }) => {
   }, [profileName]);
 
   useEffect(() => {
+    console.log("***********************************************i recieved a notif:", notif);
     if (notif && notif.status === 'friends'){
       if (notif.user_id === userData.id){
         setIsfriended(true);
@@ -67,6 +68,18 @@ const Profile = ({ me }) => {
       }
       else if (notif.online && notif.online === userData.id){
         setUserData({...userData, status_network: 'online'});
+        setNotif(null);
+      }
+    }
+    if (notif && notif.status === 'BLOCK'){
+      if (notif.user_id === userData.id){
+        setIsblocked(true);
+        setNotif(null);
+      }
+    }
+    else if (notif && notif.status === 'UNBLOCK'){
+      if (notif.user_id === userData.id){
+        setIsblocked(false);
         setNotif(null);
       }
     }

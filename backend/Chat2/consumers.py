@@ -149,17 +149,39 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }))
             
     async def handle_block_user(self, data):
-            user_id = data.get('user_id')
-            event = data.get('event')
-            if event == 'BLOCK':
-                await self.block_user(user_id)
-            elif event == 'UNBLOCK':
-                await self.unblock_user(user_id)
-            await self.send_json({
-                'type': 'BLOCK_USER',
-                'event': event,
-                'user_id': user_id
-            })
+        user_id = data.get('user_id')
+        event = data.get('event')
+        if event == 'BLOCK':
+            await self.block_user(user_id)
+
+            await self.channel_layer.group_send(
+                f'user_{user_id}_NOTIF', 
+                {
+                    'type': 'send_notification',
+                    'notification': {
+                        'status': 'BLOCK',
+                        'user_id': self.user.id
+                    }
+                }
+            )
+        elif event == 'UNBLOCK':
+            await self.unblock_user(user_id)
+
+            await self.channel_layer.group_send(
+                f'user_{user_id}_NOTIF', 
+                {
+                    'type': 'send_notification',
+                    'notification': {
+                        'status': 'UNBLOCK',
+                        'user_id': self.user.id
+                    }
+                }
+            )
+        await self.send_json({
+            'type': 'BLOCK_USER',
+            'event': event,
+            'user_id': user_id
+        })
 
     @database_sync_to_async
     def create_message(self, room_id, sender_id, content):
@@ -216,27 +238,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             friend.delete()
         target_user = Player.objects.get(id=user_id)
         self.user.block_user(target_user)
-        message = {
-            'status': 'BLOCK',
-            'user_id': my_id
-        }
-        group_name = f'user_{user_id}_notification'
-        channel_layer = get_channel_layer()
-        channel_layer.group_send(group_name, message)
 
     @database_sync_to_async
     def unblock_user(self, user_id):
         target_user = Player.objects.get(id=user_id)
-        self.user.unblock_user(target_user)
-        
-        my_id = self.scope['user'].id
-        message = {
-            'status': 'UNBLOCK',
-            'user_id': my_id
-        }
-        group_name = f'user_{user_id}_notification'
-        channel_layer = get_channel_layer()
-        channel_layer.group_send(group_name, message)
+        self.user.unblock_user(target_user) 
 
     async def send_error(self, message):
         await self.send_json({
@@ -256,6 +262,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'room_id': event['room_id']
         })
 
+    async def send_notification(self, event):
+        notification = event['notification']
+        await self.send(text_data=json.dumps({
+            'notification': notification
+        }))
+
     async def send_json(self, data):
         await self.send(text_data=json.dumps(data))
 
@@ -266,4 +278,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'type': 'NEW_ROOM',
             'room_data': room_data
         }))
-

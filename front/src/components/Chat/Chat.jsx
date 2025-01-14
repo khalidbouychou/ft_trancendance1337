@@ -307,7 +307,8 @@ const Chat = () => {
                   ),
                 },
               }));
-            } else if (data_re.event === "UNBLOCK") {
+            }
+          else if (data_re.event === "UNBLOCK") {
               setData((prevData) => ({
                 ...prevData,
                 user: {
@@ -318,6 +319,7 @@ const Chat = () => {
                 },
               }));
             }
+            break;
           default:
             console.log("Unknown message type:", data_re.type);
             break;
