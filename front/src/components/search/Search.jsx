@@ -14,7 +14,7 @@ const Search = () => {
   const fetchSearchResults = async (query) => {
     if (query.trim()) {
       const response = await fetch(
-        `http://10.13.10.12:8000/api/search/?q=${query}`
+        `http://10.13.6.7:8000/api/search/?q=${query}`
       );
       const data = await response.json();
       setSearchResults(data);

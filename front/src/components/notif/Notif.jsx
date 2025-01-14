@@ -17,15 +17,19 @@ const Notif = ({ open, notifReceived, setNotifReceived }) => {
   const [FR_notif_sent, setFR_notif_sent] = useState([]);
   const [GR_notif_sent, setGR_notif_sent] = useState([]);
 
-  const { notif } = useNotificationWS();
+  const { notif, setNotif} = useNotificationWS();
 
   // WebSocket notification handler
   useEffect(() => {
     if (notif && notif.status === "pending") {
       if (notif.notif_type === "FR") {
         setFR_notif_received([...FR_notif_received, notif]);
+        setNotifReceived(true)
+        setNotif(null)
       } else if (notif.notif_type === "GR") {
         setGR_notif_received([...GR_notif_received, notif]);
+        setNotifReceived(true)
+        setNotif(null)
       }
     }
     console.log('notif1', notif);
@@ -35,7 +39,7 @@ const Notif = ({ open, notifReceived, setNotifReceived }) => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get("http://10.13.10.12:8000/api/notif/", {
+        const response = await axios.get("http://10.13.6.7:8000/api/notif/", {
           withCredentials: true,
         });
         const notifications = response.data;

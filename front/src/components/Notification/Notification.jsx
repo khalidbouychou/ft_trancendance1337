@@ -31,7 +31,7 @@ const Notification = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('http://10.13.10.12:8000/api/notif/' , {
+        const response = await axios.get('http://10.13.6.7:8000/api/notif/' , {
             withCredentials: true,
         });
         const notifications = response.data;

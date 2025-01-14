@@ -25,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 CSRF_TRUSTED_ORIGINS = [
     'https://127.0.0.1', 
     'http://127.0.0.1', 
-    'http://10.13.10.12',
-    'https://10.13.10.12',
-    'http://10.13.10.12:8000', 
+    'http://10.13.6.7',
+    'https://10.13.6.7',
+    'http://10.13.6.7:8000', 
     'https://127.0.0.1:5173',
-    "http://10.13.10.12:5173",
-    "http://10.13.10.12:5173",
+    "http://10.13.6.7:5173",
+    "http://10.13.6.7:5173",
     f'http://{os.getenv("VITE_IP_HOST")}',
 ]
 # Quick-start development settings - unsuitable for production
@@ -44,7 +44,7 @@ DEBUG = True # Set to False in production
 
 IP_MACHINE = os.getenv('VITE_IP_HOST')
 
-ALLOWED_HOSTS = ['127.0.0.1','10.13.10.12',IP_MACHINE,'10.13.10.12']
+ALLOWED_HOSTS = ['127.0.0.1','10.13.6.7',IP_MACHINE,'10.13.6.7']
 
 # Application definition
 
@@ -225,12 +225,12 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'https://127.0.0.1',  
     'http://127.0.0.1',
-    'http://10.13.10.12',
-    'https://10.13.10.12',
-    "http://10.13.10.12:5173", 
-    'http://10.13.10.12',
-    'https://10.13.10.12',
-    "http://10.13.10.12:5173",
+    'http://10.13.6.7',
+    'https://10.13.6.7',
+    "http://10.13.6.7:5173", 
+    'http://10.13.6.7',
+    'https://10.13.6.7',
+    "http://10.13.6.7:5173",
     f'http://{os.getenv("VITE_IP_HOST")}',
     ]
 
