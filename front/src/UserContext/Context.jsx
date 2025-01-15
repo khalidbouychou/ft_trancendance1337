@@ -105,8 +105,9 @@ export default function AuthProvider({ children }) {
           setLoading(true);
           setTimeout(() => {
             setLoading(false);
-          }, 1000);
+          }, 2000);
           // if (res.data.otp_login) {
+            console.log("----------------------------",res);
             toast.success("login success", {
               style: {
                 backgroundColor: 'rgb(0, 128, 0)',
@@ -118,12 +119,13 @@ export default function AuthProvider({ children }) {
         }
       }
     } catch (error) {
-      toast.error(t(error?.response?.data?.error), {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      });
+      console.log("----------------------------",error);
+      // toast.error(t(error?.response?.data?.error), {
+      //   style: {
+      //     backgroundColor: 'rgb(255, 0, 0)',
+      //     color: 'white'
+      //   }
+      // });
       navigate(`/`);
       // navigate('/login');
       setLoading(false);

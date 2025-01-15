@@ -86,10 +86,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
             username=user_data['username'],
             avatar=user_data['avatar'],
             profile_name=user_data['username']+'_intra',
-            status_network='online',
-            bool_login=True,
         )
-        p = PingData.objects.create(player=user)
+        PingData.objects.create(player=user)
         user.save()
         return user
 
@@ -145,22 +143,20 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 username=user_data['username']).first()
             if not user:
                 user = self.create_user(user_data)
-            if user.is_anonimized ==True and user.is_active == False:
+            if user.is_anonimized == True and user.is_active == False:
                 return Response({'error': 'Account is anonymized'}, status=status.HTTP_400_BAD_REQUEST)
-            user.status_network='online',
-            user.bool_login=True,
+            user.status_network = 'online'
+            user.bool_login = True
+            user.save()
             authenticate(request, username=user_data['username'])
             login(request, user)
-            user.save()
             tokens = self.create_jwt_token(user)
-            data= PlayerSerializer(user).data
+            data = PlayerSerializer(user).data
             response = Response(data, status=status.HTTP_200_OK)
             is_secure = request.is_secure()
-            response.set_cookie(key='token', value=tokens['access'], secure=is_secure , httponly=True ,samesite='Lax' ) 
-            response.set_cookie(key='refresh', value=tokens['refresh'], secure=is_secure , httponly=True , samesite='Lax') 
+            response.set_cookie(key='token', value=tokens['access'], secure=is_secure, httponly=True, samesite='None')
+            response.set_cookie(key='refresh', value=tokens['refresh'], secure=is_secure, httponly=True, samesite='None')
             return response
-        except requests.RequestException as e:
-            return Response({'error': 'Request failed: {}'.format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 

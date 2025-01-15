@@ -19,12 +19,7 @@ const Signin = () => {
     e.preventDefault();
     try {
       if (!username || !password) {
-        toast.error(t("Please fill all the fields"), {
-          style: {
-            backgroundColor: 'rgb(255, 0, 0)',
-            color: 'white'
-          }
-        });
+        toast.error(t("Please fill all the fields"));
         return;
       }
       const response = await axios.post(
@@ -37,8 +32,9 @@ const Signin = () => {
           withCredentials: true
         }
       );
+      console.log("login form -------------->",response)
       if (response.status === 200) {
-        setUser(response.data.user);
+        setUser(response?.data?.user);
         toast.success(t(`Welcome ${response.data.user.username}`), {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
@@ -47,16 +43,10 @@ const Signin = () => {
         });
         setTimeout(() => {
           navigate("/");
-        }, 1000);
+        }, 1300);
       }
     } catch (err) {
-      console.log(err);
-      toast.error(err.response.data.error, {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white',
-        }
-      });
+      toast.error(t(err?.response?.data?.error));
     }
   };
 
