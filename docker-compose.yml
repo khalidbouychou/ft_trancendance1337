@@ -68,37 +68,34 @@ services:
       - "5173:5173"
     networks:
       - connexion
-    depends_on:
-      back :
-        condition: service_healthy
     volumes:
-      - ./front:/khbouych
-      - .env:/khbouych/.env
+      - ./front:/app
+      - .env:/app/.env
     healthcheck:
-      test: curl  -f http://e3r1p1.1337.ma:5173
+      test: ["CMD-SHELL", "curl -f http://localhost:5173 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
-      start_period: 1s
+      start_period: 10s
     restart: on-failure
 
-  web3_app:
-    container_name: web3_app
-    image: web3_app:69
-    restart: always
-    build: web3
-    networks:
-      - connexion
-    environment:
-      PRIVATE_KEY: ${PRIVATE_KEY}
-    volumes:
-      - web3_vol:/root/
-    healthcheck:
-      test: ["CMD", "nc", "-zv", "web3_app", "7545"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-      start_period: 5s
+  # web3_app:
+  #   container_name: web3_app
+  #   image: web3_app:69
+  #   restart: always
+  #   build: web3
+  #   networks:
+  #     - connexion
+  #   environment:
+  #     PRIVATE_KEY: ${PRIVATE_KEY}
+  #   volumes:
+  #     - web3_vol:/root/
+  #   healthcheck:
+  #     test: ["CMD", "nc", "-zv", "web3_app", "7545"]
+  #     interval: 5s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 5s
 
   # redis:
   #   container_name: redis

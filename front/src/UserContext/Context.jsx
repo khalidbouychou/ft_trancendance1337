@@ -33,7 +33,7 @@ export default function AuthProvider({ children }) {
     try {
       await get_auth_user();
       const res = await axios.post(
-        `https://e3r1p1.1337.ma/api/otpverify/`,
+        `https://localhost/api/otpverify/`,
         { otp: otp },
         {
           withCredentials: true,
@@ -63,7 +63,7 @@ export default function AuthProvider({ children }) {
   };
 
   async function auth_intra42() {
-    const response = await axios.get(`https://e3r1p1.1337.ma/api/auth_intra/`, {
+    const response = await axios.get(`https://localhost/api/auth_intra/`, {
       withCredentials: true
     });
     try {
@@ -94,7 +94,7 @@ export default function AuthProvider({ children }) {
         const params = new URLSearchParams();
         params.append("code", code);
         res = await axios.post(
-          `https://e3r1p1.1337.ma/api/login/`,
+          `https://localhost/api/login/`,
           params,
           {
             withCredentials: true
@@ -134,7 +134,7 @@ export default function AuthProvider({ children }) {
 
   async function get_auth_user() {
     try {
-      const res = await axios.get(`https://e3r1p1.1337.ma/api/user/`, {
+      const res = await axios.get(`https://localhost/api/user/`, {
         withCredentials: true
       });
 
@@ -156,7 +156,7 @@ export default function AuthProvider({ children }) {
 
   async function Logout() {
     try {
-      const res = await axios.get(`https://e3r1p1.1337.ma/api/logout/`, {
+      const res = await axios.get(`https://localhost/api/logout/`, {
         withCredentials: true
       });
 

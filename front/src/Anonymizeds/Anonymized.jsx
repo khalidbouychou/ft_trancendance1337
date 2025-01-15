@@ -12,7 +12,7 @@ const Anonymizeds = () => {
   useEffect(() => {
     const fetchAnonymizeds = async () => {
       try {
-        const response = await axios.get(`https://e3r1p1.1337.ma/api/list_anonymized/`, {
+        const response = await axios.get(`https://localhost/api/list_anonymized/`, {
           withCredentials: true,
         });
         setAnonymizeds(response.data);  // Set the list of anonymized accounts

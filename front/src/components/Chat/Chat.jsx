@@ -84,7 +84,7 @@ const Chat = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios("https://e3r1p1.1337.ma/api/chat/", {
+        const response = await axios("https://localhost/api/chat/", {
           withCredentials: true,
         });
         console.log("1 data:", response.data);
@@ -245,7 +245,7 @@ const Chat = () => {
       }
 
       const newSocket = new WebSocket(
-        `wss://e3r1p1.1337.ma/ws/chat/${room_id}/`
+        `wss://localhost/ws/chat/${room_id}/`
       );
 
       newSocket.onopen = () => {

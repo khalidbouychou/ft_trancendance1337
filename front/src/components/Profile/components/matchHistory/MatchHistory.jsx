@@ -12,7 +12,7 @@ const MatchHistory = ({ profileName, t }) => {
     const fetchMatches = async () => {
       try {
         const response = await axios.get(
-          `https://e3r1p1.1337.ma/api/matches/${profileName}/`,
+          `https://localhost/api/matches/${profileName}/`,
           {
             withCredentials: true,
           }

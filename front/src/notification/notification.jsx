@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 const Notification = () => {
     useEffect(() => {
         // Create a socket instance
-        const socket = new WebSocket(`wss://e3r1p1.1337.ma/ws/notif/`);
+        const socket = new WebSocket(`wss://localhost/ws/notif/`);
 
         socket.onopen = () => {
             console.log('Notification socket connected');

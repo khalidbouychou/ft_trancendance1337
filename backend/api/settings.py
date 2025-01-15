@@ -25,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 CSRF_TRUSTED_ORIGINS = [
     'https://127.0.0.1', 
     'http://127.0.0.1', 
-    'http://e3r1p1.1337.ma',
-    'https://e3r1p1.1337.ma',
-    'http://e3r1p1.1337.ma', 
+    'http://localhost',
+    'https://localhost',
+    'http://localhost', 
     'https://127.0.0.1:5173',
-    "http://e3r1p1.1337.ma:5173",
-    "http://e3r1p1.1337.ma:5173",
+    "http://localhost:5173",
+    "http://localhost:5173",
     f'http://{os.getenv("VITE_IP_HOST")}',
 ]
 # Quick-start development settings - unsuitable for production
@@ -44,7 +44,7 @@ DEBUG = True # Set to False in production
 
 IP_MACHINE = os.getenv('VITE_IP_HOST')
 
-ALLOWED_HOSTS = ['127.0.0.1','e3r1p1.1337.ma',IP_MACHINE,'e3r1p1.1337.ma']
+ALLOWED_HOSTS = ['127.0.0.1','localhost',IP_MACHINE,'localhost']
 
 # Application definition
 
@@ -224,12 +224,12 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'https://127.0.0.1',  
     'http://127.0.0.1',
-    'http://e3r1p1.1337.ma',
-    'https://e3r1p1.1337.ma',
-    "http://e3r1p1.1337.ma:5173", 
-    'http://e3r1p1.1337.ma',
-    'https://e3r1p1.1337.ma',
-    "http://e3r1p1.1337.ma:5173",
+    'http://localhost',
+    'https://localhost',
+    "http://localhost:5173", 
+    'http://localhost',
+    'https://localhost',
+    "http://localhost:5173",
     f'http://{os.getenv("VITE_IP_HOST")}',
     ]
 

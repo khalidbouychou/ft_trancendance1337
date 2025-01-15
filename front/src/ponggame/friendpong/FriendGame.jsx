@@ -73,7 +73,7 @@ export default function FriendGame() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios('https://e3r1p1.1337.ma/api/pong_data/',{
+            const response = await axios('https://localhost/api/pong_data/',{
                 withCredentials: true,
             });
             console.log('response:', response.data);
@@ -110,7 +110,7 @@ export default function FriendGame() {
         let player_id = 0;
         let myReq;
         if (FetchedData)
-            socket = new WebSocket(`wss://e3r1p1.1337.ma/ws/play-friend/`);
+            socket = new WebSocket(`wss://localhost/ws/play-friend/`);
 
         if (socket) {
             socket.onopen = () => {

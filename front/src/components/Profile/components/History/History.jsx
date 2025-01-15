@@ -22,8 +22,8 @@ const History = ({ username, ismyprofil }) => {
 
       try {
         const response = await fetch(
-          `https://e3r1p1.1337.ma/matches/matches/${username}/`
-          // `https://e3r1p1.1337.ma/matches/matches/${username}/`
+          `https://localhost/matches/matches/${username}/`
+          // `https://localhost/matches/matches/${username}/`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch match history");

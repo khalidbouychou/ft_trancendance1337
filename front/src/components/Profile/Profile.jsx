@@ -92,7 +92,7 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchPingData = async () => {
       try {
-        const response = await axios.get(`https://e3r1p1.1337.ma/api/pingdata/${profileName}/` , {
+        const response = await axios.get(`https://localhost/api/pingdata/${profileName}/` , {
           withCredentials: true,
       });
         const pingData = response.data;
@@ -144,7 +144,7 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchFriends = async () => {
       const response = await axios.get(
-        `https://e3r1p1.1337.ma/api/friends/${profile_name}/` , {
+        `https://localhost/api/friends/${profile_name}/` , {
           withCredentials: true,
       });
       console.log("profile_name_145:", profile_name);
@@ -157,7 +157,7 @@ const Profile = ({ me }) => {
     const fetchBlocked = async () => {
       try {
         const response = await axios.get(
-          `https://e3r1p1.1337.ma/api/blocked/${profile_name}/`,
+          `https://localhost/api/blocked/${profile_name}/`,
           { withCredentials: true }
         );
         setBlockedList(response.data);
@@ -190,7 +190,7 @@ const Profile = ({ me }) => {
   
       try {
         const response = await fetch(
-          `https://e3r1p1.1337.ma/api/getuser/${profile_name}/`
+          `https://localhost/api/getuser/${profile_name}/`
         );
         if (!response.ok) {
           throw new Error(

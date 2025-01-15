@@ -38,7 +38,7 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
       .join("");
     try {
       const res = await axios.post(
-        `https://e3r1p1.1337.ma/api/d_2fa/`,
+        `https://localhost/api/d_2fa/`,
         {
           otp:otp
         },

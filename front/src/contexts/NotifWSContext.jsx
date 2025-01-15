@@ -10,7 +10,7 @@ export function NotificationWebSocketProvider({ children }) {
 
   useEffect(() => {
     let ws;
-    ws = new WebSocket(`wss://e3r1p1.1337.ma/ws/notif/`);
+    ws = new WebSocket(`wss://localhost/ws/notif/`);
 
     ws.onopen = () => {
       console.log("notif socket opened");

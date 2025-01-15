@@ -31,7 +31,7 @@ const Otplogin = () => {
   //   try {
   //     await get_auth_user();
   //     const res = await axios.post(
-  //       `https://e3r1p1.1337.ma/api/otpverify/`,
+  //       `https://localhost/api/otpverify/`,
   //       { otp: otp },
   //       {
   //         withCredentials: true,

@@ -6,7 +6,7 @@ import axios from "axios";
 const CardBlocked = ({ userBlocked, onUnblock }) => {
   const handleUnblock = async () => {
     try {
-      await axios.post(`https://e3r1p1.1337.ma/api/users/1/unblock_user/`, {
+      await axios.post(`https://localhost/api/users/1/unblock_user/`, {
         blocked_user_id: userBlocked.blocked_friend.id,
       });
       alert("User unblocked successfully");

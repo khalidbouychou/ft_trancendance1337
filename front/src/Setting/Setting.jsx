@@ -19,7 +19,7 @@ const Settings = () => {
   const handleProfileNameUpdate = async () => {
     try {
       const response = await axios.put(
-        `https://e3r1p1.1337.ma/api/update/`,
+        `https://localhost/api/update/`,
         { profile_name: NewProfileName },
         {
           withCredentials: true,
@@ -59,7 +59,7 @@ const Settings = () => {
       formData.append('avatar', input.files[0]);
 
       axios
-        .put(`https://e3r1p1.1337.ma/api/update/`, formData, {
+        .put(`https://localhost/api/update/`, formData, {
           withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -118,7 +118,7 @@ const Settings = () => {
 
   const handleConfirm = async () => {
     try {
-      const response = await axios.get(`https://e3r1p1.1337.ma/api/${actionToPerform}/` , {
+      const response = await axios.get(`https://localhost/api/${actionToPerform}/` , {
         withCredentials: true,
     });
       if (response.status === 200) {

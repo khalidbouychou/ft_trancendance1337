@@ -28,7 +28,7 @@ const MainTournament = () => {
     const [MESSAGE, setMessage] = useState("message");
 
     useEffect(() => {
-        socket.current = new WebSocket(`wss://e3r1p1.1337.ma/ws/tournament-game/`);
+        socket.current = new WebSocket(`wss://localhost/ws/tournament-game/`);
 
         socket.current.onopen = () => {
 
