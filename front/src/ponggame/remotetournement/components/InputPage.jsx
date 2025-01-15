@@ -26,6 +26,7 @@ const MainTournament = () => {
     const [leftScore, setLeftScore] = useState(0);
     const [rightScore, setRightScore] = useState(0);
     const [MESSAGE, setMessage] = useState("message");
+    const [player_id, setPlayer_id1] = useState(0);
 
     useEffect(() => {
         socket.current = new WebSocket(`ws://${import.meta.env.VITE_BACKEND_IP}/ws/tournament-game/`);
@@ -80,7 +81,6 @@ const MainTournament = () => {
         let racketWidth = 0;
         let leftRacketY = 0;
         let rightRacketY = 0;
-        let player_id = 0;
         let myReq;
         let localcondition = 'N';
 
@@ -166,15 +166,18 @@ const MainTournament = () => {
             }
             else if (data.message === 'game_started') {
                 setCondition('N');
+                console.log("data:", data);
                 if (data.player_id1 === PlayerAliasName) {
-                    player_id = 1;
+                    setPlayer_id1(1);
+                    console.log("------------------------------------im left player i use w and s and my id is 1");
                     setLeftPlayerName(data.player_id1);
                     setRightPlayerName(data.player_id2);
                     setLeftPlayerAvatar(data.player1_avatar);
                     setRightPlayerAvatar(data.player2_avatar);
                 }
                 if (data.player_id2 === PlayerAliasName) {
-                    player_id = 2;
+                    setPlayer_id1(2)
+                    console.log("------------------------------------im right player i use arrowup and arrowdown and my id is 2");
                     setLeftPlayerName(data.player_id1);
                     setRightPlayerName(data.player_id2);
                     setLeftPlayerAvatar(data.player1_avatar);
@@ -214,36 +217,52 @@ const MainTournament = () => {
             const draw = () => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-                if (pressedKeys.current.has('w') && player_id === 1) {
-                    if (socket.current.readyState === WebSocket.OPEN) {
-                        const message = {
-                            action: 'w',
-                        };
-                        socket.current.send(JSON.stringify(message));
+                if (pressedKeys.current.has('w') ) {
+                    console.log("w and player id is:", player_id);
+                    if (player_id === 1){
+                        console.log("my id is 1");
+                        if (socket.current.readyState === WebSocket.OPEN) {
+                            const message = {
+                                action: 'w',
+                            };
+                            socket.current.send(JSON.stringify(message));
+                        }
                     }
                 }
-                else if (pressedKeys.current.has('s') && player_id === 1) {
-                    if (socket.current.readyState === WebSocket.OPEN) {
-                        const message = {
-                            action: 's',
-                        };
-                        socket.current.send(JSON.stringify(message));
+                else if (pressedKeys.current.has('s')) {
+                    console.log("s and player id is:", player_id);
+                    if (player_id === 1){
+                        console.log("my id is 1");
+                        if (socket.current.readyState === WebSocket.OPEN) {
+                            const message = {
+                                action: 's',
+                            };
+                            socket.current.send(JSON.stringify(message));
+                        }
                     }
                 }
-                if (pressedKeys.current.has('ArrowUp') && player_id === 2) {
-                    if (socket.current.readyState === WebSocket.OPEN) {
-                        const message = {
-                            action: 'ArrowUp',
-                        };
-                        socket.current.send(JSON.stringify(message));
+                if (pressedKeys.current.has('ArrowUp')) {
+                    console.log("arrowup and player id is:", player_id);
+                    if (player_id === 2){
+                        console.log("my id is 2");
+                        if (socket.current.readyState === WebSocket.OPEN) {
+                            const message = {
+                                action: 'ArrowUp',
+                            };
+                            socket.current.send(JSON.stringify(message));
+                        }
                     }
                 }
-                else if (pressedKeys.current.has('ArrowDown') && player_id === 2) {
-                    if (socket.current.readyState === WebSocket.OPEN) {
-                        const message = {
-                            action: 'ArrowDown',
-                        };
-                        socket.current.send(JSON.stringify(message));
+                else if (pressedKeys.current.has('ArrowDown')) {
+                    console.log("ArrowDown and player id is:", player_id);
+                    if (player_id === 2){
+                        console.log("my id is 2");
+                        if (socket.current.readyState === WebSocket.OPEN) {
+                            const message = {
+                                action: 'ArrowDown',
+                            };
+                            socket.current.send(JSON.stringify(message));
+                        }
                     }
                 }
                 drawball();
@@ -276,7 +295,7 @@ const MainTournament = () => {
             };
         }
         
-    }, [matchstart, PlayerAliasName, condition]);
+    }, [matchstart, PlayerAliasName, condition, player_id]);
 
     useEffect(() => {  
         if(PlayerAliasName !== ''){{

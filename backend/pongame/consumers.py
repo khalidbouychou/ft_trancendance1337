@@ -940,7 +940,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
         for channel_name in channels:
             await channel_layer.group_discard(group_name, channel_name)
 
-    async def receive(self, text_data):
+    async def receive(self, text_data): 
         if not text_data.strip():
             print('Received empty message')
             return
@@ -953,17 +953,22 @@ class TournamentConsumer(AsyncWebsocketConsumer):
         print('received:', data)
         action = data.get('action')
         if self.ingame:
+            print("my name is:", self.name,"my instance:",self, "my admin instance:", self.admin)
             if action == 'ArrowDown':
                 if self.admin.right_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
+                    print("ArrowDown")
                     self.admin.right_paddleY += 10
             elif action == 'ArrowUp':
                 if self.admin.right_paddleY >= 10:
-                    self.admin.right_paddleY -= 10
+                    print("ArrowUp")
+                    self.admin.right_paddleY -= 10   
             if action == 's':
                 if self.admin.left_paddleY <= self.admin.game_height - self.admin.racketHeight - 10:
+                    print("s")
                     self.admin.left_paddleY += 10
             elif action == 'w':
-                if self.admin.left_paddleY >= 10:
+                if self.admin.left_paddleY >= 10: 
+                    print("w") 
                     self.admin.left_paddleY -= 10
 
         if action == 'fetch_tournaments':
@@ -1008,6 +1013,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         tournament['player1_avatar'] = avatar
                         tournament['connected'] += 1
                         tournament['player1_instance'] = self
+                        print("name:", name, "instance:", self)
                         await self.channel_layer.group_add(
                             tournament['group1'],
                             self.channel_name
@@ -1017,6 +1023,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         tournament['player2_avatar'] = avatar
                         tournament['connected'] += 1
                         tournament['player2_instance'] = self
+                        print("name:", name, "instance:", self)
                         await self.channel_layer.group_add(
                             tournament['group1'],
                             self.channel_name
@@ -1026,6 +1033,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         tournament['player3_avatar'] = avatar
                         tournament['connected'] += 1
                         tournament['player3_instance'] = self
+                        print("name:", name, "instance:", self)
                         await self.channel_layer.group_add(
                             tournament['group2'],
                             self.channel_name
@@ -1035,6 +1043,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         tournament['player4_avatar'] = avatar
                         tournament['connected'] += 1
                         tournament['player4_instance'] = self
+                        print("name:", name, "instance:", self)
                         await self.channel_layer.group_add(
                             tournament['group2'],
                             self.channel_name

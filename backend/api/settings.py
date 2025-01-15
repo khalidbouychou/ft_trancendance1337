@@ -46,7 +46,7 @@ DEBUG = True # Set to False in production
 
 BACKEND_IP = os.getenv("VITE_BACKEND_IP")
 
-ALLOWED_HOSTS = ['127.0.0.1', '10.13.7.1', BACKEND_IP, 'e3r5p6.1337.ma']
+ALLOWED_HOSTS = ['127.0.0.1', '10.13.7.1', BACKEND_IP, 'e3r3p8.1337.ma', '*']
 
 # Application definition
 
