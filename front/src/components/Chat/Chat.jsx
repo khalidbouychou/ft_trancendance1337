@@ -10,7 +10,7 @@ import axios from "axios";
 import { useNotificationWS } from "../../contexts/NotifWSContext";
 
 const Chat = () => {
-  const {notif , setNotif} = useNotificationWS();
+  const {notif , setNotif, setChatMesageNotif, chatMesageNotif} = useNotificationWS();
   const { t } = useContext(AuthContext);
   const navigate = useNavigate();
   const [sockets, setSockets] = useState({});
@@ -73,9 +73,19 @@ const Chat = () => {
         });
         setNotif(null);
       }
+      // else if (notif && notif.message === 'chat_message') {
+      //   setChatMesageNotif(false);
+      //   setNotif(null);
+      // }
     }, [notif])
 
-
+    useEffect(() => {
+      if (chatMesageNotif) {
+        console.log('chatMesageNotif before', chatMesageNotif)
+        setChatMesageNotif(false);
+        console.log('chatMesageNotif after', chatMesageNotif)
+      }
+    }, [chatMesageNotif])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -383,7 +393,6 @@ const Chat = () => {
     setCurrentContact(contact);
     setRoomId(contact.id);
     setChat(contact.messages);
-
     await setupSocket(contact.id);
   };
   

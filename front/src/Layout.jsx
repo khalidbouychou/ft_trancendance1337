@@ -44,10 +44,10 @@ const Layout = () => {
     <div className={style.EntirePage}>
           {( location.pathname !== "/login" && location.pathname !== "/otp") && user && 
             <NotificationWebSocketProvider>
-              <LocationProvider>
+              {/* <LocationProvider> */}
                 <Sidebar /> 
                 <Outlet />
-              </LocationProvider>
+              {/* </LocationProvider> */}
             </NotificationWebSocketProvider>
           }
     </div>

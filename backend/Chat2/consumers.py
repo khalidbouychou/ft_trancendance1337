@@ -103,6 +103,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'message': message_data
             }
         )
+        xdata = {
+            'status': 'chat_message',
+        }
+        group_name = f'user_{receiver.id}_NOTIF'
+        print("group_name", group_name)
+        await self.channel_layer.group_send(
+            group_name,
+            {
+                'type': 'send_notification', 
+                'notification': xdata  
+            }
+        )
 
     async def handle_search_users(self, data):
         query = data.get('query')

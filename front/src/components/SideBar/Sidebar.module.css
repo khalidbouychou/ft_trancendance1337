@@ -139,6 +139,7 @@ a {
     letter-spacing: 1px;
     transition: 0.5s;
     color: rgba(255, 255, 255, 0.264);
+    position: relative;
     &:hover {
       transition: 0.5s;
       transform: scale(1.1);
@@ -148,10 +149,21 @@ a {
 
 .icon {
   display: flex;
-  width: 30px;
-  height: 30px;
-  color: white;
+  width: 25px;
+  height: 25px;
+  /* color: white; */
   cursor: pointer;
+}
+
+.msgRcv {
+  position: absolute;
+  display: flex;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 10px;
+  top: -1px;
+  right: -1px;
 }
 
 .notifReceive {

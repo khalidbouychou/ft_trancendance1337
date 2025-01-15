@@ -40,7 +40,6 @@ function Sidebar({
       user.username.toLowerCase().includes(search.toLowerCase())
     );
     setMatchedUsers(filteredUsers.slice(0, 5));
-    // console.log('matchedUsers: ', matchedUsers)
   }, [search]);
 
   useEffect(() => {
@@ -64,7 +63,6 @@ function Sidebar({
   }, [data.chat_rooms]);
 
   const sendSelectUserRequest = async (profile_name) => {
-    console.log("sendSelectUserRequest");
     try {
       const socket = await setupSocket(1);
       socket.send(
@@ -73,7 +71,6 @@ function Sidebar({
           profile_name: profile_name,
         })
       );
-      console.log("it was send++++");
     } catch (error) {
       console.error("Error sending SELECT_USER request:", error);
     }

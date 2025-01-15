@@ -7,6 +7,7 @@ export function NotificationWebSocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [notif, setNotif] = useState(null);
+  const [chatMesageNotif, setChatMesageNotif] = useState(false);
 
   useEffect(() => {
     let ws;
@@ -32,6 +33,10 @@ export function NotificationWebSocketProvider({ children }) {
             toast.success("u been invited to a pong game", {
             position: "top-left"
           })
+        }
+        else if (data.notification.status == "chat_message"){
+          console.log("i received a chat message");
+          setChatMesageNotif(true);
         }
       }
     };
@@ -68,7 +73,7 @@ export function NotificationWebSocketProvider({ children }) {
   }, [socket]);
 
   return (
-    <NotifWSContext.Provider value={{ sendMessage, isConnected, notif ,setNotif}}>
+    <NotifWSContext.Provider value={{ sendMessage, isConnected, notif ,setNotif, chatMesageNotif, setChatMesageNotif}}>
       {children}
       <ToastContainer />
     </NotifWSContext.Provider>

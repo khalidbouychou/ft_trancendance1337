@@ -12,8 +12,15 @@ import It from "../../../public/assets/icons/lang-icons/It-lang.png";
 import SearchCard from "./components/searchCard/SearchCard.jsx";
 import { IoIosNotifications } from "react-icons/io";
 import Notif from "../notif/Notif.jsx";
+import { FaHome } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
+import { PiGameControllerFill } from "react-icons/pi";
+import { BsChatDots } from "react-icons/bs";
+import { useNotificationWS } from "../../contexts/NotifWSContext";
+
 
 const Sidebar = () => {
+  const { chatMesageNotif, setChatMesageNotif} = useNotificationWS();
   const { t, user, Logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,6 +33,7 @@ const Sidebar = () => {
     localStorage.getItem("lang") || "en"
   );
   const [isLangListOpen, setIsLangListOpen] = useState(false);
+  const [chatNotif, setChatNotif] = useState(false)
 
   const searchRef = useRef(null);
   const langListRef = useRef(null);
@@ -35,6 +43,10 @@ const Sidebar = () => {
 
   const langIcons = { en: En, fr: Fr, it: It };
   const [notifReceived, setNotifReceived] = useState(false)
+
+  useEffect(() => {
+    console.log("chatMesageNotif", chatMesageNotif)
+  }, [chatMesageNotif])
 
   const changeLanguage = (lang) => {
     setCurrentLang(lang);
@@ -184,29 +196,29 @@ const Sidebar = () => {
                 color: location.pathname === "/" ? "yellow" : "white",
               }}
             >
-              {t("Home")}
+              <FaHome className={styl.icon} />
             </button>
           </Link>
           <Link to={`/profile/${user?.user?.profile_name}`}>
             <button
               style={{
                 color:
-                  location.pathname === `/profile/${user?.user?.profile_name}`
-                    ? "yellow"
-                    : "white",
+                location.pathname === `/profile/${user?.user?.profile_name}`
+                ? "yellow"
+                : "white",
               }}
             >
-              {t("Profile")}
+              <CgProfile className={styl.icon} />
             </button>
           </Link>
           {/* <Link to={"/notification"}>
             <button
-              style={{
-                color:
-                  location.pathname === "/notification" ? "yellow" : "white",
-              }}
+            style={{
+              color:
+              location.pathname === "/notification" ? "yellow" : "white",
+            }}
             >
-              {t("Notification")}
+            {t("Notification")}
             </button>
           </Link> */}
           <Link to={"/games"}>
@@ -215,7 +227,7 @@ const Sidebar = () => {
                 color: location.pathname === "/games" ? "yellow" : "white",
               }}
             >
-              {t("Games")}
+              <PiGameControllerFill className={styl.icon} />
             </button>
           </Link>
           <Link to={"/chat"}>
@@ -224,11 +236,12 @@ const Sidebar = () => {
                 color: location.pathname === "/chat" ? "yellow" : "white",
               }}
             >
-              {t("Chat")}
+              <BsChatDots className={styl.icon} />
+              <div className={styl.msgRcv} style={{display: chatMesageNotif ? 'flex' : 'none'}}/>
             </button>
           </Link>
           <div style={{display: 'flex', position: 'relative'}} ref={notifRef}>
-              <IoIosNotifications className={styl.icon} onClick={handleOpenNotif}/>
+              <IoIosNotifications className={styl.icon} onClick={handleOpenNotif} style={{color: 'white'}}/>
               {notifReceived && <div className={styl.notifReceive}></div>}
               <Notif open={openNotif} notifReceived={notifReceived} setNotifReceived={setNotifReceived}/>
               {notifReceived}
