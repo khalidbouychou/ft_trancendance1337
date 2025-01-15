@@ -285,7 +285,7 @@ const Chat = () => {
             break;
           case 'NEW_ROOM':
           {
-            const roomExists = prevData.chat_rooms.some(room => room.id === data_re.room_data.id);
+            const roomExists = data.chat_rooms.some(room => room.id === data_re.room_data.id);
             if (!roomExists) {
               console.log('New room created:', data_re.room_data);
               setData(prevData => ({

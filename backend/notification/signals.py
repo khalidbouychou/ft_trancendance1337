@@ -6,6 +6,7 @@ from asgiref.sync import async_to_sync
 from .serializers import NotificationSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from login.models import Friend
+from login.models import Player
 from django.db.models import Q
 import json
 
@@ -29,6 +30,10 @@ def notify_user(sender, instance, created, **kwargs):
         )
     else:
         if instance.notif_type == 'FR' and instance.status != 'declined':
+            if Player.are_enemies(instance.from_user, instance.to_user):
+                instance.status = 'declined'
+                instance.save()
+                return
             friends = Friend.objects.filter(Q(user1=instance.from_user, user2=instance.to_user) |
                                             Q(user1=instance.to_user, user2=instance.from_user))
             if friends.exists():
