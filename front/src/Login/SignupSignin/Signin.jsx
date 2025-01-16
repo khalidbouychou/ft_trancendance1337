@@ -23,7 +23,7 @@ const Signin = () => {
         return;
       }
       const response = await axios.post(
-        `http://${import.meta.env.VITE_BACKEND_IP}/api/singin/`,
+        `${import.meta.env.VITE_BACKEND_IP}/api/singin/`,
         {
           username,
           password
@@ -32,6 +32,17 @@ const Signin = () => {
           withCredentials: true
         }
       );
+      // const response = await axios.post(
+      //   `https://localhost/api/singin/`,
+      //   {
+      //     username,
+      //     password
+      //   },
+      //   {
+      //     withCredentials: true
+      //   }
+      // );
+      console.log("login form -------------->",response)
       if (response.status === 200) {
         setUser(response.data.user);
         toast.success(t(`Welcome ${response.data.user.username}`), {
@@ -46,7 +57,7 @@ const Signin = () => {
       }
     } catch (err) {
       console.log(err);
-      toast.error(err.response.data.error, {
+      toast.error(t(err?.response?.data?.error), {
         style: {
           backgroundColor: 'rgb(255, 0, 0)',
           color: 'white',

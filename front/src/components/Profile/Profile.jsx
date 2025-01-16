@@ -105,7 +105,7 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchPingData = async () => {
       try {
-        const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/pingdata/${profileName}/` , {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/pingdata/${profileName}/` , {
           withCredentials: true,
       });
         const pingData = response.data;
@@ -157,7 +157,7 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchFriends = async () => {
       const response = await axios.get(
-        `http://${import.meta.env.VITE_BACKEND_IP}/api/friends/${profile_name}/` , {
+        `${import.meta.env.VITE_BACKEND_IP}/api/friends/${profile_name}/` , {
           withCredentials: true,
       });
       console.log("profile_name_145:", profile_name);
@@ -170,7 +170,7 @@ const Profile = ({ me }) => {
     const fetchBlocked = async () => {
       try {
         const response = await axios.get(
-          `http://${import.meta.env.VITE_BACKEND_IP}/api/blocked/${profile_name}/`,
+          `${import.meta.env.VITE_BACKEND_IP}/api/blocked/${profile_name}/`,
           { withCredentials: true }
         );
         setBlockedList(response.data);
@@ -203,7 +203,7 @@ const Profile = ({ me }) => {
   
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_BACKEND_IP}/api/getuser/${profile_name}/`
+          `${import.meta.env.VITE_BACKEND_IP}/api/getuser/${profile_name}/`
         );
         if (!response.ok) {
           throw new Error(

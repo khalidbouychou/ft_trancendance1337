@@ -22,7 +22,7 @@ const Statistic = ({ userData, profileName, t }) => {
     const fetchData = async () => {
       try {
         const data = await axios.get(
-          `http://${import.meta.env.VITE_BACKEND_IP}/api/matches/${profileName}/` , {
+          `${import.meta.env.VITE_BACKEND_IP}/api/matches/${profileName}/` , {
             withCredentials: true,
         });
         setDaTa(data.data);

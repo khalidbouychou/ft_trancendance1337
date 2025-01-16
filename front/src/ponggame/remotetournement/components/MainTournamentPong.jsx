@@ -16,7 +16,7 @@ const MainTournamentPong = () => {
     }, [tournaments]);
 
     useEffect(() => {
-        socket.current = new WebSocket(`ws://${import.meta.env.VITE_BACKEND_IP}/ws/tournament-game/`);
+        socket.current = new WebSocket(`wss://${import.meta.env.VITE_WSS_IP}/ws/tournament-game/`);
 
         socket.current.onopen = () => {
             if (socket.current.readyState === WebSocket.OPEN) {

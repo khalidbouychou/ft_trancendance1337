@@ -11,7 +11,7 @@ export function NotificationWebSocketProvider({ children }) {
 
   useEffect(() => {
     let ws;
-    ws = new WebSocket(`ws://${import.meta.env.VITE_BACKEND_IP}/ws/notif/`);
+    ws = new WebSocket(`wss://${import.meta.env.VITE_WSS_IP}/ws/notif/`);
 
     ws.onopen = () => {
       console.log("notif socket opened");

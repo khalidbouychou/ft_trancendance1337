@@ -19,8 +19,8 @@ const Twofa = () => {
 
   const numInputs = 6;
 
-  const QR_CODE_URL = `http://${import.meta.env.VITE_BACKEND_IP}/api/qrcode/`;
-  const USER_STATUS_URL = `http://${import.meta.env.VITE_BACKEND_IP}/api/user_status/`;
+  const QR_CODE_URL = `${import.meta.env.VITE_BACKEND_IP}/api/qrcode/`;
+  const USER_STATUS_URL = `${import.meta.env.VITE_BACKEND_IP}/api/user_status/`;
 
   // const renderInputs = () => {
   //   return Array.from({ length: numInputs }).map((_, i) => (
@@ -140,7 +140,7 @@ const Twofa = () => {
       .join("");
       try {
         const res = await axios.post(
-        `http://${import.meta.env.VITE_BACKEND_IP}/api/otpverify/`,
+        `${import.meta.env.VITE_BACKEND_IP}/api/otpverify/`,
         {
           otp: otp
         },

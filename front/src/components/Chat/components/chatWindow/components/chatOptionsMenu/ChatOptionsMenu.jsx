@@ -35,10 +35,10 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   }, [notif])
 
   const check_blocked = async () => {
-        const response1 = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/getuser/${currentUser.profile_name}/` , {
+        const response1 = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/getuser/${currentUser.profile_name}/` , {
           withCredentials: true,
         });
-        const response2 = await axios.get(`http://${import.meta.env.VITE_BACKEND_IP}/api/getuser/${otherUser.profile_name}/` , {
+        const response2 = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/getuser/${otherUser.profile_name}/` , {
           withCredentials: true,
         });
         console.log('my response:', response1.data)

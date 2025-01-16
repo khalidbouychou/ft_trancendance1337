@@ -96,7 +96,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (searchQuery.trim()) {
-      fetch(`http://${import.meta.env.VITE_BACKEND_IP}/api/search/?q=${searchQuery}`)
+      fetch(`${import.meta.env.VITE_BACKEND_IP}/api/search/?q=${searchQuery}`)
         .then((response) => response.json())
         .then((data) => setSearchResults(data));
     } else {

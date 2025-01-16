@@ -23,17 +23,8 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent  
 # Add this setting to the end of the file or before the MIDDLEWARE setting
 CSRF_TRUSTED_ORIGINS = [
-    'http://e3r7p1.1337.ma:5173',
-    'https://127.0.0.1', 
-    'http://127.0.0.1', 
-    f'http://{os.getenv("VITE_BACKEND_IP")}',
-    f'https://{os.getenv("VITE_BACKEND_IP")}',
-    'http://10.13.10.18:8000', 
-    'http://127.0.0.1:5173',
-    'https://127.0.0.1:5173',
-    "http://10.13.10.18:5173",
-    "http://10.13.10.18:5173",
-    f'http://{os.getenv("VITE_IP_HOST")}',
+    'https://localhost',
+    'https://10.13.6.3',
 ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -44,9 +35,9 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production! 
 DEBUG = True # Set to False in production
 
-BACKEND_IP = os.getenv("VITE_BACKEND_IP")
+# BACKEND_IP = os.getenv("VITE_BACKEND_IP")
 
-ALLOWED_HOSTS = ['127.0.0.1', '10.13.7.1', BACKEND_IP, 'e3r3p8.1337.ma', '*']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -65,7 +56,6 @@ INSTALLED_APPS = [
     'login',
     'pongame',
     'matches',
-    # 'chat',
     'notification',
     'Chat2',
     'web3_app'
@@ -80,8 +70,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -191,10 +179,6 @@ REST_FRAMEWORK = {
 
 }
 
-
-
-
-
 AUTH_USER_MODEL = 'login.Player'
 SIMPLE_JWT = {
    'ACCESS_TOKEN_LIFETIME': timedelta(hours=5),
@@ -207,7 +191,6 @@ ACCESS_TOKEN_LIFETIME = SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
 REFRESH_TOKEN_LIFETIME = SIMPLE_JWT['REFRESH_TOKEN_LIFETIME']
 
 JWT_COOKIE_SECURE = False # Set to True in production
-
 
 # These are used for cookie settings
 JWT_AUTH_COOKIE = 'access_token' 
@@ -223,21 +206,12 @@ ip_frontendl = os.getenv("IP_FRONTEND")
 ip_backend = os.getenv("IP_BACKEND") 
 
 CORS_ALLOWED_ORIGINS = [
-    'http://e3r7p1.1337.ma:5173',
-    'https://127.0.0.1:5173',
-    'http://127.0.0.1:5173',
-    'https://127.0.0.1',  
-    'http://127.0.0.1',
-    f'http://{os.getenv("VITE_BACKEND_IP")}',
-    f'https://{os.getenv("VITE_BACKEND_IP")}',
-    'http://10.13.10.18',
-    'https://10.13.10.18',
-    "http://10.13.10.18:5173", 
-    'http://10.13.10.18',
-    'https://10.13.10.18',
-    "http://10.13.10.18:5173",
-    f'http://{os.getenv("VITE_IP_HOST")}',
-    ]
+    'https://localhost',
+    'https://localhost:5173',
+    'http://localhost',
+    'http://localhost:5173',
+    "https://10.13.6.3",
+]
 
 DATABASES = {
     'default': {
@@ -250,14 +224,9 @@ DATABASES = {
     }
 }
 
-# Set secure cookies and headers for HTTPS
-# SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Tells Django that the request is secure
-# CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
-# SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
+SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Tells Django that the request is secure
+CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
 
-# # Use the X-Forwarded-For header to get the real client IP address
-# USE_X_FORWARDED_HOST = True
-#************
-
-#************  khbouych ************ 
+USE_X_FORWARDED_HOST = True

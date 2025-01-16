@@ -12,7 +12,7 @@ from rest_framework.authentication import SessionAuthentication
 from login.models import Player
 from login.models import Friend
 from asgiref.sync import sync_to_async
-from django.db.models import Q
+from django.db.models import Q,F
 import asyncio
 
 class NotificationConsumer(AsyncWebsocketConsumer):
@@ -57,10 +57,20 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         user = self.scope['user']
         user.number_of_sessions -= 1
         x = 0
+        print("user.id:", user.id, "username:", user.username) 
+        await sync_to_async(
+            lambda: Player.objects.filter(id=user.id).update(
+                number_of_sessions=Player.objects.get(id=user.id).number_of_sessions - 1
+            )
+        )()
+
         if user.number_of_sessions <= 0:
-            user.status_network = 'offline'
             x = 1
-        await sync_to_async(user.save)()
+            await sync_to_async(
+                lambda: Player.objects.filter(id=user.id).update(
+                    status_network='offline'
+                )
+            )()
         if x == 1:
             data = {
                 'message': 'status',

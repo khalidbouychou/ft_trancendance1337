@@ -67,7 +67,7 @@ export default function OnlineGame() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios(`http://${import.meta.env.VITE_BACKEND_IP}/api/pong_data/`,{
+            const response = await axios(`${import.meta.env.VITE_BACKEND_IP}/api/pong_data/`,{
                 withCredentials: true,
             });
             if (response.status === 200) {
@@ -101,7 +101,7 @@ export default function OnlineGame() {
         let rightRacketY = 0;
         let myReq;
         if (FetchedData)
-            socket = new WebSocket(`ws://${import.meta.env.VITE_BACKEND_IP}/ws/remote-game/`);
+            socket = new WebSocket(`wss://${import.meta.env.VITE_WSS_IP}/ws/remote-game/`);
         if (socket) {
             socket.onopen = () => {
                 if (socket.readyState === WebSocket.OPEN) {

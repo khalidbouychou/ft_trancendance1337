@@ -37,7 +37,7 @@ function Sidebar({
     }
 
     const filteredUsers = allUsers.filter((user) =>
-      user.username.toLowerCase().includes(search.toLowerCase())
+      user.profile_name.toLowerCase().includes(search.toLowerCase())
     );
     setMatchedUsers(filteredUsers.slice(0, 5));
   }, [search]);
@@ -46,7 +46,7 @@ function Sidebar({
     setMatchedUsers(
       allUsers
         .filter((user) =>
-          user.username.toLowerCase().includes(search.toLowerCase())
+          user.profile_name.toLowerCase().includes(search.toLowerCase())
         )
         .slice(0, 5)
     );

@@ -89,7 +89,7 @@ export default function ChatWindow({
         game_type: "PG",
         to_user_id: otherUser.id,
       });
-      const pong_socket = new WebSocket(`ws://${import.meta.env.VITE_BACKEND_IP}/ws/play-friend/`);
+      const pong_socket = new WebSocket(`wss://${import.meta.env.VITE_WSS_IP}/ws/play-friend/`);
       pong_socket.onopen = () => {
         const data2 = {
           action: "friend_game",
@@ -123,11 +123,11 @@ export default function ChatWindow({
                 <div className={styl.intImg} style={{width: '42px', height: '47px'}}>
                   <img
                     src={otherUser.avatar}
-                    alt={otherUser.username}
+                    alt={otherUser.profile_name}
                   />
                 </div>
               </div>
-              <span className={styl.contactName}>{otherUser.username.toUpperCase()}</span>
+              <span className={styl.contactName}>{otherUser.profile_name.toUpperCase()}</span>
               {isTyping && (
                 <div className={styl.typingIndicator}>
                   <p>Typing...</p>

@@ -1,5 +1,4 @@
-all : uploads_dir up
-# Load environment variables from .env file
+all : up 
 ifneq ("$(wildcard .env)","")
     include .env
 endif
@@ -7,26 +6,27 @@ endif
 uploads_dir:
 	@mkdir -p backend/uploads
 
-.PHONY: all
+up: s uploads_dir
+	@docker-compose up --build
 
 s : 
 	chmod +x ./ssl.sh
 	./ssl.sh
 
-up:
-	@docker-compose up --build
-
 down :
 	@docker-compose stop
 	@docker-compose down
 
-clean:
+clean: down
+	@rm -rf **/node_modules
 	@rm -rf backend/uploads/*
 	@rm -rf /**/node_modules
 	@rm -rf */*/migrations
 	@rm -rf */*/__pycache__
+	@docker-compose down
 	@docker system prune -af
-	@docker volume prune
+	@docker volume prune -f
+	@rm -rf nginx/ssl.*
 	@rm -rf ssl/*
 
 push: 
@@ -34,7 +34,6 @@ push:
 	@git commit -m "$(m)"
 	@git push
 
-re: clean all
+re: clean all 
 
-
-
+.PHONY: all push down s  uploads_dir

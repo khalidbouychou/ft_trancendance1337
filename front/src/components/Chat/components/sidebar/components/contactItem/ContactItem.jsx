@@ -16,13 +16,13 @@ function ContactItem({ contact, currentUser, onClick, unreadMessages }) {
         <div className={styl.intImg} style={{width: '42px', height: '47px'}}>
             <img
                 src={otherUser.avatar}
-                alt={otherUser.username}
+                alt={otherUser.profile_name}
             />
         </div>
       </div>
       <div className={styl.contactDetails}>
         <span className={styl.contactName}>
-          {otherUser.username.toUpperCase()}
+          {otherUser.profile_name.toUpperCase()}
           <div className={styl.status} style={{backgroundColor: otherUser.status_network === 'online' ? 'green' : 'red'}}></div>
         </span>
         <div className={styl.contactMetadata}>
