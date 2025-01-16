@@ -36,6 +36,9 @@ const Chat = () => {
     }
   }, [chat]);
 
+  useEffect(() => {
+    console.log('-------------------------------------------data:', data);
+  }, [data])
 
   useEffect(() => {
       console.log('we recieved a notification:', notif);
@@ -285,9 +288,20 @@ const Chat = () => {
             break;
           case 'NEW_ROOM':
           {
-            const roomExists = data.chat_rooms.some(room => room.id === data_re.room_data.id);
-            if (!roomExists) {
-              console.log('New room created:', data_re.room_data);
+            // console.log("data:", data);
+            // console.log("data_re:", data_re);
+            // console.log("data_re.room_data:", data_re.room_data);
+            let exist = false;
+            for (let i = 0; i < data.chat_rooms.length; i++) {
+              // console.log('data.chat_rooms[i].id:', data.chat_rooms[i].id);
+              if (data.chat_rooms[i].id === data_re.room_data.id) {
+                exist = true;
+                break;
+              }
+            }
+            if (exist) {
+              // console.log('New room created:', data_re.room_data);
+              // console.log('data:', data);
               setData(prevData => ({
                 ...prevData,
                 chat_rooms: [...prevData.chat_rooms, data_re.room_data]
