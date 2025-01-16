@@ -61,7 +61,7 @@ const MainTournament = () => {
                 </div>
             </div>
             <div className={styles.Button}>
-            <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'grey' : 'green'}}>{t("Start")}</button>
+                <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'rgb(67, 4, 14)' : 'green'}}>{t("Start")}</button>
             </div>
         </div>
     )

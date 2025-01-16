@@ -28,11 +28,11 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1', 
     f'http://{os.getenv("VITE_BACKEND_IP")}',
     f'https://{os.getenv("VITE_BACKEND_IP")}',
-    'http://10.13.10.18:8000', 
+    'http://10.13.6.7:8000', 
     'http://127.0.0.1:5173',
     'https://127.0.0.1:5173',
-    "http://10.13.10.18:5173",
-    "http://10.13.10.18:5173",
+    "http://10.13.6.7:5173",
+    "http://10.13.6.7:5173",
     f'http://{os.getenv("VITE_IP_HOST")}',
 ]
 # Quick-start development settings - unsuitable for production
@@ -46,7 +46,7 @@ DEBUG = True # Set to False in production
 
 BACKEND_IP = os.getenv("VITE_BACKEND_IP")
 
-ALLOWED_HOSTS = ['127.0.0.1', '10.13.7.1', BACKEND_IP, 'e3r3p8.1337.ma', '*']
+ALLOWED_HOSTS = ['127.0.0.1', '10.13.7.1', BACKEND_IP, 'e3r6p7.1337.ma', '*']
 
 # Application definition
 
@@ -230,12 +230,12 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1',
     f'http://{os.getenv("VITE_BACKEND_IP")}',
     f'https://{os.getenv("VITE_BACKEND_IP")}',
-    'http://10.13.10.18',
-    'https://10.13.10.18',
-    "http://10.13.10.18:5173", 
-    'http://10.13.10.18',
-    'https://10.13.10.18',
-    "http://10.13.10.18:5173",
+    'http://10.13.6.7',
+    'https://10.13.6.7',
+    "http://10.13.6.7:5173", 
+    'http://10.13.6.7',
+    'https://10.13.6.7',
+    "http://10.13.6.7:5173",
     f'http://{os.getenv("VITE_IP_HOST")}',
     ]
 

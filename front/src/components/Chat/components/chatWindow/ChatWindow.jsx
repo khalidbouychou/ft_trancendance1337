@@ -130,7 +130,7 @@ export default function ChatWindow({
               <span className={styl.contactName}>{otherUser.username.toUpperCase()}</span>
               {isTyping && (
                 <div className={styl.typingIndicator}>
-                  <p>Typing...</p>
+                  <p>{t("Typing...")}</p>
                 </div>
               )}
             </div>
@@ -161,7 +161,7 @@ export default function ChatWindow({
                 className={styl.chatMessage}
                 value={message}
                 onChange={handleTyping}
-                placeholder="Type a message"
+                placeholder={t("Type a message")}
                 maxLength={1000}
               />
             </form>

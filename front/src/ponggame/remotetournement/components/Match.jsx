@@ -1,9 +1,8 @@
-import React, {useRef, useEffect, useState } from 'react';
+import React, {useRef, useEffect, useState, useContext } from 'react';
 import * as styles from './Match.module.css';
 import { useGlobalContext } from '../context/TournamentContext.jsx';
 
 export default function GameComponent({ type }) {
-
     const [leftplayer, setleftplayer] = useState("left player");
     const [leftAvatar, setLeftAvatar] = useState("/assets/unknown.png");
     const [rightplayer, setrightplayer] = useState("right player");

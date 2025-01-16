@@ -41,6 +41,8 @@
     border-radius: 0 0 4px 4px;
     max-height: 200px;
     overflow-y: auto;
+    scrollbar-width: none;
+	-ms-overflow-style: none;
     background-color:white;
     z-index: 1;
 }

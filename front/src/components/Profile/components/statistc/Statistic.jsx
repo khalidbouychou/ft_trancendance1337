@@ -36,7 +36,7 @@ const Statistic = ({ userData, profileName, t }) => {
   console.log("response == ", (userData?.data[0]?.exp_game % 100));
   if (daTa.length == 0) {
     return (<div className={styl.emptyMatches}>
-      No match data available to display the Statistic
+      {t("No match data available to display the Statistic")}
   </div>)}
   return (
     <div className={styl.statistic}>

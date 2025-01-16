@@ -63,9 +63,9 @@
     display: flex;
     position: relative;
     /* background-color: rgba(146, 14, 180, 0.2); */
-    background-color: #8c266f1a;
+    background-color: rgba(31, 11, 50, 0.6);
     border-radius: 10px;
-    border: 1px solid #e10361;
+    border: 1px solid rgba(31, 11, 50, 1);
     /* background-color: #660da5; */
 }
 
@@ -245,8 +245,8 @@
     justify-content: center;
     /* align-items: center; */
     flex-direction: column;
-    background-color: #8c266f1a;
-    border: 1px solid #e10361;
+    background-color: rgba(31, 11, 50, 0.6);
+    border: 1px solid rgba(31, 11, 50, 1);
     border-radius: 10px;
     p {
         font-size: 19px;

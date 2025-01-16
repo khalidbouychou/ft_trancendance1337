@@ -374,7 +374,7 @@ export default function FriendGame() {
                 marginTop:"50px"
             }
             }>
-                <h1>Manual : (W/S  | UP/DOWN)</h1>
+                <h1>{t("Manual")} : (W/S  | UP/DOWN)</h1>
             </div>
             </div>
         </>

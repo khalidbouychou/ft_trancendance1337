@@ -63,7 +63,7 @@ const MatchHistory = ({ profileName, t }) => {
         </div>
       ) : (
         <div className={styl.emptyMt}>
-          <p>No match history found</p>
+          <p>{t("No match history found")}</p>
         </div>
       )}
     </div>

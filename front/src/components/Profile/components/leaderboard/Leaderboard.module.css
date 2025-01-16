@@ -86,7 +86,7 @@
 	padding: 2%;
 	padding-top: 15px;
 	border-radius: 10px;
-	background-color: rgba(80, 79, 79, 0.4);
+	background-color: rgba(31, 11, 50, 0.5);
 
 	&::-webkit-scrollbar {
 		display: none;

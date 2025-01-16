@@ -57,6 +57,7 @@
   "Victory": "Victory",
   "Defeat": "Defeat",
   "Loss": "Loss",
+  "LOSS": "LOSS",
   "WINS": "WINS",
   "LOSE": "LOSE",
   "GAMES": "GAMES",
@@ -128,6 +129,15 @@
   "Create Tournament": "Create Tournament",
   "Alias Name": "Alias Name",
   "Start Match": "Start Match",
-  "FINAL MATCH": "FINAL MATCH"
+  "FINAL MATCH": "FINAL MATCH",
+  "No match history found": "No match history found",
+  "No match data available to display the Statistic": "No match data available to display the Statistic",
+  "Local": "Local",
+  "Tournament Local": "Tournament Local",
+  "Tournament Remote":"Tournament Remote",
+  "Local Team": "Local Team",
+  "Typing...": "Typing...",
+  "Type a message": "Type a message",
+  "Manual": "Manual"
 }
  

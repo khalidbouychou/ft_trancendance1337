@@ -128,6 +128,12 @@
   "Create Tournament": "Créer un tournoi",
   "Alias Name": "Nom d'alias",
   "Start Match": "Démarrer le match",
-  "FINAL MATCH": "MATCH FINAL"
+  "FINAL MATCH": "MATCH FINAL",
+  "No match history found": "Aucun historique de match trouvé",
+  "LOSS": "DÉFAITE",
+  "No match data available to display the Statistic": "Aucune donnée de match disponible pour afficher les statistiques",
+  "Typing...": "En train de taper...",
+  "Type a message": "Tapez un message",
+  "Manual": "Manuel"
 }
   
