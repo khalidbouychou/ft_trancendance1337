@@ -16,11 +16,16 @@ from django.db.models import Q,F
 import asyncio
 
 class NotificationConsumer(AsyncWebsocketConsumer):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
     profile_name = ''
     user_id = 0
     async def connect(self):
+        if self.scope['user'].is_authenticated:
+            await self.accept()
+            print('Connected')
+        else:
+            print("Unauthenticated user:", self.scope['user'])
+            await self.close()
+            return
         self.user = self.scope['user']
         self.user.status_network = 'online'
         self.user.number_of_sessions += 1
@@ -36,7 +41,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             "global_notification",
             self.channel_name
         )
-        await self.accept()
         data = {
             'message': 'status',
             'online': self.user_id

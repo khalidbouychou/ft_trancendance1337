@@ -439,8 +439,13 @@ class inviteConsumer(AsyncWebsocketConsumer):
     right_username = ''
 
     async def connect(self):
-        await self.accept()
-        print('Connected')
+        if self.scope['user'].is_authenticated:
+            await self.accept()
+            print('Connected')
+        else:
+            print("Unauthenticated user:", self.scope['user'])
+            await self.close()
+            return
 
     async def disconnect(self, close_code):
         print('Disconnected')
@@ -819,8 +824,6 @@ class inviteConsumer(AsyncWebsocketConsumer):
         
 
 class TournamentConsumer(AsyncWebsocketConsumer):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
     tournaments = {}
     game = {}
     gamename = ''
@@ -848,7 +851,13 @@ class TournamentConsumer(AsyncWebsocketConsumer):
     room_group_name = ''
     waiting = False
     async def connect(self):
-        await self.accept()
+        if self.scope['user'].is_authenticated:
+            await self.accept()
+            print('Connected')
+        else:
+            print("Unauthenticated user:", self.scope['user'])
+            await self.close()
+            return
         
     async def disconnect(self, close_code):
         # print(f"disconnect, it could be {self.name}")

@@ -14,87 +14,115 @@ const TournamentBoard = () => {
             player6Avatar, setPlayer6Avatar, player7Avatar, setPlayer7Avatar } = useGlobalContext();
     
     
-  return (
-    <div className={styles.first}>
-        <div className={styles.etaps}>
+    return (
+        <div className={styles.first}>
+            <div className={styles.etaps}>
             <div className={styles.gameCard}>
                 <div className={styles.player}>
-                    <div className={styles.userImage}>
-                        <img src={player1Avatar}/>
+                <div className={styles.userImage}>
+                    <div className={styles.intImg}>
+                    <div className={styles.intImg}>
+                        <img src={player1Avatar} />
                     </div>
-                    <div className={styles.userName}>
-                        <p > {player1Name} </p>
                     </div>
+                </div>
+                <div className={styles.userName}>
+                    <p> {player1Name} </p>
+                </div>
                 </div>
                 <div className={styles.vs}>
-                    <p>VS</p>
+                <p>VS</p>
                 </div>
                 <div className={styles.player}>
-                    <div className={styles.userImage}>
-                        <img src={player2Avatar}/>
+                <div className={styles.userImage}>
+                    <div className={styles.intImg}>
+                    <div className={styles.intImg}>
+                        <img src={player2Avatar} />
                     </div>
-                    <div className={styles.userName}>
-                        <p > {player2Name} </p>
                     </div>
+                </div>
+                <div className={styles.userName}>
+                    <p> {player2Name} </p>
+                </div>
                 </div>
             </div>
             <div className={styles.gameCard}>
                 <div className={styles.player}>
-                    <div className={styles.userImage}>
-                        <img src={player3Avatar}/>
+                <div className={styles.userImage}>
+                    <div className={styles.intImg}>
+                    <div className={styles.intImg}>
+                        <img src={player3Avatar} />
                     </div>
-                    <div className={styles.userName}>
-                        <p > {player3Name} </p>
                     </div>
+                </div>
+                <div className={styles.userName}>
+                    <p> {player3Name} </p>
+                </div>
                 </div>
                 <div className={styles.vs}>
-                    <p>VS</p>
+                <p>VS</p>
                 </div>
                 <div className={styles.player}>
-                    <div className={styles.userImage}>
-                        <img src={player4Avatar}/>
+                <div className={styles.userImage}>
+                    <div className={styles.intImg}>
+                    <div className={styles.intImg}>
+                        <img src={player4Avatar} />
                     </div>
-                    <div className={styles.userName}>
-                        <p > {player4Name} </p>
                     </div>
+                </div>
+                <div className={styles.userName}>
+                    <p> {player4Name} </p>
+                </div>
                 </div>
             </div>
-        </div>
-        <div className={styles.etaps}>
-        <div className={styles.gameCard}>
+            </div>
+            <div className={styles.etaps}>
+            <div className={styles.gameCard}>
                 <div className={styles.player}>
-                    <div className={styles.userImage}>
-                        <img src={player5Avatar}/>
+                <div className={styles.userImage}>
+                    <div className={styles.intImg}>
+                    <div className={styles.intImg}>
+                        <img src={player5Avatar} />
                     </div>
-                    <div className={styles.userName}>
-                        <p > {player5Name} </p>
                     </div>
+                </div>
+                <div className={styles.userName}>
+                    <p> {player5Name} </p>
+                </div>
                 </div>
                 <div className={styles.vs}>
-                    <p>VS</p>
+                <p>VS</p>
                 </div>
                 <div className={styles.player}>
-                    <div className={styles.userImage}>
-                        <img src={player6Avatar}/>
+                <div className={styles.userImage}>
+                    <div className={styles.intImg}>
+                    <div className={styles.intImg}>
+                        <img src={player6Avatar} />
                     </div>
-                    <div className={styles.userName}>
-                        <p > {player6Name} </p>
                     </div>
                 </div>
+                <div className={styles.userName}>
+                    <p> {player6Name} </p>
+                </div>
+                </div>
             </div>
-        </div>
-        <div className={styles.etaps}>
+            </div>
+            <div className={styles.etaps}>
             <div className={styles.winPlayer}>
-            <div className={styles.userImage}>
-                <img src={player7Avatar}/>
-            </div>
-            <div className={styles.userName}>
-                <p > {player7Name} </p>
+                <div className={styles.userImage}>
+                <div className={styles.intImg}>
+                    <div className={styles.intImg}>
+                    <img src={player7Avatar} />
+                    </div>
+                </div>
+                </div>
+                <div className={styles.userName}>
+                <p> {player7Name} </p>
+                </div>
             </div>
             </div>
         </div>
-    </div>
-  )
+    );
 }
 
 export default TournamentBoard

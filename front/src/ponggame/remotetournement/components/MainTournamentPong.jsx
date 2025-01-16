@@ -111,25 +111,42 @@ const MainTournamentPong = () => {
 
     return (
         <>
-            <div className={styles.top_container}>
-                <button className={styles.create_button} onClick={createTournament}>{t("Create Tournament")}</button>
-                <div className={styles.tournament_list}>
-                    {safeTournaments.length === 0 ? (
-                        <div className={styles.no_tournaments}>{t("There are no tournaments now.")}</div>
-                    ) : (
-                        Object.entries(tournaments).map(([tournamentName, tournament], index) => (
-                            <div key={index} className={styles.tournament_card}>
-                                <h3>{tournament.name}</h3>
-                                <h3>{tournament.players}/4 {t("players")}</h3>
-                                <button onClick={() => joinTournament(tournamentName)}>{t("Join")}</button>
-                                <button onClick={() => cancelTournament(tournamentName)}>{t("Cancel")}</button>
-                                <button onClick={() => leaveTournament(tournamentName)}>{t("Leave")}</button>
-                            </div>
-                        ))
-                    )}
-                </div>
+      <div className={styles.top_container}>
+        <button className={styles.create_button} onClick={createTournament}>
+          {t("Create Tournament")}
+        </button>
+        <div className={styles.tournament_list}>
+          {safeTournaments.length === 0 ? (
+            <div className={styles.no_tournaments}>
+              {t("There are no tournaments now.")}
             </div>
-        </>
+          ) : (
+            Object.entries(tournaments).map(
+              ([tournamentName, tournament], index) => (
+                <div key={index} className={styles.tournament_card}>
+                  <p>{tournament.name.toUpperCase()}</p>
+                  <p>
+                    {" "}
+                    {t("players")}: {tournament.players}/4
+                  </p>
+                  <div className={styles.BUtton}>
+                    <button onClick={() => joinTournament(tournamentName)}>
+                      {t("Join")}
+                    </button>
+                    <button onClick={() => cancelTournament(tournamentName)}>
+                      {t("Cancel")}
+                    </button>
+                    <button onClick={() => leaveTournament(tournamentName)}>
+                      {t("Leave")}
+                    </button>
+                  </div>
+                </div>
+              )
+            )
+          )}
+        </div>
+      </div>
+    </>
     );
 };
 

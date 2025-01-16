@@ -14,10 +14,15 @@ from channels.layers import get_channel_layer
 from asgiref.sync import sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
     
     async def connect(self):
+        if self.scope['user'].is_authenticated:
+            await self.accept()
+            print('Connected')
+        else:
+            print("Unauthenticated user:", self.scope['user'])
+            await self.close()
+            return
         self.room_name = self.scope['url_route']['kwargs']['room_pk']
         self.room_group_name = f'chat_room_{self.room_name}'
         self.user = self.scope['user']
@@ -32,7 +37,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.notification_group_name,
             self.channel_name
         )
-        await self.accept()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(

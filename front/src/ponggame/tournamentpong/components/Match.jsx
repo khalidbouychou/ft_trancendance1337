@@ -139,7 +139,7 @@ export default function GameComponent({ type }) {
                     }
                     else if (type === "final"){
                         setPlayer7Name(player5Name);
-                        setPlayer7Avatar("/assets/battlebeast.png");
+                        setPlayer7Avatar(player5Avatar);
                     }
                     setGameStatus(false);
                 }
@@ -164,7 +164,7 @@ export default function GameComponent({ type }) {
                     }
                     else if (type === "final"){
                         setPlayer7Name(player6Name);
-                        setPlayer7Avatar("/assets/superior.png");
+                        setPlayer7Avatar(player6Avatar);
                     }
                     setGameStatus(false);
                 }

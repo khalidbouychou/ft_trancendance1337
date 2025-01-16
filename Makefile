@@ -6,12 +6,12 @@ endif
 uploads_dir:
 	@mkdir -p backend/uploads
 
-up: s uploads_dir
+up: uploads_dir
 	@docker-compose up --build
 
-s : 
-	chmod +x ./ssl.sh
-	./ssl.sh
+# s : 
+# 	chmod +x ./ssl.sh
+# 	./ssl.sh
 
 down :
 	@docker-compose stop

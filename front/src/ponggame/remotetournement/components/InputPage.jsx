@@ -339,14 +339,14 @@ const MainTournament = () => {
             !Aliasname ? (
                 <div className={styles.last}>
                     <div className={styles.play}>
-                        <div className={styles.starting}>
+                        {/* <div className={styles.starting}> */}
                             <div className={styles.inp}>
                                 <input type="text" placeholder="Alias Name" onChange={(e) => setPlayerAliasName(e.target.value)}/>
                             </div>
-                        </div>
+                        {/* </div> */}
                     </div>
                     <div className={styles.Button}>
-                        <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'grey' : 'green'}}>{t("Start")}</button>
+                        <button disabled={start} onClick={starttournament} style={{backgroundColor: start ? 'rgba(82, 3, 3, 0.3)' : 'green'}}>{t("Start")}</button>
                     </div>
                 </div>
             ) : ( condition === 'N' ? (
@@ -389,7 +389,7 @@ const MainTournament = () => {
                         </div> 
                     ) : (
                         <div className={styles.subContainer}>
-                            <h2>{MESSAGE}</h2>
+                            <h2>{t(MESSAGE)}</h2>
                         </div>
                     )
                 )
