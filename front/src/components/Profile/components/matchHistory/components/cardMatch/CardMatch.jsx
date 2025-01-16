@@ -16,9 +16,7 @@ const CardMatch = ({ match, profileName, animationDelay , setProfileName}) => {
   const formattedTime = time.slice(0, 5);
   const image =
     match.winner === profile_name ? match.loser_avatar : match.winner_avatar;
-    console.log('userName', profile_name)
   const handleClick = () => {
-    // setProfileName(profileName);
     navigate(`/profile/${opponent}`);
   };
 

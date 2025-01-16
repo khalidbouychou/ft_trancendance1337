@@ -98,7 +98,7 @@ const Chart = ({ matches = [], profileName, t}) => {
         callbacks: {
           title: (tooltipItems) => {
             const item = tooltipItems[0];
-            return item.raw.date; // Use the full date from the raw data
+            return item.raw.date;
           },
         },
       },

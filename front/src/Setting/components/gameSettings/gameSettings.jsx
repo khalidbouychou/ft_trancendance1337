@@ -22,9 +22,8 @@ const GameSettings = () => {
     const [activeSection, setActiveSection] = useState('tmp1');
     const [code, setCode] = useState(['','','','','',])
     const [confirmationMessage, setConfirmationMessage] = useState('');
-    // const [qrValue, setQrValue] = useState('https://tail')
 
-    
+
     
       const colors = ['red', 'green', 'yellow', 'black', 'gray', 'blue', 'white'];
     

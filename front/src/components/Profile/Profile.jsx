@@ -4,7 +4,8 @@ import styl from "./Profile.module.css";
 import { AuthContext } from "../../UserContext/Context";
 import MatchHistory from "./components/matchHistory/MatchHistory";
 import Leaderboard from "./components/leaderboard/Leaderboard";
-import CardFriend from "./components/History/components/CardFriend/CardFriend";
+import CardFriend from "../CmpCard/CmpCard";
+import { toast } from "react-toastify"
 import { FaMedal } from "react-icons/fa";
 import { PiGameControllerFill } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
@@ -48,7 +49,6 @@ const Profile = ({ me }) => {
   }, [profileName]);
 
   useEffect(() => {
-    console.log("***********************************************i recieved a notif:", notif);
     if (notif && notif.status === 'friends'){
       if (notif.user_id === userData.id){
         setIsfriended(true);
@@ -123,9 +123,7 @@ const Profile = ({ me }) => {
           setWins(wins);
           setLose(losses);
         }
-        console.log("Ping data:", pingData);
       } catch (error) {
-        console.error("Failed to fetch ping data", error);
       }
     };
     
@@ -134,13 +132,10 @@ const Profile = ({ me }) => {
 
   useEffect(() => {
     const friendsArray = friendList['friend list'] || [];
-    console.log("friendsArray:", friendsArray);
-    console.log("friendList:", friendList);
 
     const isFriend = friendsArray.some(
       (friend) => friend.profile_name === user?.user?.profile_name
     );
-    console.log("isFriend:", isFriend);
     setIsfriended(isFriend);
     
     if (userData.profile_name === user?.user?.profile_name) {
@@ -160,7 +155,6 @@ const Profile = ({ me }) => {
         `${import.meta.env.VITE_BACKEND_IP}/api/friends/${profile_name}/` , {
           withCredentials: true,
       });
-      console.log("profile_name_145:", profile_name);
       setFriendList(response.data);
     };
     fetchFriends();
@@ -174,11 +168,8 @@ const Profile = ({ me }) => {
           { withCredentials: true }
         );
         setBlockedList(response.data);
-        console.log("Blocked list:", response.data);
-  
         setIsblocked(false)
         if (profile_name !== user.user.profile_name) {
-          console.log("Is blocked list:", response.data);
           const isBlocked = response.data["blocked list"].some(
             (blockedUser) => blockedUser.profile_name === user.user.profile_name
           );
@@ -186,7 +177,6 @@ const Profile = ({ me }) => {
             setIsblocked(true);
         }
       } catch (error) {
-        console.error("Error fetching blocked list:", error);
       }
     };
   
@@ -196,7 +186,9 @@ const Profile = ({ me }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!profile_name) return;
+      if (!profile_name){
+        toast.error(t("profile_name not valid"))
+      }
   
       setIsLoading(true);
       setError(null);

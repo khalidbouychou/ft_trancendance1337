@@ -33,7 +33,7 @@ const Sidebar = () => {
     localStorage.getItem("lang") || "en"
   );
   const [isLangListOpen, setIsLangListOpen] = useState(false);
-  const [chatNotif, setChatNotif] = useState(false)
+
 
   const searchRef = useRef(null);
   const langListRef = useRef(null);
@@ -44,10 +44,6 @@ const Sidebar = () => {
   const langIcons = { en: En, fr: Fr, it: It };
   const [notifReceived, setNotifReceived] = useState(false)
 
-  useEffect(() => {
-    console.log("chatMesageNotif", chatMesageNotif)
-  }, [chatMesageNotif])
-
   const changeLanguage = (lang) => {
     setCurrentLang(lang);
     localStorage.setItem("lang", lang);
@@ -57,7 +53,6 @@ const Sidebar = () => {
 
   const handleOpenNotif = () => {
     setNotifReceived(false)
-    console.log('openNotif', openNotif)
     setOpenNotif(openNotif === 'flex' ? 'none' : 'flex')
   }
 
@@ -81,7 +76,6 @@ const Sidebar = () => {
       setSearchResults([]);
       setHighlightedIndex(-1);
     }
-    // Close notifications if clicked outside
     if (notifRef.current && !notifRef.current.contains(event.target)) {
       setOpenNotif("none");
     }

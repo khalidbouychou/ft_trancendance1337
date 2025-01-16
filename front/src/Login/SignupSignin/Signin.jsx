@@ -14,13 +14,7 @@ const Signin = () => {
     e.preventDefault();
     try {
       if (!username || !password) {
-        toast.error(t("Please fill all the fields"), {
-          style: {
-            backgroundColor: 'rgb(255, 0, 0)',
-            color: 'white'
-          }
-        });
-        return;
+        toast.error(t("Please fill all the fields"));
       }
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_IP}/api/singin/`,
@@ -32,17 +26,7 @@ const Signin = () => {
           withCredentials: true
         }
       );
-      // const response = await axios.post(
-      //   `https://localhost/api/singin/`,
-      //   {
-      //     username,
-      //     password
-      //   },
-      //   {
-      //     withCredentials: true
-      //   }
-      // );
-      console.log("login form -------------->",response)
+   
       if (response.status === 200) {
         setUser(response.data.user);
         toast.success(t(`Welcome ${response.data.user.username}`), {
@@ -56,13 +40,7 @@ const Signin = () => {
         }, 1300);
       }
     } catch (err) {
-      console.log(err);
-      toast.error(t(err?.response?.data?.error), {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white',
-        }
-      });
+      toast.error(t(err?.response?.data?.error));
     }
   };
 

@@ -64,17 +64,16 @@ services:
     container_name: front
     image: front
     build:
-      context: ./front/docker-front
+      context: ./front
     ports:
       - "5173:5173"
     volumes:
-      - ./front:/app
       - .env:/app/.env
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5173"]
+      test: curl -f http://localhost:5173
       interval: 10s
       timeout: 5s
-      retries: 100
+      retries: 5
       start_period: 5s
     networks:
       - connexion
@@ -121,6 +120,7 @@ services:
       # - "80:80"
       - "443:443"
     volumes:
+      - .env:/.env
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - connexion

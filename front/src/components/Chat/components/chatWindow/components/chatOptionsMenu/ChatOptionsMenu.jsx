@@ -19,7 +19,6 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   const { notif , setNotif} = useNotificationWS();
 
   useEffect(() => {
-    console.log("***********************************************i recieved a notif:", notif);
     if (notif && notif.status === 'BLOCK'){
       if (notif.user_id === otherUser.id){
         setAmIBlocked(true);
@@ -41,14 +40,8 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
         const response2 = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/getuser/${otherUser.profile_name}/` , {
           withCredentials: true,
         });
-        console.log('my response:', response1.data)
-        console.log('my blocked_users:', response1.data.blocked_users)
-        console.log('him response:', response2.data)
-        console.log('him blocked_users:', response2.data.blocked_users)
         const didIBlockHim = response1.data.blocked_users.find(e => {return e.profile_name === otherUser.profile_name}) != undefined ? true : false;
         const didHeBlockMe = response2.data.blocked_users.find(e => {return e.profile_name === currentUser.profile_name}) != undefined ? true : false;
-        console.log('didIBlockHim:', didIBlockHim)
-        console.log('didHeBlockMe:', didHeBlockMe)
         setIsBlocked(didIBlockHim);
         setAmIBlocked(didHeBlockMe);
       }

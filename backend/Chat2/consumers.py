@@ -18,9 +18,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         if self.scope['user'].is_authenticated:
             await self.accept()
-            print('Connected')
         else:
-            print("Unauthenticated user:", self.scope['user'])
             await self.close()
             return
         self.room_name = self.scope['url_route']['kwargs']['room_pk']
@@ -111,7 +109,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'status': 'chat_message',
         }
         group_name = f'user_{receiver.id}_NOTIF'
-        print("group_name", group_name)
         await self.channel_layer.group_send(
             group_name,
             {

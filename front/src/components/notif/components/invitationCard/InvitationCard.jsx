@@ -3,8 +3,6 @@ import styl from "./InvitationCard.module.css";
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react'
 import { useNotificationWS } from '../../../../contexts/NotifWSContext.jsx'
-// import False from '../../assets/false.svg'
-// import True from '../../assets/true.svg'
 
 const InvitationCard = ({request}) => {
   const [isVisible, setIsVisible] = useState(true)
@@ -58,7 +56,6 @@ const InvitationCard = ({request}) => {
 
 	const handleAccept = () => {
 		if (isConnected) {
-			console.log('Connected');
 			sendNotifMessage({
 				type: request.notif_type === 'FR' ? 'ACCEPT_FR' : 'ACCEPT_GR',
 				from_user_id: request.from_user.id,
@@ -70,9 +67,7 @@ const InvitationCard = ({request}) => {
 					navigate('/friendgame', { state: { game_key } });
 				}
 			}
-		} else {
-			console.log('Not connected');
-		}
+		} 
 		setIsVisible(false);
 	};
 

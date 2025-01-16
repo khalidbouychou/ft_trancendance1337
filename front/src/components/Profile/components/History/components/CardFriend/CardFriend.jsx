@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CardFriend = ({friend}) => {
-  console.log("CardFriend", friend.profile_name)
   const [pingData, setPingdata] = useState('')
   const navigate = useNavigate();
 

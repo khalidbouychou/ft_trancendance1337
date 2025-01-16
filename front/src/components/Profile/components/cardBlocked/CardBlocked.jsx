@@ -3,7 +3,6 @@ import styl from "./CardBlocked.module.css";
 import { color } from "chart.js/helpers";
 
 const CardBlocked = ({user}) => {
-    console.log('list = = ', user.profile_name)
   return (
     <div className={styl.cardBlocked}>
       <div className={styl.extImg} style={{left: '5%'}}>

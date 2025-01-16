@@ -16,7 +16,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(10, 4, 11, 0.707);
     backdrop-filter: blur(5px);
     z-index: 1;
 }
@@ -35,19 +35,20 @@
 }
 
 .centered {
+    color : rgba(0, 0, 0, 0.984);
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-    width: 350px;
-    height: max-content;
-    padding: 10px;
+    width: 500px;
+    height: 300px;
+    padding: 20px;
     border: solid 2px black;
     border-radius: 30px;
     overflow: hidden;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.984);
 }
 
 .holderx {
@@ -104,11 +105,13 @@
     justify-content: center;
     align-items: center;
     button {
-        background-color: aqua;
+        color: white;
+        background-color: rgb(70, 4, 90);
         width: 150px;
         height: 50px;
         border: none;
-        border-radius: 20px;
+        font-size: 16px;
+        border-radius: 10px;
     }
 }
 
@@ -119,13 +122,15 @@
     /* gap: 20px; */
     flex: 1;
     /* background-color: #526bc4; */
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     img {
-        width: 70px;
-        height: 70px;
+        border: 5px solid rgb(104, 1, 213);
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
     }
 }
@@ -133,7 +138,6 @@
 .rightplayer {
     margin: 5px;
     background-color: #526bc4;
-
 }
 
 .vs {
@@ -144,8 +148,10 @@
     justify-content: center;
     align-items: center;
     margin: 10px 0;
-    .p {
-        font-size: 16px;
+    color: #000;
+    p {
+        color: #000;
+        font-size: 20px;
         font-weight: bold;
     }
     /* background-color: #526bc4; */

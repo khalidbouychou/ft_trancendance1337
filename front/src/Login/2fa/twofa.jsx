@@ -12,22 +12,18 @@ const Twofa = () => {
   const [qrcode, setQrcode] = useState("");
   const { t,user ,setUser,renderInputs} = useContext(AuthContext);
   const [isEnable, setEnable] = useState(false);
-  const [verified, setVerified] = useState(user?.user?.otp_verified);
+  const [verified, setVerified] = useState(user?.user?.two_factor);
 
   const QR_CODE_URL = `${import.meta.env.VITE_BACKEND_IP}/api/qrcode/`;
 
   const Offswitch = async () => {
-    console.log("off switch",isEnable);
-
     setQrcode("");
     setEnable(false);
   }
 
   const Onswitch = async () => {
-    console.log("on switch",isEnable);
     setEnable(true);
     const usertofa = user?.user?.two_factor | user?.two_factor
-    console.log(usertofa);
     if(!usertofa){
     try {
       const res = await axios.get(QR_CODE_URL, { withCredentials: true });
@@ -41,7 +37,6 @@ const Twofa = () => {
     }
     } catch (error) {
       setQrcode("");
-      console.log(error);
         }    }
   }
 
@@ -68,7 +63,7 @@ const Twofa = () => {
         }
       );
       if (res.status === 200) {
-        setVerified(res?.data?.user?.otp_verified);
+        setVerified(res?.data?.user?.two_factor);
         setQrcode("");
         toast.success(t("2FA verified"), {
           style: {
@@ -78,12 +73,7 @@ const Twofa = () => {
         });
       }
     } catch (error) {
-      toast.error(t("OTP code is not correct"), {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      });
+      toast.error(t("OTP code is not correct"));
     }
   };
 
@@ -111,6 +101,7 @@ const Twofa = () => {
                 value={t("Off")}
                 onClick={Offswitch}
                 checked={!isEnable}
+
               />
             </div>
           </div>

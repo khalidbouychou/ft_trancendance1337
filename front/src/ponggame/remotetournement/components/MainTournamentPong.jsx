@@ -11,11 +11,6 @@ const MainTournamentPong = () => {
     const safeTournaments = tournaments || [];
 
     useEffect(() => {
-        // if (tournaments)
-        //     console.log("now tournament is:", tournaments);
-    }, [tournaments]);
-
-    useEffect(() => {
         socket.current = new WebSocket(`wss://${import.meta.env.VITE_WSS_IP}/ws/tournament-game/`);
 
         socket.current.onopen = () => {
@@ -25,10 +20,7 @@ const MainTournamentPong = () => {
                     name: user.user.username,
                 };
                 socket.current.send(JSON.stringify(message));
-                console.log('tournaments socket.current is open now');
-            } else {
-                console.error('tournaments socket.current is not readyState:');
-            }
+            } 
         };
 
         socket.current.onmessage = (event) => {
@@ -52,11 +44,9 @@ const MainTournamentPong = () => {
         };
 
         socket.current.onclose = (reason) => {
-            console.log('WebSocket connection closed:', reason);
         };
 
         socket.current.onerror = (error) => {
-            console.error('WebSocket error:', error);
         };
 
         return () => {

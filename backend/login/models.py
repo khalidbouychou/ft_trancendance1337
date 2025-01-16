@@ -68,14 +68,3 @@ class PingData(models.Model):
     class Meta:
         db_table = 'ping_data'
 
-
-class AnonymizedAccount(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='anonymized_data')
-    profile_name = models.CharField(max_length=200, default='Anonymized')
-    avatar = models.URLField(max_length=200, default='https://api.dicebear.com/9.x/thumbs/svg?flip=false')
-    status_network = models.CharField(max_length=10, choices=Player.STATUS, default='offline')
-    class Meta:
-        db_table = 'anonymized_data'
-        
-    def __str__(self):
-        return self.player.username

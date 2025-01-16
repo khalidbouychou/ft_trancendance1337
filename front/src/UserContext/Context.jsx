@@ -54,8 +54,8 @@ export default function AuthProvider({ children }) {
           }
         });
         setTimeout(() => {
-          navigate("/home");
-        }, 1000);
+          navigate("/");
+        }, 2000);
       }
     } catch (err) {
       toast.error(t(`${err.response.data.error}`));
@@ -64,13 +64,9 @@ export default function AuthProvider({ children }) {
 
   async function auth_intra42() {
     const backend_ip = import.meta.env.VITE_BACKEND_IP
-    console.log("ip:", backend_ip);
-    // console.log('again ip:', backend_ip);
-    // console.log('VAR:', process.env.VITE_BACKEND_IP);
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/auth_intra/`, {
       withCredentials: true
     });
-    console.log("response:", response);
     try {
       if (response.status === 200) {
         window.location.href = response.data.url;
@@ -105,24 +101,21 @@ export default function AuthProvider({ children }) {
           setTimeout(() => {
             setLoading(false);
           }, 1000);
-          // if (res.data.otp_login) {
-            toast.success("login success", {
+          if (res?.data?.bool_login) {
+            toast.success(t("login success"), {
               style: {
                 backgroundColor: 'rgb(0, 128, 0)',
                 color: 'white'
               }
             });
-          // }
-          navigate(`/`);
+            setTimeout(() => {
+              navigate("/");
+            }, 1500);
+          }
         }
       }
     } catch (error) {
-      toast.error(t(error?.response?.data?.error), {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      });
+      toast.error(t(error?.response?.data?.error));
       navigate(`/`);
     } finally {
       setLoading(false);
@@ -136,11 +129,9 @@ export default function AuthProvider({ children }) {
 
       if (res.status === 200) {
         setUser(res.data);
-        // !res?.data?.user?.bool_login &&
-        //   res?.data?.user?.two_factor &&
-        //   res?.data?.user?.otp_verified &&
-        //   navigate("/otp");
-        if (window.location.pathname === "/login") {
+        if (res?.data?.user?.two_factor && !res?.data?.user?.otp_verified)
+         navigate("/otp");
+        else if ((location.pathname === "/login" || location.pathname === "/otp")) {
           navigate(`/`);
         }
       }

@@ -9,11 +9,8 @@ const CardBlocked = ({ userBlocked, onUnblock }) => {
       await axios.post(`${import.meta.env.VITE_BACKEND_IP}/api/users/1/unblock_user/`, {
         blocked_user_id: userBlocked.blocked_friend.id,
       });
-      alert("User unblocked successfully");
       if (onUnblock) onUnblock();
     } catch (error) {
-      alert("Error unblocking user");
-      console.error("Error unblocking user:", error);
     }
   };
 

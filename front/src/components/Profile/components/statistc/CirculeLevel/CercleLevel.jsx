@@ -14,7 +14,7 @@ const Text = ({ percentage }) => {
       dominantBaseline="central"
       textAnchor="middle"
       fontSize={"1.5em"}
-      fill="white" // Set text color to white
+      fill="white" 
     >
       {percentage.toFixed(0)}%
     </text>
@@ -28,8 +28,8 @@ const Circle = ({ color, pct, radius = 90, strokeWidth = 10 }) => {
   return (
     <circle
       r={radius}
-      cx="125" // Center the circle horizontally (width / 2)
-      cy="125" // Center the circle vertically (height / 2)
+      cx="125" 
+      cy="125" 
       fill="transparent"
       stroke={color}
       strokeWidth={strokeWidth}
@@ -41,7 +41,7 @@ const Circle = ({ color, pct, radius = 90, strokeWidth = 10 }) => {
 
 const CurveLevel = ({ percentage, color, width = 250, height = 250 }) => {
   const pct = cleanPercentage(percentage);
-  const radius = (Math.min(width, height) - 40) / 2; // Adjust radius based on width/height
+  const radius = (Math.min(width, height) - 40) / 2;
   const strokeWidth = 20;
 
   return (

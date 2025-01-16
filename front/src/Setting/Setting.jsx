@@ -32,9 +32,7 @@ const Settings = () => {
 
   const handleProfileNameUpdate = async () => {
 
-    if (!validateInput()) {
-      return;
-    }
+    if (!validateInput()) {}
 
     try {
       const response = await axios.put(
@@ -61,12 +59,7 @@ const Settings = () => {
         });
       }
     } catch (err) {
-      toast.error(t(err.response?.data?.error) || t('Profile name update failed'), {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white',
-        },
-      });
+      toast.error(t(err.response?.data?.error) || t('Profile name update failed'));
     }
   };
 
@@ -99,32 +92,20 @@ const Settings = () => {
         })
         .catch((err) => {
           setUpdated(false);
-          toast.error('Image upload failed. Please try again', {
-            style: {
-              backgroundColor: 'rgb(255, 0, 0)',
-              color: 'white',
-            },
-          });
+          toast.error('Image upload failed. Please try again');
         });
     }
   };
 
-  // File Upload Change Handler
   const Setupload = (e) => {
     const file = e.target.files[0];
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
       uploadImage();
     } else {
-      toast.error('Invalid image format', {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white',
-        },
-      });
+      toast.error('Invalid image format');
     }
   };
 
-  // Modal Handling
   const openModal = (action) => {
     setActionToPerform(action);
     setIsModalOpen(true);
@@ -151,13 +132,6 @@ const Settings = () => {
         navigate('/login');
       }
     } catch (error) {
-      console.log(error);
-      // toast.error('An error occurred. Please try again.', {
-      //   style: {
-      //     backgroundColor: 'rgb(255, 0, 0)',
-      //     color: 'white',
-      //   },
-      // });
     }
     closeModal();
   };
@@ -170,7 +144,6 @@ const Settings = () => {
   return (
     <div className={styl.Settings}>
       <div className={styl.content}>
-        {/* User Profile Section */}
         <div className={styl.updateinfos}>
           <div className={styl.userinfos}>
             <div className={styl.profile}>
@@ -217,8 +190,6 @@ const Settings = () => {
                 {t("Delete Account")}
                 
               </button>
-
-              {/* Modal for confirmation */}
               <AnonymizeDelete
                 isOpen={isModalOpen}
                 message={t(`Are you sure you want to ${actionToPerform} your account?`)}
@@ -228,8 +199,6 @@ const Settings = () => {
             </div>
           </div>
         </div>
-
-        {/* Two-Factor Authentication Section */}
         <div className={styl.last}>
           <Twofa />
         </div>

@@ -1,5 +1,5 @@
-// import React from "react";
-import PropTypes from "prop-types"; // Add missing import
+
+import PropTypes from "prop-types";
 
 import "./twofa.css";
 import { AuthContext } from "../../UserContext/Context";
@@ -17,8 +17,8 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
 
   useEffect(() => {
     get_auth_user();
-    setFormsg(user?.user?.otp_verified);
-  }, [user?.user?.otp_verified]);
+    setFormsg(user?.user?.two_factor);
+  }, [user?.user?.two_factor]);
 
   const renderInputs = () => {
     return Array.from({
@@ -27,9 +27,6 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
       <input key={i} type="text" className="otp-input" maxLength={1} />
     ));
   };
-  // useEffect(() => {
-  //   i18n.changeLanguage("en");
-  // }, []);
 
   const Disable_twofa = async () => {
     const inputs = document.getElementsByClassName("otp-input");
@@ -54,10 +51,9 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
         }
       );
       if (res.status === 200) {
-        console.log("d_2fa ******************** ", res);
         setUser(res?.data?.user);
-        setVerified(res?.data?.otp_verified);
-        setFormsg(res?.data?.otp_verified);
+        setVerified(res?.data?.two_factor);
+        setFormsg(res?.data?.two_factor);
         toast.success("2FA Disabled", {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
@@ -66,13 +62,7 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
         });
       }
     } catch (error) {
-      toast.error(t("OTP code is not correct"), {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-
-      });
+      toast.error(t("OTP code is not correct"));
     }
   };
 
@@ -102,10 +92,10 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
 };
 
 Desable2fa.propTypes = {
-  setVerified: PropTypes.func.isRequired, // Add missing prop validation
-  setEnable: PropTypes.func.isRequired, // Add missing prop validation
-  isEnable: PropTypes.bool.isRequired, // Add missing prop validation
-  message: PropTypes.string.isRequired // Add missing prop validation
+  setVerified: PropTypes.func.isRequired, 
+  setEnable: PropTypes.func.isRequired, 
+  isEnable: PropTypes.bool.isRequired, 
+  message: PropTypes.string.isRequired 
 };
 
 export default Desable2fa;

@@ -30,7 +30,6 @@ const Home = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log("******************", data);
         const sortedData = data
           .filter((data) => data.username !== "ke3ki3a")
           .sort((a, b) => {
@@ -46,12 +45,10 @@ const Home = () => {
           (item) => item.profile_name === profile_name
         );
         setUserData(userSpecificData);
-        console.log("ppppll+++>>>", data);
         setPingData(data);
         const userData = data.find((item) => item.username === username);
         setFilteredPingData(userData);
       } catch (error) {
-        console.error("Error fetching data:", error.message);
       }
     };
 

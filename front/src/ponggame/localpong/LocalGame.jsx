@@ -129,7 +129,6 @@ export default function LocalGame() {
         const draw = () => {
             if (mycondition === 'S') {
                 cancelAnimationFrame(myReq);
-                return;
             }
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);

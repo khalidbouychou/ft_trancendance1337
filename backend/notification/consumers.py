@@ -21,9 +21,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         if self.scope['user'].is_authenticated:
             await self.accept()
-            print('Connected')
         else:
-            print("Unauthenticated user:", self.scope['user'])
             await self.close()
             return
         self.user = self.scope['user']
@@ -61,7 +59,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         user = self.scope['user']
         user.number_of_sessions -= 1
         x = 0
-        print("user.id:", user.id, "username:", user.username) 
         await sync_to_async(
             lambda: Player.objects.filter(id=user.id).update(
                 number_of_sessions=Player.objects.get(id=user.id).number_of_sessions - 1
@@ -99,7 +96,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message_type = text_data_json.get('type')
         game_type = text_data_json.get('game_type')
-        print("receive in notification consumer:", message_type, game_type)  
         if message_type == 'CANCEL_FR':
             await self.cancel_FR(text_data_json)
         elif message_type == 'ACCEPT_FR':
@@ -172,10 +168,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def send_FR(self, text_data_json):
-        print("incoming send_FR")
         from_user_id = self.scope['user'].id
         to_user_id = text_data_json['to_user_id']
-        print("from_user_id:", from_user_id," to user_id:", to_user_id) 
         notif = Notification.objects.get_or_create(
             from_user_id=from_user_id,
             to_user_id=to_user_id,
@@ -256,7 +250,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     
     async def send_notification(self, event):
         notification = event['notification']
-        print(f'Sending notification {notification.get("status")}')
         await self.send(text_data=json.dumps({
             'type': f'NOTIFICATION_{notification.get("status").upper()}',
             'notification': notification

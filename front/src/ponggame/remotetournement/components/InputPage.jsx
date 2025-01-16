@@ -51,17 +51,13 @@ const MainTournament = () => {
                     };
                     socket.current.send(JSON.stringify(message));
                 }
-            } else {
-                console.error('tournaments socket.current is not readyState:');
             }
         };
 
         socket.current.onclose = (reason) => {
-            console.log('WebSocket connection closed:', reason);
         };
 
         socket.current.onerror = (error) => {
-            console.error('WebSocket error:', error);
         };
 
         return () => {
@@ -166,10 +162,8 @@ const MainTournament = () => {
             }
             else if (data.message === 'game_started') {
                 setCondition('N');
-                console.log("data:", data);
                 if (data.player_id1 === PlayerAliasName) {
                     setPlayer_id1(1);
-                    console.log("------------------------------------im left player i use w and s and my id is 1");
                     setLeftPlayerName(data.player_id1);
                     setRightPlayerName(data.player_id2);
                     setLeftPlayerAvatar(data.player1_avatar);
@@ -177,7 +171,6 @@ const MainTournament = () => {
                 }
                 if (data.player_id2 === PlayerAliasName) {
                     setPlayer_id1(2)
-                    console.log("------------------------------------im right player i use arrowup and arrowdown and my id is 2");
                     setLeftPlayerName(data.player_id1);
                     setRightPlayerName(data.player_id2);
                     setLeftPlayerAvatar(data.player1_avatar);
@@ -187,7 +180,6 @@ const MainTournament = () => {
         };
 
         if (matchstart && condition === 'N') {
-            console.log("we enter matchstart:", matchstart);
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
 
@@ -218,9 +210,7 @@ const MainTournament = () => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
     
                 if (pressedKeys.current.has('w') ) {
-                    console.log("w and player id is:", player_id);
                     if (player_id === 1){
-                        console.log("my id is 1");
                         if (socket.current.readyState === WebSocket.OPEN) {
                             const message = {
                                 action: 'w',
@@ -230,9 +220,7 @@ const MainTournament = () => {
                     }
                 }
                 else if (pressedKeys.current.has('s')) {
-                    console.log("s and player id is:", player_id);
                     if (player_id === 1){
-                        console.log("my id is 1");
                         if (socket.current.readyState === WebSocket.OPEN) {
                             const message = {
                                 action: 's',
@@ -242,9 +230,7 @@ const MainTournament = () => {
                     }
                 }
                 if (pressedKeys.current.has('ArrowUp')) {
-                    console.log("arrowup and player id is:", player_id);
                     if (player_id === 2){
-                        console.log("my id is 2");
                         if (socket.current.readyState === WebSocket.OPEN) {
                             const message = {
                                 action: 'ArrowUp',
@@ -254,9 +240,7 @@ const MainTournament = () => {
                     }
                 }
                 else if (pressedKeys.current.has('ArrowDown')) {
-                    console.log("ArrowDown and player id is:", player_id);
                     if (player_id === 2){
-                        console.log("my id is 2");
                         if (socket.current.readyState === WebSocket.OPEN) {
                             const message = {
                                 action: 'ArrowDown',
