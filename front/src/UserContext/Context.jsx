@@ -11,6 +11,7 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(true);
+  const [enable, setEnable] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   const {t} = useTranslation();
@@ -53,6 +54,7 @@ export default function AuthProvider({ children }) {
             color: "white"
           }
         });
+        setEnable(false);
         setTimeout(() => {
           navigate("/");
         }, 2000);
@@ -167,6 +169,7 @@ export default function AuthProvider({ children }) {
     },
     [user]
   );
+  
   return (
     <AuthContext.Provider
       value={{
