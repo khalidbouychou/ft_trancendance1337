@@ -254,8 +254,7 @@ const Chat = () => {
       }
 
       const newSocket = new WebSocket(
-        `wss://${import.meta.env.VITE_WSS_IP}/ws/chat/${room_id}/`
-      );
+        `wss://${import.meta.env.VITE_WSS_IP}/ws/chat/${room_id}/`);
 
       newSocket.onopen = () => {
         setSockets((prev) => ({

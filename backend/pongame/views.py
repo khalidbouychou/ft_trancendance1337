@@ -27,8 +27,6 @@ class UserDataView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-
-        # add_score(10)
         
         context = {
             'username': request.user.username,
