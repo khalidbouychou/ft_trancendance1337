@@ -11,6 +11,7 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(true);
+  const [enable, setEnable] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   const {t} = useTranslation();
@@ -53,8 +54,9 @@ export default function AuthProvider({ children }) {
             color: "white"
           }
         });
+        setEnable(false);
         setTimeout(() => {
-          navigate("/home");
+          navigate("/");
         }, 1000);
       }
     } catch (err) {
@@ -105,15 +107,15 @@ export default function AuthProvider({ children }) {
           setTimeout(() => {
             setLoading(false);
           }, 1000);
-          // if (res.data.otp_login) {
+          if (res?.data?.bool_login) {
             toast.success("login success", {
               style: {
                 backgroundColor: 'rgb(0, 128, 0)',
                 color: 'white'
               }
             });
-          // }
-          navigate(`/`);
+            navigate(`/`);
+          }
         }
       }
     } catch (error) {
@@ -136,11 +138,9 @@ export default function AuthProvider({ children }) {
 
       if (res.status === 200) {
         setUser(res.data);
-        // !res?.data?.user?.bool_login &&
-        //   res?.data?.user?.two_factor &&
-        //   res?.data?.user?.otp_verified &&
-        //   navigate("/otp");
-        if (window.location.pathname === "/login") {
+        if (res?.data?.user?.two_factor && res?.data?.user?.otp_verified)
+          setEnable(res?.data?.user?.otp_verified);
+        if (res?.data?.user?.bool_login &&  (window.location.pathname === "/login" || window.location.pathname === "/otp")) {
           navigate(`/`);
         }
       }
@@ -176,6 +176,14 @@ export default function AuthProvider({ children }) {
     },
     [user]
   );
+  
+  // useEffect(() => {
+  //   if (enable) {
+  //     console.log("-------------------------- ...... enable:", enable);
+  //     navigate("/otp");
+  //   }
+  // }
+  // )
   return (
     <AuthContext.Provider
       value={{

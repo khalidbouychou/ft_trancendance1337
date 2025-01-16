@@ -1,8 +1,3 @@
-we need to valid the user input in sign up and sign in and profile name change in settings
-unauthorized users also need to see the language change icon (and by default make the language english if not found in localhost)
-
-test if special characters in passwords fucks up the signup/login (it probably does!!!), and validate it as well
-
 toats problems after deleting my account and trying to sign up/sign in
 
 delete account not working properly (sometimes u can still login after deleting account, and sometimes just toast problems (related to the previous issue))

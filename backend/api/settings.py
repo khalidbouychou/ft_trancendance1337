@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Add this setting to the end of the file or before the MIDDLEWARE setting
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost',
-    'https://10.13.6.3',
+    'https://10.13.5.6',
 ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -210,7 +210,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://localhost:5173',
     'http://localhost',
     'http://localhost:5173',
-    "https://10.13.6.3",
+    "https://10.13.5.6",
 ]
 
 DATABASES = {
