@@ -69,14 +69,16 @@ services:
       - "5173:5173"
     volumes:
       - ./front:/app
-      - .env:/app/.env
-      - ./front:/app/
+      # - env:/app/.env
     # healthcheck:
     #   test: curl -f http://localhost:5173
     #   interval: 10s
     #   timeout: 5s
     #   retries: 5
     #   start_period: 5s
+    environment:
+      VITE_BACKEND_IP: ${VITE_BACKEND_IP}
+      VITE_WSS_IP: ${VITE_WSS_IP}
     networks:
       - connexion
     depends_on:
@@ -135,6 +137,7 @@ services:
   #   volumes:
   #     - web3_vol:/root/
   #   healthcheck:
+
   #     test: ["CMD", "nc", "-zv", "web3_app", "7545"]
   #     interval: 5s
   #     timeout: 10s

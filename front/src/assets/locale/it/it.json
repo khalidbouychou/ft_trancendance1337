@@ -138,5 +138,9 @@
   "invite you to play ping pong" : "invita-te a giocare ping pong",
   "No match history found": "Nessuna cronologia delle partite trovata",
   "No match data available to display the Statistic": "Nessun dato di partita disponibile per mostrare la statistica",
-  "Typing...": "Sta scrivendo..."
+  "Typing...": "Sta scrivendo...",
+  "you have been invited to a pong game": "siete stati invitati a una partita di pong" ,
+  "User not found" : "Utente non trovato",
+  "profile_name not valid" : "nome profilo non valido",
+  "This user has blocked you" : "Questo utente ha bloccato te"
 }

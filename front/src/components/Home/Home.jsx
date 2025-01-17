@@ -22,10 +22,6 @@ const Home = () => {
     navigate(`/profile/${name}`);
   };
 
-  // useEffect(() => {
-
-  // }, [userData]);
-
   useEffect(() => {
     const fetchDataResults = async () => {
       try {
@@ -51,7 +47,6 @@ const Home = () => {
         );
         setUserData(userSpecificData);
       } catch (error) {
-        console.error("home:", error);
       }
     };
 
@@ -67,14 +62,14 @@ const Home = () => {
                 {t("WINS")}
                 <FaMedal />
               </p>
-              <p id={styl.sm}>{String(userData?.data[0]?.wins)}</p>
+              <p id={styl.sm}>{userData?.data[0]?.wins || 0 }</p>
             </div>
             <div className={styl.card}>
               <p>
                 {t("LOSS")}
                 <GiCrossMark />
               </p>
-              <p id={styl.sm}>{userData?.data[0]?.losses}</p>
+              <p id={styl.sm}>{userData?.data[0]?.losses || 0 }</p>
             </div>
             <div className={styl.card}>
               <p>
