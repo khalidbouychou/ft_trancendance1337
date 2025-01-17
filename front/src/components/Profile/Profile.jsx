@@ -4,7 +4,7 @@ import styl from "./Profile.module.css";
 import { AuthContext } from "../../UserContext/Context";
 import MatchHistory from "./components/matchHistory/MatchHistory";
 import Leaderboard from "./components/leaderboard/Leaderboard";
-import CardFriend from "../CmpCard/CmpCard";
+import CardFriend from "./components/cardFriend/CardFriend";
 import { toast } from "react-toastify"
 import { FaMedal } from "react-icons/fa";
 import { PiGameControllerFill } from "react-icons/pi";
@@ -133,7 +133,6 @@ const Profile = ({ me }) => {
 
   useEffect(() => {
     const friendsArray = friendList['friend list'] || [];
-
     const isFriend = friendsArray.some(
       (friend) => friend.profile_name === user?.user?.profile_name
     );
@@ -266,10 +265,7 @@ const Profile = ({ me }) => {
         <div className={styl.userPrf}>
           <div className={styl.side1}>
             <div className={styl.userInfo}>
-              <button
-                className={styl.settingsBt}
-                onClick={openSettings}
-                style={{ display: displayBt }}>
+              <div className={styl.settingsBt} onClick={openSettings} style={{ display: displayBt }}>
                 <MdOutlineFormatListBulleted />
                 <div className={styl.settings} style={{ display: setting }}>
                   <button className={styl.Button} onClick={handleAddFriend}>
@@ -277,16 +273,16 @@ const Profile = ({ me }) => {
                     {isfriended ? <p>{t("Unfriend")}</p> : <p>{t("Add Friend")}</p>}
                   </button>
                 </div>
-              </button>
+              </div>
               <div className={styl.userDis}>
                 <div className={styl.extImg}>
                   <div className={styl.intImg}>
                     <img src={userData.avatar} alt="Avatar" />
                   </div>
                 </div>
-                <p className={styl.userName}>
+                <div className={styl.userName}>
                   {userData.profile_name.toUpperCase()}
-                  <p style={{ color: "rgba(255, 255, 255, 0.4)" }}>
+                  <div style={{ color: "rgba(255, 255, 255, 0.4)" }}>
                     <div className={styl.ongline}>
                       <div
                         className={styl.ongline}
@@ -301,8 +297,8 @@ const Profile = ({ me }) => {
                       ></div>
                     </div>
                     {t(userData?.status_network)}
-                  </p>
-                </p>
+                  </div>
+                </div>
               </div>
               <div className={styl.Res}>
                 <div className={styl.stt}>
@@ -334,7 +330,7 @@ const Profile = ({ me }) => {
                 <div className={styl.level}>
                   <div className={styl.tmp}>
                     <p>{t("Level")} {pingLevel}</p>
-                    <p>
+                    <div>
                       {pingExp} /{" "}
                       <p
                         style={{
@@ -344,7 +340,7 @@ const Profile = ({ me }) => {
                       >
                         {maxPingExp} xp
                       </p>
-                    </p>
+                    </div>
                   </div>
                   <div className={styl.extLvl}>
                     <div
@@ -357,8 +353,7 @@ const Profile = ({ me }) => {
                       style={{
                         color: "rgba(255, 255, 255, 0.4)",
                         left: "2px",
-                      }}
-                    >
+                      }}>
                       {t("Next Level")}
                     </p>
                     <p>{t("Level")} {nextpingLevel}</p>
@@ -367,14 +362,7 @@ const Profile = ({ me }) => {
               </div>
               <div className={styl.chooseData}>
                 <button onClick={() => handelClick("Leaderboard")}>
-                  <p
-                    style={{
-                      textDecorationColor:
-                        activeSection === "Leaderboard" ? "red" : "white",
-                    }}
-                  >
-                    {t("Leaderboard")}
-                  </p>
+                  <p style={{ textDecorationColor: activeSection === "Leaderboard" ? "red" : "white",}}> {t("Leaderboard")} </p>
                 </button>
                 <button onClick={() => handelClick("MatchHistory")}>
                   <p
@@ -398,7 +386,7 @@ const Profile = ({ me }) => {
           <div className={styl.side2}>
             <div className={styl.headFr}>
               <p>{t(status)}</p>
-              <button onClick={handleShooseList} style={{display: displayShooseButton}}>
+              <div onClick={handleShooseList} style={{display: displayShooseButton}}>
                 <p>...</p>
                 <div
                   className={styl.userBlocked}
@@ -408,7 +396,7 @@ const Profile = ({ me }) => {
                     {showUserBlocked ? "Friends" : "Blocked"}
                   </button>
                 </div>
-              </button>
+              </div>
             </div>
             <div className={styl.displayUser}>
               {showUserBlocked

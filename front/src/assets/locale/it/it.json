@@ -130,5 +130,7 @@
   "Start Match": "Inizia partita",
   "FINAL MATCH": "PARTITA FINALE",
   "Type a message": "Scrivi un messaggio",
-  "invite you to play ping pong" : "invita-te a giocare ping pong"
+  "invite you to play ping pong" : "invita-te a giocare ping pong",
+  "No match history found": "Nessuna cronologia delle partite trovata",
+  "No match data available to display the Statistic": "Aucune donnée de match disponible pour afficher les statistiques"
 }

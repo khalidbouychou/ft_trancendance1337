@@ -5,11 +5,9 @@ import {useLocation} from 'react-router-dom';
 import { useEffect } from "react";
 import { useContext } from "react";
 import { AuthContext } from "./UserContext/Context";
-
 import { GridLoader } from "react-spinners";
 import { useState } from "react";
 import { NotificationWebSocketProvider } from "./contexts/NotifWSContext.jsx";
-import { LocationProvider } from "./contexts/LocationContext.jsx";
 
 
 const Layout = () => {
@@ -44,10 +42,8 @@ const Layout = () => {
     <div className={style.EntirePage}>
           {( location.pathname !== "/login" && location.pathname !== "/otp") && user && 
             <NotificationWebSocketProvider>
-              {/* <LocationProvider> */}
                 <Sidebar /> 
                 <Outlet />
-              {/* </LocationProvider> */}
             </NotificationWebSocketProvider>
           }
     </div>

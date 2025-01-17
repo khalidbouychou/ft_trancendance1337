@@ -21,7 +21,6 @@ export default function AuthProvider({ children }) {
   }
   , [localStorage.getItem('lang')])
 
-
   const renderInputs = () => {
     return Array.from({ length: 6 }).map((_, i) =>
       <input key={i} type="text" className="otp-input" maxLength={1} />

@@ -62,7 +62,6 @@ export default function ChatWindow({
     }
   }, [data.user]);
 
-
   const handleBlockUser = (e) => {
       if (!otherUser) {}
       if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {

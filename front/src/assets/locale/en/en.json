@@ -131,6 +131,8 @@
   "Start Match": "Start Match",
   "FINAL MATCH": "FINAL MATCH",
   "Type a message": "Type a message",
-  "invite you to play ping pong" : "invite you to play ping pong"
+  "invite you to play ping pong" : "invite you to play ping pong",
+  "No match history found": "No match history found",
+  "No match data available to display the Statistic": "No match data available to display the Statistic"
 }
  

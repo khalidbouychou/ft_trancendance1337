@@ -68,6 +68,7 @@ services:
     ports:
       - "5173:5173"
     volumes:
+      - ./front:/app
       - .env:/app/.env
       - ./front:/app/
     # healthcheck:

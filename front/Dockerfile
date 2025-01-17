@@ -1,6 +1,7 @@
 FROM node:20-alpine
-RUN apk update && apk add curl
+# Add wget for healthcheck
 RUN apk add --no-cache wget
+
 WORKDIR /app
 # COPY package*.json ./
 COPY . .

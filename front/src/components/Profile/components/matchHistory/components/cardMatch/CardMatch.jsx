@@ -14,8 +14,7 @@ const CardMatch = ({ match, profileName, animationDelay , setProfileName}) => {
   const color = match.winner === profile_name ? "linear-gradient(to right, #006437, #00b378)" : "linear-gradient(to right, #64000e, #8b0000)";
   const [date, time] = match.date.split("T");
   const formattedTime = time.slice(0, 5);
-  const image =
-    match.winner === profile_name ? match.loser_avatar : match.winner_avatar;
+  const image = match.winner === profile_name ? match.loser_avatar : match.winner_avatar;
   const handleClick = () => {
     navigate(`/profile/${opponent}`);
   };

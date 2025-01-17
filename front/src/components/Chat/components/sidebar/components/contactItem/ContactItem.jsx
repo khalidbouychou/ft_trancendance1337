@@ -8,7 +8,6 @@ function ContactItem({ contact, currentUser, onClick, unreadMessages }) {
     contact.user1.id === currentUser.id ? contact.user2 : contact.user1;
   const unreadCount = unreadMessages[otherUser.id] || 0;
 
-
   return (
     <div className={styl.contactCard} onClick={onClick}>
       <div className={styl.intImg} >

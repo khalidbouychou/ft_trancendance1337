@@ -30,7 +30,7 @@ function App() {
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
           <Routes>
-            <Route   element={<Layout />}>
+            <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="games" element={<PingPongGames />} />
               <Route path="games/localpong" element={<LocalGame />} />

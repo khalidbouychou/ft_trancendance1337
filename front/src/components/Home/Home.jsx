@@ -9,6 +9,7 @@ import { FaMedal } from "react-icons/fa6";
 import { GiCrossMark } from "react-icons/gi";
 import { PiGameControllerFill } from "react-icons/pi";
 import Chart from "./components/test/Chart";
+import { use } from "react";
 
 const Home = () => {
   const { user, t } = useContext(AuthContext);
@@ -20,6 +21,10 @@ const Home = () => {
   const handleClick = (name) => {
     navigate(`/profile/${name}`);
   };
+
+  // useEffect(() => {
+
+  // }, [userData]);
 
   useEffect(() => {
     const fetchDataResults = async () => {
@@ -45,9 +50,6 @@ const Home = () => {
           (item) => item.profile_name === profile_name
         );
         setUserData(userSpecificData);
-        setPingData(data);
-        const userData = data.find((item) => item.username === username);
-        setFilteredPingData(userData);
       } catch (error) {
         console.error("home:", error);
       }
@@ -65,7 +67,7 @@ const Home = () => {
                 {t("WINS")}
                 <FaMedal />
               </p>
-              <p id={styl.sm}>{userData?.data[0]?.wins}</p>
+              <p id={styl.sm}>{String(userData?.data[0]?.wins)}</p>
             </div>
             <div className={styl.card}>
               <p>
@@ -80,7 +82,7 @@ const Home = () => {
                 <PiGameControllerFill />
               </p>
               <p id={styl.sm}>
-                {userData?.data[0]?.losses + userData?.data[0]?.wins}
+                {userData?.data[0]?.losses + userData?.data[0]?.wins || 0}
               </p>
             </div>
           </div>
