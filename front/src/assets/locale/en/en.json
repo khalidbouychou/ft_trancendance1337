@@ -56,7 +56,12 @@
   "Date & Time": "Date & Time",
   "Victory": "Victory",
   "Defeat": "Defeat",
+  "LOSS": "Loss",
   "Loss": "Loss",
+  "Accept" : "accept",
+  "Decline" : "decline",
+  "sent you an invitation" : "sent you an invitation",
+  "Cancel friend request" : "Cancel friend request",
   "WINS": "WINS",
   "LOSE": "LOSE",
   "GAMES": "GAMES",
@@ -133,6 +138,7 @@
   "Type a message": "Type a message",
   "invite you to play ping pong" : "invite you to play ping pong",
   "No match history found": "No match history found",
-  "No match data available to display the Statistic": "No match data available to display the Statistic"
+  "No match data available to display the Statistic": "No match data available to display the Statistic",
+  "Typing...": "Typing..."
 }
  

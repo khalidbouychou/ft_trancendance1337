@@ -57,10 +57,15 @@
   "Date & Time": "Data e ora",
   "Victory": "Vittoria",
   "Defeat": "Sconfitta",
+  "LOSS": "Sconfitta",
   "Loss": "Sconfitta",
   "WINS": "VITTORIE",
   "LOSE": "SCONFITTE",
-  "GAMES": "JEUX",
+  "GAMES": "GIOCHI",
+  "Accept" : "Accetta",
+  "Decline" : "rifiuta",
+  "sent you an invitation" : "ti ha inviato un invito",
+  "Cancel friend request" : "Annulla richiesta di amicizia",
   "Match History (Your Scores vs Opponent)": "Cronologia partite (I tuoi punteggi contro l'avversario)",
   "Your Score": "Il tuo punteggio",
   "Opponent Score": "Punteggio avversario",
@@ -132,5 +137,6 @@
   "Type a message": "Scrivi un messaggio",
   "invite you to play ping pong" : "invita-te a giocare ping pong",
   "No match history found": "Nessuna cronologia delle partite trovata",
-  "No match data available to display the Statistic": "Aucune donnée de match disponible pour afficher les statistiques"
+  "No match data available to display the Statistic": "Nessun dato di partita disponibile per mostrare la statistica",
+  "Typing...": "Sta scrivendo..."
 }

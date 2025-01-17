@@ -57,10 +57,14 @@
   "Date & Time": "Date et heure",
   "Victory": "Victoire",
   "Defeat": "Défaite",
+  "LOSS": "Perte",
   "Loss": "Perte",
+  "Accept" : "accepter",
+  "Decline" : "décliner",
   "WINS": "VICTOIRES",
   "LOSE": "DÉFAITES",
-  "GAMES": "PARTIES",
+  "GAMES": "JEUX",
+  "sent you an invitation" : "vous a envoyé une invitation",
   "Match History (Your Scores vs Opponent)": "Historique des matchs (Vos scores contre l'adversaire)",
   "Your Score": "Votre score",
   "Opponent Score": "Score de l'adversaire",
@@ -73,6 +77,7 @@
   "invited you to play": "vous a invité à jouer",
   "Friend request sent to": "Demande d'ami envoyée à",
   "Game invitation": "Invitation à jouer",
+  "Cancel friend request" : "Annuler la demande d'ami",
   "sent to": "envoyée à",
   "Are you sure you want to": "Êtes-vous sûr de vouloir",
   "your account": "votre compte",
@@ -133,6 +138,7 @@
   "Type a message": "Écrivez un message",
   "invite you to play ping pong" : "invitez-vous à jouer au ping pong",
   "No match history found": "Aucun historique de match trouvé",
-  "No match data available to display the Statistic": "Aucune donnée de match disponible pour afficher les statistiques"
+  "No match data available to display the Statistic": "Aucune donnée de match disponible pour afficher les statistiques",
+  "Typing...": "En train d'écrire..."
 }
   
