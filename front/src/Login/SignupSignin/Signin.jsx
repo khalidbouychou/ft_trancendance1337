@@ -40,7 +40,6 @@ const Signin = () => {
         }, 1300);
       }
     } catch (err) {
-      console.log("signin", err);
       toast.error(t(err?.response?.data?.error),
         {
           style: {

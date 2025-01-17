@@ -23,7 +23,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent  
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://10.13.1.9',
+    f'{os.getenv("VITE_BACKEND_IP")}',
 ]
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True # Set to False in production
 
-ALLOWED_HOSTS = ['10.13.1.9']
+ALLOWED_HOSTS = [os.getenv("VITE_WSS_IP")]
 
 INSTALLED_APPS = [ 
     'daphne',
@@ -177,7 +177,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://localhost:5173',
     'http://localhost',
     'http://localhost:5173',
-    "https://10.13.1.9",
+    f'{os.getenv("VITE_BACKEND_IP")}',
 ]
 
 DATABASES = {

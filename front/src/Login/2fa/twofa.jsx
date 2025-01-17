@@ -17,7 +17,6 @@ const Twofa = () => {
   const QR_CODE_URL = `${import.meta.env.VITE_BACKEND_IP}/api/qrcode/`;
 
   const Offswitch = async () => {
-    console.log("verified",isEnable)
     setQrcode("");
     setEnable(false);
   }
@@ -37,7 +36,6 @@ const Twofa = () => {
       setQrcode("");
     }
     } catch (err) {
-      console.log("twofa", err);
       setQrcode("");
         }    }
   }
@@ -75,7 +73,6 @@ const Twofa = () => {
         });
       }
     } catch (err) {
-      console.log("twofa", err);
 
       toast.error(t("OTP code is not correct"),
         {
