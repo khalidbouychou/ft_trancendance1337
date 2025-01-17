@@ -3,7 +3,7 @@ import styl from "./MatchHistory.module.css";
 import axios from "axios";
 import CardMatch from "./components/cardMatch/CardMatch";
 
-const MatchHistory = ({ profileName, t }) => {
+const MatchHistory = ({ profile_name, t }) => {
   const [matchees, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,7 +12,7 @@ const MatchHistory = ({ profileName, t }) => {
     const fetchMatches = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_IP}/api/matches/${profileName}/`,
+          `${import.meta.env.VITE_BACKEND_IP}/api/matches/${profile_name}/`,
           {
             withCredentials: true,
           }
@@ -30,7 +30,7 @@ const MatchHistory = ({ profileName, t }) => {
     };
 
     fetchMatches();
-  }, [profileName]);
+  }, [profile_name]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -54,7 +54,7 @@ const MatchHistory = ({ profileName, t }) => {
             <CardMatch
               key={index}
               match={match}
-              profileName={profileName}
+              profile_name={profile_name}
               animationDelay={`${0.2 * index}s`}
             />
           ))}

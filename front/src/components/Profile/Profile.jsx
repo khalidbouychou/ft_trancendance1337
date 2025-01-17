@@ -385,7 +385,7 @@ const Profile = ({ me }) => {
             <div className={styl.userData}>
               {activeSection === "Leaderboard" && <Leaderboard setProfileName={setProfileName} t={t}/>}
               {activeSection === "MatchHistory" && (
-                <MatchHistory profileName={profileName} t={t}/>
+                <MatchHistory profile_name={profile_name} t={t}/>
               )}
             </div>
           </div>

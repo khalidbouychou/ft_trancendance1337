@@ -78,10 +78,10 @@ const NotiCardSent = ({request, type}) => {
         </div>
       </div>
       <div className={styl.leftSide}>
-        <p>{type === 'FR' ? 'Friend request sent to' : 'Game invitation to' }</p>
+        <p>{type === 'FR' ? t('Friend request sent to') : t('Game invitation to') }</p>
         <p style={{ fontSize: "13px", color: "white" }}>{request?.to_user?.profile_name.toUpperCase()}</p>
         <button onClick={handleCancel}>
-          <p>{type === 'FR' ? 'Cancel friend request' : 'Cancel invitation Game' }</p>
+          <p>{type === 'FR' ? t('Cancel friend request') : t('Cancel invitation Game') }</p>
         </button>
       </div>
     </div>

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react'
 import { useNotificationWS } from '../../../../contexts/NotifWSContext.jsx'
 
-const InvitGameCard = ({request}) => {
+const InvitGameCard = ({request, t}) => {
   const [isVisible, setIsVisible] = useState(true)
 	const [timeLeft, setTimeLeft] = useState(30)
 	const [popupMessage, setPopupMessage] = useState('');
