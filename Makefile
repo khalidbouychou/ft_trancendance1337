@@ -1,17 +1,10 @@
 all : up 
-ifneq ("$(wildcard .env)","")
-    include .env
-endif
 
 uploads_dir:
 	@mkdir -p backend/uploads
 
 up: uploads_dir
 	@docker-compose up --build
-
-# s : 
-# 	chmod +x ./ssl.sh
-# 	./ssl.sh
 
 down :
 	@docker-compose stop

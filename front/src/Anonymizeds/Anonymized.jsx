@@ -15,10 +15,10 @@ const Anonymizeds = () => {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/list_anonymized/`, {
           withCredentials: true,
         });
-        setAnonymizeds(response.data);  // Set the list of anonymized accounts
-        setLoading(false);  // Set loading to false when the data is fetched
+        setAnonymizeds(response.data); 
+        setLoading(false);  
       } catch (error) {
-        // console.error('Error fetching anonymized accounts:', error);
+        console.error("anonymize", error);
         setLoading(false);
       }
     };

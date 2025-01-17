@@ -4,7 +4,8 @@ import styl from "./Profile.module.css";
 import { AuthContext } from "../../UserContext/Context";
 import MatchHistory from "./components/matchHistory/MatchHistory";
 import Leaderboard from "./components/leaderboard/Leaderboard";
-import CardFriend from "./components/CardFriend/CardFriend";
+import CardFriend from "./components/History/components/CardFriend/CardFriend";
+import { toast } from "react-toastify"
 import { FaMedal } from "react-icons/fa";
 import { PiGameControllerFill } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
@@ -123,7 +124,7 @@ const Profile = ({ me }) => {
           setLose(losses);
         }
       } catch (error) {
-        // console.error("Failed to fetch ping data", error);
+        console.error("profile", error);
       }
     };
     
@@ -176,7 +177,7 @@ const Profile = ({ me }) => {
             setIsblocked(true);
         }
       } catch (error) {
-        // console.error("Error fetching blocked list:", error);
+        console.error("profile", error);
       }
     };
   
@@ -186,7 +187,9 @@ const Profile = ({ me }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!profile_name) return;
+      if (!profile_name){
+        toast.error(t("profile_name not valid"))
+      }
   
       setIsLoading(true);
       setError(null);

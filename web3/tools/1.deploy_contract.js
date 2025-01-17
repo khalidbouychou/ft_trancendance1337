@@ -7,6 +7,5 @@ module.exports = function(deployer) {
 		let contractAddress = instance.address;
 		fs.writeFileSync('./contractAddress.txt', contractAddress);
 	}).catch(error => {
-		console.error("Error deploying HelloWorld:", error);
 	});
 };

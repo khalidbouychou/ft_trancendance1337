@@ -63,14 +63,12 @@ export default function ChatWindow({
   }, [data.user]);
 
   const handleBlockUser = (e) => {
-      if (!otherUser) {
-          return;
-      }
+      if (!otherUser) {}
       if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
           sockets[currentContact.id].send(JSON.stringify({
               type: 'BLOCK_USER',
               event: e ? 'BLOCK' : 'UNBLOCK',
-              user_id: otherUser.id
+              user_id: otherUser.id 
           }));
       }
   };

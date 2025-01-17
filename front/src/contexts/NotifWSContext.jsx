@@ -33,12 +33,7 @@ export function NotificationWebSocketProvider({ children }) {
       }
     };
 
-    ws.onerror = (error) => {
-      // console.error("socket error:", error);
-    }
-
     ws.close = (close_code) => {
-      // console.error("socket closed:", close_code);
     };
 
     return () => {
@@ -51,9 +46,7 @@ export function NotificationWebSocketProvider({ children }) {
   const sendMessage = useCallback((message) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(message));
-    } else {
-      // console.error('WebSocket is not connected');
-    }
+    } 
   }, [socket]);
 
   return (

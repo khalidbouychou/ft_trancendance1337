@@ -55,11 +55,9 @@ const MainTournament = () => {
         };
 
         socket.current.onclose = (reason) => {
-            // console.log('WebSocket connection closed:', reason);
         };
 
         socket.current.onerror = (error) => {
-            // console.error('WebSocket error:', error);
         };
 
         return () => {

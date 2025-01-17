@@ -1,8 +1,9 @@
 FROM node:20-alpine
-# Add wget for healthcheck
+RUN apk update && apk add curl
 RUN apk add --no-cache wget
-
 WORKDIR /app
 COPY package*.json ./
+RUN npm i
 COPY . .
-CMD npm i && npm run dev
+RUN npm run build 
+CMD ["npm" , "run" , "dev"]

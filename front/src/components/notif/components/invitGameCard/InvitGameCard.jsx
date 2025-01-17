@@ -69,7 +69,7 @@ const InvitGameCard = ({request}) => {
 					navigate('/friendgame', { state: { game_key } });
 				}
 			}
-		}
+		} 
 		setIsVisible(false);
 	};
 

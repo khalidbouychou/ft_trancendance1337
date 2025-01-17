@@ -69,19 +69,15 @@ def get_scores_num(request):
 
 
 def add_score(score: str):
-    print("function call!!!!!")
     global contract
     if contract == None:
         init_web3_connection()
  
     try: 
         if score:
-            print("1score:", score)
             send_add_score_transaction(str(score)) 
             response = {'status': 'success', 'score': score}
-            print(response)
         else:
-            print("2score:", score)
             response = {'status': 'error', 'message': 'Parameter "score" not provided'}
     except:
             response = {'status': 'error', 'message': 'exception!!'}
@@ -90,13 +86,12 @@ def add_score(score: str):
 
 
 def send_add_score_transaction(score: str):
-    print("internal function called!!!!")
-    global web3
-    # Call a non-pure function that changes state
-    nonce = web3.eth.get_transaction_count(caller)
-    gas_price = web3.eth.gas_price  # You can set a custom gas price
 
-    # Preparing the transaction
+    global web3
+
+    nonce = web3.eth.get_transaction_count(caller)
+    gas_price = web3.eth.gas_price 
+
     transaction = contract.functions.add_score(score).build_transaction({
         'chainId': web3.eth.chain_id,
         'gas': 2000000,
@@ -112,8 +107,6 @@ def send_add_score_transaction(score: str):
 
     # Wait for the transaction to be mined
     txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
-    print(" ---------------> printing receipt")
-    print(txn_receipt)
 
 def get_last_score(request):
     global contract

@@ -49,7 +49,7 @@ const Home = () => {
         const userData = data.find((item) => item.username === username);
         setFilteredPingData(userData);
       } catch (error) {
-        // console.error("Error fetching data:", error.message);
+        console.error("home:", error);
       }
     };
 

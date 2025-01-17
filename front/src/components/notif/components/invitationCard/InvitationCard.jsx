@@ -3,8 +3,6 @@ import styl from "./InvitationCard.module.css";
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react'
 import { useNotificationWS } from '../../../../contexts/NotifWSContext.jsx'
-// import False from '../../assets/false.svg'
-// import True from '../../assets/true.svg'
 
 const InvitationCard = ({request}) => {
   const [isVisible, setIsVisible] = useState(true)
@@ -69,7 +67,7 @@ const InvitationCard = ({request}) => {
 					navigate('/friendgame', { state: { game_key } });
 				}
 			}
-		}
+		} 
 		setIsVisible(false);
 	};
 

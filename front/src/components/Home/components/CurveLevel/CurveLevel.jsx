@@ -11,7 +11,6 @@ import {
   Legend,
 } from 'chart.js';
 
-// Register necessary components for Chart.js
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
 const ExpChart = ({ data, playerName, t }) => {
@@ -46,10 +45,10 @@ const ExpChart = ({ data, playerName, t }) => {
       {
         label: 'EXP',
         data: expData.exp,
-        borderColor: 'rgba(75, 192, 192, 1)', // Line color
-        backgroundColor: 'rgba(75, 192, 192, 0.4)', // Fill color
+        borderColor: 'rgba(75, 192, 192, 1)', 
+        backgroundColor: 'rgba(75, 192, 192, 0.4)', 
         borderWidth: 2,
-        tension: 0, // Stepped line
+        tension: 0, 
         stepped: true,
         pointRadius: 5,
         pointHoverRadius: 7,
@@ -90,13 +89,13 @@ const ExpChart = ({ data, playerName, t }) => {
           color: 'white', // X-axis title color
         },
         ticks: {
-          color: 'rgba(255, 255, 255, 0.6)', // X-axis ticks color
+          color: 'rgba(255, 255, 255, 0.6)', 
         },
         grid: {
-          color: 'rgba(255, 255, 255, 0.6)', // X-axis grid lines color
+          color: 'rgba(255, 255, 255, 0.6)',
         },
         border: {
-          color: 'rgba(255, 255, 255, 0.6)', // X-axis border color
+          color: 'rgba(255, 255, 255, 0.6)', 
         },
       },
       y: {
@@ -106,13 +105,13 @@ const ExpChart = ({ data, playerName, t }) => {
           color: 'white', // Y-axis title color
         },
         ticks: {
-          color: 'rgba(255, 255, 255, 0.6)', // Y-axis ticks color
+          color: 'rgba(255, 255, 255, 0.6)',
         },
         grid: {
-          color: 'rgba(255, 255, 255, 0.6)', // Y-axis grid lines color
+          color: 'rgba(255, 255, 255, 0.6)', 
         },
         border: {
-          color: 'rgba(255, 255, 255, 0.6)', // Y-axis border color
+          color: 'rgba(255, 255, 255, 0.6)',
         },
         min: 100,
       },

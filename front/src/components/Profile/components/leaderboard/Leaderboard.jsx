@@ -15,22 +15,17 @@ const Leaderboard = ({t , setProfileName}) => {
           throw new Error("Network response was not ok");
         }
         const fetchedData = await response.json();
-
         const sortedData = fetchedData
           .filter((data) => data.profile_name !== "ke3ki3a")
           .sort((a, b) => b.data[0]?.wins - a.data[0]?.wins);
         setData(sortedData);
       } catch (error) {
-        // console.error("Fetch error:", error);
       }
     };
 
     fetchData();
   }, [setProfileName]);
 
-  // useEffect(() => {
-  //   console.log("----------->Data:", data);
-  // }, [data]);
 
   const handleCardClick = (profileName) => {
     setProfileName(profileName);
@@ -55,7 +50,6 @@ const Leaderboard = ({t , setProfileName}) => {
             player={player}
             index={index}
             setProfileName={setProfileName}
-            // handleCardClick={handleCardClick()}
           />
         ))}
       </div>

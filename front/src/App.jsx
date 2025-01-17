@@ -8,7 +8,6 @@ import LocalTeamGame from "./ponggame/teampong/LocalTeamGame.jsx";
 import LocalTournament from "./ponggame/tournamentpong/Tournament.jsx";
 import RemoteTournament from "./ponggame/remotetournement/RemoteTournament.jsx";
 import OnlineGame from "./ponggame/onlinepong/OnlineGame.jsx";
-// import Pong3d from "./ponggame/pong3d/newpong.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import Setting from "./Setting/Setting.jsx";
 import Notification from "./components/Notification/Notification.jsx";
@@ -48,6 +47,7 @@ function App() {
               <Route path="notification" element={<Notification />} />
               <Route path="twofa" element={<Twofa />} />
             </Route>
+            <Route path="/otp" element={<Otplogin />} />
             <Route path="/login" element={<LoginSignup />} />
             <Route path="/*" element={<PageNotFound />} />
           </Routes>

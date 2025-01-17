@@ -1,9 +1,7 @@
 import React, { createContext, useState, useContext } from 'react';
 
-// Create the context
 export const AppContext = createContext();
 
-// Create the provider component
 export const ContextProvider = ({ children }) => {
   const [PlayerAliasName, setPlayerAliasName] = useState('');
   const [RoomName, setRoomName] = useState('VIP');
@@ -34,7 +32,7 @@ export const ContextProvider = ({ children }) => {
   const [matchstart, setMatchStart] = useState(false);
 
   return (
-    <AppContext.Provider // Fixed this part to use AppContext.Provider
+    <AppContext.Provider
       value={{
         PlayerAliasName,
         setPlayerAliasName,
@@ -91,7 +89,6 @@ export const ContextProvider = ({ children }) => {
   );
 };
 
-// Optional helper hook to use the context more easily
 export const useGlobalContext = () => {
   return useContext(AppContext);
 };

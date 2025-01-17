@@ -42,9 +42,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
   const handleForm = async (e) => {
     e.preventDefault();
 
-    if (!validateInput()) {
-      return;
-    }
+    if (!validateInput()) {}
 
     try {
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_IP}/api/signup/`, {
@@ -64,13 +62,9 @@ const Signup = ({ isLogin, setIsLogin }) => {
         }, 1000);
       }
     } catch (err) {
+      console.log("signup", err);
       let errmsg = t(err.response?.data?.error) || t("player with this username already exists."); 
-      toast.error(errmsg, {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      });
+      toast.error(errmsg);
     }
   };
 

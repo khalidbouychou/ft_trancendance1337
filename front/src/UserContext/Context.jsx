@@ -21,8 +21,6 @@ export default function AuthProvider({ children }) {
   }
   , [localStorage.getItem('lang')])
 
-
-  // otp shit
   const renderInputs = () => {
     return Array.from({ length: 6 }).map((_, i) =>
       <input key={i} type="text" className="otp-input" maxLength={1} />
@@ -58,7 +56,7 @@ export default function AuthProvider({ children }) {
         setEnable(false);
         setTimeout(() => {
           navigate("/");
-        }, 1000);
+        }, 2000);
       }
     } catch (err) {
       toast.error(t(`${err.response.data.error}`));
@@ -66,6 +64,7 @@ export default function AuthProvider({ children }) {
   };
 
   async function auth_intra42() {
+    const backend_ip = import.meta.env.VITE_BACKEND_IP
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/auth_intra/`, {
       withCredentials: true
     });
@@ -104,23 +103,20 @@ export default function AuthProvider({ children }) {
             setLoading(false);
           }, 1000);
           if (res?.data?.bool_login) {
-            toast.success("login success", {
+            toast.success(t("login success"), {
               style: {
                 backgroundColor: 'rgb(0, 128, 0)',
                 color: 'white'
               }
             });
-            navigate(`/`);
+            setTimeout(() => {
+              navigate("/");
+            }, 1500);
           }
         }
       }
     } catch (error) {
-      toast.error(t(error?.response?.data?.error), {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      });
+      toast.error(t(error?.response?.data?.error));
       navigate(`/`);
     } finally {
       setLoading(false);
@@ -134,9 +130,9 @@ export default function AuthProvider({ children }) {
 
       if (res.status === 200) {
         setUser(res.data);
-        if (res?.data?.user?.two_factor && res?.data?.user?.otp_verified)
-          setEnable(res?.data?.user?.otp_verified);
-        if (res?.data?.user?.bool_login &&  (window.location.pathname === "/login" || window.location.pathname === "/otp")) {
+        if (res?.data?.user?.two_factor && !res?.data?.user?.otp_verified)
+         navigate("/otp");
+        else if ((location.pathname === "/login" || location.pathname === "/otp")) {
           navigate(`/`);
         }
       }
@@ -173,13 +169,6 @@ export default function AuthProvider({ children }) {
     [user]
   );
   
-  // useEffect(() => {
-  //   if (enable) {
-  //     console.log("-------------------------- ...... enable:", enable);
-  //     navigate("/otp");
-  //   }
-  // }
-  // )
   return (
     <AuthContext.Provider
       value={{

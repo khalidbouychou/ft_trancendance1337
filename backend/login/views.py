@@ -2,24 +2,18 @@
 from rest_framework.response import Response
 from django.http import JsonResponse
 import requests
-from django.contrib.auth.models import User
 from .serializers import *
 from .models import *
 from rest_framework import viewsets, status
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken , BlacklistedToken , OutstandingToken ,TokenError
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken,TokenError
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, get_user_model
-from django.http import HttpResponse
 from django.contrib.auth import login , logout as django_logout
-from datetime import timedelta
 import os
 from rest_framework import generics
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.views import APIView
 import pyotp
-import time
 import qrcode
-from rest_framework.decorators import api_view  , permission_classes , authentication_classes ,action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 import random
@@ -28,9 +22,6 @@ import cloudinary.uploader
 from django.core.files.storage import default_storage
 from django.db.models import Sum
 #---------------------------------CHECK HEALTH OF THE BACKEND-----------------------------------------------------------
-
-def health_check(request):
-    return HttpResponse("OK", status=200)
 
 def DeleteCookies(response: Response) -> Response:
     response.delete_cookie('csrftoken')
@@ -55,7 +46,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
             serializer = PlayerSerializer(users, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'No search query provided'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'No search query provided'}, status=status.HTTP_400_BAD_REQUEST) 
  
     def get_user_by_profile_name(self, request, username):
         try:
@@ -64,20 +55,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Player.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    def generate_qr_code(self, request):
-        token = request.COOKIES.get('access') 
-        if not token:
-            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST) 
-        try:
-            user = AccessToken(token).user
-            if user.two_factor:
-                return Response({'error': '2FA already enabled'}, status=status.HTTP_400_BAD_REQUEST)
-            user.two_factor = True
-            user.save()
-            return Response({'msg': '2FA enabled'}, status=status.HTTP_200_OK) 
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -145,8 +122,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 username=user_data['username']).first()
             if not user:
                 user = self.create_user(user_data)
-            if user.is_anonimized ==True and user.is_active == False:
-                return Response({'error': 'Account is anonymized'}, status=status.HTTP_400_BAD_REQUEST)
+            if user.is_anonimized == True and user.is_active == False:
+                return Response({'error': 'You Anonymized Your INTRA42 Account'}, status=status.HTTP_400_BAD_REQUEST)
             user.status_network='online'
             user.bool_login=True
             authenticate(request, username=user_data['username'])
@@ -157,7 +134,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
             response = Response(data, status=status.HTTP_200_OK)
             is_secure = request.is_secure()
             response.set_cookie(key='token', value=tokens['access'], secure=is_secure , httponly=True ,samesite='Lax' ) 
-            response.set_cookie(key='refresh', value=tokens['refresh'], secure=is_secure , httponly=True , samesite='Lax') 
             return response
         except requests.RequestException as e:
             return Response({'error': 'Request failed: {}'.format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
@@ -172,12 +148,16 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
-            user = request.user 
+            user = request.user
+            refresh = request.COOKIES.get('refresh')
             if not user.is_authenticated:
                 return Response({'error': 'User not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
             user.bool_login = False
+            user.otp_verified = False
             user.status_network = 'offline'
             user.save()
+            newrefresh = RefreshToken(refresh)
+            newrefresh.blacklist()
             django_logout(request)
             response = Response({'msg': 'Logged out'}, status=status.HTTP_200_OK)
             return DeleteCookies(response)
@@ -197,25 +177,19 @@ class AuthUser(APIView):
                 django_logout(request)
                 return DeleteCookies(response)
             try:
-                AccessToken(token) # Check if the token is valid
+                AccessToken(token)
             except TokenError as e:
-                refresh = request.COOKIES.get('refresh')
-                crstf = request.COOKIES.get('csrftoken')
-                res = requests.post(f'{os.getenv("VITE_BACKEND_IP")}:8000/refresh/', data={'refresh': refresh, 'X-CSRFToken': crstf})
-                res.raise_for_status() # Raise an exception if the status code is not 2xx
-                access = res.json().get('access')
-                refresh = res.json().get('refresh')
+                refresh = RefreshToken.for_user(user) 
+                access = str(refresh.access_token)
                 is_secure = request.is_secure()
-                user_data = PlayerSerializer(user).data
-                response = Response({'msg': 'Token refreshed', 'user':user_data}, status=status.HTTP_200_OK)
+                response = Response({'msg': 'Token refreshed', 'user':PlayerSerializer(user).data}, status=status.HTTP_200_OK)
                 response.set_cookie(key='token', value=access , secure=is_secure, httponly=True ,samesite='Lax')
-                response.set_cookie(key='refresh', value=refresh , secure=is_secure, httponly=True ,samesite='Lax')
                 return response
             userdata = PlayerSerializer(user).data
-            return Response({'user' :userdata}, status=status.HTTP_200_OK)
+            return Response({'user' :userdata}, status=status.HTTP_200_OK)    
 
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST) 
 #-----------------------------------Logout-------------------------------------------------------------
 
 #-----------------------------------Form-------------------------------------------------------------
@@ -224,7 +198,7 @@ class SignupForm (generics.CreateAPIView):
     queryset = Player.objects.all()
     serializer_class = SignupSerializer
     
-    
+
 class SigninForm(generics.CreateAPIView):
     queryset = Player.objects.all()
     serializer_class = SigninSerializer
@@ -243,11 +217,9 @@ class SigninForm(generics.CreateAPIView):
             getuser.save()
             refresh = RefreshToken.for_user(getuser)
             access = str(refresh.access_token)
-            # Check if the request is secure (HTTPS)
             is_secure = request.is_secure()
             response = Response({'msg': f'Welcome -- {username}'}, status=status.HTTP_200_OK)
             response.set_cookie(key='token', value=access , secure=is_secure, httponly=True ,samesite='Lax')
-            response.set_cookie(key='refresh', value=refresh , secure=is_secure, httponly=True ,samesite='Lax')
             response.data = {
                 'user' : PlayerSerializer(getuser).data,
                 'token': access,
@@ -260,14 +232,6 @@ class SigninForm(generics.CreateAPIView):
 #-----------------------------------Form-------------------------------------------------------------
 
 #-----------------------------------2FA-------------------------------------------------------------
-
-
-class UserStatus(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
-    def get(self,request):
-        user = request.user
-        return Response({'user': PlayerSerializer(user).data}, status=status.HTTP_200_OK)
 
 # Configuration       
 cloudinary.config( 
@@ -293,7 +257,6 @@ class GenerateQRcode(APIView):
         path_url = f'/app/{path}'
         cludinary_url = cloudinary.uploader.upload(path_url)
         qrcode_url = cludinary_url['url']
-        # os.remove(path)
         user.qrcode_path = qrcode_url
         os.remove(path_url)
         user.save()
@@ -318,7 +281,7 @@ class DesableTwoFactor(APIView):
             return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
         user.two_factor = False
         user.mfa_secret = ""
-        user.otp_verified = False
+        user.otp_verified = True
         user.qrcode_path = ""
         user.save()
         data = PlayerSerializer(user).data
@@ -428,7 +391,6 @@ def get_ping_data_by_profile_name(request, username):
     pingdata = PingData.objects.filter(player=player)
     serializer = PingDataSerializer(pingdata, many=True)
     data = serializer.data
-    print("ping data",data,flush=True)
     return JsonResponse(data, safe=False) 
 
 def get_all_ping_data(request):

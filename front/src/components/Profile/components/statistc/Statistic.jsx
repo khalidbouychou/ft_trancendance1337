@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styl from "./Statistic.module.css";
-// import CurveChart from "../../../Home/components/CurveChart/CurveChart";
 import CurveLevel from "../../../Home/components/CurveLevel/CurveLevel";
-// import Chart from '../../../Home/components/test/Chart';
 import Chart from "../../../Home/components/test/Chart";
 import axios from "axios";
 import CircularLevel from "./CirculeLevel/CercleLevel";
@@ -27,7 +25,6 @@ const Statistic = ({ userData, profileName, t }) => {
         });
         setDaTa(data.data);
       } catch (error) {
-        // console.error("Error fetching match data:", error);
       }
     };
     fetchData();
@@ -35,7 +32,7 @@ const Statistic = ({ userData, profileName, t }) => {
 
   if (daTa.length == 0) {
     return (<div className={styl.emptyMatches}>
-      No match data available to display the Statistic
+      {t("No match data available to display the Statistic")}
   </div>)}
   return (
     <div className={styl.statistic}>

@@ -1,4 +1,4 @@
-Zimport styl from "./UserData.module.css";
+import styl from "./UserData.module.css";
 import { CiMedal } from "react-icons/ci";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { VscChromeClose } from "react-icons/vsc";
@@ -24,7 +24,10 @@ const UserData = ({ userData, ismyprofil }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!username) return;
+      if (!username)
+        {
+          toast.error(t("username not valid"));
+        }
 
       try {
         const response = await fetch(`3r1p9.1337.ma:8000/api/${fetchUrl}/${username}`);
@@ -35,7 +38,7 @@ const UserData = ({ userData, ismyprofil }) => {
         }
       
       } catch (error) {
-      
+        console.error("home:", error);      
       }
     };
 

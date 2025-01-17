@@ -69,7 +69,6 @@ def notify_user(sender, instance, created, **kwargs):
 
 @receiver(pre_delete, sender=Friend)
 def notify_users(sender, instance, **kwargs):
-    print("instance: ", instance)
     data1 = {
         'message': 'friend_status_changed',
         'user_id': instance.user2_id,
@@ -84,7 +83,6 @@ def notify_users(sender, instance, **kwargs):
     notification_serializer = NotificationSerializer(instance)
     room_group_name1 = f'user_{instance.user1_id}_NOTIF'
     room_group_name2 = f'user_{instance.user2_id}_NOTIF'
-    print("room_group_name1:", room_group_name1, "room_group_name2", room_group_name2)
     async_to_sync(channel_layer.group_send)(
         room_group_name1,
         {
@@ -111,7 +109,6 @@ def check_GR_status_change(sender, instance, **kwargs):
         try:
             old_instance = Notification.objects.get(pk=instance.pk)
         except Notification.DoesNotExist:
-            print('Notification does not exist')
             return
         if old_instance.status != 'pending':
             return
@@ -126,7 +123,6 @@ def check_GR_status_change(sender, instance, **kwargs):
         notification_serializer = NotificationSerializer(instance)
         user_id = instance.from_user.id if status in by_receiver_status else instance.to_user.id
         room_group_name = f'user_{user_id}_NOTIF'
-        print(f'Sending notification to group {room_group_name}, status: {status}') 
 
         async_to_sync(channel_layer.group_send)(
             room_group_name,

@@ -39,7 +39,7 @@ const Notification = () => {
         setFR_notif_sent(notifications.FR_notif_sent);
         setGR_notif_sent(notifications.GR_notif_sent);
       } catch (error) {
-        // console.error('Error fetching notifications:', error);
+        console.error("notification", error);
       }
     };
 

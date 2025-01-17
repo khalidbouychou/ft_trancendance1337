@@ -1,6 +1,5 @@
 import React , {useContext} from 'react'
 import styl from './PingGame.module.css'
-// import React, { useState } from 'react';
 import tournoi from '../../assets/tournii.jpeg';
 import team from '../../assets/tmvstm.jpeg';
 import local from '../../assets/local.jpeg';
@@ -11,6 +10,7 @@ import { AuthContext } from '../../../../UserContext/Context';
 const PingGame = () => {
   const { t } = useContext(AuthContext);
   return (
+
     <div className={styl.pingPong}>
       <div className={styl.card}>
         <div className={styl.cardName}>
@@ -52,7 +52,7 @@ const PingGame = () => {
           <Link to={"/games/localteampong"}><img src={team}/></Link>
         </div>
       </div>
-    </div>
+      </div>
   )
 }
 

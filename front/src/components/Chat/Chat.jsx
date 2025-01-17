@@ -1,5 +1,4 @@
-// import LoginPage from './login/LoginPage.jsx'
-// import ChatPage from "./chat/ChatPage.jsx";
+
 import { AuthContext } from "../../UserContext/Context.jsx";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import styl from "./Chat.module.css";
@@ -12,7 +11,6 @@ import { useNotificationWS } from "../../contexts/NotifWSContext";
 const Chat = () => {
   const {notif , setNotif, setChatMesageNotif, chatMesageNotif} = useNotificationWS();
   const { t } = useContext(AuthContext);
-  const navigate = useNavigate();
   const [sockets, setSockets] = useState({});
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
@@ -36,8 +34,6 @@ const Chat = () => {
     }
   }, [chat]);
 
-  useEffect(() => {
-  }, [data])
 
   useEffect(() => {
       if (notif && notif.message === 'status') {
@@ -74,10 +70,7 @@ const Chat = () => {
         });
         setNotif(null);
       }
-      // else if (notif && notif.message === 'chat_message') {
-      //   setChatMesageNotif(false);
-      //   setNotif(null);
-      // }
+
     }, [notif])
 
     useEffect(() => {
@@ -96,7 +89,8 @@ const Chat = () => {
         setupSocket(1);
         initUnreadMessages(response.data);
       } catch (error) {
-        // console.warn("Chat page inaccessible:", error);
+        console.error("chat", error);
+
       }
     };
 
@@ -162,13 +156,12 @@ const Chat = () => {
       const user = data.chat_rooms
         .flatMap((room) => [room.user1, room.user2])
         .find((user) => user.id === parseInt(userId));
+  
     });
   }, [unreadMessages]);
 
   useEffect(() => {
-    if (!receivedMessage) {
-      return;
-    }
+    if (!receivedMessage) {}
     if (receivedMessage.chat_room === roomId) {
       setChat((prevChat) => [...prevChat, receivedMessage]);
     } else if (receivedMessage && receivedMessage.sender) {
@@ -215,23 +208,8 @@ const Chat = () => {
       ...prevData,
       chat_rooms: updatedChatRooms,
     };
-  };
+  }; 
 
-  // const handleUnreadMessages = (message) => {
-  // 	if (data.user.id === message.sender.id) {
-  // 		return
-  // 	}
-  // 	if (currentContact) {
-  // 		const currentContactId = currentContact.user1.id === data.user.id ? currentContact.user2.id : currentContact.user1.id
-  // 		if (currentContactId === message.sender.id) {
-  // 			return
-  // 		}
-  // 	}
-  // 	setUnreadMessages({
-  // 		...unreadMessages,
-  // 		[message.sender.id]: (unreadMessages[message.sender.id] || 0) + 1
-  // 	})
-  // }
 
   const setupSocket = (room_id) => {
     return new Promise((resolve, reject) => {
@@ -240,7 +218,6 @@ const Chat = () => {
       }
       if (sockets[room_id]) {
         resolve(sockets[room_id]);
-        return;
       }
 
       const newSocket = new WebSocket(
@@ -356,8 +333,6 @@ const Chat = () => {
           })
         );
         setMessage("");
-      } else {
-        // console.warn("Cannot send message, WebSocket not ready.");
       }
     }
   };

@@ -12,7 +12,7 @@ const Twofa = () => {
   const [qrcode, setQrcode] = useState("");
   const { t,user ,setUser,renderInputs} = useContext(AuthContext);
   const [isEnable, setEnable] = useState(false);
-  const [verified, setVerified] = useState(user?.user?.otp_verified);
+  const [verified, setVerified] = useState(user?.user?.two_factor);
 
   const QR_CODE_URL = `${import.meta.env.VITE_BACKEND_IP}/api/qrcode/`;
 
@@ -31,15 +31,14 @@ const Twofa = () => {
         setTimeout(() => {
         setQrcode(`${res.data?.user?.qrcode_path}`);
         }, 2000);
-      }
-      else {
-        setQrcode("");
-      }
-    } catch (error) {
-        setQrcode("");
-        // console.log(error);
-      }
     }
+    else {
+      setQrcode("");
+    }
+    } catch (err) {
+      console.log("twofa", err);
+      setQrcode("");
+        }    }
   }
 
   const handlverify = async () => {
@@ -65,7 +64,7 @@ const Twofa = () => {
         }
       );
       if (res.status === 200) {
-        setVerified(res?.data?.user?.otp_verified);
+        setVerified(res?.data?.user?.two_factor);
         setQrcode("");
         toast.success(t("2FA verified"), {
           style: {
@@ -74,13 +73,10 @@ const Twofa = () => {
           }
         });
       }
-    } catch (error) {
-      toast.error(t("OTP code is not correct"), {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      });
+    } catch (err) {
+      console.log("twofa", err);
+
+      toast.error(t("OTP code is not correct"));
     }
   };
 
@@ -96,7 +92,7 @@ const Twofa = () => {
                 name="qrcode"
                 value={t("On")}
                 checked={isEnable}
-                onClick={Onswitch}
+                onChange={Onswitch}
               />
             </div>
             <div className="off">
@@ -106,8 +102,10 @@ const Twofa = () => {
                 id="qrcode-off"
                 name="qrcode"
                 value={t("Off")}
-                onClick={Offswitch}
-                checked={!isEnable}
+                onChange={Offswitch}
+                // checked={!isEnable}
+                defaultChecked={!isEnable}
+
               />
             </div>
           </div>

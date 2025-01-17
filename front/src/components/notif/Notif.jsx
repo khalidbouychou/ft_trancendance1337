@@ -1,6 +1,4 @@
 import styl from "./Notif.module.css";
-// import NotiCard from './component/NotiCard/NotiCard'
-// import NotiCardSent from './component/NotiCard/NotiCardSent'
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNotificationWS } from "../../contexts/NotifWSContext";
@@ -19,7 +17,7 @@ const Notif = ({ open, notifReceived, setNotifReceived }) => {
 
   const { notif, setNotif} = useNotificationWS();
 
-  // WebSocket notification handler
+
   useEffect(() => {
     if (notif && notif.status === "pending") {
       if (notif.notif_type === "FR") {
@@ -34,7 +32,7 @@ const Notif = ({ open, notifReceived, setNotifReceived }) => {
     }
   }, [notif]);
 
-  // Fetch notifications on initial load
+
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -47,7 +45,8 @@ const Notif = ({ open, notifReceived, setNotifReceived }) => {
         setFR_notif_sent(notifications.FR_notif_sent);
         setGR_notif_sent(notifications.GR_notif_sent);
       } catch (error) {
-        // console.error("Error fetching notifications:", error);
+        console.error("notif", error);
+
       }
     };
 
