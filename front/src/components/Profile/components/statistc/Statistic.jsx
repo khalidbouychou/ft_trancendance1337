@@ -27,13 +27,12 @@ const Statistic = ({ userData, profileName, t }) => {
         });
         setDaTa(data.data);
       } catch (error) {
-        console.error("Error fetching match data:", error);
+        // console.error("Error fetching match data:", error);
       }
     };
     fetchData();
   }, [profileName]);
 
-  console.log("response == ", (userData?.data[0]?.exp_game % 100));
   if (daTa.length == 0) {
     return (<div className={styl.emptyMatches}>
       No match data available to display the Statistic

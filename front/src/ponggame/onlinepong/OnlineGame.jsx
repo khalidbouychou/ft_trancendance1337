@@ -32,8 +32,6 @@ export default function OnlineGame() {
                 action: 'w',
             };
             socket.send(JSON.stringify(message));
-        } else {
-            console.log("Only the left player can move the left paddle."); 
         }
     };
 
@@ -76,8 +74,6 @@ export default function OnlineGame() {
                 setLeftPlayerName(response.data.profile_name);
                 setAvatar(response.data.avatar);
                 setLevel(response.data.exp_game);
-            } else {
-                console.log("error:", response.status);
             }
         };
 
@@ -110,8 +106,6 @@ export default function OnlineGame() {
                         level: level,
                     };
                     socket.send(JSON.stringify(message));
-                } else {
-                    console.error('WebSocket is not open. readyState:', socket.readyState);
                 }
             };
 

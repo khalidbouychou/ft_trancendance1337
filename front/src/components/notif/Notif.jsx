@@ -32,7 +32,6 @@ const Notif = ({ open, notifReceived, setNotifReceived }) => {
         setNotif(null)
       }
     }
-    console.log('notif1', notif);
   }, [notif]);
 
   // Fetch notifications on initial load
@@ -48,7 +47,7 @@ const Notif = ({ open, notifReceived, setNotifReceived }) => {
         setFR_notif_sent(notifications.FR_notif_sent);
         setGR_notif_sent(notifications.GR_notif_sent);
       } catch (error) {
-        console.error("Error fetching notifications:", error);
+        // console.error("Error fetching notifications:", error);
       }
     };
 

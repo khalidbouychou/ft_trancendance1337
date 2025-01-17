@@ -45,7 +45,6 @@ const Sidebar = () => {
   const [notifReceived, setNotifReceived] = useState(false)
 
   useEffect(() => {
-    console.log("chatMesageNotif", chatMesageNotif)
   }, [chatMesageNotif])
 
   const changeLanguage = (lang) => {
@@ -57,7 +56,6 @@ const Sidebar = () => {
 
   const handleOpenNotif = () => {
     setNotifReceived(false)
-    console.log('openNotif', openNotif)
     setOpenNotif(openNotif === 'flex' ? 'none' : 'flex')
   }
 

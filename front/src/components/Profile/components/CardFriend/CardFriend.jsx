@@ -6,15 +6,17 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CardFriend = ({friend}) => {
-  console.log("CardFriend", friend.profile_name)
   const [pingData, setPingdata] = useState('')
   const navigate = useNavigate();
 
   useEffect (() => {
     const fectchData = async () => {
+      // const path = ${import.meta.env.VITE_BACKEND_IP}
+      // console.log("path:", );
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/pingdata/${friend.profile_name}/` , {
         withCredentials: true,
     });
+      console.log("response", response.data);
       setPingdata(response.data)
     }
     fectchData()
@@ -40,7 +42,9 @@ const CardFriend = ({friend}) => {
         <div className={styl.levels}>
           <div className={styl.level}>
             <p >Ping Pong level: </p>
-            <div className={styl.Parallelogram}>{pingData[0]?.exp_game / 100}</div>
+            <div className={styl.Parallelogram}>
+              {(pingData[0]?.exp_game / 100) || 0}
+            </div>
           </div>
           <div className={styl.level}>
             <p >Ping Pong exp: </p>

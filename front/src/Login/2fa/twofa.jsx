@@ -17,17 +17,13 @@ const Twofa = () => {
   const QR_CODE_URL = `${import.meta.env.VITE_BACKEND_IP}/api/qrcode/`;
 
   const Offswitch = async () => {
-    console.log("off switch",isEnable);
-
     setQrcode("");
     setEnable(false);
   }
 
   const Onswitch = async () => {
-    console.log("on switch",isEnable);
     setEnable(true);
     const usertofa = user?.user?.two_factor | user?.two_factor
-    console.log(usertofa);
     if(!usertofa){
     try {
       const res = await axios.get(QR_CODE_URL, { withCredentials: true });
@@ -35,14 +31,15 @@ const Twofa = () => {
         setTimeout(() => {
         setQrcode(`${res.data?.user?.qrcode_path}`);
         }, 2000);
-    }
-    else {
-      setQrcode("");
-    }
+      }
+      else {
+        setQrcode("");
+      }
     } catch (error) {
-      setQrcode("");
-      console.log(error);
-        }    }
+        setQrcode("");
+        // console.log(error);
+      }
+    }
   }
 
   const handlverify = async () => {

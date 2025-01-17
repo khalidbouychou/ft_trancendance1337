@@ -22,6 +22,7 @@ export default function AuthProvider({ children }) {
   , [localStorage.getItem('lang')])
 
 
+  // otp shit
   const renderInputs = () => {
     return Array.from({ length: 6 }).map((_, i) =>
       <input key={i} type="text" className="otp-input" maxLength={1} />
@@ -65,14 +66,9 @@ export default function AuthProvider({ children }) {
   };
 
   async function auth_intra42() {
-    const backend_ip = import.meta.env.VITE_BACKEND_IP
-    console.log("ip:", backend_ip);
-    // console.log('again ip:', backend_ip);
-    // console.log('VAR:', process.env.VITE_BACKEND_IP);
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/auth_intra/`, {
       withCredentials: true
     });
-    console.log("response:", response);
     try {
       if (response.status === 200) {
         window.location.href = response.data.url;

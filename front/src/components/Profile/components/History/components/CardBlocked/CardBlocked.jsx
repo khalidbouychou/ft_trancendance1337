@@ -13,7 +13,7 @@ const CardBlocked = ({ userBlocked, onUnblock }) => {
       if (onUnblock) onUnblock();
     } catch (error) {
       alert("Error unblocking user");
-      console.error("Error unblocking user:", error);
+      // console.error("Error unblocking user:", error);
     }
   };
 

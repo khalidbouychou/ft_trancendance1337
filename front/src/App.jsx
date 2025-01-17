@@ -31,7 +31,7 @@ function App() {
       <div className={style.EntirePage}>
         <div className={style.MainContent}>
           <Routes>
-            <Route   element={<Layout />}>
+            <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="games" element={<PingPongGames />} />
               <Route path="/otp" element={<Otplogin />} />
@@ -40,7 +40,6 @@ function App() {
               <Route path="games/onlinepong" element={<OnlineGame />} />
               <Route path="games/localtournament" element={<LocalTournament />} />
               <Route path="games/remotetournament" element={<RemoteTournament />} />
-              {/* <Route path="games/pong3d" element={<Pong3d />} /> */}
               <Route path="friendgame" element={<FriendGame />} />
               <Route path="chat" element={<Chat />} />
               <Route path="profile" element={<RedirectToMyProfile />} />

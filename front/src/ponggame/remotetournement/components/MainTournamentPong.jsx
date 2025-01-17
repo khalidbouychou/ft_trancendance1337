@@ -25,9 +25,6 @@ const MainTournamentPong = () => {
                     name: user.user.username,
                 };
                 socket.current.send(JSON.stringify(message));
-                console.log('tournaments socket.current is open now');
-            } else {
-                console.error('tournaments socket.current is not readyState:');
             }
         };
 
@@ -52,11 +49,11 @@ const MainTournamentPong = () => {
         };
 
         socket.current.onclose = (reason) => {
-            console.log('WebSocket connection closed:', reason);
+            // console.log('WebSocket connection closed:', reason);
         };
 
         socket.current.onerror = (error) => {
-            console.error('WebSocket error:', error);
+            // console.error('WebSocket error:', error);
         };
 
         return () => {

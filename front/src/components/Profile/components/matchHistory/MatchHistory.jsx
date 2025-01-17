@@ -17,8 +17,6 @@ const MatchHistory = ({ profileName, t }) => {
             withCredentials: true,
           }
         );
-        console.log("response == ", response);
-
         const sortedMatches = response.data.sort(
           (a, b) => new Date(b.date) - new Date(a.date)
         );

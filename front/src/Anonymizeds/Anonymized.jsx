@@ -18,7 +18,7 @@ const Anonymizeds = () => {
         setAnonymizeds(response.data);  // Set the list of anonymized accounts
         setLoading(false);  // Set loading to false when the data is fetched
       } catch (error) {
-        console.error('Error fetching anonymized accounts:', error);
+        // console.error('Error fetching anonymized accounts:', error);
         setLoading(false);
       }
     };

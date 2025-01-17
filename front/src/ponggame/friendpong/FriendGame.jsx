@@ -82,8 +82,6 @@ export default function FriendGame() {
                 setLeftPlayerName(response.data.profile_name);
                 setAvatar(response.data.avatar);
                 setLevel(response.data.exp_game);
-            } else {
-                console.log("error:", response.status);
             }
         };
 

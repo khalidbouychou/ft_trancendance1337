@@ -54,7 +54,6 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
         }
       );
       if (res.status === 200) {
-        console.log("d_2fa ******************** ", res);
         setUser(res?.data?.user);
         setVerified(res?.data?.otp_verified);
         setFormsg(res?.data?.otp_verified);

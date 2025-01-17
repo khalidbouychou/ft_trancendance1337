@@ -4,7 +4,7 @@ import styl from "./Profile.module.css";
 import { AuthContext } from "../../UserContext/Context";
 import MatchHistory from "./components/matchHistory/MatchHistory";
 import Leaderboard from "./components/leaderboard/Leaderboard";
-import CardFriend from "./components/History/components/CardFriend/CardFriend";
+import CardFriend from "./components/CardFriend/CardFriend";
 import { FaMedal } from "react-icons/fa";
 import { PiGameControllerFill } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
@@ -48,7 +48,6 @@ const Profile = ({ me }) => {
   }, [profileName]);
 
   useEffect(() => {
-    console.log("***********************************************i recieved a notif:", notif);
     if (notif && notif.status === 'friends'){
       if (notif.user_id === userData.id){
         setIsfriended(true);
@@ -123,9 +122,8 @@ const Profile = ({ me }) => {
           setWins(wins);
           setLose(losses);
         }
-        console.log("Ping data:", pingData);
       } catch (error) {
-        console.error("Failed to fetch ping data", error);
+        // console.error("Failed to fetch ping data", error);
       }
     };
     
@@ -134,13 +132,9 @@ const Profile = ({ me }) => {
 
   useEffect(() => {
     const friendsArray = friendList['friend list'] || [];
-    console.log("friendsArray:", friendsArray);
-    console.log("friendList:", friendList);
-
     const isFriend = friendsArray.some(
       (friend) => friend.profile_name === user?.user?.profile_name
     );
-    console.log("isFriend:", isFriend);
     setIsfriended(isFriend);
     
     if (userData.profile_name === user?.user?.profile_name) {
@@ -160,7 +154,6 @@ const Profile = ({ me }) => {
         `${import.meta.env.VITE_BACKEND_IP}/api/friends/${profile_name}/` , {
           withCredentials: true,
       });
-      console.log("profile_name_145:", profile_name);
       setFriendList(response.data);
     };
     fetchFriends();
@@ -174,11 +167,8 @@ const Profile = ({ me }) => {
           { withCredentials: true }
         );
         setBlockedList(response.data);
-        console.log("Blocked list:", response.data);
-  
         setIsblocked(false)
         if (profile_name !== user.user.profile_name) {
-          console.log("Is blocked list:", response.data);
           const isBlocked = response.data["blocked list"].some(
             (blockedUser) => blockedUser.profile_name === user.user.profile_name
           );
@@ -186,7 +176,7 @@ const Profile = ({ me }) => {
             setIsblocked(true);
         }
       } catch (error) {
-        console.error("Error fetching blocked list:", error);
+        // console.error("Error fetching blocked list:", error);
       }
     };
   
@@ -272,10 +262,7 @@ const Profile = ({ me }) => {
         <div className={styl.userPrf}>
           <div className={styl.side1}>
             <div className={styl.userInfo}>
-              <button
-                className={styl.settingsBt}
-                onClick={openSettings}
-                style={{ display: displayBt }}>
+              <div className={styl.settingsBt} onClick={openSettings} style={{ display: displayBt }}>
                 <MdOutlineFormatListBulleted />
                 <div className={styl.settings} style={{ display: setting }}>
                   <button className={styl.Button} onClick={handleAddFriend}>
@@ -283,16 +270,16 @@ const Profile = ({ me }) => {
                     {isfriended ? <p>{t("Unfriend")}</p> : <p>{t("Add Friend")}</p>}
                   </button>
                 </div>
-              </button>
+              </div>
               <div className={styl.userDis}>
                 <div className={styl.extImg}>
                   <div className={styl.intImg}>
                     <img src={userData.avatar} alt="Avatar" />
                   </div>
                 </div>
-                <p className={styl.userName}>
+                <div className={styl.userName}>
                   {userData.profile_name.toUpperCase()}
-                  <p style={{ color: "rgba(255, 255, 255, 0.4)" }}>
+                  <div style={{ color: "rgba(255, 255, 255, 0.4)" }}>
                     <div className={styl.ongline}>
                       <div
                         className={styl.ongline}
@@ -307,8 +294,8 @@ const Profile = ({ me }) => {
                       ></div>
                     </div>
                     {t(userData?.status_network)}
-                  </p>
-                </p>
+                  </div>
+                </div>
               </div>
               <div className={styl.Res}>
                 <div className={styl.stt}>
@@ -340,7 +327,7 @@ const Profile = ({ me }) => {
                 <div className={styl.level}>
                   <div className={styl.tmp}>
                     <p>{t("Level")} {pingLevel}</p>
-                    <p>
+                    <div>
                       {pingExp} /{" "}
                       <p
                         style={{
@@ -350,7 +337,7 @@ const Profile = ({ me }) => {
                       >
                         {maxPingExp} xp
                       </p>
-                    </p>
+                    </div>
                   </div>
                   <div className={styl.extLvl}>
                     <div
@@ -363,8 +350,7 @@ const Profile = ({ me }) => {
                       style={{
                         color: "rgba(255, 255, 255, 0.4)",
                         left: "2px",
-                      }}
-                    >
+                      }}>
                       {t("Next Level")}
                     </p>
                     <p>{t("Level")} {nextpingLevel}</p>
@@ -373,14 +359,7 @@ const Profile = ({ me }) => {
               </div>
               <div className={styl.chooseData}>
                 <button onClick={() => handelClick("Leaderboard")}>
-                  <p
-                    style={{
-                      textDecorationColor:
-                        activeSection === "Leaderboard" ? "red" : "white",
-                    }}
-                  >
-                    {t("Leaderboard")}
-                  </p>
+                  <p style={{ textDecorationColor: activeSection === "Leaderboard" ? "red" : "white",}}> {t("Leaderboard")} </p>
                 </button>
                 <button onClick={() => handelClick("MatchHistory")}>
                   <p
@@ -404,7 +383,7 @@ const Profile = ({ me }) => {
           <div className={styl.side2}>
             <div className={styl.headFr}>
               <p>{t(status)}</p>
-              <button onClick={handleShooseList} style={{display: displayShooseButton}}>
+              <div onClick={handleShooseList} style={{display: displayShooseButton}}>
                 <p>...</p>
                 <div
                   className={styl.userBlocked}
@@ -414,7 +393,7 @@ const Profile = ({ me }) => {
                     {showUserBlocked ? "Friends" : "Blocked"}
                   </button>
                 </div>
-              </button>
+              </div>
             </div>
             <div className={styl.displayUser}>
               {showUserBlocked

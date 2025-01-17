@@ -58,7 +58,6 @@ const InvitationCard = ({request}) => {
 
 	const handleAccept = () => {
 		if (isConnected) {
-			console.log('Connected');
 			sendNotifMessage({
 				type: request.notif_type === 'FR' ? 'ACCEPT_FR' : 'ACCEPT_GR',
 				from_user_id: request.from_user.id,
@@ -70,8 +69,6 @@ const InvitationCard = ({request}) => {
 					navigate('/friendgame', { state: { game_key } });
 				}
 			}
-		} else {
-			console.log('Not connected');
 		}
 		setIsVisible(false);
 	};

@@ -30,7 +30,6 @@ const Home = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log("******************", data);
         const sortedData = data
           .filter((data) => data.username !== "ke3ki3a")
           .sort((a, b) => {
@@ -46,12 +45,11 @@ const Home = () => {
           (item) => item.profile_name === profile_name
         );
         setUserData(userSpecificData);
-        console.log("ppppll+++>>>", data);
         setPingData(data);
         const userData = data.find((item) => item.username === username);
         setFilteredPingData(userData);
       } catch (error) {
-        console.error("Error fetching data:", error.message);
+        // console.error("Error fetching data:", error.message);
       }
     };
 
@@ -67,7 +65,7 @@ const Home = () => {
                 {t("WINS")}
                 <FaMedal />
               </p>
-              <p id={styl.sm}>{userData?.data[0]?.wins}</p>
+              <p id={styl.sm}>{String(userData?.data[0]?.wins)}</p>
             </div>
             <div className={styl.card}>
               <p>
@@ -82,7 +80,7 @@ const Home = () => {
                 <PiGameControllerFill />
               </p>
               <p id={styl.sm}>
-                {userData?.data[0]?.losses + userData?.data[0]?.wins}
+                {/* {userData?.data[0]?.losses + userData?.data[0]?.wins} */}
               </p>
             </div>
           </div>

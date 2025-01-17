@@ -151,13 +151,7 @@ const Settings = () => {
         navigate('/login');
       }
     } catch (error) {
-      console.log(error);
-      // toast.error('An error occurred. Please try again.', {
-      //   style: {
-      //     backgroundColor: 'rgb(255, 0, 0)',
-      //     color: 'white',
-      //   },
-      // });
+      // console.log(error);
     }
     closeModal();
   };
