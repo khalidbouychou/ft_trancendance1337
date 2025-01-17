@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import "./twofa.css";
 import { AuthContext } from "../../UserContext/Context";
-import { useLocation } from "react-router-dom";
 import Desable2fa from "./Desable2fa";
 import { toast } from "react-toastify";
 import BounceLoader from "react-spinners/BounceLoader";
@@ -108,7 +107,6 @@ const Twofa = () => {
                 name="qrcode"
                 value={t("Off")}
                 onChange={Offswitch}
-                // checked={!isEnable}
                 defaultChecked={!isEnable}
 
               />

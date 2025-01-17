@@ -5,23 +5,23 @@ import styl from "./ContactItem.module.css";
 
 function ContactItem({ contact, currentUser, onClick, unreadMessages }) {
   const otherUser =
-    contact.user1.id === currentUser.id ? contact.user2 : contact.user1;
-  const unreadCount = unreadMessages[otherUser.id] || 0;
+    contact?.user1?.id === currentUser?.id ? contact?.user2 : contact?.user1;
+  const unreadCount = unreadMessages[otherUser?.id] || 0;
 
   return (
     <div className={styl.contactCard} onClick={onClick}>
       <div className={styl.intImg} >
         <div className={styl.intImg} style={{width: '42px', height: '47px'}}>
             <img
-                src={otherUser.avatar}
-                alt={otherUser.profile_name}
+                src={otherUser?.avatar}
+                alt={otherUser?.profile_name}
             />
         </div>
       </div>
       <div className={styl.contactDetails}>
         <span className={styl.contactName}>
           {otherUser.profile_name.toUpperCase()}
-          <div className={styl.status} style={{backgroundColor: otherUser.status_network === 'online' ? 'green' : 'red'}}></div>
+          <div className={styl.status} style={{backgroundColor: otherUser?.status_network === 'online' ? 'green' : 'red'}}></div>
         </span>
         <div className={styl.contactMetadata}>
           <span className={styl.contactLastMessage}>

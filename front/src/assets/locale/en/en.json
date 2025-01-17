@@ -139,6 +139,10 @@
   "invite you to play ping pong" : "invite you to play ping pong",
   "No match history found": "No match history found",
   "No match data available to display the Statistic": "No match data available to display the Statistic",
-  "Typing...": "Typing..."
+  "Typing...": "Typing...",
+  "you have been invited to a pong game":"you have been invited to a pong game",
+  "User not found" : "User not found",
+  "profile_name not valid" : "profile_name not valid",
+  "This user has blocked you" : "This user has blocked you"
 }
  

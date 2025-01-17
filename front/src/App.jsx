@@ -10,7 +10,6 @@ import RemoteTournament from "./ponggame/remotetournement/RemoteTournament.jsx";
 import OnlineGame from "./ponggame/onlinepong/OnlineGame.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import Setting from "./Setting/Setting.jsx";
-import Notification from "./components/Notification/Notification.jsx";
 import FriendGame from "./ponggame/friendpong/FriendGame.jsx";
 import LoginSignup from "./Login/SignupSignin/SignupSignin.jsx";
 import PageNotFound from "./Login/PageNotFound/PageNoteFound.jsx";
@@ -43,7 +42,6 @@ function App() {
               <Route path="profile" element={<RedirectToMyProfile />} />
               <Route path="profile/:profile_name" element={<Profile />} />
               <Route path="setting" element={<Setting />} />
-              <Route path="notification" element={<Notification />} />
               <Route path="twofa" element={<Twofa />} />
             </Route>
             <Route path="/otp" element={<Otplogin />} />

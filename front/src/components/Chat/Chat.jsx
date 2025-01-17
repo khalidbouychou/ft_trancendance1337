@@ -1,5 +1,4 @@
-// import LoginPage from './login/LoginPage.jsx'
-// import ChatPage from "./chat/ChatPage.jsx";
+
 import { AuthContext } from "../../UserContext/Context.jsx";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import styl from "./Chat.module.css";
@@ -71,10 +70,6 @@ const Chat = () => {
         });
         setNotif(null);
       }
-      // else if (notif && notif.message === 'chat_message') {
-      //   setChatMesageNotif(false);
-      //   setNotif(null);
-      // }
     }, [notif])
 
     useEffect(() => {
@@ -93,7 +88,6 @@ const Chat = () => {
         setupSocket(1);
         initUnreadMessages(response.data);
       } catch (error) {
-        console.warn("Chat page inaccessible:", error);
       }
     };
 
@@ -213,23 +207,6 @@ const Chat = () => {
       chat_rooms: updatedChatRooms,
     };
   };
-
-  // const handleUnreadMessages = (message) => {
-  // 	if (data.user.id === message.sender.id) {
-  // 		return
-  // 	}
-  // 	if (currentContact) {
-  // 		const currentContactId = currentContact.user1.id === data.user.id ? currentContact.user2.id : currentContact.user1.id
-  // 		if (currentContactId === message.sender.id) {
-  // 			return
-  // 		}
-  // 	}
-  // 	setUnreadMessages({
-  // 		...unreadMessages,
-  // 		[message.sender.id]: (unreadMessages[message.sender.id] || 0) + 1
-  // 	})
-  // }
-
   const setupSocket = (room_id) => {
     return new Promise((resolve, reject) => {
       if (!room_id) {
@@ -253,7 +230,6 @@ const Chat = () => {
       };
 
       newSocket.onerror = (error) => {
-        console.error("WebSocket error:", error);
         reject(error);
       };
       newSocket.onmessage = (event) => {
@@ -324,7 +300,6 @@ const Chat = () => {
             }
             break;
           default:
-            console.log("Unknown message type:", data_re.type);
             break;
         }
       };
@@ -360,8 +335,6 @@ const Chat = () => {
           })
         );
         setMessage("");
-      } else {
-        console.warn("Cannot send message, WebSocket not ready.");
       }
     }
   };

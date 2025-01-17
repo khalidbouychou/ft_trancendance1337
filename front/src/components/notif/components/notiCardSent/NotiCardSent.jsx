@@ -1,10 +1,8 @@
 import React from "react";
 import styl from './NotiCardSent.module.css'
-import { AuthContext }  from "../../../../UserContext/Context";
-import { useContext ,useState,useEffect} from 'react';
+import { useState,useEffect} from 'react';
 import { useNotificationWS } from "../../../../contexts/NotifWSContext.jsx"
-const NotiCardSent = ({request, type}) => {
-  const {t} = useContext(AuthContext);
+const NotiCardSent = ({request, type , t}) => {
 
   const [isVisible, setIsVisible] = useState(true);
   const [timeLeft, setTimeLeft] = useState(30);

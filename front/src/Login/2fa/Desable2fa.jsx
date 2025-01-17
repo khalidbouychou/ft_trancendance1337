@@ -1,6 +1,4 @@
 
-import PropTypes from "prop-types";
-
 import "./twofa.css";
 import { AuthContext } from "../../UserContext/Context";
 import { useContext, useEffect, useState } from "react";
@@ -8,9 +6,8 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import i18n from "../../i18n";
 
-const Desable2fa = ({  setUser,message, setVerified }) => {
+const Desable2fa = ({setUser, message , setVerified }) => {
   const { user, get_auth_user } = useContext(AuthContext);
   const [formsg, setFormsg] = useState(false);
   const {t} = useTranslation()
@@ -54,7 +51,7 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
         setUser(res?.data?.user);
         setVerified(res?.data?.two_factor);
         setFormsg(res?.data?.two_factor);
-        toast.success("2FA Disabled", {
+        toast.success(t("2FA Disabled"), {
           style: {
             backgroundColor: 'rgb(0, 128, 0)',
             color: 'white'
@@ -62,7 +59,6 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
         });
       }
     } catch (err) {
-      console.error("desable2fa", err);
       toast.error(t("OTP code is not correct"),
       {
         style: {
@@ -97,11 +93,5 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
     </>
   );
 };
-
-// Desable2fa.propTypes = {
-//   setVerified: PropTypes.func.isRequired, 
-//   isEnable: PropTypes.bool.isRequired, 
-//   message: PropTypes.string.isRequired 
-// };
 
 export default Desable2fa;

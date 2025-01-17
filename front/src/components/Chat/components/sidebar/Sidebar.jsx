@@ -28,7 +28,6 @@ function Sidebar({
           })
         );
       } catch (error) {
-        console.error("Error fetching matched users:", error);
       }
     };
     if (search.length == 2) {
@@ -72,7 +71,6 @@ function Sidebar({
         })
       );
     } catch (error) {
-      console.error("Error sending SELECT_USER request:", error);
     }
   };
 
