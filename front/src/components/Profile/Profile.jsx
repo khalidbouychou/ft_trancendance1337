@@ -124,6 +124,7 @@ const Profile = ({ me }) => {
           setLose(losses);
         }
       } catch (error) {
+        console.error("profile", error);
       }
     };
     
@@ -177,6 +178,7 @@ const Profile = ({ me }) => {
             setIsblocked(true);
         }
       } catch (error) {
+        console.error("profile", error);
       }
     };
   

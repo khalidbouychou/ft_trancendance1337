@@ -82,42 +82,32 @@ services:
         condition: service_healthy
     restart: on-failure
 
-  web3_app:
-    container_name: web3_app
-    image: web3_app:69
-    restart: always
-    build: web3
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
     networks:
       - connexion
+    env_file:
+      - .env
     environment:
-      PRIVATE_KEY: ${PRIVATE_KEY}
-    volumes:
-      - web3_vol:/root/
-    healthcheck:
-      test: ["CMD", "nc", "-zv", "web3_app", "7545"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-      start_period: 1s
-
-  # redis:
-  #   container_name: redis
-  #   image: redis:alpine
-  #   ports:
-  #     - "6379:6379"
-  #   networks:
-  #     - connexion
-  #   depends_on:
-  #     - back
-  #     - front
-  #   restart: on-failure
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_DB: ${REDIS_DB}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_URL: ${REDIS_URL}
+    depends_on:
+      back:
+        condition: service_healthy
+    restart: on-failure
 
   nginx:
     container_name: nginx
     build: ./nginx/
     image: nginx:ke3ikI3a
     ports:
-      # - "80:80"
       - "443:443"
     volumes:
       - .env:/.env
@@ -130,3 +120,21 @@ services:
       back:
         condition: service_healthy
     restart: on-failure
+
+  # web3_app:
+  #   container_name: web3_app
+  #   image: web3_app:69
+  #   restart: always
+  #   build: web3
+  #   networks:
+  #     - connexion
+  #   environment:
+  #     PRIVATE_KEY: ${PRIVATE_KEY}
+  #   volumes:
+  #     - web3_vol:/root/
+  #   healthcheck:
+  #     test: ["CMD", "nc", "-zv", "web3_app", "7545"]
+  #     interval: 5s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 1s

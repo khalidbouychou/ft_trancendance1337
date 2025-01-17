@@ -38,7 +38,7 @@ const UserData = ({ userData, ismyprofil }) => {
         }
       
       } catch (error) {
-      
+        console.error("home:", error);      
       }
     };
 

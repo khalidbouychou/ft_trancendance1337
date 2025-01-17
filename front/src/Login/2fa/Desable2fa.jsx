@@ -61,7 +61,8 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
           }
         });
       }
-    } catch (error) {
+    } catch (err) {
+      console.error("desable2fa", err);
       toast.error(t("OTP code is not correct"));
     }
   };
@@ -91,11 +92,10 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
   );
 };
 
-Desable2fa.propTypes = {
-  setVerified: PropTypes.func.isRequired, 
-  setEnable: PropTypes.func.isRequired, 
-  isEnable: PropTypes.bool.isRequired, 
-  message: PropTypes.string.isRequired 
-};
+// Desable2fa.propTypes = {
+//   setVerified: PropTypes.func.isRequired, 
+//   isEnable: PropTypes.bool.isRequired, 
+//   message: PropTypes.string.isRequired 
+// };
 
 export default Desable2fa;

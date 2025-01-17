@@ -62,6 +62,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
         }, 1000);
       }
     } catch (err) {
+      console.log("signup", err);
       let errmsg = t(err.response?.data?.error) || t("player with this username already exists."); 
       toast.error(errmsg);
     }

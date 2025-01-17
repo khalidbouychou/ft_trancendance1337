@@ -89,6 +89,8 @@ const Chat = () => {
         setupSocket(1);
         initUnreadMessages(response.data);
       } catch (error) {
+        console.error("chat", error);
+
       }
     };
 

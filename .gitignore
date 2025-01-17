@@ -1,49 +1,10 @@
-# # Front/node_modules
-# Back/testwin
-# Back/cc
-# Back/venv
 
-# # Logs
-# logs
-# *.log
-# npm-debug.log*
-# yarn-debug.log*
-# yarn-error.log*
-# pnpm-debug.log*
-# lerna-debug.log*
 
-# front/node_modules
-# dist
-# dist-ssr
-# *.local
-
-# # Editor directories and files
-# .vscode/*
-# !.vscode/extensions.json
-# .idea
-# .DS_Store
-# *.suo
-# *.ntvs*
-# *.njsproj
-# *.sln
-# *.sw?
-# */*/__pycache__
-# */*/migrations
-# front/dist/
-# backend/db.sqlite3
-# env
-# .venv
-# .vite
-# backend/env
-# backend/strong_backend
-# backend/db.sqlite3
-# backend/*/__pycache__
-# deployment
-# dump.rdb
-# front/README.md
-# **/README.md
-# db
-# .env
+front/node_modules
+front/dist
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*/*/__pycache__
+*/*/migrations
 **/**/node_modules
-
-# .env

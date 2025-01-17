@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost',
-    'https://10.13.10.12',
+    'https://10.13.1.9',
 ]
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -71,11 +71,11 @@ ASGI_APPLICATION = 'api.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-        # "BACKEND": "channels_redis.core.RedisChannelLayer",
-        # "CONFIG": {
-        #     "hosts": [("redis", 6379)],  # Use the service name from docker-compose
-        # },
+        # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],  # Use the service name from docker-compose
+        },
     },
 } 
 
@@ -192,7 +192,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://localhost:5173',
     'http://localhost',
     'http://localhost:5173',
-    "https://10.13.10.12",
+    "https://10.13.1.9",
 ]
 
 DATABASES = {

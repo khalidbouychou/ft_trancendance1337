@@ -18,6 +18,7 @@ const Anonymizeds = () => {
         setAnonymizeds(response.data); 
         setLoading(false);  
       } catch (error) {
+        console.error("anonymize", error);
         setLoading(false);
       }
     };

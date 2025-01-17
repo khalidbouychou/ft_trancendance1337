@@ -28,6 +28,8 @@ function Sidebar({
           })
         );
       } catch (error) {
+        console.error("sidbare", error);
+
       }
     };
     if (search.length == 2) {
@@ -71,6 +73,8 @@ function Sidebar({
         })
       );
     } catch (error) {
+      console.error("sidbar", error);
+
     }
   };
 

@@ -21,8 +21,6 @@ urlpatterns = [
     path('singin/', SigninForm.as_view(), name='singin'),
     path('qrcode/', GenerateQRcode.as_view(), name='qrcode'),
 
-  
-
     path('d_2fa/',DesableTwoFactor.as_view(), name='disabletwofactor'),
     path('otpverify/',VerifyOtp.as_view(), name='VerifyOtp'),
     path('clearqrcode/',ClearQrcode.as_view() , name='ClearQrcode'),

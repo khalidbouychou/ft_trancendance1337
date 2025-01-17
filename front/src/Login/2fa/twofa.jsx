@@ -35,7 +35,8 @@ const Twofa = () => {
     else {
       setQrcode("");
     }
-    } catch (error) {
+    } catch (err) {
+      console.log("twofa", err);
       setQrcode("");
         }    }
   }
@@ -72,7 +73,9 @@ const Twofa = () => {
           }
         });
       }
-    } catch (error) {
+    } catch (err) {
+      console.log("twofa", err);
+
       toast.error(t("OTP code is not correct"));
     }
   };
@@ -89,7 +92,7 @@ const Twofa = () => {
                 name="qrcode"
                 value={t("On")}
                 checked={isEnable}
-                onClick={Onswitch}
+                onChange={Onswitch}
               />
             </div>
             <div className="off">
@@ -99,8 +102,9 @@ const Twofa = () => {
                 id="qrcode-off"
                 name="qrcode"
                 value={t("Off")}
-                onClick={Offswitch}
-                checked={!isEnable}
+                onChange={Offswitch}
+                // checked={!isEnable}
+                defaultChecked={!isEnable}
 
               />
             </div>
