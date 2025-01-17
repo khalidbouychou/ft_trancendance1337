@@ -129,6 +129,8 @@
   "Create Tournament": "Create Tournament",
   "Alias Name": "Alias Name",
   "Start Match": "Start Match",
-  "FINAL MATCH": "FINAL MATCH"
+  "FINAL MATCH": "FINAL MATCH",
+  "No match history found": "No match history found",
+  "No match data available to display the Statistic": "No match data available to display the Statistic"
 }
  

@@ -128,5 +128,7 @@
   "Create Tournament": "Crea torneo",
   "Alias Name": "Nome alias",
   "Start Match": "Inizia partita",
-  "FINAL MATCH": "PARTITA FINALE"
+  "FINAL MATCH": "PARTITA FINALE",
+  "No match history found": "Nessuna cronologia delle partite trovata",
+  "No match data available to display the Statistic": "Aucune donnée de match disponible pour afficher les statistiques"
 }
