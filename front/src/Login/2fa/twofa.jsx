@@ -77,7 +77,14 @@ const Twofa = () => {
     } catch (err) {
       console.log("twofa", err);
 
-      toast.error(t("OTP code is not correct"));
+      toast.error(t("OTP code is not correct"),
+        {
+          style: {
+            backgroundColor: 'rgb(255, 0, 0)',
+            color: 'white'
+          }
+        }
+      );
     }
   };
 

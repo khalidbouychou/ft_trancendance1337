@@ -63,7 +63,13 @@ const Desable2fa = ({  setUser,message, setVerified }) => {
       }
     } catch (err) {
       console.error("desable2fa", err);
-      toast.error(t("OTP code is not correct"));
+      toast.error(t("OTP code is not correct"),
+      {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
+      });
     }
   };
 

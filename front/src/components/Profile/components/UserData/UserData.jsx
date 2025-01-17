@@ -26,7 +26,13 @@ const UserData = ({ userData, ismyprofil }) => {
     const fetchData = async () => {
       if (!username)
         {
-          toast.error(t("username not valid"));
+          toast.error(t("username not valid"),
+          {
+            style: {
+              backgroundColor: 'rgb(255, 0, 0)',
+              color: 'white'
+            }
+          });
         }
 
       try {

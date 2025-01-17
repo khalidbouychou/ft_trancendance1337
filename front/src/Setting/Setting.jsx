@@ -21,8 +21,12 @@ const Settings = () => {
     const displayNameRegex = /^[a-zA-Z0-9 _-]{3,50}$/; // Letters, numbers, spaces, underscores, hyphens, 3-50 characters
 
     if (!displayNameRegex.test(NewProfileName)) {
-      toast.error(t("Display name must be 3-50 characters long and can contain letters, numbers, spaces, underscores, or hyphens."), {
-        style: { backgroundColor: "rgb(255, 0, 0)", color: "white" }
+      toast.error(t("Display name must be 3-50 characters long and can contain letters, numbers, spaces, underscores, or hyphens."),
+      {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
       });
       return false;
     }
@@ -59,7 +63,13 @@ const Settings = () => {
         });
       }
     } catch (err) {
-      toast.error(t(err.response?.data?.error) || t('Profile name update failed'));
+      toast.error(t(err.response?.data?.error) || t('Profile name update failed'),
+      {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
+      });
     }
   };
 
@@ -83,7 +93,7 @@ const Settings = () => {
         })
         .then((res) => {
           setUpdated(true);
-          toast.success('Image uploaded successfully', {
+          toast.success(t('Image uploaded successfully'), {
             style: {
               backgroundColor: 'rgb(0, 128, 0)',
               color: 'white',
@@ -92,7 +102,14 @@ const Settings = () => {
         })
         .catch((err) => {
           setUpdated(false);
-          toast.error('Image upload failed. Please try again');
+          toast.error(t('Image upload failed. Please try again'),
+          {
+            style: {
+              backgroundColor: 'rgb(255, 0, 0)',
+              color: 'white'
+            }
+          }
+          );
         });
     }
   };
@@ -102,7 +119,14 @@ const Settings = () => {
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
       uploadImage();
     } else {
-      toast.error('Invalid image format');
+      toast.error(t('Invalid image format'),
+      {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
+      }
+      );
     }
   };
 
@@ -131,7 +155,15 @@ const Settings = () => {
         setUser(null);
         navigate('/login');
       }
-    } catch (error) {
+    } catch (err) {
+      toast.error(t(err.response?.data?.error),
+      {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
+      }
+      );
     }
     closeModal();
   };

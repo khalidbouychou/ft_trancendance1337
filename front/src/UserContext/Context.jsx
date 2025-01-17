@@ -59,7 +59,13 @@ export default function AuthProvider({ children }) {
         }, 2000);
       }
     } catch (err) {
-      toast.error(t(`${err.response.data.error}`));
+      toast.error(t(`${err.response.data.error}`),
+      {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
+      });
     }
   };
 
@@ -115,7 +121,13 @@ export default function AuthProvider({ children }) {
         }
       }
     } catch (error) {
-      toast.error(t(error?.response?.data?.error));
+      toast.error(t(error?.response?.data?.error),
+      {
+        style: {
+          backgroundColor: 'rgb(255, 0, 0)',
+          color: 'white'
+        }
+      });
       navigate(`/`);
     } finally {
       setLoading(false);

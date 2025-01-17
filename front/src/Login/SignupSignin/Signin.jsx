@@ -41,7 +41,14 @@ const Signin = () => {
       }
     } catch (err) {
       console.log("signin", err);
-      toast.error(t(err?.response?.data?.error));
+      toast.error(t(err?.response?.data?.error),
+        {
+          style: {
+            backgroundColor: 'rgb(255, 0, 0)',
+            color: 'white'
+          }
+        }
+    );
     }
   };
 

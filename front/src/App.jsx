@@ -56,9 +56,10 @@ function App() {
         position="top-center"
         autoClose={2000}
         newestOnTop={false}
-        closeOnClick
-        pauseOnFocusLoss
-        stacked
+        closeOnClick={true}
+        pauseOnFocusLoss={true}
+        stacked= {true}
+
        />
       </AuthProvider>
    </BrowserRouter>

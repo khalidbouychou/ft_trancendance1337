@@ -188,7 +188,13 @@ const Profile = ({ me }) => {
   useEffect(() => {
     const fetchData = async () => {
       if (!profile_name){
-        toast.error(t("profile_name not valid"))
+        toast.error(t("profile_name not valid"),
+        {
+          style: {
+            backgroundColor: 'rgb(255, 0, 0)',
+            color: 'white'
+          }
+        })
       }
   
       setIsLoading(true);
