@@ -28,6 +28,7 @@ export default function ChatWindow({
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("currentUser:", currentUser);
     if (currentContact) {
       setOtherUser(
         currentContact.user1.id === data.user.id
@@ -58,23 +59,31 @@ export default function ChatWindow({
 
   useEffect(() => {
     if (data.user) {
+      console.log("2 data:", data);
+      console.log("data.user:", data.user);
       setCurrentUser(data.user);
     }
   }, [data.user]);
 
+  // const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   const handleBlockUser = (e) => {
-      if (!otherUser) {}
+      if (!otherUser) {
+          return;
+      }
       if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
           sockets[currentContact.id].send(JSON.stringify({
               type: 'BLOCK_USER',
               event: e ? 'BLOCK' : 'UNBLOCK',
-              user_id: otherUser.id 
+              user_id: otherUser.id
           }));
       }
   };
 
   const handlePlayPong = () => {
+    console.log("Play Pong");
     if (isConnected) {
+      console.log("Connected");
       sendNotifMessage({
         type: "SEND_GR",
         game_type: "PG",
@@ -94,10 +103,13 @@ export default function ChatWindow({
         const game_key = `${currentUser.username}vs${otherUser.username}`;
         navigate("/friendgame", { state: { game_key } });
       };
+    } else {
+      console.log("Not connected");
     }
   };
 
   const viewProfile = () => {
+    console.log("View Profile");
     navigate(`/profile/${otherUser.profile_name}`);
   };
 
@@ -149,7 +161,7 @@ export default function ChatWindow({
                 className={styl.chatMessage}
                 value={message}
                 onChange={handleTyping}
-                placeholder={t("Type a message")}
+                placeholder="Type a message"
                 maxLength={1000}
               />
             </form>
