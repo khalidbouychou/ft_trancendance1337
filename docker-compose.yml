@@ -69,12 +69,13 @@ services:
       - "5173:5173"
     volumes:
       - .env:/app/.env
-    healthcheck:
-      test: curl -f http://localhost:5173
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 5s
+      - ./front:/app/
+    # healthcheck:
+    #   test: curl -f http://localhost:5173
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 5s
     networks:
       - connexion
     depends_on:
@@ -115,8 +116,8 @@ services:
     networks:
       - connexion
     depends_on:
-      front:
-        condition: service_healthy
+      # front:
+      #   condition: service_healthy
       back:
         condition: service_healthy
     restart: on-failure

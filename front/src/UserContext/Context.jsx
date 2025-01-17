@@ -64,8 +64,7 @@ export default function AuthProvider({ children }) {
     }
   };
 
-  async function auth_intra42() {
-    const backend_ip = import.meta.env.VITE_BACKEND_IP
+  async function auth_intra42() { 
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/auth_intra/`, {
       withCredentials: true
     });

@@ -133,7 +133,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
             data= PlayerSerializer(user).data
             response = Response(data, status=status.HTTP_200_OK)
             is_secure = request.is_secure()
-            response.set_cookie(key='token', value=tokens['access'], secure=is_secure , httponly=True ,samesite='Lax' ) 
+            response.set_cookie(key='token', value=tokens['access'], secure=is_secure , httponly=True ,samesite='Lax' )  
             return response
         except requests.RequestException as e:
             return Response({'error': 'Request failed: {}'.format(str(e))}, status=status.HTTP_400_BAD_REQUEST)

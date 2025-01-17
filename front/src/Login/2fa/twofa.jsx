@@ -11,12 +11,13 @@ import { use } from "react";
 const Twofa = () => {
   const [qrcode, setQrcode] = useState("");
   const { t,user ,setUser,renderInputs} = useContext(AuthContext);
-  const [isEnable, setEnable] = useState(false);
+  const [isEnable, setEnable] = useState(user?.user?.two_factor);
   const [verified, setVerified] = useState(user?.user?.two_factor);
 
   const QR_CODE_URL = `${import.meta.env.VITE_BACKEND_IP}/api/qrcode/`;
 
   const Offswitch = async () => {
+    console.log("verified",isEnable)
     setQrcode("");
     setEnable(false);
   }
@@ -118,7 +119,7 @@ const Twofa = () => {
             />
           ) : (
             <>
-              {verified ? (
+              { verified ? (
                 <h1> {t("2fa enabled")} </h1>
               ) : (
                 <>

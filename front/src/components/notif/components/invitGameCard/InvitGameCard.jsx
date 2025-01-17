@@ -98,7 +98,7 @@ const InvitGameCard = ({request}) => {
       </div>
       <div className={styl.leftSide}>
         <p style={{ color: "white" }}>{request?.from_user?.profile_name.toUpperCase()}</p>
-        <p>invite you to play ping pong</p>
+        <p>{t("invite you to play ping pong")}</p>
         <div className={styl.shoose}>
           <GiCheckMark style={{ color: "green" }} className={styl.icon} onClick={handleAccept}/>
           <GiCrossMark style={{ color: "red" }} className={styl.icon} onClick={handleDecline}/>

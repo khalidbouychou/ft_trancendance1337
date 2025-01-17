@@ -18,7 +18,7 @@ const Layout = () => {
  const [loading, setLoading] = useState(true);
 
  useEffect(() => {
-   get_auth_user()
+  (location.pathname != "/login" || location.pathname != "/otp") && get_auth_user()
  }
  , [location.pathname])
 

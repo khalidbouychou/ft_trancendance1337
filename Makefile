@@ -11,16 +11,16 @@ down :
 	@docker-compose down
 
 clean: down
+	@docker system prune -af
+	@docker volume prune -f
 	@rm -rf **/node_modules
 	@rm -rf backend/uploads/*
 	@rm -rf /**/node_modules
 	@rm -rf */*/migrations
 	@rm -rf */*/__pycache__
-	@docker-compose down
-	@docker system prune -af
-	@docker volume prune -f
 	@rm -rf nginx/ssl.*
 	@rm -rf ssl/*
+	@rm */dist
 
 push: 
 	@git add .

@@ -33,7 +33,6 @@ function App() {
             <Route   element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="games" element={<PingPongGames />} />
-              <Route path="/otp" element={<Otplogin />} />
               <Route path="games/localpong" element={<LocalGame />} />
               <Route path="games/localteampong" element={<LocalTeamGame />} />
               <Route path="games/onlinepong" element={<OnlineGame />} />

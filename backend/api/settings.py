@@ -23,7 +23,6 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent  
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://localhost',
     'https://10.13.1.9',
 ]
 
@@ -32,7 +31,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True # Set to False in production
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['10.13.1.9']
 
 INSTALLED_APPS = [ 
     'daphne',
@@ -71,7 +70,6 @@ ASGI_APPLICATION = 'api.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
-        # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [("redis", 6379)],  # Use the service name from docker-compose
@@ -171,21 +169,8 @@ SIMPLE_JWT = {
 
 ACCESS_TOKEN_LIFETIME = SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
 REFRESH_TOKEN_LIFETIME = SIMPLE_JWT['REFRESH_TOKEN_LIFETIME']
-
-JWT_COOKIE_SECURE = False # Set to True in production
-
-# These are used for cookie settings
-JWT_AUTH_COOKIE = 'access_token' 
-JWT_AUTH_REFRESH_COOKIE = 'refresh_token'
-JWT_AUTH_SECURE = False  # Set to False in development if not using HTTPS
-JWT_AUTH_SAMESITE = 'Lax'
 JWT_REFRESH_TOKEN_LIFETIME = REFRESH_TOKEN_LIFETIME
-
 CORS_ALLOW_ALL_ORIGINS = True  # Set to True for development, but not recommended for production
-
-# Read environment variables
-ip_frontendl = os.getenv("IP_FRONTEND")
-ip_backend = os.getenv("IP_BACKEND") 
 
 CORS_ALLOWED_ORIGINS = [
     'https://localhost',
@@ -205,10 +190,3 @@ DATABASES = {
         'PORT': os.getenv("POSTGRES_PORT"),
     }
 }
-
-SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Tells Django that the request is secure
-CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
-SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
-
-USE_X_FORWARDED_HOST = True

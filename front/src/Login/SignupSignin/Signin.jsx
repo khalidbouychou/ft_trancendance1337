@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 
 const Signin = () => {
-  const { t, auth_intra42, setUser } = useContext(AuthContext);
+  const { t, auth_intra42, setUser,setIntraClick } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -73,7 +73,9 @@ const Signin = () => {
         </div>
         <button
           className="button intra"
-          onClick={auth_intra42}
+          onClick={ () => {
+            auth_intra42();
+          }}
         >
           {t("INTRA 42")}
         </button>

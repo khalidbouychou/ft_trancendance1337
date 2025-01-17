@@ -1,5 +1,4 @@
 
-
 front/node_modules
 front/dist
 .vscode/*
@@ -8,3 +7,4 @@ front/dist
 */*/__pycache__
 */*/migrations
 **/**/node_modules
+front/.env
