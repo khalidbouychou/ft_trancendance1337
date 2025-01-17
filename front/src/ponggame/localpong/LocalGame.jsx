@@ -11,6 +11,7 @@ export default function LocalGame() {
     const [condition, setCondition] = useState('R');
     const [winner, setWinner] = useState('jow shmo');
     const [winner_score, setScore] = useState(-1);
+    // const [mycondition, setMyCondition] = useState('R');
 
     useEffect(() => {
         const canvas = document.getElementById('canvas');
@@ -129,6 +130,7 @@ export default function LocalGame() {
         const draw = () => {
             if (mycondition === 'S') {
                 cancelAnimationFrame(myReq);
+                return ;
             }
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -167,7 +169,9 @@ export default function LocalGame() {
             pressedKeys.current.delete(event.key);
         };
 
-        myReq = requestAnimationFrame(draw);
+        if (condition === 'R'){
+            myReq = requestAnimationFrame(draw);
+        }
 
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
@@ -176,7 +180,7 @@ export default function LocalGame() {
             window.removeEventListener('keyup', handleKeyUp);
             cancelAnimationFrame(myReq);
         };
-    }, []);
+    }, [condition]);
 
     const navigate = useNavigate();
 

@@ -167,6 +167,7 @@ export default function LocalGame() {
         const draw = () => {
             if (mycondition === 'S') {
                 cancelAnimationFrame(myReq);
+                return ;
             }
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -217,7 +218,9 @@ export default function LocalGame() {
             pressedKeys.current.delete(event.key);
         };
 
-        myReq = requestAnimationFrame(draw);
+        if (condition === 'R'){
+            myReq = requestAnimationFrame(draw);
+        }
 
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);

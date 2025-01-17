@@ -130,5 +130,6 @@
   "Start Match": "Inizia partita",
   "FINAL MATCH": "PARTITA FINALE",
   "No match history found": "Nessuna cronologia delle partite trovata",
-  "No match data available to display the Statistic": "Aucune donnée de match disponible pour afficher les statistiques"
+  "No match data available to display the Statistic": "Aucune donnée de match disponible pour afficher les statistiques",
+  "Type a message": "Digita un messaggio"
 }

@@ -149,7 +149,7 @@ export default function ChatWindow({
                 className={styl.chatMessage}
                 value={message}
                 onChange={handleTyping}
-                placeholder="Type a message"
+                placeholder={t("Type a message")}
                 maxLength={1000}
               />
             </form>

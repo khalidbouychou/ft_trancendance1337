@@ -68,12 +68,13 @@ services:
     ports:
       - "5173:5173"
     volumes:
+      - ./front:/app
       - .env:/app/.env
     healthcheck:
       test: curl -f http://localhost:5173
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 100
       start_period: 5s
     networks:
       - connexion
