@@ -1,4 +1,5 @@
-
+// import LoginPage from './login/LoginPage.jsx'
+// import ChatPage from "./chat/ChatPage.jsx";
 import { AuthContext } from "../../UserContext/Context.jsx";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import styl from "./Chat.module.css";
@@ -12,7 +13,6 @@ const Chat = () => {
   const {notif , setNotif, setChatMesageNotif, chatMesageNotif} = useNotificationWS();
   const { t } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [sockets, setSockets] = useState({});
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [currentContact, setCurrentContact] = useState("");
@@ -21,13 +21,129 @@ const Chat = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [typingUser, setTypingUser] = useState([]);
   const [receivedMessage, setReceivedMessage] = useState({});
-  const [notificationSocket, setNotificationSocket] = useState(null);
   const [data, setData] = useState({
     chat_rooms: [],
     user: {},
   });
   const chatMessagesRef = useRef(null);
   const hasFetchedData = useRef(false);
+  let chat_socket = useRef(null);;
+
+  useEffect(() => {
+    console.log("i will open a socket to ws/chat");
+    chat_socket.current = new WebSocket(`wss://${import.meta.env.VITE_WSS_IP}/ws/chat/`);
+    
+    if(chat_socket.current){
+      chat_socket.current.onopen = () => {
+        console.log("WebSocket on_open connected");
+        console.log("socket state", chat_socket.current);
+      };
+  
+      chat_socket.current.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+  
+      chat_socket.current.onmessage = (event) => {
+        const data_re = JSON.parse(event.data);
+        console.log("data_re", data_re);
+        switch (data_re.type) {
+          case "USERS_LIST":
+            setAllUsers(data_re.users);
+            break;
+          case "MESSAGE":
+            console.log("received message", data_re.message);
+            if (!data_re.message || !data_re.message.sender) {
+              break;
+            }
+            setData((prevData) => updateChatRooms(prevData, data_re.message));
+  
+            setReceivedMessage(data_re.message);
+            break;
+          case 'NEW_ROOM':
+          {
+            let exist = false;
+            for (let i = 0; i < data.chat_rooms.length; i++) {
+              if (data.chat_rooms[i].id === data_re.room_data.id) {
+                exist = true;
+                break;
+              }
+            }
+            if (exist) {
+  
+              setData(prevData => ({
+                ...prevData,
+                chat_rooms: [...prevData.chat_rooms, data_re.room_data]
+              }));
+            }
+          }
+          case "TYPING":
+            setTypingUser(data_re);
+            break;
+          case "USER_SELECTED":
+            if (data_re.status === "OK") {
+              if (data && data.chat_rooms) {
+                setupChatRoom((prevRooms) => {
+                  if (!prevRooms)
+                    return prevRooms;
+                  const roomExists = prevRooms.some(
+                    (room) => room.id === data_re.chat_room.id
+                  );
+                  if (roomExists) {
+                    return prevRooms;
+                  }
+
+                  return [...prevRooms, data_re.chat_room];
+                });
+                setData(prevData => ({
+                  ...prevData,
+                  chat_rooms: [...prevData.chat_rooms, data_re.chat_room]
+                }));
+              }
+            }
+            break;
+          case "BLOCK_USER":
+            if (data_re.event === "BLOCK") {
+              setData((prevData) => ({
+                ...prevData,
+                user: {
+                  ...prevData.user,
+                  blocked_users: Array.from(
+                    new Set([...prevData.user.blocked_users, data_re.user_id])
+                  ),
+                },
+              }));
+            }
+          else if (data_re.event === "UNBLOCK") {
+              setData((prevData) => ({
+                ...prevData,
+                user: {
+                  ...prevData.user,
+                  blocked_users: prevData.user.blocked_users.filter(
+                    (id) => id !== data_re.user_id
+                  ),
+                },
+              }));
+            }
+            break;
+          default:
+            console.log("Unknown message type:", data_re.type);
+            break;
+        }
+      };
+  
+      chat_socket.current.onclose = (event) => {
+        console.log("WebSocket closed:", event);
+      };
+    }
+
+    return () => {
+      if (chat_socket.current && chat_socket.current.readyState === WebSocket.OPEN) {
+        console.log("we closed the socket");
+        chat_socket.current.close();
+        console.log("socket state", chat_socket.current);
+      }
+    };
+  },[]);
 
   useEffect(() => {
     if (chatMessagesRef.current) {
@@ -36,47 +152,47 @@ const Chat = () => {
   }, [chat]);
 
   useEffect(() => {
-      if (notif && notif.message === 'status') {
-        setData((prevData) => {
-          const updatedChatRooms = prevData.chat_rooms.map((room) => {
-            if (notif.offline && room.user1.id === notif.offline) {
-              return {
-                ...room,
-                user1: { ...room.user1, status_network: 'offline' },
-              };
-            } else if (notif.offline && room.user2.id === notif.offline) {
-              return {
-                ...room,
-                user2: { ...room.user2, status_network: 'offline' },
-              };
-            } else if (notif.online && room.user1.id === notif.online) {
-              return {
-                ...room,
-                user1: { ...room.user1, status_network: 'online' },
-              };
-            } else if (notif.online && room.user2.id === notif.online) {
-              return {
-                ...room,
-                user2: { ...room.user2, status_network: 'online' },
-              };
-            }
-            return room;
-          });
-    
-          return {
-            ...prevData,
-            chat_rooms: updatedChatRooms,
-          };
+    if (notif && notif.message === 'status') {
+      setData((prevData) => {
+        const updatedChatRooms = prevData.chat_rooms.map((room) => {
+          if (notif.offline && room.user1.id === notif.offline) {
+            return {
+              ...room,
+              user1: { ...room.user1, status_network: 'offline' },
+            };
+          } else if (notif.offline && room.user2.id === notif.offline) {
+            return {
+              ...room,
+              user2: { ...room.user2, status_network: 'offline' },
+            };
+          } else if (notif.online && room.user1.id === notif.online) {
+            return {
+              ...room,
+              user1: { ...room.user1, status_network: 'online' },
+            };
+          } else if (notif.online && room.user2.id === notif.online) {
+            return {
+              ...room,
+              user2: { ...room.user2, status_network: 'online' },
+            };
+          }
+          return room;
         });
-        setNotif(null);
-      }
-    }, [notif])
+  
+        return {
+          ...prevData,
+          chat_rooms: updatedChatRooms,
+        };
+      });
+      setNotif(null);
+    }
+  }, [notif])
 
-    useEffect(() => {
-      if (chatMesageNotif) {
-        setChatMesageNotif(false);
-      }
-    }, [chatMesageNotif])
+  useEffect(() => {
+    if (chatMesageNotif) {
+      setChatMesageNotif(false);
+    }
+  }, [chatMesageNotif])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,10 +200,11 @@ const Chat = () => {
         const response = await axios(`${import.meta.env.VITE_BACKEND_IP}/api/chat/`, {
           withCredentials: true,
         });
+        console.log("this is the only fatch for rooms, room data:", response.data);
         setData(response.data);
-        setupSocket(1);
         initUnreadMessages(response.data);
       } catch (error) {
+        console.warn("Chat page inaccessible:", error);
       }
     };
 
@@ -95,12 +212,6 @@ const Chat = () => {
       fetchData();
       hasFetchedData.current = true;
     }
-
-    return () => {
-      if (notificationSocket) {
-        notificationSocket.close();
-      }
-    };
   }, []);
 
   const initUnreadMessages = (data) => {
@@ -134,10 +245,10 @@ const Chat = () => {
         [contactId]: 0,
       });
       if (
-        sockets[currentContact.id] &&
-        sockets[currentContact.id].readyState === WebSocket.OPEN
+        chat_socket.current &&
+        chat_socket.current.readyState === WebSocket.OPEN
       ) {
-        sockets[currentContact.id].send(
+        chat_socket.current.send(
           JSON.stringify({
             type: "MARK_AS_READ",
             room_id: currentContact.id,
@@ -148,13 +259,13 @@ const Chat = () => {
     }
   }, [currentContact]);
 
-  useEffect(() => {
-    Object.entries(unreadMessages).forEach(([userId, count]) => {
-      const user = data.chat_rooms
-        .flatMap((room) => [room.user1, room.user2])
-        .find((user) => user.id === parseInt(userId));
-    });
-  }, [unreadMessages]);
+  // useEffect(() => {
+  //   Object.entries(unreadMessages).forEach(([userId, count]) => {
+  //     const user = data.chat_rooms
+  //       .flatMap((room) => [room.user1, room.user2])
+  //       .find((user) => user.id === parseInt(userId));
+  //   });
+  // }, [unreadMessages]);
 
   useEffect(() => {
     if (!receivedMessage) {
@@ -170,9 +281,6 @@ const Chat = () => {
       });
     }
   }, [receivedMessage]);
-
-
-  
 
   const updateChatRooms = (prevData, newMessage) => {
     const updatedChatRooms = prevData.chat_rooms.map((room) => {
@@ -207,126 +315,15 @@ const Chat = () => {
       chat_rooms: updatedChatRooms,
     };
   };
-  const setupSocket = (room_id) => {
-    return new Promise((resolve, reject) => {
-      if (!room_id) {
-        return reject(new Error("No room ID provided"));
-      }
-      if (sockets[room_id]) {
-        resolve(sockets[room_id]);
-        return;
-      }
 
-      const newSocket = new WebSocket(
-        `wss://${import.meta.env.VITE_WSS_IP}/ws/chat/${room_id}/`
-      );
-
-      newSocket.onopen = () => {
-        setSockets((prev) => ({
-          ...prev,
-          [room_id]: newSocket,
-        }));
-        resolve(newSocket);
-      };
-
-      newSocket.onerror = (error) => {
-        reject(error);
-      };
-      newSocket.onmessage = (event) => {
-        const data_re = JSON.parse(event.data);
-        switch (data_re.type) {
-          case "USERS_LIST":
-            setAllUsers(data_re.users);
-            break;
-          case "MESSAGE":
-            if (!data_re.message || !data_re.message.sender) {
-              break;
-            }
-            setData((prevData) => updateChatRooms(prevData, data_re.message));
-
-            setReceivedMessage(data_re.message);
-            break;
-          case 'NEW_ROOM':
-          {
-
-            let exist = false;
-            for (let i = 0; i < data.chat_rooms.length; i++) {
-              if (data.chat_rooms[i].id === data_re.room_data.id) {
-                exist = true;
-                break;
-              }
-            }
-            if (exist) {
-
-              setData(prevData => ({
-                ...prevData,
-                chat_rooms: [...prevData.chat_rooms, data_re.room_data]
-              }));
-            }
-          }
-          case "TYPING":
-            setTypingUser(data_re);
-            break;
-          case "USER_SELECTED":
-            if (data_re.status === "OK") {
-              if (!data.chat_rooms.some(room => room.id === data_re.chat_room.id)) {
-                setupChatRoom(data_re.chat_room);
-              }
-              resolve(newSocket);
-            }
-            break;
-          case "BLOCK_USER":
-            if (data_re.event === "BLOCK") {
-              setData((prevData) => ({
-                ...prevData,
-                user: {
-                  ...prevData.user,
-                  blocked_users: Array.from(
-                    new Set([...prevData.user.blocked_users, data_re.user_id])
-                  ),
-                },
-              }));
-            }
-          else if (data_re.event === "UNBLOCK") {
-              setData((prevData) => ({
-                ...prevData,
-                user: {
-                  ...prevData.user,
-                  blocked_users: prevData.user.blocked_users.filter(
-                    (id) => id !== data_re.user_id
-                  ),
-                },
-              }));
-            }
-            break;
-          default:
-            break;
-        }
-      };
-
-      newSocket.onclose = (event) => {
-
-        setSockets((prev) => {
-          const { [room_id]: _, ...newSockets } = prev;
-          return newSockets;
-        });
-      };
-
-      setSockets((prev) => ({
-        ...prev,
-        [room_id]: newSocket,
-      }));
-
-      return () => newSocket.close();
-    });
-  };
 
   const sendMessage = (e) => {
     e.preventDefault();
 
     if (message) {
-      if (sockets[roomId] && sockets[roomId].readyState === WebSocket.OPEN) {
-        sockets[roomId].send(
+      if (chat_socket.current && chat_socket.current.readyState === WebSocket.OPEN) {
+        console.log("sending message", message, "to room", roomId, "room_id", roomId, "sender", data.user.id);
+        chat_socket.current.send(
           JSON.stringify({
             type: "MESSAGE",
             room_id: roomId,
@@ -335,14 +332,16 @@ const Chat = () => {
           })
         );
         setMessage("");
+      } else {
+        console.warn("Cannot send message, WebSocket not ready.");
       }
     }
   };
 
   const handleTyping = (e) => {
     setMessage(e.target.value);
-    if (sockets[roomId] && sockets[roomId].readyState === WebSocket.OPEN) {
-      sockets[roomId].send(
+    if (chat_socket.current && chat_socket.current.readyState === WebSocket.OPEN) {
+      chat_socket.current.send(
         JSON.stringify({
           type: "TYPING",
           room_id: roomId,
@@ -353,10 +352,10 @@ const Chat = () => {
   };
 
   const setupChatRoom = async (contact) => {
+    console.log("a room with contact", contact, "and roomId", contact.id, "chat_room", contact.messages);
     setCurrentContact(contact);
     setRoomId(contact.id);
     setChat(contact.messages);
-    await setupSocket(contact.id);
   };
   
   return (
@@ -365,7 +364,7 @@ const Chat = () => {
         <div className={styl.chatLayout}>
           <Sidebar
             setupChatRoom={setupChatRoom}
-            setupSocket={setupSocket}
+            socket={chat_socket.current}
             data={data}
             allUsers={allUsers}
             unreadMessages={unreadMessages}
@@ -379,7 +378,7 @@ const Chat = () => {
             handleTyping={handleTyping}
             data={data}
             chatMessagesRef={chatMessagesRef}
-            sockets={sockets}
+            socket={chat_socket.current}
             typingUser={typingUser}
             t={t}
           />

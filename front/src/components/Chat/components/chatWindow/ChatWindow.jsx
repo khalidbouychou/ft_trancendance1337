@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { t } from "i18next";
 import styl from "./ChatWindow.module.css";
 import { useNotificationWS } from "../../../../contexts/NotifWSContext.jsx";
+import axios from "axios";
 
 export default function ChatWindow({
   currentContact,
@@ -16,7 +17,7 @@ export default function ChatWindow({
   handleTyping,
   data,
   chatMessagesRef,
-  sockets,
+  socket,
   typingUser,
   t,
 }) {
@@ -24,8 +25,22 @@ export default function ChatWindow({
   const [otherUser, setOtherUser] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [amiBlocked, setAmIBlocked] = useState(false);
   const { sendMessage: sendNotifMessage, isConnected } = useNotificationWS();
   const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const check_blocked = async () => {
+  //     const response1 = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/getuser/${otherUser.profile_name}/` , {
+  //       withCredentials: true,
+  //     });
+  //     const didIBlockHim = response1.data.blocked_users.find(e => {return e.profile_name === otherUser.profile_name}) != undefined ? true : false;
+  //     setIsBlocked(didIBlockHim);
+  //   }
+  //   if (otherUser)
+  //     check_blocked();
+  // }, [isBlocked]);
 
   useEffect(() => {
     if (currentContact) {
@@ -34,6 +49,7 @@ export default function ChatWindow({
           ? currentContact.user2
           : currentContact.user1
       );
+      console.log("otherUser is this:", currentContact.user2, ", or this:", currentContact.user1);
     } else {
       setOtherUser(null);
     }
@@ -58,6 +74,8 @@ export default function ChatWindow({
 
   useEffect(() => {
     if (data.user) {
+      console.log("data:", data);
+      console.log("data.user:", data.user);
       setCurrentUser(data.user);
     }
   }, [data.user]);
@@ -68,8 +86,8 @@ export default function ChatWindow({
       if (!otherUser) {
           return;
       }
-      if (sockets[currentContact.id] && sockets[currentContact.id].readyState === WebSocket.OPEN) {
-          sockets[currentContact.id].send(JSON.stringify({
+      if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify({
               type: 'BLOCK_USER',
               event: e ? 'BLOCK' : 'UNBLOCK',
               user_id: otherUser.id
@@ -134,6 +152,10 @@ export default function ChatWindow({
               currentUser={currentUser}
               viewProfile={viewProfile}
               t={t}
+              isBlocked={isBlocked}
+              setIsBlocked={setIsBlocked}
+              amiBlocked={amiBlocked}
+              setAmIBlocked={setAmIBlocked}
             />}
           </div>
           <div className={styl.chatMessages} ref={chatMessagesRef}>
@@ -145,7 +167,7 @@ export default function ChatWindow({
               />
             ))}
           </div>
-          {(otherUser.username !== "ke3ki3a") &&
+          {(otherUser.username !== "ke3ki3a") && !isBlocked && !amiBlocked &&
           <div className={styl.chatFormContainer} onClick={sendMessage}>
             <form className={styl.chatForm} onSubmit={sendMessage}>
               <input
@@ -158,6 +180,16 @@ export default function ChatWindow({
               />
             </form>
           </div>
+          }
+          {isBlocked &&
+            <div className={styl.blockedUser}>
+              <p>{t("You have blocked this user")}</p>
+            </div>
+          }
+          {amiBlocked &&
+            <div className={styl.blockedUser}>
+              <p>{t("This user has blocked you")}</p>
+            </div>
           }
         </>
       ) : (

@@ -14,23 +14,21 @@ from channels.layers import get_channel_layer
 from asgiref.sync import sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
-    
+    online = {}
+    room_group_name = ''
     async def connect(self):
+        print("someone trying to connect")
         if self.scope['user'].is_authenticated:
             await self.accept()
+            print("we accpet the connection")
         else:
             await self.close()
             return
-        self.room_name = self.scope['url_route']['kwargs']['room_pk']
-        self.room_group_name = f'chat_room_{self.room_name}'
         self.user = self.scope['user']
         self.user_id = self.user.id
+        ChatConsumer.online[self.user.id] = self.channel_name
         self.notification_group_name = f'user_{self.user_id}_notification'
 
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
         await self.channel_layer.group_add(
             self.notification_group_name,
             self.channel_name
@@ -41,12 +39,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        if self.user.id in ChatConsumer.online:
+            del ChatConsumer.online[self.user.id]
 
     async def receive(self, text_data):
         try:
             text_data_json = json.loads(text_data)
             message_type = text_data_json.get('type')
-
             handlers = {
                 'MESSAGE': self.handle_message,
                 'SEARCH_USERS': self.handle_search_users,
@@ -85,15 +84,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender = await sync_to_async(Player.objects.get)(id=self.user.id)
         room = await sync_to_async(ChatRoom.objects.get)(id=room_pk)
         receiver = await sync_to_async(room.get_other_user)(sender)
+        room_group_name = f'chat_room_{room_pk}'
+        self.room_group_name = room_group_name
+        await self.channel_layer.group_add(
+            room_group_name,
+            self.channel_name
+        )
+        if (receiver.id in ChatConsumer.online):
+            await self.channel_layer.group_add( 
+                room_group_name,
+                ChatConsumer.online[receiver.id]
+            )
         unique_room = await sync_to_async(ChatRoom.get_or_create_room)(sender, receiver)
         chat_room_data = await self.serialize_chat_room(unique_room)
         chat_room = await sync_to_async( ChatRoom.objects.get)(id=room_pk)
         message_count = await sync_to_async(chat_room.messages.count)()
         if message_count == 1:
             await self.channel_layer.group_send(
-                f'user_{receiver.id}_notification', 
+                f'user_{receiver.id}_notification',  
                 {
-                    'type': 'new_room_notification',
+                    'type': 'new_room_notification', 
                     'room_data': chat_room_data
                 }
             )
@@ -119,8 +129,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def handle_search_users(self, data):
         query = data.get('query')
-
-
         users = await self.search_users(query)
         await self.send_json({
             'type': 'USERS_LIST',
@@ -128,12 +136,27 @@ class ChatConsumer(AsyncWebsocketConsumer):
         })
 
     async def handle_typing(self, data):
+        room_pk = data.get('room_id')
+        sender = await sync_to_async(Player.objects.get)(id=self.user.id)
+        room = await sync_to_async(ChatRoom.objects.get)(id=room_pk)
+        receiver = await sync_to_async(room.get_other_user)(sender)
+        room_group_name = f'chat_room_{room_pk}'
+        self.room_group_name = room_group_name
+        await self.channel_layer.group_add(
+            room_group_name,
+            self.channel_name
+        )
+        if (receiver.id in ChatConsumer.online):
+            await self.channel_layer.group_add( 
+                room_group_name,
+                ChatConsumer.online[receiver.id]
+            )
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'message_typing',
                 'sender': self.user.id,
-                'room_id': self.room_name
+                'room_id': self.room_group_name
             }
         )
 
@@ -286,8 +309,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def new_room_notification(self, event):
         room_data = event['room_data']
-
+        print("inside new_room_notification contant:", room_data)
         await self.send(text_data=json.dumps({
             'type': 'NEW_ROOM',
             'room_data': room_data
         }))
+        print("we send the new room notification")  
