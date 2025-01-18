@@ -7,8 +7,8 @@ import CircularLevel from "./CirculeLevel/CercleLevel";
 
 const Statistic = ({ userData, profileName, t }) => {
   const total = userData?.data[0]?.wins + userData?.data[0]?.losses;
-  let winPercentage = (userData?.data[0]?.wins / total) * 100;
-  let lossPercentage = (userData?.data[0]?.losses / total) * 100;
+  let winPercentage = ((userData?.data[0]?.wins / total) || 0) * 100;
+  let lossPercentage = ((userData?.data[0]?.losses / total) || 0) * 100;
   const [daTa, setDaTa] = useState([]);
   const [level, setLevel] = useState(50);
   if (!winPercentage && !lossPercentage) {
@@ -58,7 +58,7 @@ const Statistic = ({ userData, profileName, t }) => {
       </div>
       <div className={styl.bottom}>
         <div className={styl.cirLevel}>
-          <CircularLevel percentage={userData?.data[0]?.exp_game % 100} color="#660da5" width={250} height={250} />
+          <CircularLevel percentage={(userData?.data[0]?.exp_game % 100) || 0} color="#660da5" width={250} height={250} />
         </div>
         <div className={styl.level_exp}>
           <CurveLevel data={daTa} playerName={profileName} style={{width: '50%'}} t={t}/>

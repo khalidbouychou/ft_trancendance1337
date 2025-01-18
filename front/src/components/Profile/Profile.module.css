@@ -445,6 +445,14 @@
 	}
 }
 
+.listBoutton {
+	display: flex;
+	/* background-color: #ff0000; */
+	position: absolute;
+	right: -1px;
+	padding:  0 10px 10px 0;
+}
+
 .userBlocked {
 	display: flex;
 	justify-content: center;

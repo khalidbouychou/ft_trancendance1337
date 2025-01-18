@@ -43,6 +43,7 @@ const Profile = ({ me }) => {
   const [shooseList, setShooseList] = useState('none');
   const [displayShooseButton, setDisplayShooseButton] = useState('none');
   const [isblocked, setIsblocked] = useState(false);
+  const [isAnonymized, setIsanonymized] = useState(false);
 
   useEffect(() => {
     setProfileName(profile_name);
@@ -219,7 +220,7 @@ const Profile = ({ me }) => {
   
         const data = await response.json();
         setUserData(data);
-        
+        setIsanonymized(data?.is_anonimized)
       } catch (error) {
         setError(error.message);
         setUserData({});
@@ -252,6 +253,10 @@ const Profile = ({ me }) => {
     return <div className={styl.loading}>Loading...</div>;
   }
   
+  if (isAnonymized) {
+    return <div className={styl.Anonymized}>hona</div>
+  }
+
   if (error) {
     return (
       <div className={styl.error}>
@@ -288,7 +293,7 @@ const Profile = ({ me }) => {
                 </div>
                 <div className={styl.userName}>
                   {userData.profile_name.toUpperCase()}
-                  <div style={{ color: "rgba(255, 255, 255, 0.4)" }}>
+                  <div style={{ color: "rgba(255, 255, 255, 0.4)", display: 'flex', alignItems: 'center', gap: '5px', width: '100%'}}>
                     <div className={styl.ongline}>
                       <div
                         className={styl.ongline}
@@ -302,7 +307,7 @@ const Profile = ({ me }) => {
                         }}
                       ></div>
                     </div>
-                    {t(userData?.status_network)}
+                    <p >{t(userData?.status_network)}</p>
                   </div>
                 </div>
               </div>
@@ -337,15 +342,17 @@ const Profile = ({ me }) => {
                   <div className={styl.tmp}>
                     <p>{t("Level")} {pingLevel}</p>
                     <div>
-                      {pingExp} /{" "}
-                      <p
-                        style={{
-                          color: "rgba(255, 255, 255, 0.4)",
-                          left: "2px",
-                        }}
-                      >
-                        {maxPingExp} xp
-                      </p>
+                      <div style={{display: 'flex', color: 'white', fontSize: '12.5px'}}>
+                        {pingExp} /{" "}
+                        <p
+                          style={{
+                            color: "rgba(255, 255, 255, 0.4)",
+                            left: "2px",
+                          }}
+                        >
+                          {maxPingExp} xp
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <div className={styl.extLvl}>
@@ -393,14 +400,16 @@ const Profile = ({ me }) => {
             <div className={styl.headFr}>
               <p>{t(status)}</p>
               <div onClick={handleShooseList} style={{display: displayShooseButton}}>
-                <p>...</p>
-                <div
-                  className={styl.userBlocked}
-                  style={{ display: shooseList}}
-                >
-                  <button onClick={handleBlockClick}>
-                    {showUserBlocked ? "Friends" : "Blocked"}
-                  </button>
+                <div className={styl.listBoutton}>
+                  <p style={{cursor: 'pointer'}}>...</p>
+                  <div
+                    className={styl.userBlocked}
+                    style={{ display: shooseList}}
+                  >
+                    <button onClick={handleBlockClick}>
+                      {showUserBlocked ? "Friends" : "Blocked"}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -31,9 +31,7 @@ const navigate = useNavigate();
       </div>
       <div className={styl.playerName}>
         <p>
-            {player.profile_name.length > 8
-            ? player.profile_name.toUpperCase().slice(0, 6) + "."
-            : player.profile_name.toUpperCase()}
+            {player.profile_name.toUpperCase()}
         </p>
       </div>
       <div className={styl.wins}>

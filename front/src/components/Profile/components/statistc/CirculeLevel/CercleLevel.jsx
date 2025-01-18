@@ -6,35 +6,38 @@ const cleanPercentage = (percentage) => {
   return tooLow ? 0 : tooHigh ? 100 : +percentage;
 };
 
-const Text = ({ percentage }) => {
-  return (
-    <text
-      x="50%"
-      y="50%"
-      dominantBaseline="central"
-      textAnchor="middle"
-      fontSize={"1.5em"}
-      fill="white" 
-    >
-      {percentage.toFixed(0)}%
-    </text>
-  );
-};
+const Text = ({ percentage }) => (
+  <text
+    x="50%"
+    y="50%"
+    dominantBaseline="central"
+    textAnchor="middle"
+    fontSize="1.5em"
+    fill="white"
+  >
+    {percentage.toFixed(0)}%
+  </text>
+);
 
 const Circle = ({ color, pct, radius = 90, strokeWidth = 10 }) => {
   const circumference = 2 * Math.PI * radius;
-  const offset = pct === 0 ? circumference : ((100 - pct) / 100) * circumference;
+  const offset =
+    pct === 0
+      ? circumference
+      : ((100 - pct) / 100) * circumference;
+
+  console.log({ pct, radius, circumference, offset }); // Debugging
 
   return (
     <circle
       r={radius}
-      cx="125" 
-      cy="125" 
+      cx="125"
+      cy="125"
       fill="transparent"
       stroke={color}
       strokeWidth={strokeWidth}
-      strokeDasharray={circumference}
-      strokeDashoffset={offset}
+      strokeDasharray={circumference || 0} // Fallback to 0
+      strokeDashoffset={offset || 0} // Fallback to 0
     />
   );
 };

@@ -22,7 +22,7 @@ const PingGame = () => {
       </div>
       <div className={styl.card}>
         <div className={styl.cardName}>
-          <p >1 Vs 1</p>
+          <p >1 {t("Vs")} 1</p>
         </div>
         <div className={styl.Image}>
           <Link to={"/games/onlinepong"}><img src={_1vs1}/></Link>

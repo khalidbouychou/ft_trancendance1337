@@ -4,10 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react'
 import { useNotificationWS } from '../../../../contexts/NotifWSContext.jsx'
 
-const InvitationCard = ({request}) => {
+const InvitationCard = ({request, t}) => {
   const [isVisible, setIsVisible] = useState(true)
-	const [timeLeft, setTimeLeft] = useState(30)
-	const [popupMessage, setPopupMessage] = useState('');
 	const [showPopup, setShowPopup] = useState(false);
 	const { sendMessage: sendNotifMessage, isConnected, notif } = useNotificationWS();
 	const navigate = useNavigate();
@@ -96,7 +94,7 @@ const InvitationCard = ({request}) => {
       </div>
       <div className={styl.leftSide}>
         <p style={{ fontSize: "13px", color: "white" }}>{request?.from_user?.profile_name.toUpperCase()}</p>
-        <p>sent you an invitation</p>
+        <p>{t("sent you an invitation")}</p>
         <div className={styl.shoose}>
           <button style={{ backgroundColor: "green" }} onClick={handleAccept}>Accept</button>
           <button onClick={handleDecline} >Decline</button>

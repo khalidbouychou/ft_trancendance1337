@@ -139,6 +139,11 @@
   "invite you to play ping pong" : "invitez-vous à jouer au ping pong",
   "No match history found": "Aucun historique de match trouvé",
   "No match data available to display the Statistic": "Aucune donnée de match disponible pour afficher les statistiques",
-  "Typing...": "En train d'écrire..."
+  "Typing...": "En train d'écrire...",
+  "You won the match and you are qualified to the next round": "Tu as gagné le match et tu es qualifié pour le tour suivant",
+  "You lost the match": "Tu as perdu le match",
+  "Invite in Game": "Inviter dans le jeu",
+  "Block User": "Bloquer l'utilisateur",
+  "Unblock User": "Débloquer l'utilisateur"
 }
   

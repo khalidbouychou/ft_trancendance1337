@@ -146,7 +146,7 @@ export default function ChatWindow({
             ))}
           </div>
           {(otherUser.username !== "ke3ki3a") &&
-          <div className={styl.chatFormContainer} onClick={sendMessage}>
+          <div className={styl.chatFormContainer}>
             <form className={styl.chatForm} onSubmit={sendMessage}>
               <input
                 type="text"

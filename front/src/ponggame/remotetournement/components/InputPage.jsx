@@ -125,12 +125,12 @@ const MainTournament = () => {
             }
             else if (data.message === 'match_result1'){
                 if (data.winner === PlayerAliasName){
-                    setMessage("You won the match and you are qualified to the next round");
+                    setMessage(t("You won the match and you are qualified to the next round"));
                     localcondition = 'W';
                     setCondition('W');
                 }
                 else{
-                    setMessage("You lost the match");
+                    setMessage(t("You lost the match"));
                     localcondition = 'D';
                     setCondition('D');
                 }
@@ -144,7 +144,7 @@ const MainTournament = () => {
                     setPlayer7Avatar(user.user.avatar);
                 }
                 else{
-                    setMessage("You lost the match");
+                    setMessage(t("You lost the match"));
                     localcondition = 'D';
                     setCondition('D');
                 }
@@ -325,7 +325,7 @@ const MainTournament = () => {
                     <div className={styles.play}>
                         {/* <div className={styles.starting}> */}
                             <div className={styles.inp}>
-                                <input type="text" placeholder="Alias Name" onChange={(e) => setPlayerAliasName(e.target.value)}/>
+                                <input type="text" placeholder={t("Alias Name")} onChange={(e) => setPlayerAliasName(e.target.value)}/>
                             </div>
                         {/* </div> */}
                     </div>

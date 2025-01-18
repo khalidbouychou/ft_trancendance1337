@@ -56,10 +56,10 @@ const Notif = ({ open, notifReceived, setNotifReceived }) => {
   return (
     <div className={styl.notif} style={{ display: open }}>
       {FR_notif_received.map((notif) => (
-        <InvitationCard key={notif.id} request={notif} />
+        <InvitationCard key={notif.id} request={notif} t={t}/>
       ))}
       {GR_notif_received.map((notif) => (
-        <InvitGameCard key={notif.id} request={notif} />
+        <InvitGameCard key={notif.id} request={notif} t={t}/>
       ))}
       {FR_notif_sent.map((notif) => (
         <NotiCardSent key={notif.id} request={notif} type={"FR"} />

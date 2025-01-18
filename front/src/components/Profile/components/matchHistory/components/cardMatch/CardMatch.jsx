@@ -20,7 +20,7 @@ const CardMatch = ({ match, profileName, animationDelay , setProfileName}) => {
   };
 
   return (
-    <button
+    <div
       className={styl.cardMatch}
       onClick={handleClick}
       style={{ animationDelay, background: color }}
@@ -42,14 +42,14 @@ const CardMatch = ({ match, profileName, animationDelay , setProfileName}) => {
         <p>{status}</p>
       </div>
       <div className={styl.status_date}>
-        <p className={styl.date}>
+        <div className={styl.date}>
           <p>{date}</p>
           <p style={{ color: "rgba(255, 255, 255, 0.4)", fontSize: "10px" }}>
             {formattedTime}
           </p>
-        </p>
+        </div>
       </div>
-    </button>
+    </div>
   );
 };
 

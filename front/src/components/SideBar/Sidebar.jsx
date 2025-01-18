@@ -17,6 +17,7 @@ import { CgProfile } from "react-icons/cg";
 import { PiGameControllerFill } from "react-icons/pi";
 import { BsChatDots } from "react-icons/bs";
 import { useNotificationWS } from "../../contexts/NotifWSContext";
+import axios from 'axios';
 
 
 const Sidebar = () => {
@@ -90,14 +91,25 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (searchQuery.trim()) {
-      fetch(`${import.meta.env.VITE_BACKEND_IP}/api/search/?q=${searchQuery}`)
-        .then((response) => response.json())
-        .then((data) => setSearchResults(data));
+      axios
+        .get(`${import.meta.env.VITE_BACKEND_IP}/api/search/`, {
+          params: { q: searchQuery },
+        })
+        .then((response) => {
+          const filteredData = response.data.filter(
+            (item) => item.profile_name !== 'ke3ki3a'
+          );
+          setSearchResults(filteredData);
+        })
+        .catch((error) => {
+          console.error("Error fetching search results:", error);
+        });
     } else {
       setSearchResults([]);
       setHighlightedIndex(-1);
     }
   }, [searchQuery]);
+  
 
   useEffect(() => {
     
@@ -240,7 +252,7 @@ const Sidebar = () => {
               <Notif open={openNotif} notifReceived={notifReceived} setNotifReceived={setNotifReceived}/>
               {notifReceived}
           </div>
-          <div className={styl.sett}>
+          <div className={styl.sett} >
             <button onClick={toggleMenu} onClickCapture={handleDisplaySettings}>
               <div className={styl.extImg}>
                 <div className={styl.intImg}>

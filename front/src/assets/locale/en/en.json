@@ -139,6 +139,12 @@
   "invite you to play ping pong" : "invite you to play ping pong",
   "No match history found": "No match history found",
   "No match data available to display the Statistic": "No match data available to display the Statistic",
-  "Typing...": "Typing..."
+  "Typing...": "Typing...",
+  "You won the match and you are qualified to the next round": "You won the match and you are qualified to the next round",
+  "You lost the match": "You lost the match",
+  "Invite in Game": "Invite in Game",
+  "Block User": "Block User",
+  "Unblock User": "Unblock User",
+  "sent you an invitation": "sent you an invitation"
 }
  

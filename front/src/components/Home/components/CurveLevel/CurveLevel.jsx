@@ -66,7 +66,7 @@ const ExpChart = ({ data, playerName, t }) => {
         display: true,
         position: 'top',
         labels: {
-          color: 'white', // Legend text color
+          color: 'white',
         },
       },
       tooltip: {
@@ -86,7 +86,7 @@ const ExpChart = ({ data, playerName, t }) => {
         title: {
           display: true,
           text: t("Matches"),
-          color: 'white', // X-axis title color
+          color: 'white',
         },
         ticks: {
           color: 'rgba(255, 255, 255, 0.6)', 

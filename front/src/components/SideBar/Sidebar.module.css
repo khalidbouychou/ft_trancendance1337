@@ -114,7 +114,8 @@ a {
 .searchResult {
   display: flex;
   position: absolute;
-  width: 250px;
+  width: 70%;
+  min-width: 300px;
   background-color: rgba(31, 11, 50, 1);
   top: 100%;
   flex-direction: column;

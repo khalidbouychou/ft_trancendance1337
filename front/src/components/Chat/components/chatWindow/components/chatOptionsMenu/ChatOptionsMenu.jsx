@@ -77,7 +77,7 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   return (
     <div className={styl.chatOptionsMenu}>
       { !amiBlocked ? (
-      <button className={styl.menuToggle} onClick={handleMenuListOpen}>
+      <div className={styl.menuToggle} onClick={handleMenuListOpen}>
         <p>⋮</p>
         <div className={styl.menuList} style={{ display: menuList }}>
           {
@@ -110,7 +110,7 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
             </button>
           </div>
         )}
-      </button>) : (
+      </div>) : (
         <button className={styl.menuToggle} onClick={handleMenuListOpen}></button>
         )
       }
