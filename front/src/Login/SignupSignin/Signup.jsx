@@ -10,50 +10,8 @@ const Signup = ({ isLogin, setIsLogin }) => {
   const [displayname, setDisplayname] = useState("");
   const [password, setPassword] = useState("");
 
-  const validateInput = () => {
-    const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/; // Only letters, numbers, underscores, 3-30 characters
-    const displayNameRegex = /^[a-zA-Z0-9 _-]{3,50}$/; // Letters, numbers, spaces, underscores, hyphens, 3-50 characters
-    const passwordRegex = /^.{6,50}$/; // At least 6 characters, up to 50
-
-    if (!usernameRegex.test(username)) {
-      toast.error(t("Username must be 3-30 characters long and contain only letters, numbers, or underscores."),
-      {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      }
-    );
-      return false;
-    }
-
-    if (!displayNameRegex.test(displayname)) {
-      toast.error(t("Display name must be 3-50 characters long and can contain letters, numbers, spaces, underscores, or hyphens."),
-      {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      });
-    }
-
-    if (!passwordRegex.test(password)) {
-      toast.error(t("Password must be at least 6 characters long.")),
-      {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      }
-    }
-
-    return true;
-  };
-
   const handleForm = async (e) => {
     e.preventDefault();
-
-    if (!validateInput()) {}
 
     try {
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_IP}/api/signup/`, {
@@ -73,7 +31,9 @@ const Signup = ({ isLogin, setIsLogin }) => {
         }, 1000);
       }
     } catch (err) {
-      let errmsg = t(err.response?.data?.error) || t("player with this username already exists."); 
+      console.log("---------",err.response?.data);
+      const msg = err.response?.data?.username || err.response?.data?.profile_name || err.response?.data?.password || err.response?.data?.error;
+      let errmsg = t(msg); 
       toast.error(errmsg,
         {
           style: {

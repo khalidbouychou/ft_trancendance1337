@@ -29,7 +29,7 @@ CSRF_TRUSTED_ORIGINS = [
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 
-DEBUG = True# Set to False in production
+DEBUG = False
 
 ALLOWED_HOSTS = [os.getenv("VITE_WSS_IP")]
 
@@ -173,10 +173,6 @@ JWT_REFRESH_TOKEN_LIFETIME = REFRESH_TOKEN_LIFETIME
 CORS_ALLOW_ALL_ORIGINS = True  # Set to True for development, but not recommended for production
 
 CORS_ALLOWED_ORIGINS = [
-    'https://localhost',
-    'https://localhost:5173',
-    'http://localhost',
-    'http://localhost:5173',
     f'{os.getenv("VITE_BACKEND_IP")}',
 ]
 

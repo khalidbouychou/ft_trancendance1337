@@ -44,6 +44,7 @@ const Profile = ({ me }) => {
   const [shooseList, setShooseList] = useState('none');
   const [displayShooseButton, setDisplayShooseButton] = useState('none');
   const [isblocked, setIsblocked] = useState(false);
+  const [isblockedy, setIsblockedy] = useState(false);
   const [isAnonymize, setIanonymize] = useState(userData?.is_anonimized);
 
 
@@ -192,8 +193,33 @@ const Profile = ({ me }) => {
     };
   
     fetchBlocked();
-  }, [isfriended, ismyprofil, profile_name, notif, isblocked]);
+  }, [isfriended, profile_name, isblocked]);
   
+
+  useEffect(() => {
+    const fetchBlocked = async () => {
+      if (!ismyprofil)
+        return ;
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_IP}/api/blocked/${user.user.profile_name}/`,
+          { withCredentials: true }
+        );
+        console.log('Blocked list:', response.data);
+        const isBlockedUser = response.data['blocked list']?.some(
+          (blockedUser) => blockedUser.profile_name === profile_name
+        );
+        console.log('status:', isBlockedUser);
+        setIsblockedy(isBlockedUser);
+      } catch (error) {
+        console.error('Error fetching blocked list:', error);
+      }
+    };
+
+    fetchBlocked();
+  }, [user, profile_name]);
+
+  console.log("--->>>>>> === ", isblockedy)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -231,7 +257,6 @@ const Profile = ({ me }) => {
         const data = await response.json();
         setUserData(data);
         setIanonymize(data?.is_anonimized);
-        console.log('data == ', data)
         
       } catch (error) {
         setError(error.message);
@@ -278,8 +303,13 @@ const Profile = ({ me }) => {
   //   return <div className={styl.error} style={{color: 'white'}}>{t("This user has blocked you.")}</div>
   // }
   
-  if (isAnonymize || isblocked){
-    return (<Anonymize user={userData} option={isblocked ? "blocked" : "anonymize"} t={t}/>)
+  if (isblocked || isblockedy){
+    if (!isAnonymize)
+      return (<Anonymize user={userData} option={isblockedy ? "blockedy" : "blocked"} t={t}/>)
+  }
+
+  if (isAnonymize){
+    return (<Anonymize user={userData} option={"anonymize"} t={t}/>)
   }
   return (
     <div className={styl.profile}>
@@ -401,7 +431,7 @@ const Profile = ({ me }) => {
             <div className={styl.userData}>
               {activeSection === "Leaderboard" && <Leaderboard setProfileName={setProfileName} t={t}/>}
               {activeSection === "MatchHistory" && (
-                <MatchHistory profile_name={profile_name} t={t}/>
+                <MatchHistory profileName={profileName} t={t}/>
               )}
             </div>
           </div>

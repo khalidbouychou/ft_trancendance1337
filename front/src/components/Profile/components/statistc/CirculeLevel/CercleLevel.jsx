@@ -34,7 +34,7 @@ const Circle = ({ color, pct, radius = 90, strokeWidth = 10 }) => {
       stroke={color}
       strokeWidth={strokeWidth}
       strokeDasharray={circumference}
-      strokeDashoffset={offset}
+      strokeDashoffset={isNaN(offset) ? 0 : offset}
     />
   );
 };

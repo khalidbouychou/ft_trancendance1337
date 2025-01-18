@@ -142,5 +142,6 @@
   "you have been invited to a pong game": "siete stati invitati a una partita di pong" ,
   "User not found" : "Utente non trovato",
   "profile_name not valid" : "nome profilo non valido",
-  "This user has blocked you" : "Questo utente ha bloccato te"
+  "This user has blocked you" : "Questo utente ha bloccato te",
+  "WIN" : "VITTORIA"
 }

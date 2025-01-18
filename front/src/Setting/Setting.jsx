@@ -17,28 +17,7 @@ const Settings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionToPerform, setActionToPerform] = useState(null);
 
-  const validateInput = () => {
-    const displayNameRegex = /^[a-zA-Z0-9 _-]{3,50}$/; // Letters, numbers, spaces, underscores, hyphens, 3-50 characters
-
-    if (!displayNameRegex.test(NewProfileName)) {
-      toast.error(t("Display name must be 3-50 characters long and can contain letters, numbers, spaces, underscores, or hyphens."),
-      {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      });
-      return false;
-    }
-
-    return true;
-  };
-
   const handleProfileNameUpdate = async () => {
-
-    if (!validateInput()) {
-      return ;
-    }
 
     try {
       const response = await axios.put(

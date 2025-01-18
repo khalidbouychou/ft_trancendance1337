@@ -13,8 +13,8 @@ function CirclePercentage({ percentage}) {
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
     circle.style.strokeDashoffset = circumference;
 
-    const offset = circumference - (percentage / 100) * circumference;
-    circle.style.strokeDashoffset = offset;
+    const offset = isNaN(circumference - (percentage / 100) * circumference) ? 0 : circumference - (percentage / 100) * circumference;
+    circle.style.strokeDashoffset = isNaN(offset) ? 0 : offset;
   }, [percentage]);
   return (
     <svg className={styles.circle} viewBox="0 0 100 100">

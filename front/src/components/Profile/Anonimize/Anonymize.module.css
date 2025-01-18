@@ -22,8 +22,8 @@
   }
   
   .avatar {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
     border:  1px solid rgb(239, 255, 120);
     /* background-color: #e0e0e0; */
     border-radius: 50%;
@@ -33,12 +33,12 @@
     /* color: #666; */
   }
   
-  .avatar img {
-    width: 200px;
-    height: 200px;
+  /* .avatar img {
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
     object-fit: cover;
-  }
+  } */
   
   .profileInfo {
     text-align: center;
@@ -72,15 +72,15 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 140px;
-	height: 170px;
-	background-color: rgb(130, 130, 5);
+	width: 240px;
+	height: 240px;
+	/* background-color: rgb(130, 130, 5); */
 	border: none;
 	position: relative;
 	clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
 	img {
 		display: flex;
-		height: 170px;
-		width: 170px;
+		height: 240px;
+		width: 240px;
 	}
 }

@@ -137,7 +137,7 @@ const TournamentMainboard = () => {
                   ) : (
                     <div className={styles.youWin}>
                       <div className={styles.str}>
-                        <p>{t(WIN)}</p>
+                        <p>{t("WIN")}</p>
                       </div>
                       <div className={styles.userWin}>
                         <div className={styles.userImage}>

@@ -18,7 +18,6 @@ clean: down
 	@rm -rf /**/node_modules
 	@rm -rf */*/migrations
 	@rm -rf */*/__pycache__
-	@rm -rf nginx/ssl.*
 	@rm -rf ssl/*
 
 push: 

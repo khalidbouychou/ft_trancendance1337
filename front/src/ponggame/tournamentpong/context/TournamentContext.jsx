@@ -1,10 +1,12 @@
 import React, { createContext, useState, useContext } from 'react';
+import { AuthContext } from '../../../UserContext/Context';
 
 
 export const AppContext = createContext();
 
 
 export const ContextProvider = ({ children }) => {
+
   const [player1Name, setPlayer1Name] = useState('Player 1');
   const [player2Name, setPlayer2Name] = useState('Player 2');
   const [player3Name, setPlayer3Name] = useState('Player 3');
