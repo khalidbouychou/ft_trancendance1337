@@ -30,28 +30,27 @@ const Chat = () => {
   let chat_socket = useRef(null);;
 
   useEffect(() => {
-    console.log("i will open a socket to ws/chat");
+   
     chat_socket.current = new WebSocket(`wss://${import.meta.env.VITE_WSS_IP}/ws/chat/`);
     
     if(chat_socket.current){
       chat_socket.current.onopen = () => {
-        console.log("WebSocket on_open connected");
-        console.log("socket state", chat_socket.current);
+        
       };
   
       chat_socket.current.onerror = (error) => {
-        console.error("WebSocket error:", error);
+       
       };
   
       chat_socket.current.onmessage = (event) => {
         const data_re = JSON.parse(event.data);
-        console.log("data_re", data_re);
+        
         switch (data_re.type) {
           case "USERS_LIST":
             setAllUsers(data_re.users);
             break;
           case "MESSAGE":
-            console.log("received message", data_re.message);
+           
             if (!data_re.message || !data_re.message.sender) {
               break;
             }
@@ -126,21 +125,21 @@ const Chat = () => {
             }
             break;
           default:
-            console.log("Unknown message type:", data_re.type);
+           
             break;
         }
       };
   
       chat_socket.current.onclose = (event) => {
-        console.log("WebSocket closed:", event);
+       
       };
     }
 
     return () => {
       if (chat_socket.current && chat_socket.current.readyState === WebSocket.OPEN) {
-        console.log("we closed the socket");
+       
         chat_socket.current.close();
-        console.log("socket state", chat_socket.current);
+      
       }
     };
   },[]);
@@ -200,11 +199,11 @@ const Chat = () => {
         const response = await axios(`${import.meta.env.VITE_BACKEND_IP}/api/chat/`, {
           withCredentials: true,
         });
-        console.log("this is the only fatch for rooms, room data:", response.data);
+        
         setData(response.data);
         initUnreadMessages(response.data);
       } catch (error) {
-        console.warn("Chat page inaccessible:", error);
+     
       }
     };
 
@@ -259,13 +258,7 @@ const Chat = () => {
     }
   }, [currentContact]);
 
-  // useEffect(() => {
-  //   Object.entries(unreadMessages).forEach(([userId, count]) => {
-  //     const user = data.chat_rooms
-  //       .flatMap((room) => [room.user1, room.user2])
-  //       .find((user) => user.id === parseInt(userId));
-  //   });
-  // }, [unreadMessages]);
+
 
   useEffect(() => {
     if (!receivedMessage) {
@@ -322,7 +315,7 @@ const Chat = () => {
 
     if (message) {
       if (chat_socket.current && chat_socket.current.readyState === WebSocket.OPEN) {
-        console.log("sending message", message, "to room", roomId, "room_id", roomId, "sender", data.user.id);
+        
         chat_socket.current.send(
           JSON.stringify({
             type: "MESSAGE",
@@ -332,9 +325,7 @@ const Chat = () => {
           })
         );
         setMessage("");
-      } else {
-        console.warn("Cannot send message, WebSocket not ready.");
-      }
+      } 
     }
   };
 
@@ -352,7 +343,7 @@ const Chat = () => {
   };
 
   const setupChatRoom = async (contact) => {
-    console.log("a room with contact", contact, "and roomId", contact.id, "chat_room", contact.messages);
+ 
     setCurrentContact(contact);
     setRoomId(contact.id);
     setChat(contact.messages);

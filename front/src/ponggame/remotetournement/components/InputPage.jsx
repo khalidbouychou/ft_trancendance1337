@@ -141,7 +141,7 @@ const MainTournament = () => {
                     localcondition = 'W';
                     setCondition('W');
                     setPlayer7Name(PlayerAliasName);
-                    setPlayer7Avatar(user.user.avatar);
+                    setPlayer7Avatar(user?.user?.avatar);
                 }
                 else{
                     setMessage("You lost the match");

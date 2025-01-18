@@ -35,10 +35,6 @@ function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, view
   }, [notif])
 
   const check_blocked = async () => {
-    console.log("currentUser", currentUser);
-    console.log("currentUser.profile_name", currentUser.profile_name);
-    console.log("otherUser", otherUser);
-    console.log("otherUser.profile_name", otherUser.profile_name);
     const response1 = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/getuser/${currentUser.profile_name}/` , {
       withCredentials: true,
     });

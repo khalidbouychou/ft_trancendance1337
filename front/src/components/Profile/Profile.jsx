@@ -48,13 +48,6 @@ const Profile = ({ me }) => {
   const [isAnonymize, setIanonymize] = useState(userData?.is_anonimized);
 
 
-  
-  useEffect (()=>{
-    console.log("------ user",userData); 
-  } , [])
-  
-  
-  
   useEffect(() => {
     
    setProfileName(profile_name);
@@ -205,21 +198,21 @@ const Profile = ({ me }) => {
           `${import.meta.env.VITE_BACKEND_IP}/api/blocked/${user.user.profile_name}/`,
           { withCredentials: true }
         );
-        console.log('Blocked list:', response.data);
+
         const isBlockedUser = response.data['blocked list']?.some(
           (blockedUser) => blockedUser.profile_name === profile_name
         );
-        console.log('status:', isBlockedUser);
+ 
         setIsblockedy(isBlockedUser);
       } catch (error) {
-        console.error('Error fetching blocked list:', error);
+   
       }
     };
 
     fetchBlocked();
   }, [user, profile_name]);
 
-  console.log("--->>>>>> === ", isblockedy)
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -299,10 +292,7 @@ const Profile = ({ me }) => {
     );
   }
 
-  // if (isblocked) {
-  //   return <div className={styl.error} style={{color: 'white'}}>{t("This user has blocked you.")}</div>
-  // }
-  
+
   if (isblocked || isblockedy){
     if (!isAnonymize)
       return (<Anonymize user={userData} option={isblockedy ? "blockedy" : "blocked"} t={t}/>)
