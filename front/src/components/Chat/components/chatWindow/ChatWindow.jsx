@@ -30,17 +30,7 @@ export default function ChatWindow({
   const { sendMessage: sendNotifMessage, isConnected } = useNotificationWS();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const check_blocked = async () => {
-  //     const response1 = await axios.get(`${import.meta.env.VITE_BACKEND_IP}/api/getuser/${otherUser.profile_name}/` , {
-  //       withCredentials: true,
-  //     });
-  //     const didIBlockHim = response1.data.blocked_users.find(e => {return e.profile_name === otherUser.profile_name}) != undefined ? true : false;
-  //     setIsBlocked(didIBlockHim);
-  //   }
-  //   if (otherUser)
-  //     check_blocked();
-  // }, [isBlocked]);
+
 
   useEffect(() => {
     if (currentContact) {
@@ -49,7 +39,7 @@ export default function ChatWindow({
           ? currentContact.user2
           : currentContact.user1
       );
-      console.log("otherUser is this:", currentContact.user2, ", or this:", currentContact.user1);
+     
     } else {
       setOtherUser(null);
     }
@@ -74,8 +64,6 @@ export default function ChatWindow({
 
   useEffect(() => {
     if (data.user) {
-      console.log("data:", data);
-      console.log("data.user:", data.user);
       setCurrentUser(data.user);
     }
   }, [data.user]);

@@ -22,18 +22,14 @@ function Sidebar({
       try {
         
         if (socket && socket.readyState === WebSocket.OPEN) {
-          console.log("searching for users");
           socket.send(JSON.stringify({
               type: "SEARCH_USERS",
               query: search,
             })
           );
         }
-        else{
-          console.log("socket not open");
-        }
       } catch (error) {
-        console.error("Error fetching matched users:", error);
+       
       }
     };
     if (search.length == 2) {
@@ -58,12 +54,10 @@ function Sidebar({
   }, [allUsers]);
 
   useEffect(() => {
-    console.log("data:", data);
-    console.log("data.chat_rooms:", data.chat_rooms);
+   
     const filteredAndSortedRooms = data.chat_rooms
       .sort((a, b) => new Date(b.modified_at) - new Date(a.modified_at));
     setSortedRooms(filteredAndSortedRooms);
-    console.log("sortedRooms:", filteredAndSortedRooms)
   }, [data.chat_rooms]);
 
   const sendSelectUserRequest = async (profile_name) => {
@@ -75,7 +69,7 @@ function Sidebar({
         })
       );
     } catch (error) {
-      console.error("Error sending SELECT_USER request:", error);
+      
     }
   };
 

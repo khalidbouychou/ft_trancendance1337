@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styles from './TournamentMainboard.module.css'
 import { useGlobalContext } from '../context/TournamentContext.jsx';
 import Match from './Match.jsx';

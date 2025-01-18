@@ -30,10 +30,6 @@ const Statistic = ({ userData, profileName, t }) => {
     fetchData();
   }, [profileName]);
 
-  // if (daTa.length == 0) {
-  //   return (<div className={styl.emptyMatches}>
-  //     {t("No match data available to display the Statistic")}
-  // </div>)}
   return (
     <div className={styl.statistic}>
       <div className={styl.upperPart}>
