@@ -31,7 +31,6 @@ const Signup = ({ isLogin, setIsLogin }) => {
         }, 1000);
       }
     } catch (err) {
-      console.log("---------",err.response?.data);
       const msg = err.response?.data?.username || err.response?.data?.profile_name || err.response?.data?.password || err.response?.data?.error;
       let errmsg = t(msg); 
       toast.error(errmsg,
