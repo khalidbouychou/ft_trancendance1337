@@ -36,7 +36,9 @@ const Settings = () => {
 
   const handleProfileNameUpdate = async () => {
 
-    if (!validateInput()) {}
+    if (!validateInput()) {
+      return ;
+    }
 
     try {
       const response = await axios.put(

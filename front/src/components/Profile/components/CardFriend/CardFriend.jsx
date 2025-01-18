@@ -45,7 +45,7 @@ const CardFriend = ({friend}) => {
           </div>
           <div className={styl.level}>
             <p >Ping Pong exp: </p>
-            <div className={styl.Parallelogram}>{pingData[0]?.exp_game}</div>
+            <div className={styl.Parallelogram}>{pingData[0]?.exp_game || 0 }</div>
           </div>
         </div>
       </div>

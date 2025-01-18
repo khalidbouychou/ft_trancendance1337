@@ -29,7 +29,7 @@ CSRF_TRUSTED_ORIGINS = [
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 
-DEBUG = True # Set to False in production
+DEBUG = True# Set to False in production
 
 ALLOWED_HOSTS = [os.getenv("VITE_WSS_IP")]
 

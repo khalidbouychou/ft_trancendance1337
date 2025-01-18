@@ -96,8 +96,8 @@ const InvitationCard = ({request, t}) => {
         <p style={{ fontSize: "13px", color: "white" }}>{request?.from_user?.profile_name.toUpperCase()}</p>
         <p>{t("sent you an invitation")}</p>
         <div className={styl.shoose}>
-          <button style={{ backgroundColor: "green" }} onClick={handleAccept}>Accept</button>
-          <button onClick={handleDecline} >Decline</button>
+          <button style={{ backgroundColor: "green" }} onClick={handleAccept}>{t("Accept")}</button>
+          <button onClick={handleDecline} >{t("Decline")}</button>
         </div>
       </div>
     </div>

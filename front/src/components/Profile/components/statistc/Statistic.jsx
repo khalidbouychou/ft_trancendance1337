@@ -49,7 +49,7 @@ const Statistic = ({ userData, profileName, t }) => {
           ></div>
           <div className={styl.chartText}>
             <p>{t("Win")}: {Math.floor(winPercentage)}%</p>
-            <p>{t("Losses")}: {Math.floor(lossPercentage)}%</p>
+            <p>{t("Loss")}: {Math.floor(lossPercentage)}%</p>
           </div>
         </div>
         <div className={styl.CurveChart}>

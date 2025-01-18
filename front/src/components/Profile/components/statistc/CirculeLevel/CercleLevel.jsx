@@ -26,8 +26,6 @@ const Circle = ({ color, pct, radius = 90, strokeWidth = 10 }) => {
       ? circumference
       : ((100 - pct) / 100) * circumference;
 
-  console.log({ pct, radius, circumference, offset }); // Debugging
-
   return (
     <circle
       r={radius}
@@ -36,8 +34,8 @@ const Circle = ({ color, pct, radius = 90, strokeWidth = 10 }) => {
       fill="transparent"
       stroke={color}
       strokeWidth={strokeWidth}
-      strokeDasharray={circumference || 0} // Fallback to 0
-      strokeDashoffset={offset || 0} // Fallback to 0
+      strokeDasharray={circumference || 0}
+      strokeDashoffset={offset || 0}
     />
   );
 };

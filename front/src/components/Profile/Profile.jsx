@@ -4,7 +4,7 @@ import styl from "./Profile.module.css";
 import { AuthContext } from "../../UserContext/Context";
 import MatchHistory from "./components/matchHistory/MatchHistory";
 import Leaderboard from "./components/leaderboard/Leaderboard";
-import CardFriend from "./components/cardFriend/CardFriend";
+import CardFriend from "./components/CardFriend/CardFriend";
 import { toast } from "react-toastify"
 import { FaMedal } from "react-icons/fa";
 import { PiGameControllerFill } from "react-icons/pi";
@@ -14,6 +14,7 @@ import { IoIosPersonAdd } from "react-icons/io";
 import axios from "axios";
 import CardBlocked from "./components/cardBlocked/CardBlocked";
 import { useNotificationWS } from "../../contexts/NotifWSContext";
+import Anonymize  from "./Anonimize/Anonymize";
 
 const Profile = ({ me }) => {
   const { sendMessage, notif , setNotif} = useNotificationWS();
@@ -43,12 +44,17 @@ const Profile = ({ me }) => {
   const [shooseList, setShooseList] = useState('none');
   const [displayShooseButton, setDisplayShooseButton] = useState('none');
   const [isblocked, setIsblocked] = useState(false);
-  const [isAnonymized, setIsanonymized] = useState(false);
+  const [isAnonymize, setIanonymize] = useState(userData?.is_anonimized);
 
+  
+  
+  
   useEffect(() => {
-    setProfileName(profile_name);
+    
+   setProfileName(profile_name);
   }, [profileName]);
 
+  
   useEffect(() => {
     if (notif && notif.status === 'friends'){
       if (notif.user_id === userData.id){
@@ -125,12 +131,11 @@ const Profile = ({ me }) => {
           setLose(losses);
         }
       } catch (error) {
-        console.error("profile", error);
       }
     };
     
     fetchPingData();
-  }, [profile_name, notif, isblocked]);
+  }, [profile_name]);
 
   useEffect(() => {
     const friendsArray = friendList['friend list'] || [];
@@ -148,7 +153,7 @@ const Profile = ({ me }) => {
       setDisplayBt("flex");
       setDisplayShooseButton('none')
     }
-  }, [friendList, user?.user?.profile_name, userData.profile_name, notif, isblocked]);
+  }, [friendList, user?.user?.profile_name, userData.profile_name, isblocked]);
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -160,7 +165,7 @@ const Profile = ({ me }) => {
     };
     fetchFriends();
   }, [isfriended, profile_name, notif, isblocked]);
-                                                                              
+
   useEffect(() => {
     const fetchBlocked = async () => {
       try {
@@ -178,7 +183,6 @@ const Profile = ({ me }) => {
             setIsblocked(true);
         }
       } catch (error) {
-        console.error("profile", error);
       }
     };
   
@@ -208,7 +212,8 @@ const Profile = ({ me }) => {
         if (!response.ok) {
           throw new Error(
             response.status === 404
-              ? "User not found"
+              ? t("User not found")
+
               : "Failed to fetch user data"
           );
         }
@@ -220,7 +225,7 @@ const Profile = ({ me }) => {
   
         const data = await response.json();
         setUserData(data);
-        setIsanonymized(data?.is_anonimized)
+        setIanonymize(data?.is_anonimized)
       } catch (error) {
         setError(error.message);
         setUserData({});
@@ -231,7 +236,7 @@ const Profile = ({ me }) => {
     setShowUserBlocked(false);
     setActiveSection("Leaderboard");
     fetchData();
-  }, [profile_name, notif, isblocked]);
+  }, [profile_name, isblocked]);
   
   
   const handleAddFriend = () => {
@@ -252,24 +257,19 @@ const Profile = ({ me }) => {
   if (isLoading) {
     return <div className={styl.loading}>Loading...</div>;
   }
-  
-  if (isAnonymized) {
-    return <div className={styl.Anonymized}>hona</div>
-  }
 
   if (error) {
     return (
       <div className={styl.error}>
         <p>{error}</p>
-        <Link to="/"> back to home</Link>
+        <Link to="/"> {t("Go back to home")}</Link>
       </div>
     );
   }
-
-  if (isblocked) {
-    return <div className={styl.error} style={{color: 'white'}}>{t("This user has blocked you.")}</div>
+  
+  if (isAnonymize || isblocked){
+    return (<Anonymize user={userData} option={isblocked ? "blocked" : "anonymize"} t={t}/>)
   }
-
   return (
     <div className={styl.profile}>
       <div className={styl.content}>
@@ -392,7 +392,7 @@ const Profile = ({ me }) => {
             <div className={styl.userData}>
               {activeSection === "Leaderboard" && <Leaderboard setProfileName={setProfileName} t={t}/>}
               {activeSection === "MatchHistory" && (
-                <MatchHistory profileName={profileName} t={t}/>
+                <MatchHistory profile_name={profile_name} t={t}/>
               )}
             </div>
           </div>

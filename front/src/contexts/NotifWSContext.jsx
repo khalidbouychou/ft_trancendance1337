@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { ToastContainer, toast } from "react-toastify";
+import {toast } from "react-toastify";
+import { AuthContext } from '../UserContext/Context';
 
 const NotifWSContext = createContext();
 
@@ -8,6 +9,8 @@ export function NotificationWebSocketProvider({ children }) {
   const [isConnected, setIsConnected] = useState(false);
   const [notif, setNotif] = useState(null);
   const [chatMesageNotif, setChatMesageNotif] = useState(false);
+  const {t} = useContext(AuthContext);
+
 
   useEffect(() => {
     let ws;
@@ -23,7 +26,7 @@ export function NotificationWebSocketProvider({ children }) {
       setNotif(data.notification);
       if (data.notification ) {
         if (data.notification.notif_type === "GR" && data.notification.status === "pending") {
-            toast.success("u been invited to a pong game", {
+            toast.success(t("you have been invited to a pong game"), {
             position: "top-left"
           })
         }

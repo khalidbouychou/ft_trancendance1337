@@ -20,7 +20,6 @@ clean: down
 	@rm -rf */*/__pycache__
 	@rm -rf nginx/ssl.*
 	@rm -rf ssl/*
-	@rm */dist
 
 push: 
 	@git add .

@@ -16,35 +16,24 @@ const Signup = ({ isLogin, setIsLogin }) => {
     const passwordRegex = /^.{6,50}$/; // At least 6 characters, up to 50
 
     if (!usernameRegex.test(username)) {
-      toast.error(t("Username must be 3-30 characters long and contain only letters, numbers, or underscores."),
-      {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      }
-    );
+      toast.error(t("Username must be 3-30 characters long and contain only letters, numbers, or underscores."), {
+        style: { backgroundColor: "rgb(255, 0, 0)", color: "white" }
+      });
       return false;
     }
 
     if (!displayNameRegex.test(displayname)) {
-      toast.error(t("Display name must be 3-50 characters long and can contain letters, numbers, spaces, underscores, or hyphens."),
-      {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
+      toast.error(t("Display name must be 3-50 characters long and can contain letters, numbers, spaces, underscores, or hyphens."), {
+        style: { backgroundColor: "rgb(255, 0, 0)", color: "white" }
       });
+      return false;
     }
 
     if (!passwordRegex.test(password)) {
-      toast.error(t("Password must be at least 6 characters long.")),
-      {
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)',
-          color: 'white'
-        }
-      }
+      toast.error(t("Password must be at least 6 characters long."), {
+        style: { backgroundColor: "rgb(255, 0, 0)", color: "white" }
+      });
+      return false;
     }
 
     return true;
@@ -74,14 +63,7 @@ const Signup = ({ isLogin, setIsLogin }) => {
       }
     } catch (err) {
       let errmsg = t(err.response?.data?.error) || t("player with this username already exists."); 
-      toast.error(errmsg,
-        {
-          style: {
-            backgroundColor: 'rgb(255, 0, 0)',
-            color: 'white'
-          }
-        }
-      );
+      toast.error(errmsg);
     }
   };
 

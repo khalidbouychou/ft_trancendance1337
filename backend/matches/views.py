@@ -14,4 +14,5 @@ def get_matches(request):
 def get_matches_by_profile_name(request, username):
     matches = Matches.objects.filter(Q(winner_profile_name=username)|Q(loser_profile_name=username))
     serializer = MatchesSerializer(matches, many=True)
+    
     return Response(serializer.data)

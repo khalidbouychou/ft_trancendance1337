@@ -56,11 +56,10 @@
   "Date & Time": "Date & Time",
   "Victory": "Victory",
   "Defeat": "Defeat",
-  "LOSS": "Loss",
+  "LOSS": "LOSS",
   "Loss": "Loss",
   "Accept" : "accept",
   "Decline" : "decline",
-  "sent you an invitation" : "sent you an invitation",
   "Cancel friend request" : "Cancel friend request",
   "WINS": "WINS",
   "LOSE": "LOSE",
@@ -145,6 +144,11 @@
   "Invite in Game": "Invite in Game",
   "Block User": "Block User",
   "Unblock User": "Unblock User",
-  "sent you an invitation": "sent you an invitation"
+  "sent you an invitation": "sent you an invitation",
+  "you have been invited to a pong game":"you have been invited to a pong game",
+  "User not found" : "User not found",
+  "profile_name not valid" : "profile_name not valid",
+  "This user has blocked you" : "This user has blocked you",
+  "You won the final match and you are tournament winner": "You won the final match and you are tournament winner"
 }
  

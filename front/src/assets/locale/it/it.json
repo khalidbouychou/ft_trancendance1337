@@ -57,7 +57,7 @@
   "Date & Time": "Data e ora",
   "Victory": "Vittoria",
   "Defeat": "Sconfitta",
-  "LOSS": "Sconfitta",
+  "LOSS": "SCONFITTA",
   "Loss": "Sconfitta",
   "WINS": "VITTORIE",
   "LOSE": "SCONFITTE",
@@ -144,5 +144,9 @@
   "Invite in Game": "Invita nel gioco",
   "Block User": "Blocca utente",
   "Unblock User": "Sblocca utente",
-  "sent you an invitation": "ti ha inviato un invito"
+  "you have been invited to a pong game": "siete stati invitati a una partita di pong" ,
+  "User not found" : "Utente non trovato",
+  "profile_name not valid" : "nome profilo non valido",
+  "This user has blocked you" : "Questo utente ha bloccato te",
+  "You won the final match and you are tournament winner": "Hai vinto la partita finale e sei il vincitore del torneo"
 }

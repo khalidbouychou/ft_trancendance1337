@@ -137,7 +137,7 @@ const MainTournament = () => {
             }
             else if (data.message === 'match_result2'){
                 if (data.winner === PlayerAliasName){
-                    setMessage("You won the final match and you are tournament winner");
+                    setMessage(t("You won the final match and you are tournament winner"));
                     localcondition = 'W';
                     setCondition('W');
                     setPlayer7Name(PlayerAliasName);
