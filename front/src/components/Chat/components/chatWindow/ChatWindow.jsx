@@ -21,7 +21,6 @@ export default function ChatWindow({
   typingUser,
   t,
 }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [otherUser, setOtherUser] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -67,7 +66,6 @@ export default function ChatWindow({
       setCurrentUser(data.user);
     }
   }, [data.user]);
-
 
   const handleBlockUser = (e) => {
       if (!otherUser) {

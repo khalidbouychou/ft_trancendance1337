@@ -11,18 +11,18 @@ const TournamentMainboard = () => {
     const [matchType, setMatchType] = useState('');
 
     const startgameleft = () => {
-        setMatchType('left');
-        setGameStatus(true);
+      setMatchType('left');
+      setGameStatus(true);
     };
     
     const startgameright = () => {
-        setMatchType('right');
-        setGameStatus(true);
+      setMatchType('right');
+      setGameStatus(true);
     };
 
     const startgamefinal = () => {
-        setMatchType('final');
-        setGameStatus(true);
+      setMatchType('final');
+      setGameStatus(true);
     };
 
     return (
@@ -73,9 +73,9 @@ const TournamentMainboard = () => {
                     </div>
                   ) : (
                     <div className={styles.youWin}>
-                      {/* <div className={styles.str}>
+                      <div className={styles.str}>
                         <p>{t("WIN")}</p>
-                      </div> */}
+                      </div>
                       <div className={styles.userWin}>
                         <div className={styles.userImage}>
                           <div className={styles.intImg}>

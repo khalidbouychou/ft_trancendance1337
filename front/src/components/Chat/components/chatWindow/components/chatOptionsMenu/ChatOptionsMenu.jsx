@@ -11,9 +11,6 @@ import { useNotificationWS } from "../../../../../../contexts/NotifWSContext";
 
 function ChatOptionsMenu({ onBlockUser, onPlayPong, otherUser, currentUser, viewProfile, t,isBlocked,
   setIsBlocked, amiBlocked, setAmIBlocked }) {
-  // const [isOpen, setIsOpen] = useState(false);
-  // const [isBlocked, setIsBlocked] = useState(false);
-  // const [amiBlocked, setAmIBlocked] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [menuList, setMenuList] = useState('none');
   const navigate = useNavigate();

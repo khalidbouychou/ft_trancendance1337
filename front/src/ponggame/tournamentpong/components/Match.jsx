@@ -8,7 +8,7 @@ export default function GameComponent({ type }) {
     const [leftAvatar, setLeftAvatar] = useState("/assets/unknown.png");
     const [rightplayer, setrightplayer] = useState("right player");
     const [rightAvatar, setRightAvatar] = useState("/assets/unknown.png");
-    const { player1Name, player2Name, player3Name, player4Name, player5Name,setPlayer5Name, player6Name,setPlayer6Name,setPlayer7Name,setGameStatus,setPlayer5Avatar, setPlayer6Avatar, setPlayer7Avatar, player5Avatar, player6Avatar} = useGlobalContext();
+    const { player1Name, player2Name, player3Name, player4Name, player5Name,setPlayer5Name, player6Name,setPlayer6Name,setPlayer7Name,setGameStatus,gameStatus,setPlayer5Avatar, setPlayer6Avatar, setPlayer7Avatar, player5Avatar, player6Avatar} = useGlobalContext();
 
     const pressedKeys = useRef(new Set());
     const [rightScore, setRightScore] = useState(0);
@@ -174,6 +174,9 @@ export default function GameComponent({ type }) {
         const draw = () => {
             if (mycondition === 'S') {
                 cancelAnimationFrame(myReq);
+                window.removeEventListener('keydown', handleKeyDown);
+                window.removeEventListener('keyup', handleKeyUp);
+                return;
             }
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -211,8 +214,8 @@ export default function GameComponent({ type }) {
         const handleKeyUp = (event) => {
             pressedKeys.current.delete(event.key);
         };
-
-        myReq = requestAnimationFrame(draw);
+        if (mycondition === 'R')
+            myReq = requestAnimationFrame(draw);
 
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
@@ -228,7 +231,6 @@ export default function GameComponent({ type }) {
                 <div className={styles.centered}>
                     <div className={styles.gameContainer}>
                         <div className={styles.topgame}>
-                            
                             <div className={styles.side}>
                                 <img src={leftAvatar} className={styles.Img} />
                                 <p >{leftplayer}</p>
@@ -244,13 +246,9 @@ export default function GameComponent({ type }) {
                             </div>
                         </div>
                         <canvas id="canvas" className={styles.canvass}></canvas>
-                        <div style={{
-                color : "yellow",
-                marginTop:"50px"
-            }
-            }>
-                <h1>Manual : (W/S  | UP/DOWN)</h1>
-            </div>
+                        <div style={{ color : "yellow", marginTop:"50px" }}>
+                            <h1>Manual : (W/S  | UP/DOWN)</h1>
+                        </div>
                     </div>
                 </div>
             </div>
