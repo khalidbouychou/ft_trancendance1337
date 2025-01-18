@@ -6,7 +6,7 @@ import styl from "./Sidebar.module.css";
 
 function Sidebar({
   setupChatRoom,
-  setupSocket,
+  socket,
   data,
   allUsers,
   unreadMessages,
@@ -20,14 +20,16 @@ function Sidebar({
   useEffect(() => {
     const performSearch = async () => {
       try {
-        const socket = await setupSocket(1);
-        socket.send(
-          JSON.stringify({
-            type: "SEARCH_USERS",
-            query: search,
-          })
-        );
+        
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify({
+              type: "SEARCH_USERS",
+              query: search,
+            })
+          );
+        }
       } catch (error) {
+       
       }
     };
     if (search.length == 2) {
@@ -52,18 +54,14 @@ function Sidebar({
   }, [allUsers]);
 
   useEffect(() => {
-    data.chat_rooms.forEach((room) => {
-      setupSocket(room.id);
-    });
+   
     const filteredAndSortedRooms = data.chat_rooms
-      .filter((room) => room.messages && room.messages.length > 0)
       .sort((a, b) => new Date(b.modified_at) - new Date(a.modified_at));
     setSortedRooms(filteredAndSortedRooms);
   }, [data.chat_rooms]);
 
   const sendSelectUserRequest = async (profile_name) => {
     try {
-      const socket = await setupSocket(1);
       socket.send(
         JSON.stringify({
           type: "SELECT_USER",
@@ -71,6 +69,7 @@ function Sidebar({
         })
       );
     } catch (error) {
+      
     }
   };
 
@@ -132,7 +131,6 @@ function Sidebar({
             currentUser={data.user}
             onClick={() => {
               setupChatRoom(contact);
-              setupSocket(contact.id);
             }}
             unreadMessages={unreadMessages}
           />

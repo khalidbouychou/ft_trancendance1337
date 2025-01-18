@@ -44,6 +44,7 @@ const Profile = ({ me }) => {
   const [shooseList, setShooseList] = useState('none');
   const [displayShooseButton, setDisplayShooseButton] = useState('none');
   const [isblocked, setIsblocked] = useState(false);
+  const [isblockedy, setIsblockedy] = useState(false);
   const [isAnonymize, setIanonymize] = useState(userData?.is_anonimized);
 
   
@@ -187,8 +188,33 @@ const Profile = ({ me }) => {
     };
   
     fetchBlocked();
-  }, [isfriended, ismyprofil, profile_name, notif, isblocked]);
+  }, [isfriended, profile_name, isblocked]);
   
+
+  useEffect(() => {
+    const fetchBlocked = async () => {
+      if (!ismyprofil)
+        return ;
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_IP}/api/blocked/${user.user.profile_name}/`,
+          { withCredentials: true }
+        );
+
+        const isBlockedUser = response.data['blocked list']?.some(
+          (blockedUser) => blockedUser.profile_name === profile_name
+        );
+ 
+        setIsblockedy(isBlockedUser);
+      } catch (error) {
+   
+      }
+    };
+
+    fetchBlocked();
+  }, [user, profile_name]);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -392,7 +418,7 @@ const Profile = ({ me }) => {
             <div className={styl.userData}>
               {activeSection === "Leaderboard" && <Leaderboard setProfileName={setProfileName} t={t}/>}
               {activeSection === "MatchHistory" && (
-                <MatchHistory profile_name={profile_name} t={t}/>
+                <MatchHistory profileName={profileName} t={t}/>
               )}
             </div>
           </div>

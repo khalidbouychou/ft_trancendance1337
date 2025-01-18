@@ -16,9 +16,9 @@ ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Title, T
 const ExpChart = ({ data, playerName, t }) => {
   const beginExp = 100;
 
-  if (!data || data.length === 0) {
-    return <p>No match data available to display the chart.</p>;
-  }
+  // if (!data || data.length === 0) {
+  //   return <p>No match data available to display the chart.</p>;
+  // }
 
   const expData = data.reduce(
     (acc, match, index) => {

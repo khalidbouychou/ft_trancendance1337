@@ -23,7 +23,7 @@ const TournamentBoard = () => {
                   </div>
                 </div>
                 <div className={styles.userName}>
-                  <p> {player1Name} </p>
+                  <p> {t(player1Name)} </p>
                 </div>
               </div>
               <div className={styles.vs}>
@@ -41,7 +41,7 @@ const TournamentBoard = () => {
                   </div>
                 </div>
                 <div className={styles.userName}>
-                  <p> {player2Name} </p>
+                  <p> {t(player2Name)} </p>
                 </div>
               </div>
             </div>
@@ -58,7 +58,7 @@ const TournamentBoard = () => {
                   </div>
                 </div>
                 <div className={styles.userName}>
-                  <p> {player3Name} </p>
+                  <p> {t(player3Name)} </p>
                 </div>
               </div>
               <div className={styles.vs}>
@@ -76,7 +76,7 @@ const TournamentBoard = () => {
                   </div>
                 </div>
                 <div className={styles.userName}>
-                  <p> {player4Name} </p>
+                  <p> {t(player4Name)} </p>
                 </div>
               </div>
             </div>
@@ -95,7 +95,7 @@ const TournamentBoard = () => {
                   </div>
                 </div>
                 <div className={styles.userName}>
-                  <p> {player5Name} </p>
+                  <p> {t(player5Name)} </p>
                 </div>
               </div>
               <div className={styles.vs}>
@@ -113,7 +113,7 @@ const TournamentBoard = () => {
                   </div>
                 </div>
                 <div className={styles.userName}>
-                  <p> {player6Name} </p>
+                  <p> {t(player6Name)} </p>
                 </div>
               </div>
             </div>
@@ -131,7 +131,7 @@ const TournamentBoard = () => {
                 </div>
               </div>
               <div className={styles.userName}>
-                <p> {player7Name} </p>
+                <p> {t(player7Name)} </p>
               </div>
             </div>
           </div>

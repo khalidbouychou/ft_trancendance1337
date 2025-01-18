@@ -148,5 +148,5 @@
   "User not found" : "Utente non trovato",
   "profile_name not valid" : "nome profilo non valido",
   "This user has blocked you" : "Questo utente ha bloccato te",
-  "You won the final match and you are tournament winner": "Hai vinto la partita finale e sei il vincitore del torneo"
+  "WIN" : "VITTORIA"
 }

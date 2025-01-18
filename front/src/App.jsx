@@ -56,7 +56,7 @@ function App() {
         newestOnTop={false}
         closeOnClick={true}
         pauseOnFocusLoss={true}
-        stacked= {true}
+        // stacked= {true}
 
        />
       </AuthProvider>

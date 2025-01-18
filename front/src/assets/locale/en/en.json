@@ -149,6 +149,6 @@
   "User not found" : "User not found",
   "profile_name not valid" : "profile_name not valid",
   "This user has blocked you" : "This user has blocked you",
-  "You won the final match and you are tournament winner": "You won the final match and you are tournament winner"
+  "WIN" : "WIN"
 }
  

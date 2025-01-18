@@ -115,10 +115,10 @@
   "Manual : (W/S | UP/DOWN)": "Manuel : (W/S | HAUT/BAS)",
   "Exit": "Quitter",
   "Unknown": "Inconnu",
-  "Player1": "Joueur1",
-  "Player2": "Joueur2",
-  "Player3": "Joueur3",
-  "Player4": "Joueur4",
+  "Player 1": "Joueur 1",
+  "Player 2": "Joueur 2",
+  "Player 3": "Joueur 3",
+  "Player 4": "Joueur 4",
   "There are no tournaments now.": "Il n'y a pas de tournois actuellement.",
   "Waiting for other players...": "En attente des autres joueurs...",
   "Start": "Commencer",
@@ -149,6 +149,6 @@
   "User not found" : "Utilisateur non trouvé",
   "profile_name not valid" : "nom d'utilisateur non valide",
   "This user has blocked you" : "Cet utilisateur a bloqué vous",
-  "You won the final match and you are tournament winner": "Vous avez remporté le match final et vous êtes le vainqueur du tournoi"
+  "WIN" : "GAGNER"
 }
   

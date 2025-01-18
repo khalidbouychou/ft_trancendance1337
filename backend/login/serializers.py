@@ -1,4 +1,5 @@
  
+import re
 from rest_framework import serializers
 from django.db.models import Q
 from .models import *
@@ -44,14 +45,29 @@ class PingDataSerializer(serializers.ModelSerializer):
 
 def myownvalidate(data):
     username = data.get('username')
-    profile_name = data.get('profile_name')
+    profile_name = data.get('profile_name') 
     password = data.get('password')
+    username = username.strip()
+    profile_name = profile_name.strip()
+    if not username.isalnum():
+        raise serializers.ValidationError({'error': 'Username can only contain alphanumeric characters'})
+    if not profile_name.isalnum():
+        raise serializers.ValidationError({'error': 'Profile name can only contain alphanumeric characters'})
+    if not password.isalnum():
+        raise serializers.ValidationError({'error': 'Password can only contain alphanumeric characters'})
+    
+    user = Player.objects.filter(Q(username=username) | Q(profile_name=profile_name))
+    if user:
+       raise serializers.ValidationError({'error': 'Username or profile name already exists'})
+    # Check for special characters and spaces
+    if not username or not profile_name or not password:
+        raise serializers.ValidationError({'error': 'All fields are required'})
     if len(username) < 9 or len(username) > 15:
         raise serializers.ValidationError({'error': 'Username must be between 9 and 15 characters'})
     if len(profile_name) < 9 or len(profile_name) > 15:
-        raise serializers.ValidationError({'error': 'Profile name must be between 9 and 15 characters'})
+        raise serializers.ValidationError({'error': 'Profile name must be between 9 and 15 characters'}) 
     if len(password) < 8 or len(password) > 16:
-        raise serializers.ValidationError({'error': 'Password must be between 8 and 16 characters'})
+        raise serializers.ValidationError({'error': 'Password must be between 8 and 16 characters'}) 
     return data
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
